@@ -11,26 +11,18 @@ console = Console()
 app = typer.Typer()
 
 @app.command()
-def hello(name: str):
-    print(f"Hello {name}")
-
-@app.command()
-def goodbye(name: str, formal: bool = False):
-    if formal:
-        print(f"Goodbye Ms. {name}. Have a good day.")
-    else:
-        print(f"Bye {name}!")
-
-@app.command()
 def version():
-    packages = Table("Package", "Version")
+    packages = Table()
+    packages.add_column("Status", style="green")
+    packages.add_column("Packages", style="cyan")
+    packages.add_column("Version", style="magenta")
+
     command = "dpkg -l | grep 'linuxmuster\|sophomorix'"
     p = subprocess.Popen(command, shell=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
     for package in p.stdout.readlines():
         details = package.decode().split()
-        name = details[1]
-        version = details[2]
-        packages.add_row(name, version)
+        status, name, version  = details[:3]
+        packages.add_row(status, name, version)
     console.print(packages)
 
 if __name__ == "__main__":
