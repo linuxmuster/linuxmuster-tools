@@ -1,0 +1,6 @@
+dpath==2.0.6         # used for getSophomorixValue
+python-ldap
+pyyaml
+rich
+typer
+
