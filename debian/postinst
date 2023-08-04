@@ -1,0 +1,30 @@
+#!/bin/bash
+#
+# postinst script for linuxmuster-cli7
+# GPL v3
+#
+
+set -e
+
+msg()
+{
+    message=$1
+    echo
+    # Bold and orange font for linuxmuster.net
+    echo "\e[1m\e[38;5;214m$message\e[39m\e[0m"
+    echo
+}
+
+case "$1" in
+    install|configure)
+        msg "Install Python requirements"
+        /usr/bin/python3 -m pip install -r /usr/lib/python3/dist-packages/linuxmusterApi7/requirements.txt
+        
+    ;;
+
+    *)
+    ;;
+
+esac
+
+exit 0
