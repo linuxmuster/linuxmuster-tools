@@ -71,7 +71,6 @@ class LdapConnector:
                 dn = raw_data.get('distinguishedName', [b''])[0].decode()
 
                 school_node = f",OU=default-school,"
-                dn = result.get('distinguishedName', [b''])[0].decode()
                 if school_node in dn:
                     for field in fields(objectclass):
                         if field.init:
