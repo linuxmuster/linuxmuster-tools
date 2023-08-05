@@ -25,6 +25,7 @@ class LMNLdapRouter:
 
                 if func.type == 'collection':
                     return self.lc.get_collection(func.model, ldap_filter, **kwargs)
+        raise Exception('Request unknown')
 
     def single(self, pattern, model):
         def decorator(f):
