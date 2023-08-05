@@ -8,7 +8,7 @@ from .models import *
 
 class LdapConnector:
 
-    def get_single(self, objectclass, ldap_filter, dict=True, school_oriented=True):
+    def get_single(self, objectclass, ldap_filter, dict=True, school_oriented=True, attributes=[]):
         """
         Handle a single result from a ldap request (with required ldap filter)
         and convert it in the given object class.
@@ -37,11 +37,14 @@ class LdapConnector:
                         value = raw_data.get(field.name, None)
                         data[field.name] = self._filter_value(field, value)
                 if dict:
-                    return asdict(objectclass(**data))
+                    model_dict = asdict(objectclass(**data))
+                    if attributes:
+                        return {k:v for k,v in model_dict.items() if k in attributes}
+                    return model_dict
                 return objectclass(**data)
         return {}
         
-    def get_collection(self, objectclass, ldap_filter, dict=True, sortkey=None, school_oriented=True):
+    def get_collection(self, objectclass, ldap_filter, dict=True, sortkey=None, school_oriented=True, attributes=[]):
         """
         Handle multiples results from a ldap request (with required ldap filter)
         and convert it in a list of given object class.
@@ -77,7 +80,11 @@ class LdapConnector:
                             value = raw_data.get(field.name, None)
                             data[field.name] = self._filter_value(field, value)
                     if dict:
-                        response.append(asdict(objectclass(**data)))
+                        model_dict = asdict(objectclass(**data))
+                        if attributes:
+                            response.append({k:v for k,v in model_dict.items() if k in attributes})
+                        else:
+                            response.append(asdict(objectclass(**data)))
                     else:
                         response.append(objectclass(**data))
         if sortkey is not None:
