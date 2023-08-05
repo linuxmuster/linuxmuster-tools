@@ -14,7 +14,6 @@ class LMNLdapRouter:
         Parse all urls and find the correct API to handle the request.
         """
 
-        print(self.urls)
         for url_model, func in self.urls.items():
             match = func.url_pattern.match(url)
             if match:
