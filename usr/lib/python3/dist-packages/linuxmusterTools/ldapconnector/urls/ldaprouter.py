@@ -21,10 +21,10 @@ class LMNLdapRouter:
                 ldap_filter = func(**data)
 
                 if func.type == 'single':
-                    return self.lc.get_single(func.model, ldap_filter)
+                    return self.lc.get_single(func.model, ldap_filter, **kwargs)
 
                 if func.type == 'collection':
-                    return self.lc.get_collection(func.model, ldap_filter)
+                    return self.lc.get_collection(func.model, ldap_filter, **kwargs)
 
     def single(self, pattern, model):
         def decorator(f):
