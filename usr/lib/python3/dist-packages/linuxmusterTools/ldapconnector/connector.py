@@ -138,7 +138,7 @@ class LdapConnector:
         if value is None:
             return None
 
-    def _get(self, ldap_filter, scope=ldap.SCOPE_SUBTREE, searchdn=''):
+    def _get(self, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn=''):
         """
         Connect to ldap and perform the request.
 
@@ -160,8 +160,7 @@ class LdapConnector:
         with open('/etc/linuxmuster/webui/config.yml', 'r') as config:
             params = yaml.load(config, Loader=yaml.SafeLoader)['linuxmuster']['ldap']
 
-        if not searchdn:
-            searchdn = params['searchdn']
+        searchdn = f"{subdn}{params['searchdn']}"
 
         l.bind(params['binddn'], params['bindpw'])
         res = l.search_s(searchdn,scope, ldap_filter, attrlist=['*'])
