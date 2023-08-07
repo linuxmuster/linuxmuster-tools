@@ -35,7 +35,7 @@ class LdapConnector:
         return {}
 
 
-    def get_single(self, objectclass, ldap_filter, **kwargs):
+    def get_single(self, objectclass, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn='', **kwargs):
         """
         Handle a single result from a ldap request (with required ldap filter)
         and convert it in the given object class.
@@ -52,10 +52,10 @@ class LdapConnector:
         :typee attributes: list
         """
 
-        result = self._get(ldap_filter)[0]
+        result = self._get(ldap_filter, scope=scope, subdn=subdn)[0]
         return self._create_result_object(result, objectclass, **kwargs)
 
-    def get_collection(self, objectclass, ldap_filter, sortkey=None, **kwargs):
+    def get_collection(self, objectclass, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn='', sortkey=None, **kwargs):
         """
         Handle multiples results from a ldap request (with required ldap filter)
         and convert it in a list of given object class.
@@ -74,7 +74,7 @@ class LdapConnector:
         :typee attributes: list
         """
 
-        results = self._get(ldap_filter)
+        results = self._get(ldap_filter, scope=scope, subdn=subdn)
         response = []
         for result in results:
             response.append(self._create_result_object(result, objectclass, **kwargs))
