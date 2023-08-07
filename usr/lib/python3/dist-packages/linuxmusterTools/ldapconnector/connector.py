@@ -147,12 +147,16 @@ class LdapConnector:
         if value is None:
             return None
 
-    def _get(self, ldap_filter):
+    def _get(self, ldap_filter, scope=ldap.SCOPE_SUBTREE, searchdn=''):
         """
         Connect to ldap and perform the request.
 
         :param ldap_filter: Valid ldap filter
         :type ldap_filter: basestring
+        :param scope: subtree search or one level
+        :type scope: str
+        :param searchdn: special searchdn
+        :type searchdn: str
         :return: Raw result of the request
         :rtype: dict
         """
@@ -165,8 +169,11 @@ class LdapConnector:
         with open('/etc/linuxmuster/webui/config.yml', 'r') as config:
             params = yaml.load(config, Loader=yaml.SafeLoader)['linuxmuster']['ldap']
 
+        if not searchdn:
+            searchdn = params['searchdn']
+
         l.bind(params['binddn'], params['bindpw'])
-        res = l.search_s(params['searchdn'], ldap.SCOPE_SUBTREE, ldap_filter, attrlist=['*'])
+        res = l.search_s(searchdn,scope, ldap_filter, attrlist=['*'])
         l.unbind()
 
         # Removing sensitive data
