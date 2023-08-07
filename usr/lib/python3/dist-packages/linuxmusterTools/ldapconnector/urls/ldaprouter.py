@@ -1,5 +1,6 @@
 import re
 import ldap
+import logging
 
 from linuxmusterTools.ldapconnector.connector import LdapConnector
 
@@ -27,6 +28,21 @@ class LMNLdapRouter:
                     return self.lc.get_collection(func.model, ldap_filter, scope=func.scope, subdn=func.subdn, **kwargs)
         raise Exception('Request unknown')
 
+    def add_url(self, url, method):
+        """
+        Check collisions between URLs before adding to self.urls.
+
+        :param url: Regexp to match
+        :type url: re.pattern
+        :param method: Method to run
+        :type method: function
+        """
+
+        if url in self.urls:
+            logging.warning(f"URL {url} already listed in the methods, not adding it!")
+        else:
+            self.urls[url] = method
+
     def single(self, pattern, model):
         """
         Search a single entry in the whole subtree of the base dn.
@@ -43,7 +59,7 @@ class LMNLdapRouter:
             f.model = model
             f.scope = ldap.SCOPE_SUBTREE
             f.subdn = ''
-            self.urls[f.url_pattern] = f
+            self.add_url(f.url_pattern, f)
             return f
         return decorator
 
@@ -63,7 +79,7 @@ class LMNLdapRouter:
             f.model = model
             f.scope = ldap.SCOPE_ONELEVEL
             f.subdn = ''
-            self.urls[f.url_pattern] = f
+            self.add_url(f.url_pattern, f)
             return f
 
         return decorator
@@ -84,7 +100,7 @@ class LMNLdapRouter:
             f.model = model
             f.scope = ldap.SCOPE_SUBTREE
             f.subdn = subdn
-            self.urls[f.url_pattern] = f
+            self.add_url(f.url_pattern, f)
             return f
 
         return decorator
@@ -105,7 +121,7 @@ class LMNLdapRouter:
             f.model = model
             f.scope = ldap.SCOPE_ONELEVEL
             f.subdn = subdn
-            self.urls[f.url_pattern] = f
+            self.add_url(f.url_pattern, f)
             return f
 
         return decorator
@@ -126,7 +142,7 @@ class LMNLdapRouter:
             f.model = model
             f.scope = ldap.SCOPE_SUBTREE
             f.subdn = ''
-            self.urls[f.url_pattern] = f
+            self.add_url(f.url_pattern, f)
             return f
         return decorator
 
@@ -146,7 +162,7 @@ class LMNLdapRouter:
             f.model = model
             f.scope = ldap.SCOPE_ONELEVEL
             f.subdn = ''
-            self.urls[f.url_pattern] = f
+            self.add_url(f.url_pattern, f)
             return f
 
         return decorator
@@ -167,7 +183,7 @@ class LMNLdapRouter:
             f.model = model
             f.scope = ldap.SCOPE_SUBTREE
             f.subdn = subdn
-            self.urls[f.url_pattern] = f
+            self.add_url(f.url_pattern, f)
             return f
 
         return decorator
@@ -188,7 +204,7 @@ class LMNLdapRouter:
             f.model = model
             f.scope = ldap.SCOPE_ONELEVEL
             f.subdn = subdn
-            self.urls[f.url_pattern] = f
+            self.add_url(f.url_pattern, f)
             return f
 
         return decorator
