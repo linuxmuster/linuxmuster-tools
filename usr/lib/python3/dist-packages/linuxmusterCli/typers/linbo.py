@@ -3,7 +3,7 @@ import typer
 
 from rich.console import Console
 from rich.table import Table
-from linuxmusterTools.sambaTool import GPOS
+from linuxmusterTools.lmnfile import LMNFile
 
 
 LINBO_PATH = '/srv/linbo'
@@ -14,6 +14,10 @@ app = typer.Typer()
 def groups():
     groups = Table()
     groups.add_column("Groups", style="green")
+    groups.add_column("Devices", style="green")
+
+    with LMNFile('/etc/linuxmuster/sophomorix/default-school/devices.csv', 'r') as f:
+        devices = f.read()
 
     for file in os.listdir(LINBO_PATH):
         path = os.path.join(LINBO_PATH, file)
@@ -23,5 +27,10 @@ def groups():
             and not os.path.islink(path)
             and os.path.isfile(path)
         ):
-            groups.add_row(file.split(".")[-1])
+            group = file.split(".")[-1]
+            devices_count = 0
+            for device in devices:
+                if device['group'] == group:
+                    devices_count += 1
+            groups.add_row(group, str(devices_count))
     console.print(groups)
