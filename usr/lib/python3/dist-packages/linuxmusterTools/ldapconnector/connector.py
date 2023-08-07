@@ -1,3 +1,5 @@
+import logging
+
 import ldap
 import yaml
 from datetime import datetime
@@ -52,8 +54,11 @@ class LdapConnector:
         :typee attributes: list
         """
 
-        result = self._get(ldap_filter, scope=scope, subdn=subdn)[0]
-        return self._create_result_object(result, objectclass, **kwargs)
+        results = self._get(ldap_filter, scope=scope, subdn=subdn)
+        if len(results) > 1:
+            # Only taking the first entry so warn the user
+            logging.warning("Multiple entries found in LDAP, but only giving the first one as expected.")
+        return self._create_result_object(results[0], objectclass, **kwargs)
 
     def get_collection(self, objectclass, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn='', sortkey=None, **kwargs):
         """
