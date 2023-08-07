@@ -8,7 +8,7 @@ from .models import *
 
 class LdapConnector:
 
-    def get_single(self, objectclass, ldap_filter, dict=True, school_oriented=True, attributes=[]):
+    def get_single(self, objectclass, ldap_filter, dict=True, school='', attributes=[]):
         """
         Handle a single result from a ldap request (with required ldap filter)
         and convert it in the given object class.
@@ -19,6 +19,10 @@ class LdapConnector:
         :type ldap_filter: basestring
         :param dict: if True, returns a dict, else an object
         :type dict: bool
+        :param school: school to search
+        :typee school: str
+        :param attributes: list of attributes to return
+        :typee attributes: list
         """
 
         result = self._get(ldap_filter)[0]
@@ -26,9 +30,8 @@ class LdapConnector:
             raw_data = result[1]
             data = {}
             school_node = ""
-            # TODO missing school info
-            if school_oriented:
-                school_node = f",OU=default-school,"
+            if school:
+                school_node = f"OU={school},"
 
             dn = raw_data.get('distinguishedName', [b''])[0].decode()
             if school_node in dn:
@@ -44,7 +47,7 @@ class LdapConnector:
                 return objectclass(**data)
         return {}
         
-    def get_collection(self, objectclass, ldap_filter, dict=True, sortkey=None, school_oriented=True, attributes=[]):
+    def get_collection(self, objectclass, ldap_filter, dict=True, sortkey=None, school='', attributes=[]):
         """
         Handle multiples results from a ldap request (with required ldap filter)
         and convert it in a list of given object class.
@@ -57,6 +60,10 @@ class LdapConnector:
         :type dict: bool
         :param sortkey: if given, sorts the list with the given attribute
         :type sortkey: basestring
+        :param school: school to search
+        :typee school: str
+        :param attributes: list of attributes to return
+        :typee attributes: list
         """
 
         results = self._get(ldap_filter)
@@ -66,14 +73,12 @@ class LdapConnector:
                 raw_data = result[1]
                 data = {}
 
-                # TODO : missing school info
                 school_node = ""
-                if school_oriented:
-                    school_node = f",OU=default-school,"
+                if school:
+                    school_node = f"OU={school},"
 
                 dn = raw_data.get('distinguishedName', [b''])[0].decode()
 
-                school_node = f",OU=default-school,"
                 if school_node in dn:
                     for field in fields(objectclass):
                         if field.init:
