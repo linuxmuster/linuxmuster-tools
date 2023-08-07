@@ -8,24 +8,11 @@ from .models import *
 
 class LdapConnector:
 
-    def get_single(self, objectclass, ldap_filter, dict=True, school='', attributes=[]):
+    def _create_result_object(self, result, objectclass, dict=True, school='', attributes=[]):
         """
-        Handle a single result from a ldap request (with required ldap filter)
-        and convert it in the given object class.
-
-        :param objectclass: dataclass like LMNUser
-        :type objectclass:
-        :param ldap_filter: A valid ldap filter
-        :type ldap_filter: basestring
-        :param dict: if True, returns a dict, else an object
-        :type dict: bool
-        :param school: school to search
-        :typee school: str
-        :param attributes: list of attributes to return
-        :typee attributes: list
+        Formatting one ldap result object into a dict or a LMN model object.
         """
 
-        result = self._get(ldap_filter)[0]
         if result[0] is not None:
             raw_data = result[1]
             data = {}
@@ -46,8 +33,29 @@ class LdapConnector:
                     return model_dict
                 return objectclass(**data)
         return {}
-        
-    def get_collection(self, objectclass, ldap_filter, dict=True, sortkey=None, school='', attributes=[]):
+
+
+    def get_single(self, objectclass, ldap_filter, **kwargs):
+        """
+        Handle a single result from a ldap request (with required ldap filter)
+        and convert it in the given object class.
+
+        :param objectclass: dataclass like LMNUser
+        :type objectclass:
+        :param ldap_filter: A valid ldap filter
+        :type ldap_filter: basestring
+        :param dict: if True, returns a dict, else an object
+        :type dict: bool
+        :param school: school to search
+        :typee school: str
+        :param attributes: list of attributes to return
+        :typee attributes: list
+        """
+
+        result = self._get(ldap_filter)[0]
+        return self._create_result_object(result, objectclass, **kwargs)
+
+    def get_collection(self, objectclass, ldap_filter, sortkey=None, **kwargs):
         """
         Handle multiples results from a ldap request (with required ldap filter)
         and convert it in a list of given object class.
@@ -69,29 +77,7 @@ class LdapConnector:
         results = self._get(ldap_filter)
         response = []
         for result in results:
-            if result[0] is not None:
-                raw_data = result[1]
-                data = {}
-
-                school_node = ""
-                if school:
-                    school_node = f"OU={school},"
-
-                dn = raw_data.get('distinguishedName', [b''])[0].decode()
-
-                if school_node in dn:
-                    for field in fields(objectclass):
-                        if field.init:
-                            value = raw_data.get(field.name, None)
-                            data[field.name] = self._filter_value(field, value)
-                    if dict:
-                        model_dict = asdict(objectclass(**data))
-                        if attributes:
-                            response.append({k:v for k,v in model_dict.items() if k in attributes})
-                        else:
-                            response.append(asdict(objectclass(**data)))
-                    else:
-                        response.append(objectclass(**data))
+            response.append(self._create_result_object(result, objectclass, **kwargs))
         if sortkey is not None:
             if dict:
                 return sorted(response, key=lambda d: d.get(sortkey, None))
