@@ -1,11 +1,11 @@
 import logging
 
 import ldap
-import yaml
 from datetime import datetime
 from dataclasses import fields, asdict
 
 from .models import *
+from ..lmnfile import LMNFile
 
 
 class LdapConnector:
@@ -161,9 +161,8 @@ class LdapConnector:
         l.set_option(ldap.OPT_REFERRALS, 0)
         l.protocol_version = ldap.VERSION3
 
-        # TODO : with LMNFile
-        with open('/etc/linuxmuster/webui/config.yml', 'r') as config:
-            params = yaml.load(config, Loader=yaml.SafeLoader)['linuxmuster']['ldap']
+        with LMNFile('/etc/linuxmuster/webui/config.yml', 'r') as config:
+            params = config.data['linuxmuster']['ldap']
 
         searchdn = f"{subdn}{params['searchdn']}"
 
