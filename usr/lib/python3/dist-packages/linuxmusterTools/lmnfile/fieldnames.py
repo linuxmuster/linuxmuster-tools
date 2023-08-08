@@ -1,4 +1,4 @@
-csv_fieldsnames = {
+csv_fieldnames = {
     'devices': [
         'room',
         'hostname',

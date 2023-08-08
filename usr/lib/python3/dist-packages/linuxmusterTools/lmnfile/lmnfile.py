@@ -13,7 +13,7 @@ import time
 import yaml
 from configobj import ConfigObj
 
-from .fieldnames import csv_fieldsnames
+from .fieldnames import csv_fieldnames
 
 
 # Allow 1 MiB for csv
@@ -91,14 +91,16 @@ class LMNFile(metaclass=abc.ABCMeta):
         self.check_allowed_path()
         self.delimiter = delimiter
 
-        # Fieldnames aliases for some common CSV files
-        for model, fields in csv_fieldsnames.items():
-            if self.file.startswith('/etc/linuxmuster/sophomorix/') \
-                and self.file.endswith(f'{model}.csv'):
-                self.fieldnames = fields
-                break
-        else:
-            self.fieldnames = fieldnames
+        if self.file.endswith('.csv'):
+            # Fieldnames aliases for some common CSV files
+            for model in sorted(csv_fieldnames):
+                # dict must be sorted, because students is a prefix of extrastudents
+                if self.file.startswith('/etc/linuxmuster/') \
+                    and self.file.endswith(f'{model}.csv'):
+                    self.fieldnames = csv_fieldnames[model]
+                    break
+            else:
+                self.fieldnames = fieldnames
 
     @classmethod
     def hasExtension(cls, ext):
