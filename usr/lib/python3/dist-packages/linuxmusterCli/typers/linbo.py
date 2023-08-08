@@ -1,5 +1,6 @@
 import os
 import typer
+from typing_extensions import Annotated
 
 from rich.console import Console
 from rich.table import Table
@@ -11,12 +12,16 @@ console = Console(emoji=False)
 app = typer.Typer()
 
 @app.command()
-def groups():
+def groups(school: Annotated[str, typer.Option("--school", "-s")] = 'default-school'):
     groups = Table()
     groups.add_column("Groups", style="green")
     groups.add_column("Devices", style="green")
+    if school != 'default-school':
+        prefix = f'{school}.'
+    else:
+        prefix = ''
 
-    with LMNFile('/etc/linuxmuster/sophomorix/default-school/devices.csv', 'r') as f:
+    with LMNFile(f'/etc/linuxmuster/sophomorix/{school}/{prefix}devices.csv', 'r') as f:
         devices = f.read()
 
     for file in os.listdir(LINBO_PATH):
