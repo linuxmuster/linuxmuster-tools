@@ -5,12 +5,13 @@ from typing_extensions import Annotated
 from rich.console import Console
 from rich.table import Table
 from linuxmusterTools.lmnfile import LMNFile
+from linuxmusterTools.linbo import LinboImageManager
 
 
 LINBO_PATH = '/srv/linbo'
-LINBO_IMAGES_PATH = '/srv/linbo/images'
 console = Console(emoji=False)
 app = typer.Typer()
+lim = LinboImageManager()
 
 @app.command()
 def groups(school: Annotated[str, typer.Option("--school", "-s")] = 'default-school'):
@@ -43,15 +44,19 @@ def groups(school: Annotated[str, typer.Option("--school", "-s")] = 'default-sch
 
 @app.command()
 def images():
-    images = Table()
+    images = Table(show_lines=True)
     images.add_column("Name", style="green")
     images.add_column("Size (MiB)", style="cyan")
-
-    for root, dirs, files in os.walk(LINBO_IMAGES_PATH):
-        if 'backups' not in root:
-            for f in files:
-                if f.endswith('.qcow2'):
-                    size = round(os.stat(os.path.join(root, f)).st_size / 1024 / 1024)
-                    images.add_row(f, str(size))
+    images.add_column("Backups", style="magenta")
+    images.add_column("Differential image", style="cyan")
+    # images.add_column("Used in groups", style="cyan")
+    
+    for name,group in lim.groups.items():
+        size = str(round(group.base.size / 1024 / 1024))
+        diff = "No"
+        if group.diff_image:
+            diff_size = round(group.diff_image.size / 1024 / 1024)
+            diff = f"Yes ({diff_size} MiB)"
+        images.add_row(name, size, '\n'.join(group.backups.keys()), diff)
 
     console.print(images)
