@@ -27,7 +27,7 @@ def get_user(username):
 
     return ldap_filter
 
-@router.collection(r'/users/search/(?P<selection>\w*)/(?P<query>\w*)', models.LMNUser)
+@router.collection(r'/users/search/(?P<selection>\w*)/(?P<query>[\w\-]*)', models.LMNUser)
 def get_results_search_user(query, selection=[]):
     """
     Get all details from a search on a specific user login scheme and a
