@@ -31,13 +31,17 @@ def get_device(name):
     return ldap_filter
 
 @router.collection(r'/devices/search/(?P<selection>\w*)/(?P<query>[\w\-]*)', models.LMNDevice)
-def get_results_search_device(query):
+def get_results_search_device(query, selection=[]):
     """
-    Get all details from a search on a specific device scheme
+    Get all details from a search on a specific device scheme and having a specific role
+    (something like 'printer', 'server', ...).
     Return a list of LMNDevice data object.
     """
+
+    # TODO: role filtering through selection variable must be ameliorated
 
     return f"""(&
                                 (cn=*{query}*)
                                 (objectClass=computer)
+                                (sophomorixRole={selection})
                             )"""
