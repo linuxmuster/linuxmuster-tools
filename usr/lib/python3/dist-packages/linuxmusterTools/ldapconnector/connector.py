@@ -36,7 +36,6 @@ class LdapConnector:
                 return objectclass(**data)
         return {}
 
-
     def get_single(self, objectclass, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn='', **kwargs):
         """
         Handle a single result from a ldap request (with required ldap filter)
@@ -82,7 +81,11 @@ class LdapConnector:
         results = self._get(ldap_filter, scope=scope, subdn=subdn)
         response = []
         for result in results:
-            response.append(self._create_result_object(result, objectclass, **kwargs))
+            formatted_obj = self._create_result_object(result, objectclass, **kwargs)
+            
+            if formatted_obj:
+                # Avoid empty dicts
+                response.append(self._create_result_object(result, objectclass, **kwargs))
         if sortkey is not None:
             if dict:
                 return sorted(response, key=lambda d: d.get(sortkey, None))
