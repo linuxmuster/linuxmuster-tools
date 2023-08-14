@@ -9,7 +9,7 @@ LdapConnector is a simple way to get data from the ldap tree in the linuxmsuter.
 Just import the LdapReader obejct to start send requests.
 By default, a request will ship all attributes specified in the models, but you can filter it with the parameter list `attributes`:
 
-```
+```Console
 >>> from linuxmusterTools.ldapconnector import LMNLdapReader as lr
 >>> # Getting all schoolclasses
 >>> lr.get('/schoolclasses', attributes=['cn'])
@@ -23,7 +23,7 @@ By default, a request will ship all attributes specified in the models, but you 
 
 When getting many objects, you can use the parameter `sortkey`:
 
-```
+```Console
 >>> lr.get('/schoolclasses', attributes=['cn'], sortkey='cn')
 [{'cn': '5a'}, {'cn': '8b'}, {'cn': '8d'}, {'cn': '10atest'}, {'cn': '10b migrated'}, {'cn': '12b'}, ...]
 ```
@@ -32,7 +32,7 @@ When getting many objects, you can use the parameter `sortkey`:
 
 If a response contains many items, you get a list of dict, but with the boolean parameter `dict`, you can switch to a dataclass object:
 
-```
+```Console
 >>> lr.get('/schools', dict=False)
 [LMNSchool(ou='default-school', distinguishedName='OU=default-school,OU=SCHOOLS,DC=linuxmuster,DC=lan')]
 ```
