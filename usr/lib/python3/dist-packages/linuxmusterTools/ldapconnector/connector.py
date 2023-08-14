@@ -170,11 +170,18 @@ class LdapConnector:
         searchdn = f"{subdn}{params['searchdn']}"
 
         l.bind(params['binddn'], params['bindpw'])
-        res = l.search_s(searchdn,scope, ldap_filter, attrlist=['*'])
+        response = l.search_s(searchdn,scope, ldap_filter, attrlist=['*'])
+
+        # Filter non-interesting values
+        results = []
+        for result in response:
+            if result[0] is not None:
+                results.append(result)
+        
         l.unbind()
 
         # Removing sensitive data
         params = {}
 
-        return res
+        return results
 
