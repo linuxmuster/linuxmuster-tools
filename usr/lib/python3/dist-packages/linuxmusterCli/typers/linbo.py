@@ -45,7 +45,7 @@ def groups(school: Annotated[str, typer.Option("--school", "-s")] = 'default-sch
 def images():
     images = Table()
     images.add_column("Name", style="green")
-    images.add_column("Size", style="cyan")
+    images.add_column("Size (MiB)", style="cyan")
 
     for root, dirs, files in os.walk(LINBO_IMAGES_PATH):
         if 'backups' not in root:
