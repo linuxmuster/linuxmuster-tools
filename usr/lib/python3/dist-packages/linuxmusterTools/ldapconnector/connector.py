@@ -54,13 +54,14 @@ class LdapConnector:
         """
 
         results = self._get(ldap_filter, scope=scope, subdn=subdn)
+        
         if len(results) > 1:
             # Only taking the first entry so warn the user
             logging.warning("Multiple entries found in LDAP, but only giving the first one as expected.")
         elif len(results) == 0:
             return {}
-        else:
-            return self._create_result_object(results[0], objectclass, **kwargs)
+        
+        return self._create_result_object(results[0], objectclass, **kwargs)
 
     def get_collection(self, objectclass, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn='', sortkey=None, **kwargs):
         """
