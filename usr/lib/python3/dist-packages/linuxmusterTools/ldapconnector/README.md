@@ -43,6 +43,9 @@ The object models are all defined in the models subdirectory.
 
 At this point, the following requests are available:
 
+  * `/devices` : get all devices
+  * `/devices/NAME` : get all informations about the device `NAME` ( as `cn` )
+  * `/devices/search/SELECTION/QUERY` : get all devices matching the `SELECTION` and `QUERY` criterias. `SELECTION` is role-based and can be set to `all` or a specific role like `printer`. `QUERY` is string which should be contained in the `cn`.
   * `/projects` : get all projects
   * `/projects/PROJECT` : get all informations about a single project named `PROJECT`
   * `/roles/ROLE` : get all users in a specific `ROLE` ( `ROLE` can be e.g. `teacher`, `globaladministrator`, ... ) 
