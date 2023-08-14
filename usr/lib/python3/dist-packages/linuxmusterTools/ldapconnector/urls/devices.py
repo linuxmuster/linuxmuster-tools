@@ -39,6 +39,8 @@ def get_results_search_device(query, selection=[]):
     """
 
     # TODO: role filtering through selection variable must be ameliorated
+    if selection == 'all':
+        selection = '*'
 
     return f"""(&
                                 (cn=*{query}*)
