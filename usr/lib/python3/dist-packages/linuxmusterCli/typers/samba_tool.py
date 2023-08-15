@@ -2,8 +2,10 @@ import typer
 
 from rich.console import Console
 from rich.table import Table
-from linuxmusterTools.sambaTool import GPOS
+from linuxmusterTools.sambaTool import GPOManager
 
+gpomgr = GPOManager()
+GPOS = gpomgr.gpos
 
 console = Console(emoji=False)
 app = typer.Typer()
@@ -16,5 +18,5 @@ def gpos():
     gpos.add_column("Path", style="magenta")
 
     for name, details in GPOS.items():
-        gpos.add_row(name, details['gpo'], details['path'])
+        gpos.add_row(name, details.gpo, details.path)
     console.print(gpos)
