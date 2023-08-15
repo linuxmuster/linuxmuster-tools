@@ -22,7 +22,7 @@ class GPO:
     path: str
     unix_path: str
 
-class LMNGPOS:
+class GPOManager:
     """
     Sample object to manage all GPOs informations.
     """
