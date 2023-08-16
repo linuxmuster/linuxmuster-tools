@@ -43,5 +43,5 @@ class GPOManager:
             gpo_id = gpo['name'][0].decode()
             name = gpo['displayName'][0].decode()
             path = gpo['gPCFileSysPath'][0].decode()
-            unix_path = f"/var/lib/samba/sysvol/unpeud.info/Policies/{{{gpo_id[1:-1]}}}"
+            unix_path = "/var/lib/samba/" + '/'.join(path.split('\\')[3:])
             self.gpos[name] = GPO(str(gpo.dn), gpo_id, name, path, unix_path)
