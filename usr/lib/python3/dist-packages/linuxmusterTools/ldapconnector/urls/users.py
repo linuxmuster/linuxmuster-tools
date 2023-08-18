@@ -42,8 +42,8 @@ def get_user(username):
 
     return ldap_filter
 
-@router.collection(r'/users/search/(?P<selection>\w*)/(?P<query>[\w\-]*)', models.LMNUser)
-def get_results_search_user(query, selection=[]):
+@router.collection(r'/users/search/(?P<selection>\w*)/(?P<query>[\w\+]*)', models.LMNUser)
+def get_results_search_user(query='', selection=[]):
     """
     Get all details from a search on a specific user login scheme and a
     selection of roles.
@@ -66,8 +66,11 @@ def get_results_search_user(query, selection=[]):
     for role in ['globaladministrator', 'schooladministrator', 'teacher', 'student']:
         role_filter[role] = f'(sophomorixRole={role})'
 
+    if query:
+        query = f"(sAMAccountName=*{query}*)"
+
     return f"""(&
-                                (sAMAccountName=*{query}*)
+                                {query}
                                 (objectClass=user)
                                 (|
                                     {role_filter[selection]}
