@@ -30,11 +30,12 @@ def ls(school: Annotated[str, typer.Option("--school", "-s")] = 'default-school'
     devices.add_column("Mac", style="magenta")
     devices.add_column("LDAP", style="magenta")
     for device in devices_data:
-        for ldap_device in ldap_data:
-            if device['hostname'] == ldap_device['cn'].lower() and device['mac'].lower() == ldap_device['sophomorixComputerMAC'].lower():
-                devices.add_row(device['room'], device['hostname'], device['ip'], device['mac'], "Registered")
-                break
-        else:
-            devices.add_row(device['room'], device['hostname'], device['ip'], device['mac'], "Not registered")
+        if device['room'][0] != "#":
+            for ldap_device in ldap_data:
+                if device['hostname'].lower() == ldap_device['cn'].lower() and device['mac'].lower() == ldap_device['sophomorixComputerMAC'].lower():
+                    devices.add_row(device['room'], device['hostname'], device['ip'], device['mac'], "Registered")
+                    break
+            else:
+                devices.add_row(device['room'], device['hostname'], device['ip'], device['mac'], "Not registered")
     console.print(devices)
 
