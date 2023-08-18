@@ -4,7 +4,22 @@ from linuxmusterTools.ldapconnector.urls.ldaprouter import router
 
 @router.collection(r'/users', models.LMNUser)
 def get_all_users():
-    pass
+    """
+    Get all details from all users.
+    Return a list of LMNUser data object.
+    """
+
+    ldap_filter = f"""(&
+                                (objectClass=user)
+                                (|
+                                    (sophomorixRole=globaladministrator)
+                                    (sophomorixRole=schooladministrator)
+                                    (sophomorixRole=teacher)
+                                    (sophomorixRole=student)
+                                )
+                            )"""
+
+    return ldap_filter
 
 
 @router.single(r'/users/(?P<username>[\w\-]*)', models.LMNUser)
