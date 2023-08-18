@@ -5,7 +5,7 @@ import subprocess
 
 from rich.console import Console
 from rich.table import Table
-from typers import samba_tool, linbo, devices
+from typers import samba_tool, linbo, devices, users
 
 
 console = Console()
@@ -13,6 +13,7 @@ app = typer.Typer()
 app.add_typer(samba_tool.app, name='samba')
 app.add_typer(linbo.app, name='linbo')
 app.add_typer(devices.app, name='devices')
+app.add_typer(users.app, name='users')
 
 @app.command()
 def version():
