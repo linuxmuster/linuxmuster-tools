@@ -1,4 +1,20 @@
-# Linuxmuster tools  
+<h1 align="center">
+    Linuxmuster-tools7
+</h1>
+
+<p align="center">
+    <a href="https://raw.githubusercontent.com/ajenti/ajenti/master/LICENSE">
+        <img src="https://img.shields.io/badge/Python-v3-green" alt="Badge License" />
+    </a>
+    <a href="https://raw.githubusercontent.com/ajenti/ajenti/master/LICENSE"> 
+        <img src="https://img.shields.io/github/license/linuxmuster/linuxmuster-tools?label=License" alt="Badge License" />
+    </a>
+    <a href="https://ask.linuxmuster.net">
+        <img src="https://img.shields.io/discourse/users?logo=discourse&logoColor=white&server=https%3A%2F%2Fask.linuxmuster.net" alt="Community Forum"/>
+    </a>
+</p>
+
+## Features
 
 This module groups some useful modules used in the linuxmuster.net's Webui:
 
@@ -6,6 +22,39 @@ This module groups some useful modules used in the linuxmuster.net's Webui:
   * `sambaTool` : get informations from the samba backend, actually only the GPOs
   * `lmnfile` : parse the common configurations file used on linuxmuster.net's server a provide an unique interface to handle yaml, csv and conf files.
   * `linbo` : manager for all linbo images, backups, differential images and files.
+
+## Maintenance Details
+
+Linuxmuster.net official | ✅  YES
+:---: | :---: 
+[Community support](https://ask.linuxmuster.net) | ✅  YES*
+Actively developed | ✅  YES
+Maintainer organisation |  Linuxmuster.net
+Primary maintainer | arnaud@linuxmuster.net
+    
+\* The linuxmuster community consits of people who are nice and happy to help. They are not directly involved in the development though, and might not be able to help in all cases.
+
+## Installation
+
+### 1. Import key:
+
+```bash
+wget -qO- "https://deb.linuxmuster.net/pub.gpg" | gpg --dearmour -o /usr/share/keyrings/linuxmuster.net.gpg
+```
+
+### 2. Add repo:
+
+##### Linuxmuster 7.2 ( testing )
+
+```bash
+sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/linuxmuster.net.gpg] https://deb.linuxmuster.net/ lmn72 main" > /etc/apt/sources.list.d/lmn72.list'
+```
+
+### 3. Apt update
+
+```bash
+sudo apt update && sudo apt install linuxmuster-tools7
+```
 
 ## LDAPConnector
 
