@@ -7,8 +7,19 @@ from dataclasses import fields, asdict
 from .models import *
 from ..lmnfile import LMNFile
 
+try:
+    from aj.plugins.lmn_common.api import ldap_config as params
+    webui_import = True
+except ImportError as e:
+    webui_import = False
 
 class LdapConnector:
+
+    def __init__(self):
+        if webui_import:
+            self.params = params
+        else:
+            self.params = {}
 
     def _create_result_object(self, result, objectclass, dict=True, school='', attributes=[]):
         """
@@ -168,12 +179,13 @@ class LdapConnector:
         l.set_option(ldap.OPT_REFERRALS, 0)
         l.protocol_version = ldap.VERSION3
 
-        with LMNFile('/etc/linuxmuster/webui/config.yml', 'r') as config:
-            params = config.data['linuxmuster']['ldap']
+        if not webui_import:
+            with LMNFile('/etc/linuxmuster/webui/config.yml', 'r') as config:
+                self.params = config.data['linuxmuster']['ldap']
 
-        searchdn = f"{subdn}{params['searchdn']}"
+        searchdn = f"{subdn}{self.params['searchdn']}"
 
-        l.bind(params['binddn'], params['bindpw'])
+        l.bind(self.params['binddn'], self.params['bindpw'])
         response = l.search_s(searchdn,scope, ldap_filter, attrlist=['*'])
 
         # Filter non-interesting values
@@ -185,7 +197,8 @@ class LdapConnector:
         l.unbind()
 
         # Removing sensitive data
-        params = {}
+        if not webui_import:
+            self.params = {}
 
         return results
 
