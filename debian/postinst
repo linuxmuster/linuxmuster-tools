@@ -18,7 +18,7 @@ msg()
 case "$1" in
     install|configure)
         msg "Install Python requirements"
-        /usr/bin/python3 -m pip install -r /usr/lib/python3/dist-packages/linuxmusterApi7/requirements.txt
+        /usr/bin/python3 -m pip install -r /usr/lib/python3/dist-packages/linuxmusterTools/requirements.txt
         
     ;;
 
