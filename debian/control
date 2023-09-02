@@ -1,11 +1,11 @@
-Source: linuxmuster-cli7
+Source: linuxmuster-tools7
 Section: linuxmuster
 Priority: optional
 Maintainer: Arnaud Kientz <arnaud@linuxmuster.net>
 Build-Depends: debhelper (>= 5.0.0)
 Standards-Version: 5.0.0
 
-Package: linuxmuster-cli7
+Package: linuxmuster-tools7
 Architecture: all
 Depends: python3
-Description: Tools and CLI for the linuxmuster.net 7 server.
+Description: Tools for the linuxmuster.net 7 server.

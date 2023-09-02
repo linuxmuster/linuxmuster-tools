@@ -1,5 +1,5 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: linuxmuster-cli7
+Upstream-Name: linuxmuster-tools7
 Source: https://github.com/linuxmuster/linuxmuster-cli
 
 Files: *
