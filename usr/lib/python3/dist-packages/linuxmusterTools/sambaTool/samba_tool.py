@@ -1,17 +1,21 @@
 import os
 import logging
 from dataclasses import dataclass
-from samba.auth import system_session
-from samba.credentials import Credentials
-from samba.param import LoadParm
-from samba.samdb import SamDB
-from samba.netcmd.gpo import get_gpo_info
 import xml.etree.ElementTree as ElementTree
 
+try:
+    from samba.auth import system_session
+    from samba.credentials import Credentials
+    from samba.param import LoadParm
+    from samba.samdb import SamDB
+    from samba.netcmd.gpo import get_gpo_info
 
-lp = LoadParm()
-creds = Credentials()
-creds.guess(lp)
+    lp = LoadParm()
+    creds = Credentials()
+    creds.guess(lp)
+except ImportError:
+    logging.error("Samba doesn't seem to be installed, this module can not be used.")
+
 gpos_infos = {}
 
 SAMDB_PATH = '/var/lib/samba/private/sam.ldb'
