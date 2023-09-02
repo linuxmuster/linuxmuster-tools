@@ -1,4 +1,4 @@
-linuxmuster-tools7 (0.1) lmn72; urgency=medium
+linuxmuster-tools7 (7.2.1) lmn72; urgency=medium
 
   * Integration von ldapreader, samba-tools, lmnfile and linbo manager.   
 
