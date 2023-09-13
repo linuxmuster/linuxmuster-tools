@@ -28,6 +28,10 @@ class LMNSchoolClass:
     sophomorixStatus: str
     sophomorixType: str
     membersCount: int = field(init=False)
+    dn: str = field(init=False)
+
+    def __post_init__(self):
+        self.dn = self.distinguishedName
 
     def __post_init__(self):
         self.membersCount = len(self.sophomorixMembers)
