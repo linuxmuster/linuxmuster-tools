@@ -1,7 +1,5 @@
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import List
-import ldap
 import re
 from .lmnsession import LMNSession
 
@@ -49,7 +47,7 @@ class LMNUser:
     sophomorixRole: str
     sophomorixSchoolname: str
     sophomorixSchoolPrefix: str
-    sophomorixSessions: List[LMNSession]
+    sophomorixSessions: list
     sophomorixStatus: str
     sophomorixSurnameASCII: str
     sophomorixSurnameInitial: str
@@ -68,6 +66,7 @@ class LMNUser:
     schoolclasses: list = field(init=False)
     dn: str = field(init=False)
     permissions: list = field(init=False)
+    lmnsessions: list = field(init=False)
 
     def split_dn(self, dn):
         # 'CN=11c,OU=11c,OU=Students,OU=default-school,OU=SCHOOLS...' becomes :
@@ -123,10 +122,19 @@ class LMNUser:
             module, value = perm.split(': ')
             self.permissions[module] = value == 'true'
 
+    def parse_sessions(self):
+        self.lmnsessions = []
+        for v in self.sophomorixSessions:
+            data = v.split(';')
+            members = data[2].split(',') if data[2] else []
+            membersCount = len(members)
+            self.lmnsessions.append(LMNSession(data[0], data[1], members, membersCount))
+
     def __post_init__(self):
         self.schoolclasses = self.extract_schoolclasses(self.memberOf)
         self.projects = self.extract_projects(self.memberOf)
         self.dn = self.distinguishedName
         self.extract_management()
         self.parse_permissions()
+        self.parse_sessions()
 

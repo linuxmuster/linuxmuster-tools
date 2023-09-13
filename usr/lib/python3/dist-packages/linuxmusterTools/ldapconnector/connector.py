@@ -4,7 +4,6 @@ import ldap
 from datetime import datetime
 from dataclasses import fields, asdict
 
-from .models import *
 from ..lmnfile import LMNFile
 
 try:
@@ -144,19 +143,6 @@ class LdapConnector:
             if value is None:
                 return 0
             return int(value[0].decode())
-
-        if field.type.__name__ == 'List':
-            if value is None:
-                return []
-            # Creepy test
-            if 'LMNSession' in str(field.type.__args__[0]):
-                result = []
-                for v in value:
-                    data = v.decode().split(';')
-                    members = data[2].split(',') if data[2] else []
-                    membersCount = len(members)
-                    result.append(LMNSession(data[0], data[1], members, membersCount))
-                return result
 
         if value is None:
             return None
