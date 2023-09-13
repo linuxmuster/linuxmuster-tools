@@ -30,8 +30,10 @@ class LMNProject:
     sophomorixSchoolname: str
     sophomorixStatus: str
     sophomorixType: str
-    #membersCount: int = field(init=False)
-    #adminsCount: int = field(init=False)
+    dn: str = field(init=False)
+
+    def __post_init__(self):
+        self.dn = self.distinguishedName
 
     def get_all_members(self):
         """
