@@ -32,6 +32,4 @@ class LMNSchoolClass:
 
     def __post_init__(self):
         self.dn = self.distinguishedName
-
-    def __post_init__(self):
         self.membersCount = len(self.sophomorixMembers)
