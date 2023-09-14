@@ -1,3 +1,10 @@
+linuxmuster-tools7 (7.2.2) lmn72; urgency=medium
+
+  * [ldapreader] Add aliases for dn
+  * [ldapreader] Get all members and admins of a project 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Thu, 14 Sep 2023 13:49:19 +0200
+
 linuxmuster-tools7 (7.2.1) lmn72; urgency=medium
 
   * Integration von ldapreader, samba-tools, lmnfile and linbo manager.   
