@@ -86,7 +86,7 @@ class LMNUser:
         if n:
             return int(n[0])
         else:
-            return 10000000 # just a big number to come after aall schoolclasses
+            return 10000000 # just a big number to come after all schoolclasses
 
     def extract_schoolclasses(self, membership):
         schoolclasses = []
