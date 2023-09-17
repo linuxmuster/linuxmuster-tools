@@ -1,6 +1,6 @@
 import logging
-
 import ldap
+import re
 from datetime import datetime
 from dataclasses import fields, asdict
 
@@ -92,6 +92,16 @@ class LdapConnector:
         :typee attributes: list
         """
 
+        def _check_schoolclass_number(s):
+            if not isinstance(s, str):
+                return s
+
+            n = re.findall(r'\d+', s)
+            if n:
+                return int(n[0])
+            else:
+                return 10000000  # just a big number to come after all schoolclasses
+
         results = self._get(ldap_filter, scope=scope, subdn=subdn)
         response = []
         for result in results:
@@ -102,9 +112,9 @@ class LdapConnector:
                 response.append(self._create_result_object(result, objectclass, **kwargs))
         if sortkey is not None:
             if dict:
-                return sorted(response, key=lambda d: d.get(sortkey, None))
+                return sorted(response, key=lambda d: _check_schoolclass_number(d.get(sortkey, None)))
             else:
-                return sorted(response, key=lambda d: getattr(d, sortkey))
+                return sorted(response, key=lambda d: _check_schoolclass_number(getattr(d, sortkey)))
         return response
 
     @staticmethod
