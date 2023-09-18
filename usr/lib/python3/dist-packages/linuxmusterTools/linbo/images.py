@@ -441,8 +441,11 @@ class LinboImageManager:
                     timestamp
                 )
 
-                if not os.path.isdir(new_backup_dir):
-                    os.mkdir(new_backup_dir)
+                if os.path.isdir(new_backup_dir):
+                    print(f"Backup directory {new_backup_dir} already exists")
+                    return
+                
+                os.mkdir(new_backup_dir)
 
                 # Move base image to backup/timestamp
                 for file in os.listdir(imageGroup.base.path):
