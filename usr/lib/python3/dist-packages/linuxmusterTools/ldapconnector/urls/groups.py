@@ -1,8 +1,8 @@
 import linuxmusterTools.ldapconnector.models as models
-from linuxmusterTools.ldapconnector.urls.ldaprouter import router
+from linuxmusterTools.ldapconnector.urls.ldaprouter import router, SCHOOL_MARKER
 
 # TODO: specify school in multischool environment
-@router.collection_s(r'/groups', models.LMNGroup, subdn='OU=default-school,OU=SCHOOLS,')
+@router.collection_s(r'/groups', models.LMNGroup, subdn=f'OU={SCHOOL_MARKER},OU=SCHOOLS,')
 def get_all_groups():
     """
     Get all groups.
@@ -13,7 +13,7 @@ def get_all_groups():
 
     return ldap_filter
 
-@router.single_s(r'/groups/(?P<name>[\w\-_]*)', models.LMNGroup, subdn='OU=default-school,OU=SCHOOLS,')
+@router.single_s(r'/groups/(?P<name>[\w\-_]*)', models.LMNGroup, subdn=f'OU={SCHOOL_MARKER},OU=SCHOOLS,')
 def get_group(name=''):
     """
     Get a group specified by its name.
@@ -27,7 +27,7 @@ def get_group(name=''):
 
     return ldap_filter
 
-@router.collection_s(r'/printers', models.LMNGroup, subdn='OU=default-school,OU=SCHOOLS,')
+@router.collection_s(r'/printers', models.LMNGroup, subdn=f'OU={SCHOOL_MARKER},OU=SCHOOLS,')
 def get_all_printers():
     """
     Get all printer groups.
@@ -41,7 +41,7 @@ def get_all_printers():
 
     return ldap_filter
 
-@router.single_s(r'/printers/(?P<name>[\w\-_]*)', models.LMNGroup, subdn='OU=default-school,OU=SCHOOLS,')
+@router.single_s(r'/printers/(?P<name>[\w\-_]*)', models.LMNGroup, subdn=f'OU={SCHOOL_MARKER},OU=SCHOOLS,')
 def get_printer(name=''):
     """
     Get a specific printer.

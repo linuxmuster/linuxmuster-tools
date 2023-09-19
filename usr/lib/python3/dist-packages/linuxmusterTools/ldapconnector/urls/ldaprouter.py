@@ -5,6 +5,9 @@ import logging
 from linuxmusterTools.ldapconnector.connector import LdapConnector
 
 
+# This marker will be replaced by the selected school, or default-school
+SCHOOL_MARKER = "##SCHOOL_MARKER##"
+
 class LMNLdapRouter:
     def __init__(self):
         self.lc = LdapConnector()
@@ -21,11 +24,19 @@ class LMNLdapRouter:
                 data = match.groupdict()
                 ldap_filter = func(**data)
 
+                # Replace selected school in the subdn where we are searching
+                if 'school' in kwargs:
+                    school = kwargs['school']
+                else:
+                    school = 'default-school'
+
+                subdn = func.subdn.replace(SCHOOL_MARKER, school)
+
                 if func.type == 'single':
-                    return self.lc.get_single(func.model, ldap_filter, scope=func.scope, subdn=func.subdn, **kwargs)
+                    return self.lc.get_single(func.model, ldap_filter, scope=func.scope, subdn=subdn, **kwargs)
 
                 if func.type == 'collection':
-                    return self.lc.get_collection(func.model, ldap_filter, scope=func.scope, subdn=func.subdn, **kwargs)
+                    return self.lc.get_collection(func.model, ldap_filter, scope=func.scope, subdn=subdn, **kwargs)
         raise Exception('Request unknown')
 
     def add_url(self, url, method):
