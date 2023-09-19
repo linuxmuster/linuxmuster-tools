@@ -1,7 +1,6 @@
 import linuxmusterTools.ldapconnector.models as models
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router, SCHOOL_MARKER
 
-# TODO: specify school in multischool environment
 @router.collection_s(r'/groups', models.LMNGroup, subdn=f'OU={SCHOOL_MARKER},OU=SCHOOLS,')
 def get_all_groups():
     """
