@@ -31,9 +31,17 @@ class LMNProject:
     sophomorixStatus: str
     sophomorixType: str
     dn: str = field(init=False)
+    all_members: list = field(init=False)
+    all_admins: list = field(init=False)
+    membersCount: int = field(init=False)
+    adminsCount: int = field(init=False)
 
     def __post_init__(self):
         self.dn = self.distinguishedName
+        self.all_admins = []
+        self.all_members = []
+        self.membersCount = -1
+        self.adminsCount = -1
 
     def asdict(self):
         return asdict(self)
@@ -78,8 +86,8 @@ class LMNProject:
 
             to_scan = to_scan[1:]
 
-        self.membersCount = len(set(members))
-        self.all_members = members
+        self.membersCount = len(members)
+        self.all_members = list(members)
 
         to_scan = self.sophomorixAdminGroups
         already_scanned = []
@@ -106,5 +114,5 @@ class LMNProject:
 
             to_scan = to_scan[1:]
 
-        self.adminsCount = len(set(admins))
-        self.all_admins = admins
+        self.adminsCount = len(admins)
+        self.all_admins = list(admins)
