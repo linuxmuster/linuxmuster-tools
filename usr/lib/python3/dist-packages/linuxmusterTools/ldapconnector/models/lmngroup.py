@@ -6,12 +6,14 @@ class LMNGroup:
     cn: str
     displayName: str
     distinguishedName: str
+    member: list
     memberOf: list
     name: str
     sAMAccountName: str
     sAMAccountType: str
     sophomorixAdminClass: str
     sophomorixCreationDate: str
+    sophomorixMembers: list
     sophomorixRole: str
     sophomorixSchoolname: str
     sophomorixSchoolPrefix: str
