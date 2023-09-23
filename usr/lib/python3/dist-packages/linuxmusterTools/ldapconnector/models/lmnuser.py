@@ -64,6 +64,7 @@ class LMNUser:
     wifi: bool = field(init=False)
     projects: list = field(init=False)
     schoolclasses: list = field(init=False)
+    printers: list = field(init=False)
     dn: str = field(init=False)
     permissions: list = field(init=False)
     lmnsessions: list = field(init=False)
@@ -108,6 +109,16 @@ class LMNUser:
         projects.sort()
         return projects
 
+    def extract_printers(self, membership):
+        printers = []
+        for dn in membership:
+            if 'OU=printer-groups' in dn:
+                printer = self.common_name(dn)
+                if printer:
+                    printers.append(printer)
+        printers.sort()
+        return printers
+
     def extract_management(self):
         for group in ['internet', 'intranet', 'printing', 'webfilter', 'wifi']:
             setattr(self, group, False)
@@ -133,6 +144,7 @@ class LMNUser:
     def __post_init__(self):
         self.schoolclasses = self.extract_schoolclasses(self.memberOf)
         self.projects = self.extract_projects(self.memberOf)
+        self.printers = self.extract_printers(self.memberOf)
         self.dn = self.distinguishedName
         self.extract_management()
         self.parse_permissions()
