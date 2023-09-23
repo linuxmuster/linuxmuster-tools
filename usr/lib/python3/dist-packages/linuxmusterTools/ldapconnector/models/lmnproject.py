@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
 from datetime import datetime
 from ..urls import router as lr
 
@@ -34,6 +34,9 @@ class LMNProject:
 
     def __post_init__(self):
         self.dn = self.distinguishedName
+
+    def asdict(self):
+        return asdict(self)
 
     def get_all_members(self):
         """
