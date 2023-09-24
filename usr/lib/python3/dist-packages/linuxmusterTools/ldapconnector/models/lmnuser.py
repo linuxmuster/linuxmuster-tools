@@ -57,17 +57,18 @@ class LMNUser:
     sophomorixWebuiDashboard: list
     sophomorixWebuiPermissionsCalculated: list
     unixHomeDirectory: str
-    internet: bool = field(init=False)
-    intranet: bool = field(init=False)
-    printing: bool = field(init=False)
-    webfilter: bool = field(init=False)
-    wifi: bool = field(init=False)
-    projects: list = field(init=False)
-    schoolclasses: list = field(init=False)
-    printers: list = field(init=False)
-    dn: str = field(init=False)
-    permissions: list = field(init=False)
-    lmnsessions: list = field(init=False)
+    dn:             str = field(init=False)
+    internet:       bool = field(init=False)
+    intranet:       bool = field(init=False)
+    isAdmin:        bool = field(init=False)
+    lmnsessions:    list = field(init=False)
+    permissions:    list = field(init=False)
+    printers:       list = field(init=False)
+    printing:       bool = field(init=False)
+    projects:       list = field(init=False)
+    schoolclasses:  list = field(init=False)
+    webfilter:      bool = field(init=False)
+    wifi:           bool = field(init=False)
 
     def split_dn(self, dn):
         # 'CN=11c,OU=11c,OU=Students,OU=default-school,OU=SCHOOLS...' becomes :
@@ -149,4 +150,5 @@ class LMNUser:
         self.extract_management()
         self.parse_permissions()
         self.parse_sessions()
+        self.isAdmin = "administrator" in self.sophomorixRole
 
