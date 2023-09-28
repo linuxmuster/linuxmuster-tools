@@ -35,6 +35,24 @@ class Drive:
         if self.properties['path'] is not None:
             self.id = self.properties['path'].split('\\')[-1]
 
+    def visible(self, role):
+        if self.disabled:
+            # Disabled for all
+            return False
+
+        if not self.filters:
+            # No filter, available for all
+            return True
+
+        for filter_role, rules in self.filters.items():
+            if filter_role == role:
+                print(filter_role, rules)
+                if rules['bool'] == 'AND' and not rules['negation']:
+                    return True
+
+        # Default policy
+        return False
+
 class Drives:
     """
     Object to store data from Drives.xml
@@ -100,7 +118,7 @@ class Drives:
                 name = filtergroup.get('name', '').split('\\')[1]
                 values = {
                     'bool': filtergroup.get("bool", ""),
-                    'negation': filtergroup.get("not", 0)
+                    'negation': filtergroup.get("not", '0') != '0'
                 }
                 # If the same role appears more than one time, the last
                 # filtergroup node will overwrite the precedent one
