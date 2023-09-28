@@ -52,7 +52,7 @@ class Drive:
         # Default policy
         return False
 
-class Drives:
+class DriveManager:
     """
     Object to store data from Drives.xml
     """
@@ -152,7 +152,7 @@ class Drives:
 @dataclass
 class GPO:
     dn: str
-    drives: Drives
+    drivemgr: DriveManager
     gpo: str
     name: str
     path: str
@@ -180,5 +180,5 @@ class GPOManager:
             name = gpo['displayName'][0].decode()
             path = gpo['gPCFileSysPath'][0].decode()
             unix_path = "/var/lib/samba/" + '/'.join(path.split('\\')[3:])
-            drives = Drives(unix_path)
-            self.gpos[name] = GPO(str(gpo.dn), drives, gpo_id, name, path, unix_path)
+            drivemgr = DriveManager(unix_path)
+            self.gpos[name] = GPO(str(gpo.dn), drivemgr, gpo_id, name, path, unix_path)
