@@ -46,7 +46,6 @@ class Drive:
 
         for filter_role, rules in self.filters.items():
             if filter_role == role:
-                print(filter_role, rules)
                 if rules['bool'] == 'AND' and not rules['negation']:
                     return True
 
