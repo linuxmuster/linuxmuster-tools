@@ -1,6 +1,6 @@
 import os
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
 import xml.etree.ElementTree as ElementTree
 
 try:
@@ -128,6 +128,9 @@ class Drives:
 
         self.tree.write(self.path, encoding='utf-8', xml_declaration=True)
         self.load()
+
+    def aslist(self):
+        return [asdict(d) for d in self.drives]
 
 @dataclass
 class GPO:
