@@ -51,6 +51,7 @@ class Drives:
 
         for drive in self.tree.findall('Drive'):
             drive_attr = {'properties': self._parseProperties(drive)}
+            drive_attr['filters'] = self._parseFilters(drive)
             drive_attr['disabled'] = bool(int(drive.attrib.get('disabled', '0')))
 
             self.usedLetters.append(drive_attr['properties']['letter'])
@@ -63,6 +64,7 @@ class Drives:
                     'letter': drive_attr['properties']['letter'],
                     'disabled': drive_attr['disabled'],
                     'label': drive_attr['properties']['label'],
+                    'filters': drive_attr['filters'],
                 }
 
     @staticmethod
@@ -75,6 +77,22 @@ class Drives:
             properties['label'] = prop.get('label', 'Unknown')
             properties['path'] = prop.get('path', None)
        return properties
+
+    @staticmethod
+    def _parseFilters(drive):
+        filters = {}
+        # It should be max one node Filters
+        for filter in drive.findall('Filters'):
+            for filtergroup in filter.findall('FilterGroup'):
+                name = filtergroup.get('name', '').split('\\')[1]
+                values = {
+                    'bool': filtergroup.get("bool", ""),
+                    'negation': filtergroup.get("not", 0)
+                }
+                # If the same role appears more than one time, the last
+                # filtergroup node will overwrite the precedent one
+                filters[name] = values
+        return filters
 
     def save(self, content):
         """
