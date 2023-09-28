@@ -1,6 +1,6 @@
 import os
 import logging
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import xml.etree.ElementTree as ElementTree
 
 try:
@@ -19,6 +19,21 @@ except ImportError:
 gpos_infos = {}
 
 SAMDB_PATH = '/var/lib/samba/private/sam.ldb'
+
+@dataclass
+class Drive:
+    disabled: bool
+    filters: dict
+    label: str
+    letter: str
+    properties: dict
+    userLetter: str
+    id: str = field(init=False)
+
+    def __post_init__(self):
+        self.id = None
+        if self.properties['path'] is not None:
+            self.id = self.properties['path'].split('\\')[-1]
 
 class Drives:
     """
@@ -42,7 +57,6 @@ class Drives:
         """
 
         self.drives = []
-        self.drives_dict = {}
 
         try:
             self.tree = ElementTree.parse(self.path)
@@ -50,22 +64,21 @@ class Drives:
             return
 
         for drive in self.tree.findall('Drive'):
-            drive_attr = {'properties': self._parseProperties(drive)}
-            drive_attr['filters'] = self._parseFilters(drive)
-            drive_attr['disabled'] = bool(int(drive.attrib.get('disabled', '0')))
+            properties = self._parseProperties(drive)
+            filters = self._parseFilters(drive)
+            disabled = bool(int(drive.attrib.get('disabled', '0')))
 
-            self.usedLetters.append(drive_attr['properties']['letter'])
-            self.drives.append(drive_attr)
-
-            if drive_attr['properties']['path'] is not None:
-                drive_id = drive_attr['properties']['path'].split('\\')[-1]
-                self.drives_dict[drive_id] = {
-                    'userLetter': drive_attr['properties']['useLetter'],
-                    'letter': drive_attr['properties']['letter'],
-                    'disabled': drive_attr['disabled'],
-                    'label': drive_attr['properties']['label'],
-                    'filters': drive_attr['filters'],
-                }
+            self.usedLetters.append(properties['letter'])
+            self.drives.append(
+                Drive(
+                    disabled=disabled,
+                    filters=filters,
+                    label=properties['label'],
+                    letter=properties['letter'],
+                    properties=properties,
+                    userLetter=properties['useLetter'],
+                )
+            )
 
     @staticmethod
     def _parseProperties(drive):
