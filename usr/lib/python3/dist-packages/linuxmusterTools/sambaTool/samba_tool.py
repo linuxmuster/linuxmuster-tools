@@ -50,16 +50,12 @@ class Drives:
             return
 
         for drive in self.tree.findall('Drive'):
-            drive_attr = {'properties': {}}
+            drive_attr = {'properties': self._parseProperties(drive)}
             drive_attr['disabled'] = bool(int(drive.attrib.get('disabled', '0')))
-            for prop in drive.findall('Properties'):
-                drive_attr['properties']['useLetter'] = bool(int(prop.get('useLetter', '0')))
-                drive_attr['properties']['letter'] = prop.get('letter', '')
-                drive_attr['properties']['label'] = prop.get('label', 'Unknown')
-                drive_attr['properties']['path'] = prop.get('path', None)
-                self.usedLetters.append(drive_attr['properties']['letter'])
 
+            self.usedLetters.append(drive_attr['properties']['letter'])
             self.drives.append(drive_attr)
+
             if drive_attr['properties']['path'] is not None:
                 drive_id = drive_attr['properties']['path'].split('\\')[-1]
                 self.drives_dict[drive_id] = {
@@ -68,6 +64,17 @@ class Drives:
                     'disabled': drive_attr['disabled'],
                     'label': drive_attr['properties']['label'],
                 }
+
+    @staticmethod
+    def _parseProperties(drive):
+       properties = {}
+       # It should be max one properties node
+       for prop in drive.findall('Properties'):
+            properties['useLetter'] = bool(int(prop.get('useLetter', '0')))
+            properties['letter'] = prop.get('letter', '')
+            properties['label'] = prop.get('label', 'Unknown')
+            properties['path'] = prop.get('path', None)
+       return properties
 
     def save(self, content):
         """
