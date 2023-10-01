@@ -18,10 +18,12 @@ class Drive:
         if self.properties['path'] is not None:
             self.id = self.properties['path'].split('\\')[-1]
 
-    # def visible(self, role):
+    # def visible(self, user):
         # TODO: this was written with a wrong interpretation of filters,
         # must be rewritten with more informations from the user (groups
-        # membership, role, etc ...)
+        # membership, role, etc ...).
+        # The parameter user should be a user object from ldapreader
+
         # if self.disabled:
             # Disabled for all
         #     return False
