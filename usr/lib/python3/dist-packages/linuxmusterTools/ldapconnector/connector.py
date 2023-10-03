@@ -1,6 +1,7 @@
 import logging
 import ldap
 import re
+import os
 from datetime import datetime
 from dataclasses import fields, asdict
 
@@ -171,17 +172,36 @@ class LdapConnector:
         :rtype: dict
         """
 
-        l = ldap.initialize("ldap://localhost:389/")
-        l.set_option(ldap.OPT_REFERRALS, 0)
-        l.protocol_version = ldap.VERSION3
+        if not os.path.isfile('/etc/linuxmuster/webui/config.yml'):
+            # Using it from linuxclient
+            # Trying to auth via GSSAPI
+            try:
+                from linuxmusterLinuxclient7 import config
+            except ModuleNotFoundError:
+                raise Exception('Ldap config missing, could not connect to LDAP server.')
 
-        if not webui_import:
-            with LMNFile('/etc/linuxmuster/webui/config.yml', 'r') as config:
-                self.params = config.data['linuxmuster']['ldap']
+            rc, networkConfig = config.network()
+
+            if not rc:
+                return []
+
+            serverHostname = networkConfig["serverHostname"]
+            l = ldap.initialize(f"ldap://{serverHostname}:389/")
+            l.set_option(ldap.OPT_REFERRALS, 0)
+            l.protocol_version = ldap.VERSION3
+            sasl_auth = ldap.sasl.sasl({} ,'GSSAPI')
+            l.sasl_interactive_bind_s("", sasl_auth)
+        else:
+            # On the server, accessing directly to bind user credentials
+            l = ldap.initialize("ldap://localhost:389/")
+            l.set_option(ldap.OPT_REFERRALS, 0)
+            l.protocol_version = ldap.VERSION3
+            if not webui_import:
+                with LMNFile('/etc/linuxmuster/webui/config.yml','r') as config:
+                    self.params = config.data['linuxmuster']['ldap']
+            l.bind(self.params['binddn'], self.params['bindpw'])
 
         searchdn = f"{subdn}{self.params['searchdn']}"
-
-        l.bind(self.params['binddn'], self.params['bindpw'])
         response = l.search_s(searchdn,scope, ldap_filter, attrlist=['*'])
 
         # Filter non-interesting values
