@@ -21,6 +21,38 @@ def get_all_users():
 
     return ldap_filter
 
+@router.collection(r'/users/exam', models.LMNUser)
+def get_exam_users():
+    """
+    Get all details from all users in exam mode.
+    Return a LMNUser data object.
+    """
+
+    ldap_filter = f"""(&
+                                (objectClass=user)
+                                (|
+                                    (sophomorixRole=examuser)
+                                )
+                            )"""
+
+    return ldap_filter
+
+@router.single(r'/users/exam/(?P<username>[\w\-]*)', models.LMNUser)
+def get_exam_user(username):
+    """
+    Get all details from a specific user in exam mode.
+    Return a LMNUser data object.
+    """
+
+    ldap_filter = f"""(&
+                                (cn={username})
+                                (objectClass=user)
+                                (|
+                                    (sophomorixRole=examuser)
+                                )
+                            )"""
+
+    return ldap_filter
 
 @router.single(r'/users/(?P<username>[\w\-]*)', models.LMNUser)
 def get_user(username):
