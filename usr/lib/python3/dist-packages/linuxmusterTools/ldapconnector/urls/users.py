@@ -45,7 +45,7 @@ def get_exam_user(username):
     """
 
     ldap_filter = f"""(&
-                                (cn={username})
+                                (|(cn={username})(cn={username}-exam))
                                 (objectClass=user)
                                 (|
                                     (sophomorixRole=examuser)
