@@ -1,3 +1,11 @@
+linuxmuster-tools7 (7.2.5) lmn72; urgency=medium
+
+  * [ldapreader] Add GSSAPI support 
+  * [ldapreader] Requests for exam users
+  * [samba-tool] Better files organisation 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sat, 14 Oct 2023 10:45:50 +0200
+
 linuxmuster-tools7 (7.2.4) lmn72; urgency=medium
 
   * [ldapreader] Asdict method for projects
