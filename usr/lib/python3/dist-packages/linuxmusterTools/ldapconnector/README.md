@@ -46,6 +46,10 @@ At this point, the following requests are available:
   * `/devices` : get all devices
   * `/devices/NAME` : get all informations about the device `NAME` ( as `cn` )
   * `/devices/search/SELECTION/QUERY` : get all devices matching the `SELECTION` and `QUERY` criterias. `SELECTION` is role-based and can be set to `all` or a specific role like `printer`. `QUERY` is string which should be contained in the `cn`.
+  * `/groups` : get all groups
+  * `/groups/NAME` : get all informations about the group `NAME` ( as `cn` )
+  * `/printers` : get all printer groups
+  * `/printers/NAME` : get all informations about the printer group `NAME` ( as `cn` )
   * `/projects` : get all projects
   * `/projects/PROJECT` : get all informations about a single project named `PROJECT`
   * `/roles/ROLE` : get all users in a specific `ROLE` ( `ROLE` can be e.g. `teacher`, `globaladministrator`, ... ) 
@@ -56,4 +60,6 @@ At this point, the following requests are available:
   * `/schools` : get a collection of all schools in a multischool environment, models.LMNSchool, subdn='OU=SCHOOLS,')
   * `/users` : get all users
   * `/users/USERNAME` : get all informations about the user `USERNAME` ( as `cn` )
+  * `/users/exam` : get all exam users
+  * `/users/exam/NAME` : get all informations about the exam user `NAME` or `NAME-exam` ( as `cn` )
   * `/users/search/SELECTION/QUERY` : get all users matching the `SELECTION` and `QUERY` criterias. `SELECTION` is role-based and can be set to `all`, `admins` or a specific role like `student`. `QUERY` is string which should be contained in the `cn`.
