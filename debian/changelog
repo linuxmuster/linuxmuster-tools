@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.2.6) lmn72; urgency=medium
+
+  * [ldapreader] Possibly fix ldap interrupted calls 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Fri, 20 Oct 2023 09:08:16 +0200
+
 linuxmuster-tools7 (7.2.5) lmn72; urgency=medium
 
   * [ldapreader] Add GSSAPI support 
