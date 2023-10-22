@@ -14,8 +14,20 @@ class UPChecker:
 
         devices_path = f'/etc/linuxmuster/sophomorix/{self.school}/{prefix}devices.csv'
         self.devices = []
+
+        valid_computer_roles = [
+            'classroom-teachercomputer',
+            'classroom-studentcomputer',
+            'faculty-teachercomputer',
+            'staffcomputer',
+            'thinclient',
+            'iponly',
+        ]
+
         with LMNFile(devices_path, 'r') as devices_csv:
-            self.devices = devices_csv.read()
+            for device in devices_csv.read():
+                if device['sophomorixRole'] in valid_computer_roles:
+                    self.devices.append(device)
 
         self.check()
 
