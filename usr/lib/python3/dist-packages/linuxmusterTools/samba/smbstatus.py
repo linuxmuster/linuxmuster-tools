@@ -1,6 +1,7 @@
 import subprocess
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field, InitVar
+from ..lmnfile import LMNFile
 
 
 @dataclass
@@ -16,6 +17,11 @@ class SMBConnection:
     signing: str
     username: str
     version: str
+    hostnames: InitVar[dict]
+    hostname: str = field(init=False)
+
+    def __post_init__(self, hostnames):
+        self.hostname = hostnames.get(self.machine, 'No hostname found')
 
 users_regex = re.compile(
     r"(?P<pid>[0-9]+)\s+"
@@ -45,28 +51,44 @@ machine_regex = re.compile(
     r"(?P<signing>\S+)\s*"
 )
 
-def get_logged_users():
-    output = subprocess.getoutput('smbstatus -b').split('\n')
+class SMBConnections:
+    def __init__(self, school='default-school'):
+        self.school = school
+        self.hostnames = self.load_hostnames()
+        self.get_users()
 
-    users = []
+    def switch(self, school):
+        self.school = school
+        self.hostnames = self.load_hostnames()
 
-    for line in output:
-        match = users_regex.match(line)
-        if match:
-            data = match.groupdict()
-            users.append(SMBConnection(group='users', **data))
+    def load_hostnames(self):
+        devices_path = f'/etc/linuxmuster/sophomorix/{self.school}/devices.csv'
+        devices = {}
+        with LMNFile(devices_path, 'r') as devices_csv:
+            for device in devices_csv.read():
+                devices[device['ip']] = device['hostname']
+        return devices
 
-    return users
+    def get_users(self):
+        output = subprocess.getoutput('smbstatus -b').split('\n')
 
-def get_logged_machines():
-    output = subprocess.getoutput('smbstatus -b').split('\n')
+        self.users = {}
 
-    machines = []
+        for line in output:
+            match = users_regex.match(line)
+            if match:
+                data = match.groupdict()
+                user = data['username'].split('\\')[1]
+                self.users[user] = SMBConnection(group='users', hostnames=self.hostnames, **data)
 
-    for line in output:
-        match = machine_regex.match(line)
-        if match:
-            data = match.groupdict()
-            machines.append(SMBConnection(**data))
+    def get_machines(self):
+        output = subprocess.getoutput('smbstatus -b').split('\n')
 
-    return machines
+        self.machines = {}
+
+        for line in output:
+            match = machine_regex.match(line)
+            if match:
+                data = match.groupdict()
+                machine = data['username'].split('\\')[1]
+                self.machines[machine] = SMBConnection(hostnames=self.hostnames, **data)
