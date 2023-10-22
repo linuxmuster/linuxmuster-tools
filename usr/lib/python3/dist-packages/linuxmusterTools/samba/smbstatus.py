@@ -62,7 +62,12 @@ class SMBConnections:
         self.hostnames = self.load_hostnames()
 
     def load_hostnames(self):
-        devices_path = f'/etc/linuxmuster/sophomorix/{self.school}/devices.csv'
+        if self.school != 'default-school':
+            prefix = f'{self.school}.'
+        else:
+            prefix = ''
+
+        devices_path = f'/etc/linuxmuster/sophomorix/{self.school}/{prefix}devices.csv'
         devices = {}
         with LMNFile(devices_path, 'r') as devices_csv:
             for device in devices_csv.read():
