@@ -7,5 +7,5 @@ Standards-Version: 5.0.0
 
 Package: linuxmuster-tools7
 Architecture: all
-Depends: python3
+Depends: python3, nmap
 Description: Tools for the linuxmuster.net 7 server.
