@@ -1,3 +1,11 @@
+linuxmuster-tools7 (7.2.7) lmn72; urgency=medium
+
+  * [samba] Move to simply samba
+  * [samba] Prefix for multischool
+  * [samba] Parser for smbstatus   
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Thu, 26 Oct 2023 10:25:41 +0200
+
 linuxmuster-tools7 (7.2.6) lmn72; urgency=medium
 
   * [ldapreader] Possibly fix ldap interrupted calls 
