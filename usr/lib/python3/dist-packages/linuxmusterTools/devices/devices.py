@@ -50,7 +50,7 @@ class Devices:
         return None
 
     def get_client(self, hostname, groups=[]):
-        return self.get_hostname(hostname, roles=CLIENT_ROLES, groupes=groups)
+        return self.get_hostname(hostname, roles=CLIENT_ROLES, groups=groups)
 
     def get_clients(self, groups=[]):
-        return self.filter(roles=CLIENT_ROLES, groupes=groups)
+        return self.filter(roles=CLIENT_ROLES, groups=groups)
