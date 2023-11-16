@@ -1,6 +1,15 @@
 from ..lmnfile import LMNFile
 
 
+CLIENT_ROLES = [
+    'classroom-teachercomputer',
+    'classroom-studentcomputer',
+    'faculty-teachercomputer',
+    'staffcomputer',
+    'thinclient',
+    'iponly',
+]
+
 class Devices:
     def __init__(self, school='default-school'):
         self.school = school
@@ -23,6 +32,8 @@ class Devices:
             for device in devices_csv.read():
                 self.devices.append(device)
 
+        self.clients = self.filter(roles=CLIENT_ROLES)
+
     def filter(self, roles=[], groups=[]):
         if roles and groups:
             return [device for device in self.devices if device['sophomorixRole'] in roles and device['group'] in groups]
@@ -37,3 +48,9 @@ class Devices:
             if device['hostname'] == hostname:
                 return device
         return None
+
+    def get_client(self, hostname, groups=[]):
+        return self.get_hostname(hostname, roles=CLIENT_ROLES, groupes=groups)
+
+    def get_clients(self, groups=[]):
+        return self.filter(roles=CLIENT_ROLES, groupes=groups)

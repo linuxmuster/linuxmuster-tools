@@ -5,29 +5,20 @@ from concurrent import futures
 from .devices import Devices
 
 
-VALID_COMPUTER_ROLES = [
-    'classroom-teachercomputer',
-    'classroom-studentcomputer',
-    'faculty-teachercomputer',
-    'staffcomputer',
-    'thinclient',
-    'iponly',
-]
-
 class UPChecker:
     def __init__(self, school='default-school'):
         self.devicesmgr = Devices()
-        self.devices = self.devicesmgr.filter(roles=VALID_COMPUTER_ROLES)
+        self.devices = self.devicesmgr.clients
 
     def checkhost(self, hostname):
-        to_check = self.devicesmgr.get_hostname(hostname, roles=VALID_COMPUTER_ROLES)
+        to_check = self.devicesmgr.get_client(hostname)
 
         if to_check:
             return self.test_online(to_check)
         return {}
 
     def check(self, groups=[]):
-        to_check = self.devicesmgr.filter(roles=VALID_COMPUTER_ROLES, groups=groups)
+        to_check = self.devicesmgr.get_clients(groups=groups)
 
         results = {}
         with futures.ThreadPoolExecutor() as executor:
