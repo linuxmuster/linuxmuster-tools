@@ -2,48 +2,39 @@ import subprocess
 import xml.etree.ElementTree as ElementTree
 from concurrent import futures
 
-from ..lmnfile import LMNFile
+from .devices import Devices
+
+
+VALID_COMPUTER_ROLES = [
+    'classroom-teachercomputer',
+    'classroom-studentcomputer',
+    'faculty-teachercomputer',
+    'staffcomputer',
+    'thinclient',
+    'iponly',
+]
 
 class UPChecker:
     def __init__(self, school='default-school'):
-        self.school = school
-        if self.school != 'default-school':
-            prefix = f'{self.school}.'
-        else:
-            prefix = ''
-
-        devices_path = f'/etc/linuxmuster/sophomorix/{self.school}/{prefix}devices.csv'
-        self.devices = []
-
-        valid_computer_roles = [
-            'classroom-teachercomputer',
-            'classroom-studentcomputer',
-            'faculty-teachercomputer',
-            'staffcomputer',
-            'thinclient',
-            'iponly',
-        ]
-
-        with LMNFile(devices_path, 'r') as devices_csv:
-            for device in devices_csv.read():
-                if device['sophomorixRole'] in valid_computer_roles:
-                    self.devices.append(device)
+        self.devicesmgr = Devices()
+        self.devices = self.devicesmgr.filter(roles=VALID_COMPUTER_ROLES)
 
     def checkhost(self, hostname):
-        for device in self.devices:
-            if device['hostname'] == hostname:
-                to_check = device
-                break
-        self.test_online(to_check)
+        to_check = self.devicesmgr.get_hostname(hostname, roles=VALID_COMPUTER_ROLES)
 
-    def check(self, group=''):
-        if group:
-            to_check = [device for device in self.devices if device['group'] == group]
-        else:
-            to_check = self.devices
-        self.results = {}
+        if to_check:
+            return self.test_online(to_check)
+        return {}
+
+    def check(self, groups=[]):
+        to_check = self.devicesmgr.filter(roles=VALID_COMPUTER_ROLES, groups=groups)
+
+        results = {}
         with futures.ThreadPoolExecutor() as executor:
-            infos = executor.map(self.test_online, to_check)
+            for result in executor.map(self.test_online, to_check):
+                ip = list(result.keys())[0]
+                results[ip] = result[ip]
+        return results
 
     def test_online(self, device):
         """
@@ -61,7 +52,7 @@ class UPChecker:
 
         numberOfOnlineHosts = int(xmlRoot.find("runstats").find("hosts").attrib["up"])
         if numberOfOnlineHosts == 0:
-            return "Off"
+            return {device['ip']: "Off"}
 
         ports = {}
         scannedPorts = xmlRoot.find("host").find("ports").findall("port")
@@ -78,11 +69,9 @@ class UPChecker:
         if numberOfFilteredPorts == 3:
             # All ports filtered, no answer from the host,
             # likely because the host is down and the firewall doesn't respond.
-            return "No response"
+            return {device['ip']: "No response"}
 
-        up = self.get_os_from_ports(ports)
-        self.results[device['ip']] =  up
-        print(device['ip'], up)
+        return {device['ip']: self.get_os_from_ports(ports)}
 
     def get_os_from_ports(self, ports):
         """
