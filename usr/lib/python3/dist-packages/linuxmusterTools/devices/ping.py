@@ -29,12 +29,14 @@ class UPChecker:
                 if device['sophomorixRole'] in valid_computer_roles:
                     self.devices.append(device)
 
-        self.check()
-
-    def check(self):
+    def check(self, group=''):
+        if group:
+            to_check = [device for device in self.devices if device['group'] == group]
+        else:
+            to_check = self.devices
         self.results = {}
         with futures.ThreadPoolExecutor() as executor:
-            infos = executor.map(self.test_online, self.devices)
+            infos = executor.map(self.test_online, to_check)
 
     def test_online(self, device):
         """
