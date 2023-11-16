@@ -29,6 +29,13 @@ class UPChecker:
                 if device['sophomorixRole'] in valid_computer_roles:
                     self.devices.append(device)
 
+    def checkhost(self, hostname):
+        for device in self.devices:
+            if device['hostname'] == hostname:
+                to_check = device
+                break
+        self.test_online(to_check)
+
     def check(self, group=''):
         if group:
             to_check = [device for device in self.devices if device['group'] == group]
