@@ -37,7 +37,7 @@ class LMNLdapRouter:
 
                 if func.type == 'collection':
                     return self.lc.get_collection(func.model, ldap_filter, scope=func.scope, subdn=subdn, **kwargs)
-        raise Exception('Request unknown')
+        raise Exception(f'Requested search {url} unknown')
 
     def add_url(self, url, method):
         """
