@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.2.10) lmn72; urgency=medium
+
+  * Allow uppercases in projects names 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sun, 19 Nov 2023 18:36:27 +0100
+
 linuxmuster-tools7 (7.2.9) lmn72; urgency=medium
 
   * Better error message
