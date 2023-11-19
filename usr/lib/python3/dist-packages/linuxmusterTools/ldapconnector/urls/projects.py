@@ -2,7 +2,7 @@ import linuxmusterTools.ldapconnector.models as models
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router
 
 
-@router.single(r'/projects/(?P<project>[a-z0-9_\-]*)', models.LMNProject)
+@router.single(r'/projects/(?P<project>[a-zA-Z0-9_\-]*)', models.LMNProject)
 def get_project(project):
     """
     Get all details from a specific project.
