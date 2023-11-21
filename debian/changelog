@@ -1,3 +1,10 @@
+linuxmuster-tools7 (7.2.11) lmn72; urgency=medium
+
+  * [dns] Add DNS manager
+  * [ldapreader] Create empty object on empty response 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Tue, 21 Nov 2023 18:37:04 +0100
+
 linuxmuster-tools7 (7.2.10) lmn72; urgency=medium
 
   * Allow uppercases in projects names 
