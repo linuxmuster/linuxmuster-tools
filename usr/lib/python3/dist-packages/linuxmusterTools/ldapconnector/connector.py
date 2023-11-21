@@ -45,7 +45,13 @@ class LdapConnector:
                         return {k:v for k,v in model_dict.items() if k in attributes}
                     return model_dict
                 return objectclass(**data)
-        return {}
+
+        if dict:
+            return {}
+
+        # Creating empty object with default values
+        data = {field.name:field.type() for field in fields(objectclass) if field.init }
+        return objectclass(**data)
 
     def get_single(self, objectclass, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn='', **kwargs):
         """
@@ -65,14 +71,17 @@ class LdapConnector:
         """
 
         results = self._get(ldap_filter, scope=scope, subdn=subdn)
-        
+
+        if len(results) == 0:
+            return self._create_result_object([None], objectclass, **kwargs)
+
+        to_handle = results[0]
+
         if len(results) > 1:
             # Only taking the first entry so warn the user
             logging.warning("Multiple entries found in LDAP, but only giving the first one as expected.")
-        elif len(results) == 0:
-            return {}
-        
-        return self._create_result_object(results[0], objectclass, **kwargs)
+
+        return self._create_result_object(to_handle, objectclass, **kwargs)
 
     def get_collection(self, objectclass, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn='', sortkey=None, **kwargs):
         """
