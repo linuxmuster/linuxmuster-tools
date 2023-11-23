@@ -58,6 +58,8 @@ class LMNUser:
     sophomorixWebuiPermissionsCalculated: list
     unixHomeDirectory: str
     dn:             str = field(init=False)
+    examMode:       bool = field(init=False)
+    examTeacher:    str = field(init=False)
     internet:       bool = field(init=False)
     intranet:       bool = field(init=False)
     isAdmin:        bool = field(init=False)
@@ -142,6 +144,14 @@ class LMNUser:
             membersCount = len(members)
             self.lmnsessions.append(LMNSession(data[0], data[1], members, membersCount))
 
+    def parse_exam(self):
+        if self.sophomorixExamMode[0] == '---':
+            self.examMode = False
+            self.examTeacher = ''
+        else:
+            self.examMode = True
+            self.examTeacher = self.sophomorixExamMode[0]
+
     def __post_init__(self):
         self.schoolclasses = self.extract_schoolclasses(self.memberOf)
         self.projects = self.extract_projects(self.memberOf)
@@ -150,5 +160,6 @@ class LMNUser:
         self.extract_management()
         self.parse_permissions()
         self.parse_sessions()
+        self.parse_exam()
         self.isAdmin = "administrator" in self.sophomorixRole
 
