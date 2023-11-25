@@ -146,7 +146,11 @@ class LMNUser:
             self.lmnsessions.append(LMNSession(data[0], data[1], members, membersCount))
 
     def parse_exam(self):
-        if self.sophomorixExamMode[0] == '---':
+        if not self.sophomorixExamMode:
+            self.examMode = False
+            self.examTeacher = ''
+            self.examBaseCn = ''
+        elif self.sophomorixExamMode[0] == '---':
             self.examMode = False
             self.examTeacher = ''
             self.examBaseCn = ''
