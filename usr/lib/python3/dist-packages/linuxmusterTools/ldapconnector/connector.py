@@ -37,7 +37,7 @@ class LdapConnector:
             if school_node in dn:
                 for field in fields(objectclass):
                     if field.init:
-                        value = raw_data.get(field.name, None)
+                        value = raw_data.get(field.name, field.type())
                         data[field.name] = self._filter_value(field, value)
                 if dict:
                     model_dict = asdict(objectclass(**data))
@@ -53,7 +53,7 @@ class LdapConnector:
         data = {field.name:field.type() for field in fields(objectclass) if field.init }
         return objectclass(**data)
 
-    def get_single(self, objectclass, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn='', **kwargs):
+    def get_single(self, objectclass, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn='', attributes=[], **kwargs):
         """
         Handle a single result from a ldap request (with required ldap filter)
         and convert it in the given object class.
@@ -70,10 +70,10 @@ class LdapConnector:
         :typee attributes: list
         """
 
-        results = self._get(ldap_filter, scope=scope, subdn=subdn)
+        results = self._get(ldap_filter, scope=scope, subdn=subdn, attributes=attributes)
 
         if len(results) == 0:
-            return self._create_result_object([None], objectclass, **kwargs)
+            return self._create_result_object([None], objectclass, attributes=attributes, **kwargs)
 
         to_handle = results[0]
 
@@ -81,9 +81,9 @@ class LdapConnector:
             # Only taking the first entry so warn the user
             logging.warning("Multiple entries found in LDAP, but only giving the first one as expected.")
 
-        return self._create_result_object(to_handle, objectclass, **kwargs)
+        return self._create_result_object(to_handle, objectclass, attributes=attributes, **kwargs)
 
-    def get_collection(self, objectclass, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn='', sortkey=None, **kwargs):
+    def get_collection(self, objectclass, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn='', sortkey=None, attributes=[], **kwargs):
         """
         Handle multiples results from a ldap request (with required ldap filter)
         and convert it in a list of given object class.
@@ -112,14 +112,14 @@ class LdapConnector:
             else:
                 return 10000000  # just a big number to come after all schoolclasses
 
-        results = self._get(ldap_filter, scope=scope, subdn=subdn)
+        results = self._get(ldap_filter, scope=scope, subdn=subdn, attributes=attributes)
         response = []
         for result in results:
-            formatted_obj = self._create_result_object(result, objectclass, **kwargs)
+            formatted_obj = self._create_result_object(result, objectclass, attributes=attributes, **kwargs)
             
             if formatted_obj:
                 # Avoid empty dicts
-                response.append(self._create_result_object(result, objectclass, **kwargs))
+                response.append(self._create_result_object(result, objectclass, attributes=attributes, **kwargs))
         if sortkey is not None:
             if dict:
                 return sorted(response, key=lambda d: _check_schoolclass_number(d.get(sortkey, None)))
@@ -140,17 +140,17 @@ class LdapConnector:
             # Something like [b'']
             if value is None:
                 return ''
-            return value[0].decode() if value is not None else ''
+            return value[0].decode() if value else ''
 
         if field.type.__name__ == 'list':
             # Something like [b'a', b'c']
             if value is None:
                 return []
-            return [v.decode() for v in value] if value is not None else []
+            return [v.decode() for v in value] if value else []
 
         if field.type.__name__ == 'bool':
             # Something like [b'FALSE']
-            if value is None:
+            if value is None or value == False:
                 return False
             return value[0].capitalize() == b'True'
 
@@ -160,14 +160,14 @@ class LdapConnector:
 
         if field.type.__name__ == 'int':
             # Something like [b'20']
-            if value is None:
+            if value is None or value == 0:
                 return 0
             return int(value[0].decode())
 
         if value is None:
             return None
 
-    def _get(self, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn=''):
+    def _get(self, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn='', attributes=['*']):
         """
         Connect to ldap and perform the request.
 
@@ -211,8 +211,16 @@ class LdapConnector:
                     self.params = config.data['linuxmuster']['ldap']
             l.bind(self.params['binddn'], self.params['bindpw'])
 
+        attrlist = attributes[:]
+        # Not a proper way to add DN
+        if attributes != ['*']:
+            attrlist.append('distinguishedName')
+
+        if not attributes:
+            attrlist = ['*']
+
         searchdn = f"{subdn}{self.params['searchdn']}"
-        response = l.search_s(searchdn,scope, ldap_filter, attrlist=['*'])
+        response = l.search_s(searchdn,scope, ldap_filter, attrlist=attrlist)
 
         # Filter non-interesting values
         results = []
