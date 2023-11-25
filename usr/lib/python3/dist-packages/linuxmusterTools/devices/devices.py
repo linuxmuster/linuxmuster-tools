@@ -32,6 +32,8 @@ class Devices:
             for device in devices_csv.read():
                 self.devices.append(device)
 
+        self.groups = list(set([d['group'] for d in self.devices if d.get('group', False)]))
+        self.rooms = list(set([d['room'] for d in self.devices if d.get('room', False)]))
         self.clients = self.filter(roles=CLIENT_ROLES)
 
     def filter(self, roles=[], groups=[]):
