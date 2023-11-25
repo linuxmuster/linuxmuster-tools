@@ -60,6 +60,7 @@ class LMNUser:
     dn:             str = field(init=False)
     examMode:       bool = field(init=False)
     examTeacher:    str = field(init=False)
+    examBaseCn:     str = field(init=False)
     internet:       bool = field(init=False)
     intranet:       bool = field(init=False)
     isAdmin:        bool = field(init=False)
@@ -148,9 +149,11 @@ class LMNUser:
         if self.sophomorixExamMode[0] == '---':
             self.examMode = False
             self.examTeacher = ''
+            self.examBaseCn = ''
         else:
             self.examMode = True
             self.examTeacher = self.sophomorixExamMode[0]
+            self.examBaseCn = self.cn.replace('-exam', '')
 
     def __post_init__(self):
         self.schoolclasses = self.extract_schoolclasses(self.memberOf)
