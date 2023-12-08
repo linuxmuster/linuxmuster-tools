@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.2.13) lmn72; urgency=medium
+
+  * [linbo] Read qdiff date properly. 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Fri, 08 Dec 2023 10:00:28 +0100
+
 linuxmuster-tools7 (7.2.12) lmn72; urgency=medium
 
   * [devices] Llist rooms and groups
