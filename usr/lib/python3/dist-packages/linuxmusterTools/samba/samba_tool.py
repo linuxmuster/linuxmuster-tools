@@ -17,8 +17,6 @@ try:
 except ImportError:
     logging.error("Samba doesn't seem to be installed, this module can not be used.")
 
-gpos_infos = {}
-
 SAMDB_PATH = '/var/lib/samba/private/sam.ldb'
 
 @dataclass
@@ -36,6 +34,9 @@ class GPOManager:
     """
 
     def __init__(self):
+
+        gpos_infos = {}
+
         if os.path.isfile(SAMDB_PATH):
             try:
                 samdb = SamDB(url=SAMDB_PATH, session_info=system_session(),credentials=creds, lp=lp)
