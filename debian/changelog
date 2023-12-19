@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.2.14) lmn72; urgency=medium
+
+  * [samba] Fix undefined gpos var. 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Tue, 19 Dec 2023 16:09:34 +0100
+
 linuxmuster-tools7 (7.2.13) lmn72; urgency=medium
 
   * [linbo] Read qdiff date properly. 
