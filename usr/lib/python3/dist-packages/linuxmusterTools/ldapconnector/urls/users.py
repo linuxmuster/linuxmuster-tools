@@ -99,7 +99,7 @@ def get_results_search_user(query='', selection=[]):
         role_filter[role] = f'(sophomorixRole={role})'
 
     if query:
-        query = f"(sAMAccountName=*{query}*)"
+        query = f"(|(sAMAccountName=*{query}*)(sn=*{query}*)(givenName=*{query}*))"
 
     return f"""(&
                                 {query}
