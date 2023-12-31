@@ -14,8 +14,8 @@ try:
     lp = LoadParm()
     creds = Credentials()
     creds.guess(lp)
-except ImportError:
-    logging.error("Samba doesn't seem to be installed, this module can not be used.")
+except ImportError as e:
+    logging.error(f"Samba doesn't seem to be installed, this module can not be used: {str(e)}")
 
 SAMDB_PATH = '/var/lib/samba/private/sam.ldb'
 
