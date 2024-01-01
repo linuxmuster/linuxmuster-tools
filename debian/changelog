@@ -1,3 +1,12 @@
+linuxmuster-tools7 (7.2.15) lmn72; urgency=medium
+
+  * [ldapreader] Search with first and last names.
+  * [quota] List user files and directories sizes
+  * [samba] Add samba constants like SAMBA_WORKGROUP.
+  * [samba] Fix library conflict.
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Mon, 01 Jan 2024 21:57:48 +0100
+
 linuxmuster-tools7 (7.2.14) lmn72; urgency=medium
 
   * [samba] Fix undefined gpos var. 
