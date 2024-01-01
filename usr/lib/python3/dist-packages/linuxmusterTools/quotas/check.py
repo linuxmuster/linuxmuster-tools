@@ -22,7 +22,7 @@ def list_user_files(user):
                         directories[directory]['files'][f] = f"{size / 1024 / 1024:.2f}"
                         break
                 else:
-                    directories[root] = {'total': size, 'files':{f: size}}
+                    directories[root] = {'total': size, 'files':{f: f"{size / 1024 / 1024:.2f}"}}
 
     total = 0
     for directory, details in directories.items():
