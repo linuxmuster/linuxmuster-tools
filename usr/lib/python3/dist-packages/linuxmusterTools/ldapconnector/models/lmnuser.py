@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 import re
+import ldap
 from .lmnsession import LMNSession
 
 @dataclass
@@ -169,4 +170,20 @@ class LMNUser:
         self.parse_sessions()
         self.parse_exam()
         self.isAdmin = "administrator" in self.sophomorixRole
+
+    def test_password(self, password=''):
+        l = ldap.initialize("ldap://localhost:389/")
+        l.set_option(ldap.OPT_REFERRALS, 0)
+        l.set_option(ldap.OPT_RESTART, ldap.OPT_ON)
+        l.protocol_version = ldap.VERSION3
+        try:
+            l.bind_s(self.dn, password)
+            return True
+        except ldap.INVALID_CREDENTIALS:
+            return False
+
+    def test_first_password(self):
+        if self.sophomorixFirstPassword:
+            return self.test_password(self.sophomorixFirstPassword)
+        return 'Insufficient permissions to read first password from LDAP.'
 
