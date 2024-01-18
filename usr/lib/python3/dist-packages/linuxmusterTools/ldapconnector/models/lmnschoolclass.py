@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field
 from datetime import datetime
+from ..urls import router as lr
+
 
 @dataclass
 class LMNSchoolClass:
@@ -33,3 +35,14 @@ class LMNSchoolClass:
     def __post_init__(self):
         self.dn = self.distinguishedName
         self.membersCount = len(self.sophomorixMembers)
+
+    def get_first_passwords(self):
+        response = {}
+
+        for student in self.sophomorixMembers:
+            lmnuser = lr.get(f'/users/{student}', dict=False)
+            response[student] = {
+                'firstPassword': lmnuser.sophomorixFirstPassword,
+                'firstPasswordStillSet': lmnuser.test_first_password(),
+            }
+        return response
