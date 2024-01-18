@@ -204,14 +204,14 @@ class LdapConnector:
             # On the server, accessing directly to bind user credentials
             l = ldap.initialize("ldap://localhost:389/")
             l.set_option(ldap.OPT_REFERRALS, 0)
-            ldap.set_option(ldap.OPT_RESTART, ldap.OPT_ON)
+            l.set_option(ldap.OPT_RESTART, ldap.OPT_ON)
             l.protocol_version = ldap.VERSION3
             if not webui_import:
                 with LMNFile('/etc/linuxmuster/webui/config.yml','r') as config:
                     self.params = config.data['linuxmuster']['ldap']
                 with open('/etc/linuxmuster/.secret/administrator', 'r') as admpwd:
                     passwd = admpwd.read().strip()
-            l.bind(f"CN=Administrator,CN=Users,{self.params['searchdn']}", passwd)
+            l.bind_s(f"CN=Administrator,CN=Users,{self.params['searchdn']}", passwd)
 
         attrlist = attributes[:]
         # Not a proper way to add DN
