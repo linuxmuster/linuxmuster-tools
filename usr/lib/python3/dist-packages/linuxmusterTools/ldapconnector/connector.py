@@ -209,7 +209,9 @@ class LdapConnector:
             if not webui_import:
                 with LMNFile('/etc/linuxmuster/webui/config.yml','r') as config:
                     self.params = config.data['linuxmuster']['ldap']
-            l.bind(self.params['binddn'], self.params['bindpw'])
+                with open('/etc/linuxmuster/.secret/administrator', 'r') as admpwd:
+                    passwd = admpwd.read().strip()
+            l.bind(f"CN=Administrator,CN=Users,{self.params['searchdn']}", passwd)
 
         attrlist = attributes[:]
         # Not a proper way to add DN
@@ -233,6 +235,7 @@ class LdapConnector:
         # Removing sensitive data
         if not webui_import:
             self.params = {}
+            passwd = ''
 
         return results
 
