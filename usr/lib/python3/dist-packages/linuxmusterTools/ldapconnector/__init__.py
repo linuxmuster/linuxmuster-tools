@@ -1,3 +1,6 @@
-from linuxmusterTools.ldapconnector.urls import router
+from linuxmusterTools.ldapconnector.urls import router as reader_router
+from linuxmusterTools.ldapconnector.ldap_writer import ldap_writer
 
-LMNLdapReader = router
+
+LMNLdapReader = reader_router
+LMNLdapWriter = ldap_writer
