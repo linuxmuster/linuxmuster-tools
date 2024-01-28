@@ -1,3 +1,9 @@
+linuxmuster-tools8 (8.0.1) lmn80; urgency=medium
+
+  * First test package.
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sun, 28 Jan 2024 20:40:20 +0100
+
 linuxmuster-tools7 (7.2.15) lmn72; urgency=medium
 
   * [ldapreader] Search with first and last names.
