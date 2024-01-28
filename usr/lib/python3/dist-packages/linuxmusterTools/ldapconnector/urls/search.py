@@ -1,5 +1,3 @@
-import ldap.filter
-
 import linuxmusterTools.ldapconnector.models as models
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router
 
