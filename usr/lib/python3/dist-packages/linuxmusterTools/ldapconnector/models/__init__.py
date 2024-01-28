@@ -5,3 +5,4 @@ from .lmnproject import *
 from .lmnschool import *
 from .lmndevice import *
 from .lmngroup import *
+from .lmnobject import *
