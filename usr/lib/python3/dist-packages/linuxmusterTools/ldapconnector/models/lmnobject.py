@@ -11,6 +11,7 @@ class LMNObject:
     distinguishedName: str
     sAMAccountName: str
     sAMAccountType: str
+    sophomorixRole: str
     sophomorixSchoolname: str
     sophomorixSchoolPrefix: str
     sophomorixStatus: str
