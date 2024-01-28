@@ -23,7 +23,7 @@ jobs:
         run: make deb
 
       - name: Copy artifacts
-        run: mkdir package && cp ../linuxmuster-tools7_* ./package
+        run: mkdir package && cp ../linuxmuster-tools8_* ./package
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3

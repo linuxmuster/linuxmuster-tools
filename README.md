@@ -1,5 +1,5 @@
 <h1 align="center">
-    Linuxmuster-tools7
+    Linuxmuster-tools8
 </h1>
 
 <p align="center">
@@ -56,7 +56,7 @@ sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/linuxmuster.net.
 ### 3. Apt update
 
 ```bash
-sudo apt update && sudo apt install linuxmuster-tools7
+sudo apt update && sudo apt install linuxmuster-tools8
 ```
 
 ## LDAPConnector
