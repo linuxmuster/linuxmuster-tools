@@ -8,4 +8,8 @@ def global_search(query=''):
     Search all cn containing the query search
     """
 
+    if not query:
+        # Get the whole menu
+        return "(cn=*)"
+
     return f"(cn=*{query}*)"
