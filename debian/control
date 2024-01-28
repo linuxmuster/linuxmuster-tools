@@ -1,11 +1,11 @@
-Source: linuxmuster-tools7
+Source: linuxmuster-tools8
 Section: linuxmuster
 Priority: optional
 Maintainer: Arnaud Kientz <arnaud@linuxmuster.net>
 Build-Depends: debhelper (>= 5.0.0)
 Standards-Version: 5.0.0
 
-Package: linuxmuster-tools7
+Package: linuxmuster-tools8
 Architecture: all
 Depends: python3, nmap
-Description: Tools for the linuxmuster.net 7 server.
+Description: Tools for the linuxmuster.net 8 server.
