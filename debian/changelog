@@ -1,3 +1,14 @@
+linuxmuster-tools8 (8.0.2) lmn80; urgency=medium
+
+  * Add ldap writer
+  * [ldapreader] Move to administrator account 
+  * [ldapreader] Add getval wrapper
+  * [ldapreader] Get passwords list
+  * [ldapreader] Get user quota
+  * [ldapreader] Global ldap search
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Tue, 30 Jan 2024 18:05:55 +0100
+
 linuxmuster-tools8 (8.0.1) lmn80; urgency=medium
 
   * First test package.
