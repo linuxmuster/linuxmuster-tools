@@ -94,3 +94,16 @@ class GroupManager:
 
         self.samdb.add_remove_group_members(groupname=group, members=members, add_members_operation=False)
 
+    def add_members(self, group, members):
+        """
+        Add members to a group. samdb throw an Exception if the group or the user
+        does not exist.
+
+        :param group: group name
+        :type group: basestring
+        :param members: members list
+        :type members: list
+        """
+
+        self.samdb.add_remove_group_members(groupname=group, members=members, add_members_operation=True)
+
