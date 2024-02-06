@@ -2,7 +2,7 @@ import os
 import logging
 from dataclasses import dataclass, field, asdict
 from .drives import DriveManager
-
+from ..ldapconnector import LMNLdapReader as lr
 
 try:
     from samba.auth import system_session
@@ -55,3 +55,30 @@ class GPOManager:
             unix_path = "/var/lib/samba/" + '/'.join(path.split('\\')[3:])
             drivemgr = DriveManager(unix_path)
             self.gpos[name] = GPO(str(gpo.dn), drivemgr, gpo_id, name, path, unix_path)
+
+class GroupManager:
+    """
+    Samble class to manage samba groups via samba-tool.
+    """
+
+    def __init__(self):
+        if os.path.isfile(SAMDB_PATH):
+            try:
+                self.samdb = SamDB(url=SAMDB_PATH, session_info=system_session(),credentials=creds, lp=lp)
+            except Exception:
+                logging.error(f'Could not load {SAMDB_PATH}, is linuxmuster installed ?')
+        else:
+            logging.warning(f'{SAMDB_PATH} not found, is linuxmuster installed ?')
+
+    def list(self):
+        raw_groups = lr.get('/groups', attributes=['cn', 'sophomorixType'])
+        groups = {}
+
+        for group in raw_groups:
+            if group['sophomorixType'] not in groups:
+                groups[group['sophomorixType']] = []
+            groups[group['sophomorixType']].append(group['cn'])
+
+        return groups
+
+
