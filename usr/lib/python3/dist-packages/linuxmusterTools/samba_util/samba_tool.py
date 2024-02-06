@@ -1,5 +1,6 @@
 import os
 import logging
+import subprocess
 from dataclasses import dataclass, field, asdict
 from .drives import DriveManager
 from ..ldapconnector import LMNLdapReader as lr
@@ -62,6 +63,8 @@ class GroupManager:
     """
 
     def __init__(self):
+        self.POST_HOOK_DIR = '/etc/linuxmuster/tools/hooks/group-manager'
+
         if os.path.isfile(SAMDB_PATH):
             try:
                 self.samdb = SamDB(url=SAMDB_PATH, session_info=system_session(),credentials=creds, lp=lp)
@@ -69,6 +72,22 @@ class GroupManager:
                 logging.error(f'Could not load {SAMDB_PATH}, is linuxmuster installed ?')
         else:
             logging.warning(f'{SAMDB_PATH} not found, is linuxmuster installed ?')
+
+    def _run_post_hook(self, action, group, members):
+        """
+        Runs alls the scripts located in self.POST_HOOK_DIR in alphanum order, passing 3 arguments:
+
+        :param action: actually 'remove' or 'add'
+        :type action: basestring
+        :param group: group name
+        :type group: basestring
+        :param members: members list, will be given coma separated as argument
+        :type members: list
+        """
+
+        for script in sorted(os.listdir(self.POST_HOOK_DIR)):
+            print(f"Executing {os.path.join(self.POST_HOOK_DIR, script)}")
+            subprocess.run([os.path.join(self.POST_HOOK_DIR, script), action, group, ','.join(members)])
 
     def list(self):
         raw_groups = lr.get('/groups', attributes=['cn', 'sophomorixType'])
@@ -92,7 +111,13 @@ class GroupManager:
         :type members: list
         """
 
-        self.samdb.add_remove_group_members(groupname=group, members=members, add_members_operation=False)
+        try:
+            self.samdb.add_remove_group_members(groupname=group, members=members, add_members_operation=False)
+        except Exception as e:
+            print(e)
+            return
+
+        self._run_post_hook('remove', group, members)
 
     def add_members(self, group, members):
         """
@@ -105,5 +130,11 @@ class GroupManager:
         :type members: list
         """
 
-        self.samdb.add_remove_group_members(groupname=group, members=members, add_members_operation=True)
+        try:
+            self.samdb.add_remove_group_members(groupname=group, members=members, add_members_operation=True)
+        except Exception as e:
+            print(e)
+            return
+
+        self._run_post_hook('add', group, members)
 
