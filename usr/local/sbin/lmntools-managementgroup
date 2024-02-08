@@ -1,0 +1,35 @@
+#! /usr/bin/env python3
+
+import argparse
+import sys
+
+from linuxmusterTools.samba_util import GroupManager
+
+
+parser = argparse.ArgumentParser(
+                    prog='lmntools-managementgroup',
+                    description='Add and remove members from a ldap group')
+
+parser.add_argument('-g', '--group', help="The group to modify")
+parser.add_argument('-a', '--add-members', help="Comma separatedlist of users to add to GROUP")
+parser.add_argument('-r', '--remove-members', help="Comma separatedlist of users to remove from GROUP")
+
+args = parser.parse_args()
+
+if args.group is not None:
+    groupmanager = GroupManager()
+
+    if args.add_members is None and args.remove_members is None:
+        parser.print_help()
+        sys.exit(0)
+
+    if args.add_members is not None:
+        to_add = args.add_members.split(',')
+        groupmanager.add_members(args.group, to_add)
+
+    if args.remove_members is not None:
+        to_remove = args.remove_members.split(',')
+        groupmanager.remove_members(args.group, to_remove)
+
+else:
+    parser.print_help()
