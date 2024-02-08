@@ -25,11 +25,17 @@ if args.group is not None:
 
     if args.add_members is not None:
         to_add = args.add_members.split(',')
-        groupmanager.add_members(args.group, to_add)
+        try:
+            groupmanager.add_members(args.group, to_add)
+        except Exception as e:
+￼           sys.exit(e)
 
     if args.remove_members is not None:
         to_remove = args.remove_members.split(',')
-        groupmanager.remove_members(args.group, to_remove)
+        try:
+            groupmanager.remove_members(args.group, to_remove)
+        except Exception as e:
+￼           sys.exit(e)
 
 else:
     parser.print_help()
