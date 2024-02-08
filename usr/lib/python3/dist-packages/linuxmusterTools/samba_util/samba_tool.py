@@ -111,12 +111,7 @@ class GroupManager:
         :type members: list
         """
 
-        try:
-            self.samdb.add_remove_group_members(groupname=group, members=members, add_members_operation=False)
-        except Exception as e:
-            print(e)
-            return
-
+        self.samdb.add_remove_group_members(groupname=group, members=members, add_members_operation=False)
         self._run_post_hook('remove', group, members)
 
     def add_members(self, group, members):
@@ -130,11 +125,6 @@ class GroupManager:
         :type members: list
         """
 
-        try:
-            self.samdb.add_remove_group_members(groupname=group, members=members, add_members_operation=True)
-        except Exception as e:
-            print(e)
-            return
-
+        self.samdb.add_remove_group_members(groupname=group, members=members, add_members_operation=True)
         self._run_post_hook('add', group, members)
 
