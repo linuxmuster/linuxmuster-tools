@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# postinst script for linuxmuster-tools7
+# postinst script for linuxmuster-tools8
 # GPL v3
 #
 
@@ -19,7 +19,12 @@ case "$1" in
     install|configure)
         msg "Install Python requirements"
         /usr/bin/python3 -m pip install -r /usr/lib/python3/dist-packages/linuxmusterTools/requirements.txt
-        
+
+        msg "Checking post-hooks directories"
+        mkdir -p /etc/linuxmuster/tools/hooks/group-manager
+        chown root:root /etc/linuxmuster/tools/hooks/group-manager -R
+        chmod 600 /etc/linuxmuster/tools/hooks/group-manager -R
+
     ;;
 
     *)
