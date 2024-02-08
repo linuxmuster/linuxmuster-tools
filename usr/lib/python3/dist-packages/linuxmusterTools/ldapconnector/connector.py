@@ -207,11 +207,19 @@ class LdapConnector:
             l.set_option(ldap.OPT_RESTART, ldap.OPT_ON)
             l.protocol_version = ldap.VERSION3
             if not webui_import:
+                # Using Administrator password to be able to write data in LDAP
                 with LMNFile('/etc/linuxmuster/webui/config.yml','r') as config:
                     self.params = config.data['linuxmuster']['ldap']
                 with open('/etc/linuxmuster/.secret/administrator', 'r') as admpwd:
-                    passwd = admpwd.read().strip()
-            l.bind_s(f"CN=Administrator,CN=Users,{self.params['searchdn']}", passwd)
+                    bindpwd = admpwd.read().strip()
+                binddn = f"CN=Administrator,CN=Users,{self.params['searchdn']}"
+            else:
+                # Importing lmntools from the Webui will resulting into using the same binddn as the one configured
+                # in the config.yml from the Webui
+                binddn = self.params['binddn']
+                bindpwd = self.params['bindpw']
+
+            l.bind_s(binddn, bindpwd)
 
         attrlist = attributes[:]
         # Not a proper way to add DN
