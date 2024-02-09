@@ -37,7 +37,7 @@ def list_user_files(user):
 
 def get_user_quotas(user):
     # TODO: find a better way to get shares list
-    sophomorixQuota = lr.getval(f'/users/{user}', 'sophomorixQuota')['sophomorixQuota']
+    sophomorixQuota = lr.getval(f'/users/{user}', 'sophomorixQuota')
     if sophomorixQuota is None:
         raise Exception(f'User {user} not found in ldap')
 
