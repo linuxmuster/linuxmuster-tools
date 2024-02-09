@@ -13,31 +13,52 @@ class LMNLdapRouter:
         self.lc = LdapConnector()
         self.urls = {}
 
+    def _find_method(self, url):
+       for url_model, func in self.urls.items():
+            match = func.url_pattern.match(url)
+            if match:
+                data = match.groupdict()
+                return func, data
+       raise Exception(f'Requested search {url} unknown')
+
     def get(self, url, **kwargs):
         """
         Parse all urls and find the right method to handle the request.
         """
 
-        for url_model, func in self.urls.items():
-            match = func.url_pattern.match(url)
-            if match:
-                data = match.groupdict()
-                ldap_filter = func(**data)
+        func, data = self._find_method(url)
+        ldap_filter = func(**data)
 
-                # Replace selected school in the subdn where we are searching
-                if 'school' in kwargs:
-                    school = kwargs['school']
-                else:
-                    school = 'default-school'
+        # Replace selected school in the subdn where we are searching
+        if 'school' in kwargs:
+            school = kwargs['school']
+        else:
+            school = 'default-school'
 
-                subdn = func.subdn.replace(SCHOOL_MARKER, school)
+        subdn = func.subdn.replace(SCHOOL_MARKER, school)
 
-                if func.type == 'single':
-                    return self.lc.get_single(func.model, ldap_filter, scope=func.scope, subdn=subdn, **kwargs)
+        if func.type == 'single':
+            return self.lc.get_single(func.model, ldap_filter, scope=func.scope, subdn=subdn, **kwargs)
 
-                if func.type == 'collection':
-                    return self.lc.get_collection(func.model, ldap_filter, scope=func.scope, subdn=subdn, **kwargs)
-        raise Exception(f'Requested search {url} unknown')
+        if func.type == 'collection':
+            return self.lc.get_collection(func.model, ldap_filter, scope=func.scope, subdn=subdn, **kwargs)
+
+    def getval(self, url, attributes, dict=True, **kwargs):
+
+        # Get default type from model for each attribute
+        if isinstance(attributes, str):
+            attrs = [attributes]
+        elif isinstance(attributes, list):
+            attrs = attributes
+        else:
+            raise Exception(f"Attributes {attributes} should be a string or a list of valid attributes.")
+
+        results = self.get(url, attributes=attrs, dict=dict, **kwargs)
+
+        if dict:
+            return {attr: results.get(attr, None) for attr in attrs}
+        else:
+            return {attr: getattr(results, attr, None) for attr in attrs}
 
     def add_url(self, url, method):
         """

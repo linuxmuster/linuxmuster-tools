@@ -63,3 +63,10 @@ At this point, the following requests are available:
   * `/users/exam` : get all exam users
   * `/users/exam/NAME` : get all informations about the exam user `NAME` or `NAME-exam` ( as `cn` )
   * `/users/search/SELECTION/QUERY` : get all users matching the `SELECTION` and `QUERY` criterias. `SELECTION` is role-based and can be set to `all`, `admins` or a specific role like `student`. `QUERY` is string which should be contained in the `cn`.
+
+## Modify LDAP attribute
+
+```Console
+>>> from linuxmusterTools.ldapconnector import LMNLdapWriter as lw
+>>> lw.set('kiar', 'user', {'mail': 'bla@bla.com'})
+```
