@@ -243,7 +243,7 @@ class LdapConnector:
         # Removing sensitive data
         if not webui_import:
             self.params = {}
-            passwd = ''
+            binddn, bindpwd = '', ''
 
         return results
 
