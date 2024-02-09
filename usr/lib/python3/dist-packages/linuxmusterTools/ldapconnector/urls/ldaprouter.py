@@ -43,12 +43,22 @@ class LMNLdapRouter:
         if func.type == 'collection':
             return self.lc.get_collection(func.model, ldap_filter, scope=func.scope, subdn=subdn, **kwargs)
 
-    def getval(self, url, attributes, dict=True, **kwargs):
+    def getval(self, url, attribute, **kwargs):
 
         # Get default type from model for each attribute
-        if isinstance(attributes, str):
-            attrs = [attributes]
-        elif isinstance(attributes, list):
+        if isinstance(attribute, str):
+            attrs = [attribute]
+        else:
+            raise Exception(f"Attribute {attribute} should be a string or a list of valid attributes.")
+
+        results = self.get(url, attributes=attrs, dict=dict, **kwargs)
+
+        return results.get(attribute, None)
+
+    def getvalues(self, url, attributes, dict=True, **kwargs):
+
+        # Get default type from model for each attribute
+        if isinstance(attributes, list):
             attrs = attributes
         else:
             raise Exception(f"Attributes {attributes} should be a string or a list of valid attributes.")
