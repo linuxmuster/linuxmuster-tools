@@ -172,10 +172,14 @@ class LMNUser:
         self.isAdmin = "administrator" in self.sophomorixRole
 
     def test_password(self, password=''):
+        if not self.dn:
+            return False
+
         l = ldap.initialize("ldap://localhost:389/")
         l.set_option(ldap.OPT_REFERRALS, 0)
         l.set_option(ldap.OPT_RESTART, ldap.OPT_ON)
         l.protocol_version = ldap.VERSION3
+
         try:
             l.bind_s(self.dn, password)
             return True
