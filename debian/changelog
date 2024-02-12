@@ -1,3 +1,14 @@
+linuxmuster-tools7 (7.2.17) lmn72; urgency=medium
+
+  * Add ldap writer
+  * [ldapreader] Move to administrator account for extern import
+  * [ldapreader] Add getval wrapper
+  * [ldapreader] Get passwords list
+  * [ldapreader] Get user quota
+  * [ldapreader] Global ldap search 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Mon, 12 Feb 2024 10:58:45 +0100
+
 linuxmuster-tools7 (7.2.16) lmn72; urgency=medium
 
   * [samba] Add group manager 
