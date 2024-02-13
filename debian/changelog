@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.2.18) lmn72; urgency=medium
+
+  * [samba] Idempotence when adding member to group 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Tue, 13 Feb 2024 10:51:57 +0100
+
 linuxmuster-tools7 (7.2.17) lmn72; urgency=medium
 
   * Add ldap writer
