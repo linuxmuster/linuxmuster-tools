@@ -125,6 +125,13 @@ class GroupManager:
         :type members: list
         """
 
-        self.samdb.add_remove_group_members(groupname=group, members=members, add_members_operation=True)
+        for member in members:
+            try:
+                self.samdb.add_remove_group_members(groupname=group, members=[member], add_members_operation=True)
+            except Exception as e:
+                if "(68," in str(e):
+                    # Attribute member already exists for target GUID ... already in group, passing error
+                    pass
+
         self._run_post_hook('add', group, members)
 
