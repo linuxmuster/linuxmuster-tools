@@ -44,7 +44,7 @@ class SambaToolDNS():
             for device in devices.data:
                 # Ignore comment lines
                 if device['hostname'] is not None:
-                    self.lmn_hosts.append(device['hostname'])
+                    self.lmn_hosts.append(device['hostname'].lower())
 
     def _samba_tool_process(self, action, options):
         """
