@@ -1,4 +1,6 @@
 import os
+import string
+import random
 import logging
 import subprocess
 from dataclasses import dataclass, field, asdict
@@ -11,6 +13,7 @@ try:
     from samba.param import LoadParm
     from samba.samdb import SamDB
     from samba.netcmd.gpo import get_gpo_info
+    from ldb import LdbError
 
     lp = LoadParm()
     creds = Credentials()
@@ -134,4 +137,47 @@ class GroupManager:
                     pass
 
         self._run_post_hook('add', group, members)
+
+class UserManager:
+    """
+    Sample class to manage samba users via samba-tool.
+    """
+
+    def __init__(self):
+        self.POST_HOOK_DIR = '/etc/linuxmuster/tools/hooks/user-manager'
+
+        if os.path.isfile(SAMDB_PATH):
+            try:
+                self.samdb = SamDB(url=SAMDB_PATH, session_info=system_session(),credentials=creds, lp=lp)
+            except Exception:
+                logging.error(f'Could not load {SAMDB_PATH}, is linuxmuster installed ?')
+        else:
+            logging.warning(f'{SAMDB_PATH} not found, is linuxmuster installed ?')
+
+    def _check_password_strength(self, password):
+        """
+        Passwords must contain at least one lowercase, one uppercase, one special char or number, and at least 7 chars.
+        """
+
+        regexp = re.compile(r"(?=.*[a-z])(?=.*[A-Z])(?=.*[?!@#§+\-$%&*{}()]|(?=.*\d)).{7,}")
+        return re.match(regexp, password) is None
+
+    def _generate_password(self):
+        """
+        Passwords must contain at least one lowercase, one uppercase, one special char or number, and at least 7 chars.
+        """
+
+        charlist = string.ascii_letters + string.digits + "?!@#§+-$%&*{}()]["
+        password_check = False
+        while not password_check:
+            password = ''.join(random.choices(charlist, k=8))
+            password_check = self._check_password_strength(password)
+
+        return password
+
+    def set_password(self, username, password):
+        try:
+            self.samdb.setpassword(f"samaccountname={username}", password)
+        except LdbError as e:
+            logging.error(e.args[1])
 
