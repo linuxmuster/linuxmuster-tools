@@ -180,4 +180,5 @@ class UserManager:
             self.samdb.setpassword(f"samaccountname={username}", password)
         except LdbError as e:
             logging.error(e.args[1])
+            raise Exception(e.args[1])
 
