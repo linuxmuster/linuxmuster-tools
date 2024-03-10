@@ -218,8 +218,12 @@ class LdapConnector:
                 # in the config.yml from the Webui
                 binddn = self.params['binddn']
                 bindpwd = self.params['bindpw']
-
-            l.bind_s(binddn, bindpwd)
+            
+            try:
+                l.bind_s(binddn, bindpwd)
+            except ldap.SERVER_DOWN as e:
+                logging.error(str(e))
+                return []
 
         attrlist = attributes[:]
         # Not a proper way to add DN
