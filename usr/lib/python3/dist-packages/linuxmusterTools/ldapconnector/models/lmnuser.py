@@ -126,10 +126,14 @@ class LMNUser:
         return printers
 
     def extract_management(self):
+        school_prefix = ""
+        if self.sophomorixSchoolname != 'default-school':
+            school_prefix = f"{self.sophomorixSchoolname}-"
+
         for group in ['internet', 'intranet', 'printing', 'webfilter', 'wifi']:
             setattr(self, group, False)
             for dn in self.memberOf:
-                if dn.startswith(f"CN={group},OU=Management"):
+                if dn.startswith(f"CN={school_prefix}{group},OU=Management"):
                     setattr(self, group, True)
 
     def parse_permissions(self):
