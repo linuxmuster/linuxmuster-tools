@@ -58,10 +58,10 @@ class LMNUser:
     sophomorixWebuiDashboard: list
     sophomorixWebuiPermissionsCalculated: list
     unixHomeDirectory: str
-    dn:             str = field(init=False)
+    dn:             str  = field(init=False)
     examMode:       bool = field(init=False)
-    examTeacher:    str = field(init=False)
-    examBaseCn:     str = field(init=False)
+    examTeacher:    str  = field(init=False)
+    examBaseCn:     str  = field(init=False)
     internet:       bool = field(init=False)
     intranet:       bool = field(init=False)
     isAdmin:        bool = field(init=False)
@@ -71,6 +71,7 @@ class LMNUser:
     printing:       bool = field(init=False)
     projects:       list = field(init=False)
     schoolclasses:  list = field(init=False)
+    school:         str  = field(init=False)
     webfilter:      bool = field(init=False)
     wifi:           bool = field(init=False)
 
@@ -165,6 +166,7 @@ class LMNUser:
         self.projects = self.extract_projects(self.memberOf)
         self.printers = self.extract_printers(self.memberOf)
         self.dn = self.distinguishedName
+        self.school = self.sophomorixSchoolname
         self.extract_management()
         self.parse_permissions()
         self.parse_sessions()
