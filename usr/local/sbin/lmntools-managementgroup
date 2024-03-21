@@ -11,17 +11,23 @@ parser = argparse.ArgumentParser(
                     description='Add and remove members from a ldap group')
 
 parser.add_argument('-g', '--group', help="The group to modify")
-parser.add_argument('-a', '--add-members', help="Comma separatedlist of users to add to GROUP")
-parser.add_argument('-r', '--remove-members', help="Comma separatedlist of users to remove from GROUP")
+parser.add_argument('-a', '--add-members', help="Comma separated list of users to add to GROUP")
+parser.add_argument('-r', '--remove-members', help="Comma separated list of users to remove from GROUP")
+parser.add_argument('-s', '--school', help="Schoolname, if different from default-school")
 
 args = parser.parse_args()
 
 if args.group is not None:
-    groupmanager = GroupManager()
 
     if args.add_members is None and args.remove_members is None:
         parser.print_help()
         sys.exit(0)
+
+    school = "default-school"
+    if args.school is not None:
+        school = args.school
+
+    groupmanager = GroupManager(school=school)
 
     if args.add_members is not None:
         to_add = args.add_members.split(',')

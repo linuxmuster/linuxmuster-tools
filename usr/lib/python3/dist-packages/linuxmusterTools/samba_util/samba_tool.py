@@ -65,8 +65,10 @@ class GroupManager:
     Samble class to manage samba groups via samba-tool.
     """
 
-    def __init__(self):
+    def __init__(self, school='default-school'):
         self.POST_HOOK_DIR = '/etc/linuxmuster/tools/hooks/group-manager'
+        self.school = school
+        self.school_prefix = "" if self.school == 'default-school' else f"{school}-"
 
         if os.path.isfile(SAMDB_PATH):
             try:
@@ -93,7 +95,7 @@ class GroupManager:
             subprocess.run([os.path.join(self.POST_HOOK_DIR, script), action, group, ','.join(members)])
 
     def list(self):
-        raw_groups = lr.get('/groups', attributes=['cn', 'sophomorixType'])
+        raw_groups = lr.get('/groups', attributes=['cn', 'sophomorixType'], school=self.school)
         groups = {}
 
         for group in raw_groups:
@@ -114,7 +116,7 @@ class GroupManager:
         :type members: list
         """
 
-        self.samdb.add_remove_group_members(groupname=group, members=members, add_members_operation=False)
+        self.samdb.add_remove_group_members(groupname=f"{self.school_prefix}{group}", members=members, add_members_operation=False)
         self._run_post_hook('remove', group, members)
 
     def add_members(self, group, members):
@@ -130,7 +132,7 @@ class GroupManager:
 
         for member in members:
             try:
-                self.samdb.add_remove_group_members(groupname=group, members=[member], add_members_operation=True)
+                self.samdb.add_remove_group_members(groupname=f"{self.school_prefix}{group}", members=[member], add_members_operation=True)
             except Exception as e:
                 if "(68," in str(e):
                     # Attribute member already exists for target GUID ... already in group, passing error
