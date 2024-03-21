@@ -1,3 +1,12 @@
+linuxmuster-tools7 (7.2.19) lmn72; urgency=medium
+
+  * Case insensitive hostnames
+  * User manager to handle passwords
+  * Fix crash on LDAP server down
+  * Add school parameter for group management 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Thu, 21 Mar 2024 08:56:32 +0100
+
 linuxmuster-tools7 (7.2.18) lmn72; urgency=medium
 
   * [samba] Idempotence when adding member to group 
