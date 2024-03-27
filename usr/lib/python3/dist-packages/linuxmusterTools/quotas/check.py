@@ -2,9 +2,70 @@ import os
 import pwd
 import re
 import subprocess
+import smbclient
+from datetime import datetime
+from smbprotocol.exceptions import SMBAuthenticationError
 
-from ..samba_util import SAMBA_WORKGROUP, SAMBA_DOMAIN
+from ..samba_util import SAMBA_WORKGROUP, SAMBA_DOMAIN, SAMBA_NETBIOS
 from ..ldapconnector import LMNLdapReader as lr
+
+
+def timestamp2date(t):
+    return datetime.fromtimestamp(t).strftime("%d.%m.%Y %H:%M:%S")
+
+def _get_recursive_dir_properties(path):
+    """
+    Get properties of folder, and call itself recursively for subfolders.
+
+    :param path: Current SAMBA path to scan
+    :type path: basestring
+    :return: Files, subfolders, and their size, last modified date.
+    :rtype: dict
+    """
+
+    properties = {
+            'size':0,
+            'last-modified': timestamp2date(smbclient.stat(path).st_mtime),
+            'files': {},
+            'dirs': {},
+    }
+
+    for item in smbclient.scandir(path):
+        if item.is_file():
+            stats = item.stat()
+            size = stats.st_size
+            lastmodified = timestamp2date(stats.st_mtime)
+            properties['files'][item.name] = {
+                'size': size,
+                'last-modified': lastmodified,
+            }
+
+        elif item.is_dir():
+            dir_path = f"{path}\\{item.name}"
+            properties['dirs'][dir_path] = _get_recursive_dir_properties(dir_path)
+
+    return properties
+
+def samba_list_user_files(user):
+    """
+    Recursively list files and folder of a school root share, with size and last-modified properties.
+    This function can only be called with a valid kerberos ticket.
+
+    :param user: LDAP User
+    :type user: basestring
+    :return: All folders and files owned by user
+    :rtype: dict
+    """
+
+    try:
+        school = lr.getval(f'/users/{user}', 'sophomorixSchoolname')
+        path = f'\\\\{SAMBA_NETBIOS}\\{school}'
+        directories = {path: _get_recursive_dir_properties(path)}
+
+        return directories
+    except SMBAuthenticationError as e:
+        print(f"Please check if you have a valid Kerberos Ticket for the user {user}.")
+        return None
 
 def list_user_files(user):
     path = '/srv/samba'
