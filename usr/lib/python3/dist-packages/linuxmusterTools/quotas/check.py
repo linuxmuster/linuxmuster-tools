@@ -8,6 +8,7 @@ from smbprotocol.exceptions import SMBAuthenticationError
 
 from ..samba_util import SAMBA_WORKGROUP, SAMBA_DOMAIN, SAMBA_NETBIOS
 from ..ldapconnector import LMNLdapReader as lr
+from ..common import format_size
 
 
 def timestamp2date(t):
@@ -93,7 +94,7 @@ def samba_dir_size(user, path=None):
             total += item.stat().st_size
         elif item.is_dir():
             total += samba_dir_size(user, path=item.path)
-    return total
+    return format_size(total)
 
 def list_user_files(user):
     path = '/srv/samba'
@@ -110,19 +111,18 @@ def list_user_files(user):
                 for directory, _ in directories.items():
                     if root.startswith(directory):
                         directories[directory]['total'] += size
-                        directories[directory]['files'][f] = f"{size / 1024 / 1024:.2f}"
+                        directories[directory]['files'][f] = f"{format_size(size)}"
                         break
                 else:
-                    directories[root] = {'total': size, 'files':{f: f"{size / 1024 / 1024:.2f}"}}
+                    directories[root] = {'total': size, 'files':{f: f"{format_size(size)}"}}
 
     total = 0
     for directory, details in directories.items():
         size = details['total']
         total += size
-        mega = size / 1024 / 1024
-        directories[directory]['total'] = f"{mega:.2f}"
+        directories[directory]['total'] = f"{format_size(size)}"
 
-    return {'directories': directories, 'total': f"{total / 1024 / 1024:.2f}"}
+    return {'directories': directories, 'total': f"{format_size(total)}"}
 
 def get_user_quotas(user):
     # TODO: find a better way to get shares list
