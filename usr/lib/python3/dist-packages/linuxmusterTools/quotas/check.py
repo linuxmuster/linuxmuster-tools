@@ -24,37 +24,39 @@ def _get_recursive_dir_properties(path):
     """
 
     properties = {
+            'name': path.split('\\')[-1],
+            'type': "directory",
             'size':0,
-            'last-modified': timestamp2date(smbclient.stat(path).st_mtime),
-            'files': [],
-            'dirs': [],
+            'lastModified': timestamp2date(smbclient.stat(path).st_mtime),
+            'contents': [],
+            'path': path,
     }
 
     for item in smbclient.scandir(path):
         if item.is_file():
             stats = item.stat()
-            size = stats.st_size
-            lastmodified = timestamp2date(stats.st_mtime)
-            properties['files'].append({
+            properties['contents'].append({
                     'name': item.name,
-                    'size': size,
-                    'last-modified': lastmodified,
+                    'type': "file",
+                    "path": f"{path}\\{item.name}",
+                    'size': stats.st_size,
+                    'lastModified': timestamp2date(stats.st_mtime),
                 }
             )
 
         elif item.is_dir():
             dir_path = f"{path}\\{item.name}"
-            properties['dirs'].append({dir_path: _get_recursive_dir_properties(dir_path)})
+            properties['contents'].append(_get_recursive_dir_properties(dir_path))
 
     return properties
 
 def _sum_dir_size(d):
-    for p,properties in d.items():
-        for f in properties['files']:
-            properties['size'] += f['size']
-        for d in properties['dirs']:
-            properties['size'] += _sum_dir_size(d)
-        return properties['size']
+    for item in d['contents']:
+        if item["type"] == "file":
+            d['size'] += item['size']
+        else:
+            d['size'] += _sum_dir_size(item)
+    return d['size']
 
 def samba_root_tree(user):
     """
@@ -70,7 +72,8 @@ def samba_root_tree(user):
     try:
         school = lr.getval(f'/users/{user}', 'sophomorixSchoolname')
         path = f'\\\\{SAMBA_NETBIOS}\\{school}'
-        directories = {path: _get_recursive_dir_properties(path)}
+        directories = _get_recursive_dir_properties(path)
+        directories['school'] = school
         _sum_dir_size(directories)
         return directories
     except SMBAuthenticationError as e:
