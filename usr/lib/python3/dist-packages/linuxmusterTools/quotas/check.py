@@ -11,7 +11,7 @@ from ..ldapconnector import LMNLdapReader as lr
 
 
 def timestamp2date(t):
-    return datetime.fromtimestamp(t).strftime("%d.%m.%Y %H:%M:%S")
+    return datetime.fromtimestamp(t).strftime("%Y-%m-%dT%H:%M:%S")
 
 def _get_recursive_dir_properties(path):
     """
