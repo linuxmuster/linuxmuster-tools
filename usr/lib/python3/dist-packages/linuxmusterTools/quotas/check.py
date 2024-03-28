@@ -24,7 +24,7 @@ def _get_recursive_dir_properties(path):
     """
 
     properties = {
-            'name': path.split('\\')[-1],
+            'name': path.split('/')[-1],
             'type': "directory",
             'size':0,
             'lastModified': timestamp2date(smbclient.stat(path).st_mtime),
@@ -38,14 +38,14 @@ def _get_recursive_dir_properties(path):
             properties['contents'].append({
                     'name': item.name,
                     'type': "file",
-                    "path": f"{path}\\{item.name}",
+                    "path": f"{path}/{item.name}",
                     'size': stats.st_size,
                     'lastModified': timestamp2date(stats.st_mtime),
                 }
             )
 
         elif item.is_dir():
-            dir_path = f"{path}\\{item.name}"
+            dir_path = f"{path}/{item.name}"
             properties['contents'].append(_get_recursive_dir_properties(dir_path))
 
     return properties
@@ -71,7 +71,7 @@ def samba_root_tree(user):
 
     try:
         school = lr.getval(f'/users/{user}', 'sophomorixSchoolname')
-        path = f'\\\\{SAMBA_NETBIOS}\\{school}'
+        path = f'//{SAMBA_NETBIOS}/{school}'
         directories = _get_recursive_dir_properties(path)
         directories['school'] = school
         _sum_dir_size(directories)
