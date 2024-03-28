@@ -80,6 +80,21 @@ def samba_root_tree(user):
         print(f"Please check if you have a valid Kerberos Ticket for the user {user}.")
         return None
 
+def samba_dir_size(user, path=None):
+    if not path:
+        # Scanning from root share
+        school = lr.getval(f'/users/{user}', 'sophomorixSchoolname')
+        path = f'//{SAMBA_NETBIOS}/{school}'
+
+    total = 0
+    for item in smbclient.scandir(path):
+        print(item.path)
+        if item.is_file():
+            total += item.stat().st_size
+        elif item.is_dir():
+            total += samba_dir_size(user, path=item.path)
+    return total
+
 def list_user_files(user):
     path = '/srv/samba'
     user = f'{SAMBA_WORKGROUP}\\{user}'
