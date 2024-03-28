@@ -26,8 +26,8 @@ def _get_recursive_dir_properties(path):
     properties = {
             'size':0,
             'last-modified': timestamp2date(smbclient.stat(path).st_mtime),
-            'files': {},
-            'dirs': {},
+            'files': [],
+            'dirs': [],
     }
 
     for item in smbclient.scandir(path):
@@ -35,18 +35,28 @@ def _get_recursive_dir_properties(path):
             stats = item.stat()
             size = stats.st_size
             lastmodified = timestamp2date(stats.st_mtime)
-            properties['files'][item.name] = {
-                'size': size,
-                'last-modified': lastmodified,
-            }
+            properties['files'].append({
+                    'name': item.name,
+                    'size': size,
+                    'last-modified': lastmodified,
+                }
+            )
 
         elif item.is_dir():
             dir_path = f"{path}\\{item.name}"
-            properties['dirs'][dir_path] = _get_recursive_dir_properties(dir_path)
+            properties['dirs'].append({dir_path: _get_recursive_dir_properties(dir_path)})
 
     return properties
 
-def samba_list_user_files(user):
+def _sum_dir_size(d):
+    for p,properties in d.items():
+        for f in properties['files']:
+            properties['size'] += f['size']
+        for d in properties['dirs']:
+            properties['size'] += _sum_dir_size(d)
+        return properties['size']
+
+def samba_root_tree(user):
     """
     Recursively list files and folder of a school root share, with size and last-modified properties.
     This function can only be called with a valid kerberos ticket.
@@ -61,7 +71,7 @@ def samba_list_user_files(user):
         school = lr.getval(f'/users/{user}', 'sophomorixSchoolname')
         path = f'\\\\{SAMBA_NETBIOS}\\{school}'
         directories = {path: _get_recursive_dir_properties(path)}
-
+        _sum_dir_size(directories)
         return directories
     except SMBAuthenticationError as e:
         print(f"Please check if you have a valid Kerberos Ticket for the user {user}.")
