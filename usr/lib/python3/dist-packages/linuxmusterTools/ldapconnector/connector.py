@@ -70,7 +70,7 @@ class LdapConnector:
         :typee attributes: list
         """
 
-        results = self._get(ldap_filter, scope=scope, subdn=subdn, attributes=attributes)
+        results = self._get(ldap_filter, scope=scope, subdn=subdn)
 
         if len(results) == 0:
             return self._create_result_object([None], objectclass, attributes=attributes, **kwargs)
@@ -112,7 +112,7 @@ class LdapConnector:
             else:
                 return 10000000  # just a big number to come after all schoolclasses
 
-        results = self._get(ldap_filter, scope=scope, subdn=subdn, attributes=attributes)
+        results = self._get(ldap_filter, scope=scope, subdn=subdn)
         response = []
         for result in results:
             formatted_obj = self._create_result_object(result, objectclass, attributes=attributes, **kwargs)
@@ -167,7 +167,7 @@ class LdapConnector:
         if value is None:
             return None
 
-    def _get(self, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn='', attributes=['*']):
+    def _get(self, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn=''):
         """
         Connect to ldap and perform the request.
 
@@ -225,16 +225,8 @@ class LdapConnector:
                 logging.error(str(e))
                 return []
 
-        attrlist = attributes[:]
-        # Not a proper way to add DN
-        if attributes != ['*']:
-            attrlist.append('distinguishedName')
-
-        if not attributes:
-            attrlist = ['*']
-
         searchdn = f"{subdn}{self.params['searchdn']}"
-        response = l.search_s(searchdn,scope, ldap_filter, attrlist=attrlist)
+        response = l.search_s(searchdn,scope, ldap_filter)
 
         # Filter non-interesting values
         results = []
