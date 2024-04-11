@@ -49,7 +49,7 @@ class DriveManager:
         try:
             self.policy = policy_path.split('/')[-1]
             self.path = f'{policy_path}/User/Preferences/Drives/Drives.xml'
-        except AttributeError:
+        except Exception:
             logging.error(f"{policy_path} is not a valid policy path.")
             self.path = ''
         self.usedLetters = []
