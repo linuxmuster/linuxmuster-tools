@@ -58,6 +58,7 @@ class LMNUser:
     sophomorixWebuiDashboard: list
     sophomorixWebuiPermissionsCalculated: list
     unixHomeDirectory: str
+    whenChanged: str
     dn:             str  = field(init=False)
     examMode:       bool = field(init=False)
     examTeacher:    str  = field(init=False)
