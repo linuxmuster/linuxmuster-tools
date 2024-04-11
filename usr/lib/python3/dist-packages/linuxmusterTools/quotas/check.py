@@ -151,7 +151,7 @@ def get_user_quotas(user):
         cmd = ['smbcquotas', '-U', f'administrator%{pw}', '-u', user, f'//{SAMBA_DOMAIN}/{share}']
         smbc_output = subprocess.run(cmd, capture_output=True)
         out, err = smbc_output.stdout.decode().strip(),  smbc_output.stderr.decode().strip()
-        if 'cli_full_connection failed!' in err:
+        if smbc_output.returncode > 0:
             # Catch Samba error
             error_code =  err.split("(")[1].strip(")")
             quotas[share] = {
