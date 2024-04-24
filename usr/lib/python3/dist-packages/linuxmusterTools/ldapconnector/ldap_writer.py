@@ -37,7 +37,7 @@ class LdapWriter():
 
         return details
 
-    def set(self, name, objecttype, data):
+    def set(self, name, objecttype, data, add=False):
         """
         Set one or more attributes only for a ldap entry.
 
@@ -47,6 +47,9 @@ class LdapWriter():
         :type objecttype: basestring
         :param data: Dict of attributes:values to write
         :type data: dict
+        :type add: bool
+        :param add: Define if the attribute should be added, even if the
+        attribute is already present
         """
 
         details = self._is_valid_object(name, objecttype)
@@ -54,15 +57,14 @@ class LdapWriter():
         ldif = []
         for attr, new_val in data.items():
             if attr in details:
-                if details[attr]:
+                if details[attr] and not add:
                     # Delete attribute first
                     ldif.append((ldap.MOD_DELETE, attr, None))
-                ldif.append((ldap.MOD_ADD, attr, [new_val.encode()]))
+                ldif.append((ldap.MOD_ADD, attr, [f"{new_val}".encode()]))
             elif attr == 'unicodePwd':
                 ldif.append((ldap.MOD_REPLACE, attr, f'"{new_val}"'.encode('utf-16-le')))
             else:
                 logging.warning(f"Attribute {attr} not found in {details}'s values.")
-
         self.lc._set(details['dn'], ldif)
 
 ldap_writer = LdapWriter()
