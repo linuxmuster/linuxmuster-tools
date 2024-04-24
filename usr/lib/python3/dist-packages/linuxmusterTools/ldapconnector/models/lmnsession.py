@@ -20,3 +20,6 @@ class LMNSession:
                 'firstPasswordStillSet': lmnuser.test_first_password(),
             }
         return response
+
+    def __str__(self):
+        return f"{self.sid};{self.name};{','.join(self.members)};"
