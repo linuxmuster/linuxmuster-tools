@@ -7,6 +7,7 @@ STRING_RULES = {
     'password': re.compile(r"^[a-zA-Z0-9?!@#§+\-$%&*{}()\]\[]+$"),
     'strong_password': re.compile(r"(?=.*[a-z])(?=.*[A-Z])(?=.*[?!@#§+\-$%&*{}()]|(?=.*\d)).{7,}"),
     'project': re.compile(r"^[a-z0-9_\-]*$"),
+    "session": re.compile(r"^[a-z0-9\+\-_]*$", re.IGNORECASE),
     "linbo_conf": re.compile(r"^[a-z0-9\+\-_]*$", re.IGNORECASE),
     "linbo_image": re.compile(r"^[a-zA-Z0-9_\-]+$"),
     "login": re.compile(r"^[a-z0-9\-_]*$", re.IGNORECASE),
