@@ -1,4 +1,5 @@
 import re
+from functools import partialmethod
 
 
 STRING_RULES = {
@@ -40,7 +41,14 @@ ROLES = [
     'router'
 ]
 
+def set_check_method(cls, *args):
+    for string_type in STRING_RULES:
+        setattr(cls, f"check_{string_type}", partialmethod(cls.check, string_type))
+    return cls
+
+@set_check_method
 class StringChecker:
+
     def check(self, string_type, string):
         pattern = STRING_RULES.get(string_type, None)
         if pattern:
