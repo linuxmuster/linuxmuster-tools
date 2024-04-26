@@ -1,4 +1,5 @@
 import re
+import logging
 from functools import partialmethod
 
 
@@ -57,4 +58,16 @@ class StringChecker:
 
     def check_role(self, role):
         return role in ROLES
+
+    def normalize_mac(self, mac):
+        # TODO: all upper ?
+        if self.check_mac1(mac):
+            return mac
+        elif self.check_mac2(mac):
+            return mac.replace("-", ":")
+        elif self.check_mac3(mac):
+            return ":".join(re.findall(r"..", mac))
+        logging.warning(f"Mac addresse {mac} does not correspond to any valid mac address.")
+        return None
+
 
