@@ -45,11 +45,10 @@ class LMNLdapRouter:
 
     def getval(self, url, attribute, **kwargs):
 
-        # Get default type from model for each attribute
         if isinstance(attribute, str):
             attrs = [attribute]
         else:
-            raise Exception(f"Attribute {attribute} should be a string or a list of valid attributes.")
+            raise Exception(f"Attribute {attribute} should be a string.")
 
         results = self.get(url, attributes=attrs, dict=dict, **kwargs)
 
@@ -57,11 +56,10 @@ class LMNLdapRouter:
 
     def getvalues(self, url, attributes, dict=True, **kwargs):
 
-        # Get default type from model for each attribute
         if isinstance(attributes, list):
             attrs = attributes
         else:
-            raise Exception(f"Attributes {attributes} should be a string or a list of valid attributes.")
+            raise Exception(f"Attributes {attributes} should be a list of valid attributes.")
 
         results = self.get(url, attributes=attrs, dict=dict, **kwargs)
 
