@@ -13,6 +13,8 @@ class LMNGroup:
     sAMAccountType: str
     sophomorixAdminClass: str
     sophomorixCreationDate: str
+    sophomorixHidden: bool
+    sophomorixJoinable: bool
     sophomorixMembers: list
     sophomorixRole: str
     sophomorixSchoolname: str
