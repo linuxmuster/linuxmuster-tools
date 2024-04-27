@@ -67,6 +67,29 @@ class LdapWriter():
                 logging.warning(f"Attribute {attr} not found in {details}'s values.")
         self.lc._set(details['dn'], ldif)
 
+    def delete(self, name, objecttype, data):
+        """
+        Delete one or more attributes only for a ldap entry.
+
+        :param name: cn
+        :type name: basestring
+        :param objecttype: user, device, etc ... see OBJECT_MAPPING above
+        :type objecttype: basestring
+        :param data: Dict of attributes:values to delete.
+        Value may be empty if the attribute is not ambiguous
+        :type data: dict
+        """
+
+        details = self._is_valid_object(name, objecttype)
+
+        ldif = []
+        for attr, val in data.items():
+            if attr in details:
+                ldif.append((ldap.MOD_DELETE, attr, val.encode()))
+            else:
+                logging.warning(f"Attribute {attr} not found in {details}'s values.")
+        self.lc._set(details['dn'], ldif)
+
 ldap_writer = LdapWriter()
 
 
