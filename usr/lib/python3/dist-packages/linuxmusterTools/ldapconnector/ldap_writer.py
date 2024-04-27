@@ -32,8 +32,8 @@ class LdapWriter():
         details = self.lr.get(f'{OBJECT_MAPPING[objecttype]["url"]}{name}')
 
         if not details:
-            logging.info(f"The {objecttype} {name} not found in ldap.")
-            raise Exception(f"The {objecttype} {name} not found in ldap.")
+            logging.info(f"The {objecttype} {name} was not found in ldap.")
+            raise Exception(f"The {objecttype} {name} was not found in ldap.")
 
         return details
 
