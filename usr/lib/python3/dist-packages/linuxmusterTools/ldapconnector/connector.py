@@ -30,7 +30,10 @@ class LdapConnector:
             raw_data = result[1]
             data = {}
             school_node = ""
-            if school:
+
+            # Filter per school in multischool environment, but not for
+            # global-admins
+            if school and school != 'global':
                 school_node = f"OU={school},"
 
             dn = raw_data.get('distinguishedName', [b''])[0].decode()
