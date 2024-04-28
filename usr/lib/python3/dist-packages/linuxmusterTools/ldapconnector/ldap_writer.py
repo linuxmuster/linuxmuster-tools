@@ -65,7 +65,7 @@ class LdapWriter():
                 ldif.append((ldap.MOD_REPLACE, attr, f'"{new_val}"'.encode('utf-16-le')))
             else:
                 logging.warning(f"Attribute {attr} not found in {details}'s values.")
-        self.lc._set(details['dn'], ldif)
+        self.lc._set(details['distinguishedName'], ldif)
 
     def delete(self, name, objecttype, data):
         """
@@ -88,7 +88,7 @@ class LdapWriter():
                 ldif.append((ldap.MOD_DELETE, attr, val.encode()))
             else:
                 logging.warning(f"Attribute {attr} not found in {details}'s values.")
-        self.lc._set(details['dn'], ldif)
+        self.lc._set(details['distinguishedName'], ldif)
 
 ldap_writer = LdapWriter()
 
