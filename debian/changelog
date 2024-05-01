@@ -1,3 +1,13 @@
+linuxmuster-tools7 (7.2.23) lmn72; urgency=medium
+
+  * Add string checker fot LMN objects names
+  * [ldapreader] Export session as string
+  * [ldapreader] Ignore global school parameter
+  * [ldapreader] Get all management groups
+  * [ldapwriter] Flag add=True to only add an entry
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Wed, 01 May 2024 23:34:25 +0200
+
 linuxmuster-tools7 (7.2.22) lmn72; urgency=medium
 
   * [ldapreader] Add whenChanged user attribute
