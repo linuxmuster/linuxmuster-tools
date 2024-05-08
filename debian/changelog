@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.2.24) lmn72; urgency=medium
+
+  * [ldapreader] Check if linuxmuster is configured. 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Wed, 08 May 2024 15:13:19 +0200
+
 linuxmuster-tools7 (7.2.23) lmn72; urgency=medium
 
   * Add string checker fot LMN objects names
