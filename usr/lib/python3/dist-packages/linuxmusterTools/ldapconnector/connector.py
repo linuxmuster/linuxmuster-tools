@@ -219,8 +219,12 @@ class LdapConnector:
             else:
                 # Importing lmntools from the Webui will resulting into using the same binddn as the one configured
                 # in the config.yml from the Webui
-                binddn = self.params['binddn']
-                bindpwd = self.params['bindpw']
+                try:
+                    binddn = self.params['binddn']
+                    bindpwd = self.params['bindpw']
+                except KeyError:
+                    logging.warning(f'LDAP credentials not found, is linuxmuster installed and configured ?')
+                    return []
             
             try:
                 l.bind_s(binddn, bindpwd)
