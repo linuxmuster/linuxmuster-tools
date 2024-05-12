@@ -45,7 +45,7 @@ ROLES = [
 
 def set_check_method(cls, *args):
     for string_type in STRING_RULES:
-        setattr(cls, f"check_{string_type}", partialmethod(cls.check, string_type))
+        setattr(cls, f"check_{string_type}_name", partialmethod(cls.check, string_type))
     return cls
 
 @set_check_method
