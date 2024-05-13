@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.2.25) lmn72; urgency=medium
+
+  * [validator] Better terminology. 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Mon, 13 May 2024 09:39:09 +0200
+
 linuxmuster-tools7 (7.2.24) lmn72; urgency=medium
 
   * [ldapreader] Check if linuxmuster is configured. 
