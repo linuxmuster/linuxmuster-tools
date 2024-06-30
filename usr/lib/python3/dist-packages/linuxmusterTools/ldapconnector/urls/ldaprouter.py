@@ -52,7 +52,11 @@ class LMNLdapRouter:
 
         results = self.get(url, attributes=attrs, dict=dict, **kwargs)
 
-        return results.get(attribute, None)
+        if isinstance(results, list):
+            # results is a collection
+            return [result.get(attribute, None) for result in results]
+        else:
+            return results.get(attribute, None)
 
     def getvalues(self, url, attributes, dict=True, **kwargs):
 
@@ -63,10 +67,17 @@ class LMNLdapRouter:
 
         results = self.get(url, attributes=attrs, dict=dict, **kwargs)
 
-        if dict:
-            return {attr: results.get(attr, None) for attr in attrs}
+        if isinstance(results, list):
+            # results is a collection
+            if dict:
+                return [{attr: result.get(attr, None) for attr in attrs} for result in results]
+            else:
+                return [{attr: getattr(result, attr, None) for attr in attrs} for result in results]
         else:
-            return {attr: getattr(results, attr, None) for attr in attrs}
+            if dict:
+                return {attr: results.get(attr, None) for attr in attrs}
+            else:
+                return {attr: getattr(results, attr, None) for attr in attrs}
 
     def add_url(self, url, method):
         """
