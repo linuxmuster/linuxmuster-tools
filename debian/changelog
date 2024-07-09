@@ -1,3 +1,11 @@
+linuxmuster-tools7 (7.2.26) lmn72; urgency=medium
+
+  * [ldapreader] Getval for collections
+  * [ldapreader] Difference between units and sophomorix-group
+  * [ldapreader] Get projects with special chars 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Tue, 09 Jul 2024 12:29:09 +0200
+
 linuxmuster-tools7 (7.2.25) lmn72; urgency=medium
 
   * [validator] Better terminology. 
