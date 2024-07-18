@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.2.29) lmn72; urgency=medium
+
+  * [samba] Sort logs by reverse date 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Thu, 18 Jul 2024 18:21:58 +0200
+
 linuxmuster-tools7 (7.2.28) lmn72; urgency=medium
 
   * [samba] Handle missing log level parameter 
