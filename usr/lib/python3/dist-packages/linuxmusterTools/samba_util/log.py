@@ -1,5 +1,6 @@
 import re
 import logging
+from datetime import datetime
 
 from ..samba_util import SAMBA_REALM, LOG_LEVEL
 
@@ -23,9 +24,10 @@ def check_audit_level():
 def format_log_data(entry):
     data = re.findall(r"\[([^\]]*)\]", entry)
     if "@" in data[2]:
+        date = datetime.strptime(data[3].split(".")[0], "%a, %d %b %Y %H:%M:%S")
         return {
             'user': data[2].split("@")[0].strip('\\\\'),
-            'datetime': data[3],
+            'datetime': date,
             'ip': data[7].split(':')[1]
         }
     return {}
@@ -36,7 +38,10 @@ def parse_log_files(log_file, pattern):
         for line in f.readlines():
             if pattern in line:
                 data = format_log_data(line)
-                if data and not data['user'].endswith("$"):
+                # Datetime of logging is cut to the second
+                # By login to a linux client, a log entry can occur many times
+                # in a second, so we ignore duplicates
+                if data and not data['user'].endswith("$") and not data in logs:
                     logs.append(data)
     return logs
 
@@ -46,8 +51,6 @@ def last_login(pattern):
         logs = []
         logs.extend(parse_log_files(SAMBA_LOG, pattern))
         logs.extend(parse_log_files(SAMBA_LOG_OLD, pattern))
-        for entry in logs:
-            print(f"{entry['user']:25}|{entry['ip']:20}|{entry['datetime']}")
         return logs
 
     return
