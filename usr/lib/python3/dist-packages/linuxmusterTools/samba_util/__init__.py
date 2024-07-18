@@ -2,6 +2,7 @@ from configparser import ConfigParser
 
 from .samba_tool import *
 from .drives import *
+from .dns import *
 
 
 # Load samba domain
