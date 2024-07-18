@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.2.28) lmn72; urgency=medium
+
+  * [samba] Handle missing log level parameter 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Thu, 18 Jul 2024 18:16:14 +0200
+
 linuxmuster-tools7 (7.2.27) lmn72; urgency=medium
 
   * [samba] Get last login 
