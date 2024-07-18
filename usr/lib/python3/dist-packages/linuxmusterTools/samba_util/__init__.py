@@ -36,7 +36,7 @@ if not os.path.isfile('/etc/samba/smb.conf'):
 
 try:
     smbconf.read('/etc/samba/smb.conf')
-    LOG_LEVEL = parse_log_level(smbconf["global"]["log level"])
+    LOG_LEVEL = parse_log_level(smbconf["global"].get("log level", ""))
     SAMBA_REALM = smbconf["global"]["realm"].lower()
     SAMBA_WORKGROUP = smbconf["global"]["workgroup"]
     SAMBA_NETBIOS = smbconf["global"]["netbios name"].lower()
