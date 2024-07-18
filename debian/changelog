@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.2.27) lmn72; urgency=medium
+
+  * [samba] Get last login 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Thu, 18 Jul 2024 16:06:24 +0200
+
 linuxmuster-tools7 (7.2.26) lmn72; urgency=medium
 
   * [ldapreader] Getval for collections
