@@ -46,11 +46,10 @@ def parse_log_files(log_file, pattern):
     return logs
 
 def last_login(pattern):
+    logs = []
 
     if check_audit_level():
-        logs = []
         logs.extend(parse_log_files(SAMBA_LOG, pattern))
         logs.extend(parse_log_files(SAMBA_LOG_OLD, pattern))
-        return logs
 
-    return
+    return sorted(logs, key=lambda d: d["datetime"], reverse=True)
