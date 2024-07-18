@@ -23,7 +23,7 @@ def check_audit_level():
 
 def format_log_data(entry):
     data = re.findall(r"\[([^\]]*)\]", entry)
-    if "@" in data[2]:
+    if len(data) > 1 and "Kerberos" in data[0] and "@" in data[2]:
         date = datetime.strptime(data[3].split(".")[0], "%a, %d %b %Y %H:%M:%S")
         return {
             'user': data[2].split("@")[0].strip('\\\\'),
