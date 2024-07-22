@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.2.30) lmn72; urgency=medium
+
+  * [ldapreader] Add attributes to search answers 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Mon, 22 Jul 2024 17:21:45 +0200
+
 linuxmuster-tools7 (7.2.29) lmn72; urgency=medium
 
   * [samba] Sort logs by reverse date 
