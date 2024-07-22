@@ -32,7 +32,7 @@ Linuxmuster.net official | ✅  YES
 :---: | :---: 
 [Community support](https://ask.linuxmuster.net) | ✅  YES*
 Actively developed | ✅  YES
-Maintainer organisation |  Linuxmuster.net
+Maintainer organisation |  Linuxmuster.net / Netzint GmbH
 Primary maintainer | arnaud@linuxmuster.net
     
 \* The linuxmuster community consits of people who are nice and happy to help. They are not directly involved in the development though, and might not be able to help in all cases.
