@@ -8,9 +8,23 @@ class LMNObject:
     """
 
     cn: str
+    description: str
+    displayName: str
     distinguishedName: str
+    givenName: str
+    mail: str
     sAMAccountName: str
     sAMAccountType: str
+    sn: str
+    sophomorixAddMailQuota: str
+    sophomorixAddQuota: list
+    sophomorixCreationDate: str
+    sophomorixHidden: bool
+    sophomorixJoinable: bool
+    sophomorixMailAlias: bool
+    sophomorixMailList: bool
+    sophomorixMailQuota: str
+    sophomorixQuota: str
     sophomorixRole: str
     sophomorixSchoolname: str
     sophomorixSchoolPrefix: str
