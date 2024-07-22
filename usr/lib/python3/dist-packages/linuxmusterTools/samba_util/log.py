@@ -1,4 +1,6 @@
 import re
+import glob
+import gzip
 import logging
 from datetime import datetime
 
@@ -32,24 +34,34 @@ def format_log_data(entry):
         }
     return {}
 
-def parse_log_files(log_file, pattern):
+def parse_log_content(content, pattern):
     logs = []
-    with open(log_file, 'r') as f:
-        for line in f.readlines():
-            if pattern in line:
-                data = format_log_data(line)
-                # Datetime of logging is cut to the second
-                # By login to a linux client, a log entry can occur many times
-                # in a second, so we ignore duplicates
-                if data and not data['user'].endswith("$") and not data in logs:
-                    logs.append(data)
+
+    for line in content:
+        if isinstance(line, bytes):
+            line = line.decode()
+
+        if pattern in line:
+            data = format_log_data(line)
+            # Datetime of logging is cut to the second
+            # By login to a linux client, a log entry can occur many times
+            # in a second, so we ignore duplicates
+            if data and not data['user'].endswith("$") and not data in logs:
+                logs.append(data)
+
     return logs
 
-def last_login(pattern):
+def last_login(pattern, include_gz=False):
     logs = []
 
     if check_audit_level():
-        logs.extend(parse_log_files(SAMBA_LOG, pattern))
-        logs.extend(parse_log_files(SAMBA_LOG_OLD, pattern))
+        for log_file in [SAMBA_LOG, SAMBA_LOG_OLD]:
+            with open(log_file, 'r') as f:
+                logs.extend(parse_log_content(f.readlines(), pattern))
+
+        if include_gz:
+            for log_file in glob.glob('/var/log/samba/log.samba*gz'):
+                with gzip.open(log_file, 'rb') as f:
+                    logs.extend(parse_log_content(f.readlines(), pattern))
 
     return sorted(logs, key=lambda d: d["datetime"], reverse=True)
