@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.2.31) lmn72; urgency=medium
+
+  * [samba] Scan gz logs too 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Mon, 22 Jul 2024 18:03:25 +0200
+
 linuxmuster-tools7 (7.2.30) lmn72; urgency=medium
 
   * [ldapreader] Add attributes to search answers 
