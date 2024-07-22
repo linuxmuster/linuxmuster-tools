@@ -7,6 +7,7 @@ from ..urls import router as lr
 class LMNProject:
     cn: str
     description: str
+    displayName: str
     distinguishedName: str
     mail: list
     member: list
