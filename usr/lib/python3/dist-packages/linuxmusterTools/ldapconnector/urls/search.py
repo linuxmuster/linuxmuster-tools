@@ -12,4 +12,8 @@ def global_search(query=''):
         # Get the whole menu
         return "(cn=*)"
 
-    return f"(cn=*{query}*)"
+    return f"""(
+                |
+                (cn=*{query}*)
+                (displayName=*{query}*)
+    )"""
