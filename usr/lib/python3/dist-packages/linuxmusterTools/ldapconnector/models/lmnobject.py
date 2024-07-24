@@ -38,16 +38,13 @@ class LMNObject:
         return [node.split("=") for node in self.dn.split(',')]
 
     def get_type(self):
-        objtypes = ['Devices', 'Teachers', 'Projects']
+        objtypes = ['Devices', 'Teachers', 'Projects', 'Students']
         for objtype in objtypes:
+            if self.dn.startswith(f'CN={objtype.lower()},OU={objtype},'):
+                return f'ADGroup {objtype}'
+
             if f'OU={objtype},' in self.dn:
                 return objtype.lower()[:-1]
-
-        if f'OU=Students,' in self.dn:
-            splitted_dn = self.split_dn()
-            if splitted_dn[0][1] == splitted_dn[1][1]:
-                return 'schoolclass'
-            return 'student'
 
         return 'unknown'
 
