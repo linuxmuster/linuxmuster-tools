@@ -8,6 +8,7 @@ OBJECT_MAPPING = {
     'user': {'url': '/users/'},
     'device': {'url': '/devices/'},
     'group': {'url': '/groups/'},
+    'managementgroup': {'url': '/managementgroups/'},
     'schoolclass': {'url': '/schoolclasses/'},
     'project': {'url': '/projects/'},
 }
