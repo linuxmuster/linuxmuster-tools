@@ -12,6 +12,7 @@ class LMNProject:
     mail: list
     member: list
     name: str
+    proxyAddresses: list
     sAMAccountName: str
     sAMAccountType: str
     sophomorixAddMailQuota: list
@@ -20,6 +21,7 @@ class LMNProject:
     sophomorixAdmins: list
     sophomorixCreationDate: str # datetime
     sophomorixHidden: bool
+    sophomorixIntrinsicMulti1: list
     sophomorixJoinable: bool
     sophomorixMailAlias: bool
     sophomorixMailList: bool

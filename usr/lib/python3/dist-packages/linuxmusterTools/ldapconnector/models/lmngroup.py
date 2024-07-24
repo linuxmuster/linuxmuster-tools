@@ -9,11 +9,13 @@ class LMNGroup:
     member: list
     memberOf: list
     name: str
+    proxyAddresses: list
     sAMAccountName: str
     sAMAccountType: str
     sophomorixAdminClass: str
     sophomorixCreationDate: str
     sophomorixHidden: bool
+    sophomorixIntrinsicMulti1: list
     sophomorixJoinable: bool
     sophomorixMembers: list
     sophomorixRole: str
