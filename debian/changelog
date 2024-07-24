@@ -1,3 +1,12 @@
+linuxmuster-tools7 (7.2.33) lmn72; urgency=medium
+
+  * [ldapreader] Add proxyAddresses und IntrinsicMulti1 to groups and projects.
+  * [ldapreader] Differenciate AD group.
+  * [ldapreader] Search for displayName too.
+  * [ldapreader] Add management group to ldap_writer.
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Wed, 24 Jul 2024 17:29:05 +0200
+
 linuxmuster-tools7 (7.2.32) lmn72; urgency=medium
 
   * [ldapreader] Add displayName to LDAP objects 
