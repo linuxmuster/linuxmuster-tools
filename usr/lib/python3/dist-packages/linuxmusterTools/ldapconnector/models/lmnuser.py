@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
 from datetime import datetime
 import re
 import ldap
@@ -87,6 +87,9 @@ class LMNUser:
             return self.split_dn(dn)[0][1]
         except KeyError:
             return ''
+
+    def asdict(self):
+        return asdict(self)
 
     @staticmethod
     def _check_schoolclass_number(s):
