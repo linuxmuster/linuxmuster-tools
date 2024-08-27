@@ -35,7 +35,22 @@ class LMNLdapRouter:
         else:
             school = 'default-school'
 
-        subdn = func.subdn.replace(SCHOOL_MARKER, school)
+        subdn = func.subdn
+
+        # Global search for globaladmin if the subdn is restricted to a school
+        # search like "ou=default-school,ou=schools,".
+        # If the subdn is more specific in a school, like
+        # "ou=management,ou=default-school,ou=schools,", then the parameter
+        # school is necessary, and we throw an error when missing.
+
+        if subdn:
+            if school == 'global':
+                if subdn.startswith(f"OU={SCHOOL_MARKER}"):
+                    subdn = "OU=SCHOOLS,"
+                else:
+                    raise ValueError("Parameter school is mandatory for this endpoint and missing in your request.")
+            else:
+                subdn = subdn.replace(SCHOOL_MARKER, school)
 
         if func.type == 'single':
             return self.lc.get_single(func.model, ldap_filter, scope=func.scope, subdn=subdn, **kwargs)
