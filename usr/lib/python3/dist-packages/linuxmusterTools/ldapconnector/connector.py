@@ -233,7 +233,12 @@ class LdapConnector:
                 return []
 
         searchdn = f"{subdn}{self.params['searchdn']}"
-        response = l.search_s(searchdn,scope, ldap_filter)
+        try:
+            response = l.search_s(searchdn, scope, ldap_filter)
+        except ldap.NO_SUCH_OBJECT:
+            # Searchdn is maybe wrong, returning empty response
+            logging.warning(f"Searchdn {searchdn} is maybe wrong")
+            return []
 
         # Filter non-interesting values
         results = []
