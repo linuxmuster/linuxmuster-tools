@@ -1,3 +1,13 @@
+linuxmuster-tools7 (7.2.34) lmn72; urgency=medium
+
+  * [ldapreader] asdict for user model
+  * [ldapreader] Handle subdn for global search
+  * [ldapreader] Add printer model and get all members
+  * [ldapreader] Get from dn in router 
+  * [ldapwriter] Setting list values
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Thu, 05 Sep 2024 21:16:07 +0200
+
 linuxmuster-tools7 (7.2.33) lmn72; urgency=medium
 
   * [ldapreader] Add proxyAddresses und IntrinsicMulti1 to groups and projects.
