@@ -11,6 +11,7 @@ OBJECT_MAPPING = {
     'managementgroup': {'url': '/managementgroups/'},
     'schoolclass': {'url': '/schoolclasses/'},
     'project': {'url': '/projects/'},
+    'printer': {'url': '/printers/'},
 }
 
 class LdapWriter():
@@ -58,7 +59,7 @@ class LdapWriter():
         ldif = []
         for attr, new_val in data.items():
             if attr in details:
-                if details[attr] and not add:
+                if details[attr] not in [None, ""] and not add:
                     # Delete attribute first
                     ldif.append((ldap.MOD_DELETE, attr, None))
                 if isinstance(new_val, list):
