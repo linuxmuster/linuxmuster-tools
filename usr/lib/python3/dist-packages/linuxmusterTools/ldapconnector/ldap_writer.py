@@ -61,7 +61,11 @@ class LdapWriter():
                 if details[attr] and not add:
                     # Delete attribute first
                     ldif.append((ldap.MOD_DELETE, attr, None))
-                ldif.append((ldap.MOD_ADD, attr, [f"{new_val}".encode()]))
+                if isinstance(new_val, list):
+                    for val in new_val:
+                        ldif.append((ldap.MOD_ADD, attr, [f"{val}".encode()]))
+                else:
+                    ldif.append((ldap.MOD_ADD, attr, [f"{new_val}".encode()]))
             elif attr == 'unicodePwd':
                 ldif.append((ldap.MOD_REPLACE, attr, f'"{new_val}"'.encode('utf-16-le')))
             else:
