@@ -1,14 +1,16 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, asdict
 
 
 @dataclass
 class LMNGroup:
     cn: str
+    description: str
     displayName: str
     distinguishedName: str
     member: list
     memberOf: list
     name: str
+    objectClass: list
     proxyAddresses: list
     sAMAccountName: str
     sAMAccountType: str
@@ -23,3 +25,11 @@ class LMNGroup:
     sophomorixSchoolPrefix: str
     sophomorixStatus: str
     sophomorixType: str
+
+    def __post_init__(self):
+        self.dn = self.distinguishedName
+        self.all_members = []
+        self.membersCount = -1
+
+    def asdict(self):
+        return asdict(self)
