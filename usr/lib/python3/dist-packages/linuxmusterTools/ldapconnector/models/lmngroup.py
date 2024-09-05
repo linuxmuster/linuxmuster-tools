@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, field, asdict
 from ..urls import router as lr
 from .lmnobject import LMNObject
 
@@ -27,6 +27,9 @@ class LMNGroup:
     sophomorixSchoolPrefix: str
     sophomorixStatus: str
     sophomorixType: str
+    dn: str = field(init=False)
+    all_members: list = field(init=False)
+    membersCount: int = field(init=False)
 
     def __post_init__(self):
         self.dn = self.distinguishedName
