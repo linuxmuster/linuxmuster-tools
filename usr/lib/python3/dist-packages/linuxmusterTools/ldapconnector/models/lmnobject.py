@@ -13,6 +13,7 @@ class LMNObject:
     distinguishedName: str
     givenName: str
     mail: str
+    objectClass: list
     sAMAccountName: str
     sAMAccountType: str
     sn: str
