@@ -1,3 +1,10 @@
+linuxmuster-tools7 (7.2.35) lmn72; urgency=medium
+
+  * [ldapreader] Fix conflicts for parallel requests
+  * [ldapreader] Missing members in projects from sophomorix output
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sat, 07 Sep 2024 17:24:18 +0200
+
 linuxmuster-tools7 (7.2.34) lmn72; urgency=medium
 
   * [ldapreader] asdict for user model
