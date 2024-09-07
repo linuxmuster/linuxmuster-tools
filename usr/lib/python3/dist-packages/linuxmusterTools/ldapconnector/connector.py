@@ -2,7 +2,6 @@ import logging
 import ldap
 import re
 import os
-from datetime import datetime
 from dataclasses import fields, asdict
 
 from ..lmnfile import LMNFile
@@ -13,13 +12,8 @@ try:
 except ImportError as e:
     webui_import = False
 
-class LdapConnector:
 
-    def __init__(self):
-        if webui_import:
-            self.params = params
-        else:
-            self.params = {}
+class LdapConnector:
 
     def _create_result_object(self, result, objectclass, dict=True, school='', attributes=[]):
         """
@@ -212,27 +206,29 @@ class LdapConnector:
             if not webui_import:
                 # Using Administrator password to be able to write data in LDAP
                 with LMNFile('/etc/linuxmuster/webui/config.yml','r') as config:
-                    self.params = config.data['linuxmuster']['ldap']
+                    ldap_params = config.data['linuxmuster']['ldap']
                 with open('/etc/linuxmuster/.secret/administrator', 'r') as admpwd:
                     bindpwd = admpwd.read().strip()
-                binddn = f"CN=Administrator,CN=Users,{self.params['searchdn']}"
+
+                binddn = f"CN=Administrator,CN=Users,{ldap_params['searchdn']}"
+                searchdn = f"{subdn}{ldap_params['searchdn']}"
             else:
                 # Importing lmntools from the Webui will resulting into using the same binddn as the one configured
                 # in the config.yml from the Webui
                 try:
-                    binddn = self.params['binddn']
-                    bindpwd = self.params['bindpw']
+                    binddn = params['binddn']
+                    bindpwd = params['bindpw']
+                    searchdn = f"{subdn}{params['searchdn']}"
                 except KeyError:
                     logging.warning(f'LDAP credentials not found, is linuxmuster installed and configured ?')
                     return []
-            
+
             try:
                 l.bind_s(binddn, bindpwd)
             except ldap.SERVER_DOWN as e:
                 logging.error(str(e))
                 return []
 
-        searchdn = f"{subdn}{self.params['searchdn']}"
         try:
             response = l.search_s(searchdn, scope, ldap_filter)
         except ldap.NO_SUCH_OBJECT:
@@ -249,9 +245,7 @@ class LdapConnector:
         l.unbind()
 
         # Removing sensitive data
-        if not webui_import:
-            self.params = {}
-            binddn, bindpwd = '', ''
+        binddn, bindpwd, searchdn = '', '', ''
 
         return results
 
