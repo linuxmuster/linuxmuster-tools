@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field, asdict
-from datetime import datetime
 from ..urls import router as lr
+from .lmnobject import LMNObject
 
 
 @dataclass
@@ -63,6 +63,13 @@ class LMNProject:
 
         members = set(self.sophomorixMembers)
         admins = set(self.sophomorixAdmins)
+
+        ## Unfortunately there's members which are not in sophomorixMembers
+        for dn in self.member:
+            details = lr.get_from_dn(LMNObject, dn)
+            # TODO : handles group too ?
+            if 'person' in details["objectClass"]:
+                members.add(details['cn'])
 
         to_scan = self.sophomorixMemberGroups
         already_scanned = []
