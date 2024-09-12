@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 @dataclass
 class LMNObject:
     """
-    Common minimalistic object for global search queries.
+    Common linuxmuster.net object with all attributes for global search queries.
     """
 
     cn: str
@@ -12,24 +12,77 @@ class LMNObject:
     displayName: str
     distinguishedName: str
     givenName: str
-    mail: str
+    homeDirectory: str
+    homeDrive: str
+    mail: list
+    member: list
+    memberOf: list
+    name: str
     objectClass: list
+    ou: str
+    proxyAddresses: list
     sAMAccountName: str
     sAMAccountType: str
     sn: str
-    sophomorixAddMailQuota: str
+    sophomorixAddMailQuota: list
     sophomorixAddQuota: list
+    sophomorixAdminClass: str
+    sophomorixAdminFile: str
+    sophomorixAdminGroups: list
+    sophomorixAdmins: list
+    sophomorixBirthdate: str
+    sophomorixCloudQuotaCalculated: list
+    sophomorixComment: str
+    sophomorixComputerIP: str
+    sophomorixComputerMAC: str
+    sophomorixComputerRoom: str
     sophomorixCreationDate: str
+    sophomorixCreationDate: str # datetime
+    sophomorixCustom1: str
+    sophomorixCustom2: str
+    sophomorixCustom3: str
+    sophomorixCustom4: str
+    sophomorixCustom5: str
+    sophomorixCustomMulti1: list
+    sophomorixCustomMulti2: list
+    sophomorixCustomMulti3: list
+    sophomorixCustomMulti4: list
+    sophomorixCustomMulti5: list
+    sophomorixDeactivationDate: str # datetime
+    sophomorixExamMode: list
+    sophomorixExitAdminClass: str
+    sophomorixFirstnameASCII: str
+    sophomorixFirstnameInitial: str
+    sophomorixFirstPassword: str
     sophomorixHidden: bool
+    sophomorixIntrinsic2: list
+    sophomorixIntrinsicMulti1: list
     sophomorixJoinable: bool
     sophomorixMailAlias: bool
+    sophomorixMailAlias: list
     sophomorixMailList: bool
-    sophomorixMailQuota: str
-    sophomorixQuota: str
+    sophomorixMailList: list
+    sophomorixMailQuotaCalculated: list
+    sophomorixMailQuota: list
+    sophomorixMaxMembers: int
+    sophomorixMemberGroups: list
+    sophomorixMembers: list
+    sophomorixQuota: list
     sophomorixRole: str
     sophomorixSchoolname: str
     sophomorixSchoolPrefix: str
+    sophomorixSessions: list
     sophomorixStatus: str
+    sophomorixSurnameASCII: str
+    sophomorixSurnameInitial: str
+    sophomorixTolerationDate: str # datetime
+    sophomorixType: str
+    sophomorixUnid: str
+    sophomorixUserToken: str
+    sophomorixWebuiDashboard: list
+    sophomorixWebuiPermissionsCalculated: list
+    unixHomeDirectory: str
+    whenChanged: str
     dn:   str = field(init=False)
     type: str = field(init=False)
 
