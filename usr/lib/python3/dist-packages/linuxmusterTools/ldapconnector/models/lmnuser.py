@@ -15,6 +15,7 @@ class LMNUser:
     mail: list
     memberOf: list
     name: str
+    objectClass: list
     proxyAddresses: list
     sAMAccountName: str
     sAMAccountType: str

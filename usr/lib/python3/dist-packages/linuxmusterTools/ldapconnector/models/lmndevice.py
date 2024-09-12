@@ -8,6 +8,7 @@ class LMNDevice:
     distinguishedName: str
     memberOf: list
     name: str
+    objectClass: list
     proxyAddresses: list
     sAMAccountName: str
     sAMAccountType: str

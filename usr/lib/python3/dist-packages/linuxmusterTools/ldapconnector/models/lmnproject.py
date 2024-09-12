@@ -12,6 +12,7 @@ class LMNProject:
     mail: list
     member: list
     name: str
+    objectClass: list
     proxyAddresses: list
     sAMAccountName: str
     sAMAccountType: str

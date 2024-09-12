@@ -13,6 +13,7 @@ class LMNSchoolClass:
     member: list
     memberOf: list
     name: str
+    objectClass: list
     sAMAccountName: str
     sAMAccountType: str
     sophomorixAddMailQuota: list
