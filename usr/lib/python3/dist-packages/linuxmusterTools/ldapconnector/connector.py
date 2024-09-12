@@ -257,13 +257,18 @@ class LdapConnector:
         # l.protocol_version = ldap.VERSION3
         if not webui_import:
             with LMNFile('/etc/linuxmuster/webui/config.yml','r') as config:
-                self.params = config.data['linuxmuster']['ldap']
+                params = config.data['linuxmuster']['ldap']
             with open('/etc/linuxmuster/.secret/administrator', 'r') as admpwd:
                 passwd = admpwd.read().strip()
-        l.simple_bind_s(f"CN=Administrator,CN=Users,{self.params['searchdn']}", passwd)
+
+        l.simple_bind_s(f"CN=Administrator,CN=Users,{params['searchdn']}", passwd)
 
         l.modify_s(dn, ldif)
         l.unbind_s()
+
+        # Removing sensitive data
+        params = {}
+        passwd = ''
 
 
 
