@@ -59,18 +59,33 @@ class LdapWriter():
         ldif = []
         for attr, new_val in data.items():
             if attr in details:
-                if details[attr] not in [None, ""] and not add:
-                    # Delete attribute first
-                    ldif.append((ldap.MOD_DELETE, attr, None))
-                if isinstance(new_val, list):
-                    for val in new_val:
-                        ldif.append((ldap.MOD_ADD, attr, [f"{val}".encode()]))
+
+                if isinstance(details[attr], list):
+                    # Multi-value
+                    if not add:
+                        # Delete attribute first
+                        ldif.append((ldap.MOD_DELETE, attr, None))
+
+                    if isinstance(new_val, list):
+                        for val in new_val:
+                            ldif.append((ldap.MOD_ADD, attr, [f"{val}".encode()]))
+                    else:
+                        ldif.append((ldap.MOD_ADD, attr, [f"{new_val}".encode()]))
+
                 else:
+                    # Single-value
+                    if details[attr] not in [None, ""]:
+                        # Delete attribute first
+                        ldif.append((ldap.MOD_DELETE, attr, None))
+
                     ldif.append((ldap.MOD_ADD, attr, [f"{new_val}".encode()]))
+
             elif attr == 'unicodePwd':
                 ldif.append((ldap.MOD_REPLACE, attr, f'"{new_val}"'.encode('utf-16-le')))
+
             else:
                 logging.warning(f"Attribute {attr} not found in {details}'s values.")
+
         self.lc._set(details['distinguishedName'], ldif)
 
     def delete(self, name, objecttype, data):
