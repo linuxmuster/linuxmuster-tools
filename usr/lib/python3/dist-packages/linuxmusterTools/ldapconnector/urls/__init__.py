@@ -8,3 +8,4 @@ from .devices import *
 from .groups import *
 from .search import *
 from .managementgroups import *
+from .objects import *

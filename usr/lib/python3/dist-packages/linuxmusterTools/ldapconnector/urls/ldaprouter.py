@@ -58,10 +58,6 @@ class LMNLdapRouter:
         if func.type == 'collection':
             return self.lc.get_collection(func.model, ldap_filter, scope=func.scope, subdn=subdn, **kwargs)
 
-    def get_from_dn(self, model, dn, **kwargs):
-        ldap_filter = f"""(distinguishedName={dn})"""
-        return self.lc.get_single(model, ldap_filter, **kwargs)
-
     def getval(self, url, attribute, **kwargs):
 
         if isinstance(attribute, str):

@@ -55,7 +55,7 @@ class LMNGroup:
         to_scan = []
 
         for dn in self.member:
-            details = lr.get_from_dn(LMNObject, dn)
+            details = lr.get(f'/dn/{dn}')
             if 'person' in details["objectClass"]:
                 members.add(details['cn'])
             elif 'group' in details["objectClass"]:

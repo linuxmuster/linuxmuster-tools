@@ -67,7 +67,7 @@ class LMNProject:
 
         ## Unfortunately there's members which are not in sophomorixMembers
         for dn in self.member:
-            details = lr.get_from_dn(LMNObject, dn)
+            details = lr.get(f'/dn/{dn}')
             # TODO : handles group too ?
             if 'person' in details["objectClass"]:
                 members.add(details['cn'])
