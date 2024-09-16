@@ -21,34 +21,124 @@ class LdapWriter:
         self.lc = LdapConnector()
         self.lr = LMNLdapReader
 
-    def _is_valid_object(self, name, objecttype):
+    def setattr_user(self, name, **kwargs):
         """
-        Check if the object exists in ldap and return his values.
+        Middleware to check if the object exists.
 
         :param name: cn of the object
         :type name: basestring
-        :param objecttype: user, device, etc ... see OBJECT_MAPPING above
-        :type objecttype: basestring
-        :return: details
-        :rtype: dict
         """
 
-        details = self.lr.get(f'{OBJECT_MAPPING[objecttype]["url"]}{name}')
+        details = self.lr.get(f'/users/{name}')
 
         if not details:
-            logging.info(f"The {objecttype} {name} was not found in ldap.")
-            raise Exception(f"The {objecttype} {name} was not found in ldap.")
+            logging.info(f"The user {name} was not found in ldap.")
+            raise Exception(f"The user {name} was not found in ldap.")
 
-        return details
+        self._setattr(details, **kwargs)
 
-    def set(self, name, objecttype, data, add=False):
+    def setattr_device(self, name, **kwargs):
+        """
+        Middleware to check if the object exists.
+
+        :param name: cn of the object
+        :type name: basestring
+        """
+
+        details = self.lr.get(f'/devices/{name}')
+
+        if not details:
+            logging.info(f"The device {name} was not found in ldap.")
+            raise Exception(f"The device {name} was not found in ldap.")
+
+        self._setattr(details, **kwargs)
+
+    def setattr_group(self, name, **kwargs):
+        """
+        Middleware to check if the object exists.
+
+        :param name: cn of the object
+        :type name: basestring
+        """
+
+        details = self.lr.get(f'/groups/{name}')
+
+        if not details:
+            logging.info(f"The group {name} was not found in ldap.")
+            raise Exception(f"The group {name} was not found in ldap.")
+
+        self._setattr(details, **kwargs)
+
+    def setattr_managementgroup(self, name, **kwargs):
+        """
+        Middleware to check if the object exists.
+
+        :param name: cn of the object
+        :type name: basestring
+        """
+
+        details = self.lr.get(f'/managementgroups/{name}')
+
+        if not details:
+            logging.info(f"The managementgroup {name} was not found in ldap.")
+            raise Exception(f"The managementgroup {name} was not found in ldap.")
+
+        self._setattr(details, **kwargs)
+
+    def setattr_schoolclass(self, name, **kwargs):
+        """
+        Middleware to check if the object exists.
+
+        :param name: cn of the object
+        :type name: basestring
+        """
+
+        details = self.lr.get(f'/schoolclasses/{name}')
+
+        if not details:
+            logging.info(f"The schoolclass {name} was not found in ldap.")
+            raise Exception(f"The schoolclass {name} was not found in ldap.")
+
+        self._setattr(details, **kwargs)
+
+    def setattr_printer(self, name, **kwargs):
+        """
+        Middleware to check if the object exists.
+
+        :param name: cn of the object
+        :type name: basestring
+        """
+
+        details = self.lr.get(f'/printers/{name}')
+
+        if not details:
+            logging.info(f"The printer {name} was not found in ldap.")
+            raise Exception(f"The printer {name} was not found in ldap.")
+
+        self._setattr(details, **kwargs)
+
+    def setattr_project(self, name, **kwargs):
+        """
+        Middleware to check if the object exists.
+
+        :param name: cn of the object
+        :type name: basestring
+        """
+
+        details = self.lr.get(f'/projects/{name}')
+
+        if not details:
+            logging.info(f"The project {name} was not found in ldap.")
+            raise Exception(f"The project {name} was not found in ldap.")
+
+        self._setattr(details, **kwargs)
+
+    def _setattr(self, obj_details, data=None, add=False):
         """
         Set one or more attributes only for a ldap entry.
 
-        :param name: cn
-        :type name: basestring
-        :param objecttype: user, device, etc ... see OBJECT_MAPPING above
-        :type objecttype: basestring
+        :param obj_details: object to modify (project, ...)
+        :type obj_details: dict
         :param data: Dict of attributes:values to write
         :type data: dict
         :type add: bool
@@ -56,13 +146,16 @@ class LdapWriter:
         attribute is already present
         """
 
-        details = self._is_valid_object(name, objecttype)
+
+        if not data:
+            logging.warning("No data provided, doing nothing.")
+            return
 
         ldif = []
         for attr, new_val in data.items():
-            if attr in details:
+            if attr in obj_details:
 
-                if isinstance(details[attr], list):
+                if isinstance(obj_details[attr], list):
                     # Multi-value
                     if not add:
                         # Delete attribute first
@@ -76,7 +169,7 @@ class LdapWriter:
 
                 else:
                     # Single-value
-                    if details[attr] not in [None, ""]:
+                    if obj_details[attr] not in [None, ""]:
                         # Delete attribute first
                         ldif.append((ldap.MOD_DELETE, attr, None))
 
@@ -86,9 +179,9 @@ class LdapWriter:
                 ldif.append((ldap.MOD_REPLACE, attr, f'"{new_val}"'.encode('utf-16-le')))
 
             else:
-                logging.warning(f"Attribute {attr} not found in {details}'s values.")
+                logging.warning(f"Attribute {attr} not found in {obj_details}'s values.")
 
-        self.lc._set(details['distinguishedName'], ldif)
+        self.lc._set(obj_details['distinguishedName'], ldif)
 
     def delete(self, name, objecttype, data):
         """
@@ -103,7 +196,7 @@ class LdapWriter:
         :type data: dict
         """
 
-        details = self._is_valid_object(name, objecttype)
+        details = "bla"# self._is_valid_object(name, objecttype)
 
         ldif = []
         for attr, val in data.items():
