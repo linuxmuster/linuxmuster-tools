@@ -4,6 +4,7 @@ import logging
 from linuxmusterTools.ldapconnector.connector import LdapConnector
 from .urls.ldaprouter import router as LMNLdapReader
 
+
 OBJECT_MAPPING = {
     'user': {'url': '/users/'},
     'device': {'url': '/devices/'},
@@ -14,7 +15,8 @@ OBJECT_MAPPING = {
     'printer': {'url': '/printers/'},
 }
 
-class LdapWriter():
+class LdapWriter:
+
     def __init__(self):
         self.lc = LdapConnector()
         self.lr = LMNLdapReader

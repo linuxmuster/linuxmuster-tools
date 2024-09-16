@@ -2,7 +2,7 @@ import re
 import ldap
 import logging
 
-from linuxmusterTools.ldapconnector.connector import LdapConnector
+from linuxmusterTools.ldapconnector.ldap_reader import LdapReader
 
 
 # This marker will be replaced by the selected school, or default-school
@@ -10,7 +10,7 @@ SCHOOL_MARKER = "##SCHOOL_MARKER##"
 
 class LMNLdapRouter:
     def __init__(self):
-        self.lc = LdapConnector()
+        self.lr = LdapReader()
         self.urls = {}
 
     def _find_method(self, url):
@@ -53,10 +53,10 @@ class LMNLdapRouter:
                 subdn = subdn.replace(SCHOOL_MARKER, school)
 
         if func.type == 'single':
-            return self.lc.get_single(func.model, ldap_filter, scope=func.scope, subdn=subdn, **kwargs)
+            return self.lr.get_single(func.model, ldap_filter, scope=func.scope, subdn=subdn, **kwargs)
 
         if func.type == 'collection':
-            return self.lc.get_collection(func.model, ldap_filter, scope=func.scope, subdn=subdn, **kwargs)
+            return self.lr.get_collection(func.model, ldap_filter, scope=func.scope, subdn=subdn, **kwargs)
 
     def getval(self, url, attribute, **kwargs):
 
