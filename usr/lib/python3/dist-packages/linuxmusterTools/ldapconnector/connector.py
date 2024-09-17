@@ -166,6 +166,17 @@ class LdapConnector:
 
         self._add(dn, [('objectclass', [b'top', b'OrganizationalUnit'])])
 
+    def _add_group(self, dn, ldif=[]):
+        """
+        Connect to ldap and insert a group with the given dn.
+
+        :param dn: dn of the object to modify
+        :type dn: basestring
+        """
+
+        ldif.append(('objectclass', [b'top', b'group']))
+        self._add(dn, ldif)
+
     def _del(self, dn):
         """
         Connect to ldap and delete the object with the given dn.
