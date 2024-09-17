@@ -134,6 +134,21 @@ class LdapConnector:
         conn.modify_s(dn, ldif)
         conn.unbind_s()
 
+    def _add(self, dn, ldif):
+        """
+        Connect to ldap and insert an object with the given dn and ldif attributes.
+
+        :param dn: dn of the object to modify
+        :type dn: basestring
+        :param ldif: Valid ldif (list of tuples, one tuple per operation)
+        :type ldif: list
+        """
+
+
+        conn, _ = self._connect()
+        conn.add_s(dn, ldif)
+        conn.unbind_s()
+
     def _add_ou(self, dn):
         """
         Connect to ldap and insert an organisational unit with the given dn.
@@ -143,9 +158,7 @@ class LdapConnector:
         """
 
 
-        conn, _ = self._connect()
-        conn.add_s(dn, [('objectclass', [b'top', b'OrganizationalUnit'])])
-        conn.unbind_s()
+        self._add(dn, [('objectclass', [b'top', b'OrganizationalUnit'])])
 
     def _del(self, dn):
         """
