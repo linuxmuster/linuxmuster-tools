@@ -151,3 +151,26 @@ class LdapConnector:
         # Removing sensitive data
         params = {}
         passwd = ''
+
+    def _del(self, dn):
+
+
+        # Only allow to modify on the server
+        l = ldap.initialize("ldap://localhost:389/")
+        l.set_option(ldap.OPT_REFERRALS, 0)
+        l.set_option(ldap.OPT_RESTART, ldap.OPT_ON)
+        l.protocol_version = ldap.VERSION3
+        if not webui_import:
+            with LMNFile('/etc/linuxmuster/webui/config.yml','r') as config:
+                params = config.data['linuxmuster']['ldap']
+            with open('/etc/linuxmuster/.secret/administrator', 'r') as admpwd:
+                passwd = admpwd.read().strip()
+
+        l.simple_bind_s(f"CN=Administrator,CN=Users,{params['searchdn']}", passwd)
+
+        l.delete_s(dn)
+        l.unbind_s()
+
+        # Removing sensitive data
+        params = {}
+        passwd = ''
