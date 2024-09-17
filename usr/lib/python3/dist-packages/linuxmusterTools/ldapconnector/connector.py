@@ -13,6 +13,77 @@ except ImportError as e:
 
 class LdapConnector:
 
+    def _connect(self, webui=False):
+        """
+        Choose the right credentials, depending if the this module is imported in linuxmuster-webui7 or used directly on
+        the server, and the perform a connection to the ldap server.
+
+        :param webui: True only if using the _get method from the webui (no changes possible from the webui)
+        :type webui: bool
+        :return: LDAP object with connection data
+        :rtype: LDAPObject
+        """
+
+
+        ## AUTH via GSSAPI for linuxmuster-client7, actually not used
+        # if not os.path.isfile('/etc/linuxmuster/webui/config.yml'):
+        #     # Using it from linuxclient
+        #     # Trying to auth via GSSAPI
+        #     try:
+        #         from linuxmusterLinuxclient7 import config
+        #     except ModuleNotFoundError:
+        #         raise Exception('Ldap config missing, could not connect to LDAP server.')
+        #
+        #     rc, networkConfig = config.network()
+        #
+        #     if not rc:
+        #         return []
+        #
+        #     serverHostname = networkConfig["serverHostname"]
+        #     l = ldap.initialize(f"ldap://{serverHostname}:389/")
+        #     l.set_option(ldap.OPT_REFERRALS, 0)
+        #     l.protocol_version = ldap.VERSION3
+        #     sasl_auth = ldap.sasl.sasl({} ,'GSSAPI')
+        #     l.sasl_interactive_bind_s("", sasl_auth)
+
+        # On the server, accessing directly to bind user credentials
+        conn = ldap.initialize("ldap://localhost:389/")
+        conn.set_option(ldap.OPT_REFERRALS, 0)
+        conn.set_option(ldap.OPT_RESTART, ldap.OPT_ON)
+        conn.protocol_version = ldap.VERSION3
+
+        if not webui_import:
+            # Using Administrator password to be able to write data in LDAP
+            with LMNFile('/etc/linuxmuster/webui/config.yml', 'r') as config:
+                ldap_params = config.data['linuxmuster']['ldap']
+            with open('/etc/linuxmuster/.secret/administrator', 'r') as admpwd:
+                bindpwd = admpwd.read().strip()
+
+            binddn = f"CN=Administrator,CN=Users,{ldap_params['searchdn']}"
+            searchdn = ldap_params['searchdn']
+
+        elif webui:
+            # Importing lmntools from the Webui will resulting into using the same binddn as the one configured
+            # in the config.yml from the Webui
+            try:
+                binddn = params['binddn']
+                bindpwd = params['bindpw']
+                searchdn = params['searchdn']
+            except KeyError:
+                logging.warning(f'LDAP credentials not found, is linuxmuster installed and configured ?')
+                return []
+
+        try:
+            conn.bind_s(binddn, bindpwd)
+        except ldap.SERVER_DOWN as e:
+            logging.error(str(e))
+            return None
+
+        # Removing sensitive data
+        binddn, bindpwd = '', ''
+
+        return conn, searchdn
+
     def _get(self, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn=''):
         """
         Connect to ldap and perform a search.
@@ -27,59 +98,12 @@ class LdapConnector:
         :rtype: dict
         """
 
-        if not os.path.isfile('/etc/linuxmuster/webui/config.yml'):
-            # Using it from linuxclient
-            # Trying to auth via GSSAPI
-            try:
-                from linuxmusterLinuxclient7 import config
-            except ModuleNotFoundError:
-                raise Exception('Ldap config missing, could not connect to LDAP server.')
+        conn, _searchdn = self._connect(webui=True)
 
-            rc, networkConfig = config.network()
-
-            if not rc:
-                return []
-
-            serverHostname = networkConfig["serverHostname"]
-            l = ldap.initialize(f"ldap://{serverHostname}:389/")
-            l.set_option(ldap.OPT_REFERRALS, 0)
-            l.protocol_version = ldap.VERSION3
-            sasl_auth = ldap.sasl.sasl({} ,'GSSAPI')
-            l.sasl_interactive_bind_s("", sasl_auth)
-        else:
-            # On the server, accessing directly to bind user credentials
-            l = ldap.initialize("ldap://localhost:389/")
-            l.set_option(ldap.OPT_REFERRALS, 0)
-            l.set_option(ldap.OPT_RESTART, ldap.OPT_ON)
-            l.protocol_version = ldap.VERSION3
-            if not webui_import:
-                # Using Administrator password to be able to write data in LDAP
-                with LMNFile('/etc/linuxmuster/webui/config.yml','r') as config:
-                    ldap_params = config.data['linuxmuster']['ldap']
-                with open('/etc/linuxmuster/.secret/administrator', 'r') as admpwd:
-                    bindpwd = admpwd.read().strip()
-
-                binddn = f"CN=Administrator,CN=Users,{ldap_params['searchdn']}"
-                searchdn = f"{subdn}{ldap_params['searchdn']}"
-            else:
-                # Importing lmntools from the Webui will resulting into using the same binddn as the one configured
-                # in the config.yml from the Webui
-                try:
-                    binddn = params['binddn']
-                    bindpwd = params['bindpw']
-                    searchdn = f"{subdn}{params['searchdn']}"
-                except KeyError:
-                    logging.warning(f'LDAP credentials not found, is linuxmuster installed and configured ?')
-                    return []
-
-            try:
-                l.bind_s(binddn, bindpwd)
-            except ldap.SERVER_DOWN as e:
-                logging.error(str(e))
-                return []
+        searchdn = f"{subdn}{_searchdn}"
 
         try:
-            response = l.search_s(searchdn, scope, ldap_filter)
+            response = conn.search_s(searchdn, scope, ldap_filter)
         except ldap.NO_SUCH_OBJECT:
             # Searchdn is maybe wrong, returning empty response
             logging.warning(f"Searchdn {searchdn} is maybe wrong")
@@ -91,10 +115,7 @@ class LdapConnector:
             if result[0] is not None:
                 results.append(result)
         
-        l.unbind()
-
-        # Removing sensitive data
-        binddn, bindpwd, searchdn = '', '', ''
+        conn.unbind()
 
         return results
 
@@ -109,68 +130,32 @@ class LdapConnector:
         """
 
 
-        # Only allow to modify on the server
-        l = ldap.initialize("ldap://localhost:389/")
-        l.set_option(ldap.OPT_REFERRALS, 0)
-        l.set_option(ldap.OPT_RESTART, ldap.OPT_ON)
-        l.protocol_version = ldap.VERSION3
-        if not webui_import:
-            with LMNFile('/etc/linuxmuster/webui/config.yml','r') as config:
-                params = config.data['linuxmuster']['ldap']
-            with open('/etc/linuxmuster/.secret/administrator', 'r') as admpwd:
-                passwd = admpwd.read().strip()
-
-        l.simple_bind_s(f"CN=Administrator,CN=Users,{params['searchdn']}", passwd)
-
-        l.modify_s(dn, ldif)
-        l.unbind_s()
-
-        # Removing sensitive data
-        params = {}
-        passwd = ''
+        conn, _ = self._connect()
+        conn.modify_s(dn, ldif)
+        conn.unbind_s()
 
     def _add_ou(self, dn):
+        """
+        Connect to ldap and insert an organisational unit with the given dn.
+
+        :param dn: dn of the object to modify
+        :type dn: basestring
+        """
 
 
-        # Only allow to modify on the server
-        l = ldap.initialize("ldap://localhost:389/")
-        l.set_option(ldap.OPT_REFERRALS, 0)
-        l.set_option(ldap.OPT_RESTART, ldap.OPT_ON)
-        l.protocol_version = ldap.VERSION3
-        if not webui_import:
-            with LMNFile('/etc/linuxmuster/webui/config.yml','r') as config:
-                params = config.data['linuxmuster']['ldap']
-            with open('/etc/linuxmuster/.secret/administrator', 'r') as admpwd:
-                passwd = admpwd.read().strip()
-
-        l.simple_bind_s(f"CN=Administrator,CN=Users,{params['searchdn']}", passwd)
-
-        l.add_s(dn, [('objectclass', [b'top', b'OrganizationalUnit'])])
-        l.unbind_s()
-
-        # Removing sensitive data
-        params = {}
-        passwd = ''
+        conn, _ = self._connect()
+        conn.add_s(dn, [('objectclass', [b'top', b'OrganizationalUnit'])])
+        conn.unbind_s()
 
     def _del(self, dn):
+        """
+        Connect to ldap and delete the object with the given dn.
+
+        :param dn: dn of the object to modify
+        :type dn: basestring
+        """
 
 
-        # Only allow to modify on the server
-        l = ldap.initialize("ldap://localhost:389/")
-        l.set_option(ldap.OPT_REFERRALS, 0)
-        l.set_option(ldap.OPT_RESTART, ldap.OPT_ON)
-        l.protocol_version = ldap.VERSION3
-        if not webui_import:
-            with LMNFile('/etc/linuxmuster/webui/config.yml','r') as config:
-                params = config.data['linuxmuster']['ldap']
-            with open('/etc/linuxmuster/.secret/administrator', 'r') as admpwd:
-                passwd = admpwd.read().strip()
-
-        l.simple_bind_s(f"CN=Administrator,CN=Users,{params['searchdn']}", passwd)
-
-        l.delete_s(dn)
-        l.unbind_s()
-
-        # Removing sensitive data
-        params = {}
-        passwd = ''
+        conn, _ = self._connect()
+        conn.delete_s(dn)
+        conn.unbind_s()
