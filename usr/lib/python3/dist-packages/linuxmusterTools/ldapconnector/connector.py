@@ -70,17 +70,23 @@ class LdapConnector:
                 bindpwd = params['bindpw']
                 searchdn = params['searchdn']
             except KeyError:
-                logging.warning(f'LDAP credentials not found, is linuxmuster installed and configured ?')
-                return []
+                logging.error('LDAP credentials not found, is linuxmuster installed and configured ?')
+                raise Exception('LDAP credentials not found, is linuxmuster installed and configured ?')
 
         try:
             conn.bind_s(binddn, bindpwd)
+
+            # Removing sensitive data
+            binddn, bindpwd = '', ''
+        except ldap.INVALID_CREDENTIALS as e:
+            logging.error(str(e))
+            raise Exception(f'Invalid credentials: {str(e)}')
         except ldap.SERVER_DOWN as e:
             logging.error(str(e))
-            return None
-
-        # Removing sensitive data
-        binddn, bindpwd = '', ''
+            raise Exception(f'Ldap server down: {str(e)}')
+        except ldap.LDAPError as e:
+            logging.error(e['desc'])
+            raise Exception(f"Other ldap error: {e['desc']}")
 
         return conn, searchdn
 
