@@ -91,7 +91,7 @@ class LdapWriter:
         ldif = []
         for attr, val in data.items():
             if attr in obj_details:
-                ldif.append((ldap.MOD_DELETE, attr, val.encode()))
+                ldif.append((ldap.MOD_DELETE, attr, None))
             else:
                 logging.warning(f"Attribute {attr} not found in {obj_details}'s values.")
         self.lc._set(obj_details['distinguishedName'], ldif)
