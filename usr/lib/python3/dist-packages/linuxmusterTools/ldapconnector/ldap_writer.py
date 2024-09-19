@@ -45,7 +45,7 @@ class LdapWriter:
 
                 if isinstance(obj_details[attr], list):
                     # Multi-value
-                    if not add:
+                    if not add and obj_details[attr]:
                         # Delete attribute first
                         ldif.append((ldap.MOD_DELETE, attr, None))
 
@@ -57,7 +57,7 @@ class LdapWriter:
 
                 else:
                     # Single-value
-                    if obj_details[attr] not in [None, ""]:
+                    if obj_details[attr]:
                         # Delete attribute first
                         ldif.append((ldap.MOD_DELETE, attr, None))
 
@@ -67,9 +67,10 @@ class LdapWriter:
                 ldif.append((ldap.MOD_REPLACE, attr, f'"{new_val}"'.encode('utf-16-le')))
 
             else:
-                logging.warning(f"Attribute {attr} not found in {obj_details}'s values.")
+                logging.warning(f"Attribute {attr} not found in {obj_details['distinguishedName']}'s values.")
 
-        self.lc._set(obj_details['distinguishedName'], ldif)
+        if ldif:
+            self.lc._set(obj_details['distinguishedName'], ldif)
 
     def _delattr(self, obj_details, data=None):
         """
@@ -90,11 +91,13 @@ class LdapWriter:
 
         ldif = []
         for attr, val in data.items():
-            if attr in obj_details:
+            if attr in obj_details and val:
                 ldif.append((ldap.MOD_DELETE, attr, None))
             else:
-                logging.warning(f"Attribute {attr} not found in {obj_details}'s values.")
-        self.lc._set(obj_details['distinguishedName'], ldif)
+                logging.warning(f"Attribute {attr} not found in {obj_details['distinguishedName']}'s values.")
+
+        if ldif:
+            self.lc._set(obj_details['distinguishedName'], ldif)
 
     def setattr_user(self, name, **kwargs):
         """
