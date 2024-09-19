@@ -1,3 +1,14 @@
+linuxmuster-tools7 (7.2.36) lmn72; urgency=medium
+
+  * [ldapreader] Get object from dn.
+  * [ldapreader] Add common object model.
+  * [ldapreader] Real ldap_reader and ldapconnector objects.
+  * [ldapwriter] Add ldap entry, group or OU.
+  * [ldapwriter] Delete entry.
+  * [ldapwriter] Separate del and set methods for each model.
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Thu, 19 Sep 2024 18:28:33 +0200
+
 linuxmuster-tools7 (7.2.35) lmn72; urgency=medium
 
   * [ldapreader] Fix conflicts for parallel requests
