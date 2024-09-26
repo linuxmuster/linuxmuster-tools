@@ -53,10 +53,10 @@ class LMNLdapRouter:
                 subdn = subdn.replace(SCHOOL_MARKER, school)
 
         if func.type == 'single':
-            return self.lr.get_single(func.model, ldap_filter, scope=func.scope, subdn=subdn, **kwargs)
+            return self.lr.get_single(func.model, ldap_filter, scope=func.scope, subdn=subdn, dn_filter=func.dn_filter, **kwargs)
 
         if func.type == 'collection':
-            return self.lr.get_collection(func.model, ldap_filter, scope=func.scope, subdn=subdn, **kwargs)
+            return self.lr.get_collection(func.model, ldap_filter, scope=func.scope, subdn=subdn, dn_filter=func.dn_filter, **kwargs)
 
     def getval(self, url, attribute, **kwargs):
 
@@ -109,7 +109,7 @@ class LMNLdapRouter:
         else:
             self.urls[url] = method
 
-    def single(self, pattern, model):
+    def single(self, pattern, model, subdn='', dn_filter='', level="subtree"):
         """
         Search a single entry in the whole subtree of the base dn.
 
@@ -123,76 +123,17 @@ class LMNLdapRouter:
             f.url_pattern = re.compile(f'^{pattern}$')
             f.type = 'single'
             f.model = model
-            f.scope = ldap.SCOPE_SUBTREE
-            f.subdn = ''
-            self.add_url(f.url_pattern, f)
-            return f
-        return decorator
-
-    def single_l(self, pattern, model):
-        """
-        Search a single entry in the current level scope of the base dn.
-
-        :param pattern: URL pattern
-        :type pattern: basestring
-        :param model: model obejct to return, can be e.g. LMNUser
-        :type model: dataclass object
-        """
-
-        def decorator(f):
-            f.url_pattern = re.compile(f'^{pattern}$')
-            f.type = 'single'
-            f.model = model
-            f.scope = ldap.SCOPE_ONELEVEL
-            f.subdn = ''
-            self.add_url(f.url_pattern, f)
-            return f
-
-        return decorator
-
-    def single_s(self, pattern, model, subdn):
-        """
-        Search a single entry in the whole subtree of a subtree of the base dn.
-
-        :param pattern: URL pattern
-        :type pattern: basestring
-        :param model: model obejct to return, can be e.g. LMNUser
-        :type model: dataclass object
-        """
-
-        def decorator(f):
-            f.url_pattern = re.compile(f'^{pattern}$')
-            f.type = 'single'
-            f.model = model
-            f.scope = ldap.SCOPE_SUBTREE
+            if level == "single":
+                f.scope = ldap.SCOPE_ONELEVEL
+            else:
+                f.scope = ldap.SCOPE_SUBTREE
             f.subdn = subdn
+            f.dn_filter = dn_filter
             self.add_url(f.url_pattern, f)
             return f
-
         return decorator
 
-    def single_ls(self, pattern, model, subdn):
-        """
-        Search a single entry in the current level scope of a subtree.
-
-        :param pattern: URL pattern
-        :type pattern: basestring
-        :param model: model obejct to return, can be e.g. LMNUser
-        :type model: dataclass object
-        """
-
-        def decorator(f):
-            f.url_pattern = re.compile(f'^{pattern}$')
-            f.type = 'single'
-            f.model = model
-            f.scope = ldap.SCOPE_ONELEVEL
-            f.subdn = subdn
-            self.add_url(f.url_pattern, f)
-            return f
-
-        return decorator
-
-    def collection(self, pattern, model):
+    def collection(self, pattern, model, subdn='', dn_filter='', level="subtree"):
         """
         Search multiple entries in the whole subtree of the base dn.
 
@@ -206,73 +147,14 @@ class LMNLdapRouter:
             f.url_pattern = re.compile(f'^{pattern}$')
             f.type = 'collection'
             f.model = model
-            f.scope = ldap.SCOPE_SUBTREE
-            f.subdn = ''
-            self.add_url(f.url_pattern, f)
-            return f
-        return decorator
-
-    def collection_l(self, pattern, model):
-        """
-        Search multiple entries in the current level scope of the base dn.
-
-        :param pattern: URL pattern
-        :type pattern: basestring
-        :param model: model obejct to return, can be e.g. LMNUser
-        :type model: dataclass object
-        """
-
-        def decorator(f):
-            f.url_pattern = re.compile(f'^{pattern}$')
-            f.type = 'collection'
-            f.model = model
-            f.scope = ldap.SCOPE_ONELEVEL
-            f.subdn = ''
-            self.add_url(f.url_pattern, f)
-            return f
-
-        return decorator
-
-    def collection_s(self, pattern, model, subdn):
-        """
-        Search multiple entries in the whole subtree of a subtree of the base dn.
-
-        :param pattern: URL pattern
-        :type pattern: basestring
-        :param model: model obejct to return, can be e.g. LMNUser
-        :type model: dataclass object
-        """
-
-        def decorator(f):
-            f.url_pattern = re.compile(f'^{pattern}$')
-            f.type = 'collection'
-            f.model = model
-            f.scope = ldap.SCOPE_SUBTREE
+            if level == "single":
+                f.scope = ldap.SCOPE_ONELEVEL
+            else:
+                f.scope = ldap.SCOPE_SUBTREE
             f.subdn = subdn
+            f.dn_filter = dn_filter
             self.add_url(f.url_pattern, f)
             return f
-
-        return decorator
-
-    def collection_ls(self, pattern, model, subdn):
-        """
-        Search multiple entries in the current level scope of a subtree.
-
-        :param pattern: URL pattern
-        :type pattern: basestring
-        :param model: model obejct to return, can be e.g. LMNUser
-        :type model: dataclass object
-        """
-
-        def decorator(f):
-            f.url_pattern = re.compile(f'^{pattern}$')
-            f.type = 'collection'
-            f.model = model
-            f.scope = ldap.SCOPE_ONELEVEL
-            f.subdn = subdn
-            self.add_url(f.url_pattern, f)
-            return f
-
         return decorator
 
 router = LMNLdapRouter()

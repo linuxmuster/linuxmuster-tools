@@ -2,7 +2,7 @@ import linuxmusterTools.ldapconnector.models as models
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router
 
 
-@router.collection_ls(r'/schools', models.LMNSchool, subdn='OU=SCHOOLS,')
+@router.collection(r'/schools', models.LMNSchool, subdn='OU=SCHOOLS,', level="single")
 def get_all_schools():
     """
     Get all schools.
