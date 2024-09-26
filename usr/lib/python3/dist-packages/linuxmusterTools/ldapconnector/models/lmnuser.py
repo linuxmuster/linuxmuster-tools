@@ -1,8 +1,11 @@
 from dataclasses import dataclass, field, asdict
-from datetime import datetime
+import os
 import re
 import ldap
 from .lmnsession import LMNSession
+
+from linuxmusterTools.lmnfile import LMNFile
+
 
 @dataclass
 class LMNUser:
@@ -61,6 +64,7 @@ class LMNUser:
     unixHomeDirectory: str
     whenChanged: str
     dn:             str  = field(init=False)
+    customFields:   dict  = field(init=False)
     examMode:       bool = field(init=False)
     examTeacher:    str  = field(init=False)
     examBaseCn:     str  = field(init=False)
@@ -170,6 +174,41 @@ class LMNUser:
             self.examTeacher = self.sophomorixExamMode[0]
             self.examBaseCn = self.cn.replace('-exam', '')
 
+    def create_custom_fields_objects(self):
+        custom_config_path = f'/etc/linuxmuster/sophomorix/{self.school}/custom_fields.yml'
+        custom_config = {}
+        if os.path.isfile(custom_config_path):
+            with LMNFile(custom_config_path, 'r') as config:
+                custom_config = config.read()
+
+        self.customFields = {}
+
+        proxy_add = custom_config.get('proxyAddresses', {}).get(self.sophomorixRole, {'editable': False, 'show': False, 'title':''})
+        self.customFields['proxyAddresses'] = {
+            'title': proxy_add['title'],
+            'canRead': proxy_add['show'],
+            'canWrite': proxy_add['editable'],
+            'value': self.proxyAddresses
+        }
+
+        for i in range(1, 5):
+            config = custom_config.get('custom', {}).get(self.sophomorixRole, {}).get(str(i), {'editable': False, 'show': False, 'title':''})
+            self.customFields[f"sophomorixCustom{i}"] = {
+                'title': config['title'],
+                'canRead': config['show'],
+                'canWrite': config['editable'],
+                'value': getattr(self, f"sophomorixCustom{i}")
+            }
+
+        for i in range(1, 5):
+            config = custom_config.get('customMulti', {}).get(self.sophomorixRole, {}).get(str(i), {'editable': False, 'show': False, 'title': ''})
+            self.customFields[f"sophomorixCustomMulti{i}"] = {
+                'title': config['title'],
+                'canRead': config['show'],
+                'canWrite': config['editable'],
+                'value': getattr(self, f"sophomorixCustomMulti{i}")
+            }
+
     def __post_init__(self):
         self.schoolclasses = self.extract_schoolclasses(self.memberOf)
         self.projects = self.extract_projects(self.memberOf)
@@ -180,6 +219,7 @@ class LMNUser:
         self.parse_permissions()
         self.parse_sessions()
         self.parse_exam()
+        self.create_custom_fields_objects()
         self.isAdmin = "administrator" in self.sophomorixRole
 
     def test_password(self, password=''):
