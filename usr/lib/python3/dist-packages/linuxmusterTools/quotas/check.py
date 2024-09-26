@@ -1,6 +1,7 @@
 import os
 import pwd
 import re
+import logging
 import subprocess
 import smbclient
 from datetime import datetime
@@ -153,12 +154,15 @@ def get_user_quotas(user):
         out, err = smbc_output.stdout.decode().strip(),  smbc_output.stderr.decode().strip()
         if smbc_output.returncode > 0:
             # Catch Samba error
-            error_code =  err.split("(")[1].strip(")")
-            quotas[share] = {
-                "used": error_code,
-                "soft_limit": error_code,
-                "hard_limit": error_code,
-            }
+            # error_code =  err.split("(")[1].strip(")")
+            error = f"""Can not get quota from {share}: 
+    - Output: {out}
+    - Returncode: {smbc_output.returncode}
+    - Error: {err}"""
+
+            logging.warning(error)
+            quotas[share] = {'ERROR': {'output':out, 'error':err, 'code':smbc_output.returncode}}
+
         else:
             used, soft, hard = [value.strip("/") for value in re.split(r"\s{2,}", out)[2:]]
             quotas[share] = {
