@@ -11,7 +11,7 @@ class LdapReader:
     def __init__(self):
         self.lc = LdapConnector()
 
-    def _create_result_object(self, result, objectclass, dict=True, school='', attributes=[]):
+    def _create_result_object(self, result, objectclass, dict=True, school='', attributes=[], dn_filter=''):
         """
         Formatting one ldap result object into a dict or a LMN model object.
         """
@@ -27,7 +27,7 @@ class LdapReader:
                 school_node = f"OU={school},"
 
             dn = raw_data.get('distinguishedName', [b''])[0].decode()
-            if school_node in dn:
+            if school_node in dn and dn_filter in dn:
                 for field in fields(objectclass):
                     if field.init:
                         value = raw_data.get(field.name, field.type())
