@@ -1,3 +1,11 @@
+linuxmuster-tools7 (7.2.37) lmn72; urgency=medium
+
+  * [ldapreader] Add dn filter and refactor url decorators
+  * [ldapreader] Custom fields object as user attribute
+  * [quotas] Better handle quotas errors 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sat, 28 Sep 2024 10:42:30 +0200
+
 linuxmuster-tools7 (7.2.36) lmn72; urgency=medium
 
   * [ldapreader] Get object from dn.
