@@ -45,10 +45,7 @@ class LMNLdapRouter:
 
         if subdn:
             if school == 'global':
-                if subdn.startswith(f"OU={SCHOOL_MARKER}"):
-                    subdn = "OU=SCHOOLS,"
-                else:
-                    raise ValueError("Parameter school is mandatory for this endpoint and missing in your request.")
+                subdn = "OU=SCHOOLS,"
             else:
                 subdn = subdn.replace(SCHOOL_MARKER, school)
 
