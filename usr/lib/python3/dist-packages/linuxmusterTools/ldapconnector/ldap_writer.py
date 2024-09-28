@@ -67,7 +67,7 @@ class LdapWriter:
                 ldif.append((ldap.MOD_REPLACE, attr, f'"{new_val}"'.encode('utf-16-le')))
 
             else:
-                logging.warning(f"Attribute {attr} not found in {obj_details['distinguishedName']}'s values.")
+                logging.warning(f"Attribute {attr} not found in {obj_details['distinguishedName']}.")
 
         if ldif:
             self.lc._set(obj_details['distinguishedName'], ldif)
@@ -91,10 +91,26 @@ class LdapWriter:
 
         ldif = []
         for attr, val in data.items():
-            if attr in obj_details and val:
-                ldif.append((ldap.MOD_DELETE, attr, None))
+            if attr in obj_details:
+                if not val:
+                    # Delete the whole attribute
+                    ldif.append((ldap.MOD_DELETE, attr, None))
+                else:
+                    if isinstance(val, str):
+                        if val in obj_details[attr]:
+                            ldif.append((ldap.MOD_DELETE, attr, val.encode()))
+                        else:
+                            logging.info(
+                                f"Value {val} not found in attribute {attr} from {obj_details['distinguishedName']}.")
+                    elif isinstance(val, list):
+                        for v in val:
+                            if v in obj_details[attr]:
+                                ldif.append((ldap.MOD_DELETE, attr, v.encode()))
+                            else:
+                                logging.info(
+                                    f"Value {v} not found in attribute {attr} from {obj_details['distinguishedName']}.")
             else:
-                logging.warning(f"Attribute {attr} not found in {obj_details['distinguishedName']}'s values.")
+                logging.warning(f"Attribute {attr} not found in {obj_details['distinguishedName']}.")
 
         if ldif:
             self.lc._set(obj_details['distinguishedName'], ldif)
