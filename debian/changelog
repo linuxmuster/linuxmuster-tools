@@ -1,3 +1,10 @@
+linuxmuster-tools7 (7.2.38) lmn72; urgency=medium
+
+  * [ldapreader] Ignore SCHOOLMARKER for globaladmins. 
+  * [ldapwriter] Fix delete attribute.
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sat, 28 Sep 2024 12:59:32 +0200
+
 linuxmuster-tools7 (7.2.37) lmn72; urgency=medium
 
   * [ldapreader] Add dn filter and refactor url decorators
