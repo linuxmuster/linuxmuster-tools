@@ -6,6 +6,12 @@ from .lmnsession import LMNSession
 
 from linuxmusterTools.lmnfile import LMNFile
 
+try:
+    from aj.plugins.lmn_common.api import ldap_config as params
+    webui_import = True
+except ImportError as e:
+    webui_import = False
+
 
 @dataclass
 class LMNUser:
@@ -219,7 +225,13 @@ class LMNUser:
         self.parse_permissions()
         self.parse_sessions()
         self.parse_exam()
-        self.create_custom_fields_objects()
+
+        if not webui_import:
+            self.create_custom_fields_objects()
+        else:
+            self.customFields = {}
+
+
         self.isAdmin = "administrator" in self.sophomorixRole
 
     def test_password(self, password=''):
