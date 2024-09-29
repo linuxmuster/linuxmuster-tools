@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.2.39) lmn72; urgency=medium
+
+  * [ldapreader] No customFields object for Webui import. 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sun, 29 Sep 2024 14:09:02 +0200
+
 linuxmuster-tools7 (7.2.38) lmn72; urgency=medium
 
   * [ldapreader] Ignore SCHOOLMARKER for globaladmins. 
