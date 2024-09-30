@@ -59,7 +59,7 @@ def get_group(name=''):
 
     return ldap_filter
 
-@router.collection(r'/printers', models.LMNGroup, subdn=f'OU={SCHOOL_MARKER},OU=SCHOOLS,', level="single")
+@router.collection(r'/printers', models.LMNGroup, subdn=f'OU={SCHOOL_MARKER},OU=SCHOOLS,')
 def get_all_printers():
     """
     Get all printer groups.
@@ -73,7 +73,7 @@ def get_all_printers():
 
     return ldap_filter
 
-@router.single(r'/printers/(?P<name>[\w\-_]*)', models.LMNGroup, subdn=f'OU={SCHOOL_MARKER},OU=SCHOOLS,', level="single")
+@router.single(r'/printers/(?P<name>[\w\-_]*)', models.LMNGroup, subdn=f'OU={SCHOOL_MARKER},OU=SCHOOLS,')
 def get_printer(name=''):
     """
     Get a specific printer.
