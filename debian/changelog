@@ -1,3 +1,10 @@
+linuxmuster-tools7 (7.2.40) lmn72; urgency=medium
+
+  * [ldapreader] Fix printer search
+  * [samba] Load DFS shares 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Mon, 30 Sep 2024 21:55:30 +0200
+
 linuxmuster-tools7 (7.2.39) lmn72; urgency=medium
 
   * [ldapreader] No customFields object for Webui import. 
