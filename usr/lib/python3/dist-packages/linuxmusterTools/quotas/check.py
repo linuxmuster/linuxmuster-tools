@@ -7,7 +7,7 @@ import smbclient
 from datetime import datetime
 from smbprotocol.exceptions import SMBAuthenticationError
 
-from ..samba_util import SAMBA_WORKGROUP, SAMBA_DOMAIN, SAMBA_NETBIOS
+from ..samba_util import SAMBA_WORKGROUP, SAMBA_DOMAIN, SAMBA_NETBIOS, DFS
 from ..ldapconnector import LMNLdapReader as lr
 from ..common import format_size
 
@@ -149,7 +149,14 @@ def get_user_quotas(user):
 
     # TODO: parallel ?
     for share in quotas.keys():
-        cmd = ['smbcquotas', '-U', f'administrator%{pw}', '-u', user, f'//{SAMBA_DOMAIN}/{share}']
+        # Search for DFS paths
+        if share in DFS.keys():
+            share_path = DFS[share]['dfs_proxy']
+        else:
+            # Default school
+            share_path = f'//{SAMBA_DOMAIN}/{share}'
+
+        cmd = ['smbcquotas', '-U', f'administrator%{pw}', '-u', user, share_path]
         smbc_output = subprocess.run(cmd, capture_output=True)
         out, err = smbc_output.stdout.decode().strip(),  smbc_output.stderr.decode().strip()
         if smbc_output.returncode > 0:
