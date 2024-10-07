@@ -1,6 +1,8 @@
 import re
 import ldap
+import csv
 import logging
+from datetime import datetime
 
 from linuxmusterTools.ldapconnector.ldap_reader import LdapReader
 
@@ -90,6 +92,31 @@ class LMNLdapRouter:
                 return {attr: results.get(attr, None) for attr in attrs}
             else:
                 return {attr: getattr(results, attr, None) for attr in attrs}
+
+    def ascsv(self, url, delimiter=";", csvfile=None, attributes=[], header=True, **kwargs):
+        if not csvfile:
+            # TODO: find a better path
+            obj_type = url.split('/')[1]
+            now = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+            csvfile = f'/tmp/export_csv_{obj_type}_{now}.csv'
+
+        data = self.get(url, attributes=attributes, dict=True, **kwargs)
+        if not isinstance(data, list):
+            data = [data]
+
+        headers = list(data[0].keys())
+
+        with open(csvfile, 'w') as csv_io:
+            csv_writer = csv.writer(csv_io, delimiter=delimiter)
+
+            if header:
+                csv_writer.writerow(headers)
+
+            for entry in data:
+                csv_writer.writerow([entry[field] for field in headers])
+
+        logging.info(f"CSV file successfully exported to {csvfile}")
+        print(f"CSV file successfully exported to {csvfile}")
 
     def add_url(self, url, method):
         """
