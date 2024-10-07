@@ -1,3 +1,11 @@
+linuxmuster-tools7 (7.2.41) lmn72; urgency=medium
+
+  * [ldapreader] Refactor with common parent methods
+  * [ldapreader] Basic exports as json and csv
+  * [quotas] Check quotas for DFS shares 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Mon, 07 Oct 2024 12:27:58 +0200
+
 linuxmuster-tools7 (7.2.40) lmn72; urgency=medium
 
   * [ldapreader] Fix printer search
