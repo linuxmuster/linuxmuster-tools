@@ -1,3 +1,4 @@
+import json
 from dataclasses import dataclass, asdict
 
 
@@ -9,6 +10,9 @@ class LMNParent:
 
     def asdict(self):
         return asdict(self)
+
+    def asjson(self):
+        return json.dumps(self.asdict())
 
     @staticmethod
     def split_dn(dn):
