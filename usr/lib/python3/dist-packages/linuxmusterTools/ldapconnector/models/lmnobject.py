@@ -87,11 +87,6 @@ class LMNObject(LMNParent):
     dn:   str = field(init=False)
     type: str = field(init=False)
 
-    def split_dn(self):
-        # 'CN=11c,OU=11c,OU=Students,OU=default-school,OU=SCHOOLS...' becomes :
-        # [['CN', '11c'], ['OU', '11c'], ['OU', 'Students'],...]
-        return [node.split("=") for node in self.dn.split(',')]
-
     def get_type(self):
         objtypes = ['Devices', 'Teachers', 'Projects', 'Students']
         for objtype in objtypes:
