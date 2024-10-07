@@ -1,10 +1,10 @@
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 from ..urls import router as lr
-from .lmnobject import LMNObject
+from .common import LMNParent
 
 
 @dataclass
-class LMNProject:
+class LMNProject(LMNParent):
     cn: str
     description: str
     displayName: str
@@ -46,9 +46,6 @@ class LMNProject:
         self.all_members = []
         self.membersCount = -1
         self.adminsCount = -1
-
-    def asdict(self):
-        return asdict(self)
 
     def get_all_members(self):
         """

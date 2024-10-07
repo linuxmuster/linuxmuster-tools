@@ -1,8 +1,9 @@
 from dataclasses import dataclass, field
+from .common import LMNParent
 
 
 @dataclass
-class LMNObject:
+class LMNObject(LMNParent):
     """
     Common linuxmuster.net object with all attributes for global search queries.
     """

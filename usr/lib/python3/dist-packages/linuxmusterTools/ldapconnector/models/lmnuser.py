@@ -1,8 +1,9 @@
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 import os
 import re
 import ldap
 from .lmnsession import LMNSession
+from .common import LMNParent
 
 from linuxmusterTools.lmnfile import LMNFile
 
@@ -14,7 +15,7 @@ except ImportError as e:
 
 
 @dataclass
-class LMNUser:
+class LMNUser(LMNParent):
     cn: str
     displayName: str
     distinguishedName: str
@@ -98,9 +99,6 @@ class LMNUser:
             return self.split_dn(dn)[0][1]
         except KeyError:
             return ''
-
-    def asdict(self):
-        return asdict(self)
 
     @staticmethod
     def _check_schoolclass_number(s):

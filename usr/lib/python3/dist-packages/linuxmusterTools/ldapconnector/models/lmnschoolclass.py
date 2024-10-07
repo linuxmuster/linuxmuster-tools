@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field
-from datetime import datetime
 from ..urls import router as lr
+from .common import LMNParent
 
 
 @dataclass
-class LMNSchoolClass:
+class LMNSchoolClass(LMNParent):
     cn: str
     description: str
     displayName: str

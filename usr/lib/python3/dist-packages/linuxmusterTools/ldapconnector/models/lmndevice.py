@@ -1,8 +1,9 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+from .common import LMNParent
 
 
 @dataclass
-class LMNDevice:
+class LMNDevice(LMNParent):
     cn: str
     displayName: str
     distinguishedName: str
