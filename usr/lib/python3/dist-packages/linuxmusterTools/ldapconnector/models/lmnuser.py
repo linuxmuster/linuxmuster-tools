@@ -88,18 +88,6 @@ class LMNUser(LMNParent):
     webfilter:      bool = field(init=False)
     wifi:           bool = field(init=False)
 
-    def split_dn(self, dn):
-        # 'CN=11c,OU=11c,OU=Students,OU=default-school,OU=SCHOOLS...' becomes :
-        # [['CN', '11c'], ['OU', '11c'], ['OU', 'Students'],...]
-        return [node.split("=") for node in dn.split(',')]
-
-    def common_name(self, dn):
-        try:
-            # [['CN', '11c'], ['OU', '11c'], ['OU', 'Students'],...]
-            return self.split_dn(dn)[0][1]
-        except KeyError:
-            return ''
-
     @staticmethod
     def _check_schoolclass_number(s):
         n = re.findall(r'\d+', s)
