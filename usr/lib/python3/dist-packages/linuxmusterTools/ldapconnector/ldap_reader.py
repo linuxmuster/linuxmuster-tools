@@ -74,8 +74,7 @@ class LdapReader:
 
         results = self.lc._get(ldap_filter, scope=scope, subdn=subdn)
 
-        if objectclass.__name__ == 'LMNUser':
-            custom_fields_config = CustomFieldsConfig().config
+        custom_fields_config = CustomFieldsConfig().config
 
         if len(results) == 0:
             return self._create_result_object([None], objectclass, attributes=attributes, custom_config= custom_fields_config, **kwargs)
@@ -120,15 +119,15 @@ class LdapReader:
         results = self.lc._get(ldap_filter, scope=scope, subdn=subdn)
         response = []
 
-        if objectclass.__name__ == 'LMNUser':
-            custom_fields_config = CustomFieldsConfig().config
+        # TODO: ugly code, find a better way to handle specific parameters
+        custom_fields_config = CustomFieldsConfig().config
 
         for result in results:
             formatted_obj = self._create_result_object(result, objectclass, attributes=attributes, custom_config= custom_fields_config, **kwargs)
-            
+
             if formatted_obj:
                 # Avoid empty dicts
-                response.append(self._create_result_object(result, objectclass, attributes=attributes, custom_config= custom_fields_config, **kwargs))
+                response.append(formatted_obj)
         if sortkey is not None:
             if dict:
                 return sorted(response, key=lambda d: _check_schoolclass_number(d.get(sortkey, None)))
