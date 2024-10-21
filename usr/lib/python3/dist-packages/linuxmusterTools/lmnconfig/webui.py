@@ -2,6 +2,7 @@ import os
 import logging
 
 from linuxmusterTools.lmnfile import LMNFile
+from linuxmusterTools.common import WEBUI_IMPORT
 
 
 class CustomFieldsConfig:
@@ -9,7 +10,10 @@ class CustomFieldsConfig:
     def __init__(self, school='default-school'):
         custom_config_path = f'/etc/linuxmuster/sophomorix/{school}/custom_fields.yml'
 
-        if os.path.isfile(custom_config_path):
+        if WEBUI_IMPORT:
+            self.config = {}
+            return
+        elif os.path.isfile(custom_config_path):
             with LMNFile(custom_config_path, 'r') as config:
                 self.config = config.read()
         else:

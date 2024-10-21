@@ -4,13 +4,7 @@ import ldap
 from .lmnsession import LMNSession
 from .common import LMNParent
 
-from linuxmusterTools.lmnfile import LMNFile
-
-try:
-    from aj.plugins.lmn_common.api import ldap_config as params
-    webui_import = True
-except ImportError as e:
-    webui_import = False
+from linuxmusterTools.common import WEBUI_IMPORT
 
 
 @dataclass
@@ -206,7 +200,7 @@ class LMNUser(LMNParent):
         self.parse_sessions()
         self.parse_exam()
 
-        if not webui_import:
+        if not WEBUI_IMPORT:
             self.create_custom_fields_objects(custom_fields_config)
         else:
             self.customFields = {}
