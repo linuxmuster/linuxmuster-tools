@@ -4,6 +4,7 @@ import ldap
 from dataclasses import fields, asdict
 
 from .connector import LdapConnector
+from ..lmnconfig import CustomFieldsConfig
 
 
 class LdapReader:
@@ -11,7 +12,7 @@ class LdapReader:
     def __init__(self):
         self.lc = LdapConnector()
 
-    def _create_result_object(self, result, objectclass, dict=True, school='', attributes=[], dn_filter=''):
+    def _create_result_object(self, result, objectclass, dict=True, school='', attributes=[], dn_filter='', custom_config={}):
         """
         Formatting one ldap result object into a dict or a LMN model object.
         """
@@ -33,11 +34,19 @@ class LdapReader:
                         value = raw_data.get(field.name, field.type())
                         data[field.name] = self._filter_value(field, value)
                 if dict:
-                    model_dict = asdict(objectclass(**data))
+                    if objectclass.__name__ == 'LMNUser':
+                        model_dict = asdict(objectclass(**data, custom_fields_config=custom_config))
+                    else:
+                        model_dict = asdict(objectclass(**data))
+
                     if attributes:
                         return {k:v for k,v in model_dict.items() if k in attributes}
                     return model_dict
-                return objectclass(**data)
+
+                if objectclass.__name__ == 'LMNUser':
+                        return objectclass(**data, custom_fields_config=custom_config)
+                else:
+                        return objectclass(**data)
 
         if dict:
             return {}
@@ -65,8 +74,11 @@ class LdapReader:
 
         results = self.lc._get(ldap_filter, scope=scope, subdn=subdn)
 
+        if objectclass.__name__ == 'LMNUser':
+            custom_fields_config = CustomFieldsConfig().config
+
         if len(results) == 0:
-            return self._create_result_object([None], objectclass, attributes=attributes, **kwargs)
+            return self._create_result_object([None], objectclass, attributes=attributes, custom_config= custom_fields_config, **kwargs)
 
         to_handle = results[0]
 
@@ -74,7 +86,7 @@ class LdapReader:
             # Only taking the first entry so warn the user
             logging.warning("Multiple entries found in LDAP, but only giving the first one as expected.")
 
-        return self._create_result_object(to_handle, objectclass, attributes=attributes, **kwargs)
+        return self._create_result_object(to_handle, objectclass, attributes=attributes, custom_config= custom_fields_config, **kwargs)
 
     def get_collection(self, objectclass, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn='', sortkey=None, attributes=[], **kwargs):
         """
@@ -107,12 +119,16 @@ class LdapReader:
 
         results = self.lc._get(ldap_filter, scope=scope, subdn=subdn)
         response = []
+
+        if objectclass.__name__ == 'LMNUser':
+            custom_fields_config = CustomFieldsConfig().config
+
         for result in results:
-            formatted_obj = self._create_result_object(result, objectclass, attributes=attributes, **kwargs)
+            formatted_obj = self._create_result_object(result, objectclass, attributes=attributes, custom_config= custom_fields_config, **kwargs)
             
             if formatted_obj:
                 # Avoid empty dicts
-                response.append(self._create_result_object(result, objectclass, attributes=attributes, **kwargs))
+                response.append(self._create_result_object(result, objectclass, attributes=attributes, custom_config= custom_fields_config, **kwargs))
         if sortkey is not None:
             if dict:
                 return sorted(response, key=lambda d: _check_schoolclass_number(d.get(sortkey, None)))

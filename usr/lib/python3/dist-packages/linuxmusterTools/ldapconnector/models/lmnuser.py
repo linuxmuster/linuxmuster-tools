@@ -1,5 +1,4 @@
-from dataclasses import dataclass, field
-import os
+from dataclasses import dataclass, field, InitVar
 import re
 import ldap
 from .lmnsession import LMNSession
@@ -17,6 +16,7 @@ except ImportError as e:
 @dataclass
 class LMNUser(LMNParent):
     cn: str
+    custom_fields_config: InitVar[dict]
     displayName: str
     distinguishedName: str
     givenName: str
@@ -166,13 +166,7 @@ class LMNUser(LMNParent):
             self.examTeacher = self.sophomorixExamMode[0]
             self.examBaseCn = self.cn.replace('-exam', '')
 
-    def create_custom_fields_objects(self):
-        custom_config_path = f'/etc/linuxmuster/sophomorix/{self.school}/custom_fields.yml'
-        custom_config = {}
-        if os.path.isfile(custom_config_path):
-            with LMNFile(custom_config_path, 'r') as config:
-                custom_config = config.read()
-
+    def create_custom_fields_objects(self, custom_config={}):
         self.customFields = {}
 
         proxy_add = custom_config.get('proxyAddresses', {}).get(self.sophomorixRole, {'editable': False, 'show': False, 'title':''})
@@ -201,7 +195,7 @@ class LMNUser(LMNParent):
                 'value': getattr(self, f"sophomorixCustomMulti{i}")
             }
 
-    def __post_init__(self):
+    def __post_init__(self, custom_fields_config={}):
         self.schoolclasses = self.extract_schoolclasses(self.memberOf)
         self.projects = self.extract_projects(self.memberOf)
         self.printers = self.extract_printers(self.memberOf)
@@ -213,7 +207,7 @@ class LMNUser(LMNParent):
         self.parse_exam()
 
         if not webui_import:
-            self.create_custom_fields_objects()
+            self.create_custom_fields_objects(custom_fields_config)
         else:
             self.customFields = {}
 
