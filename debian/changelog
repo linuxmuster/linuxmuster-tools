@@ -1,3 +1,16 @@
+linuxmuster-tools7 (7.2.43) lmn72; urgency=medium
+
+  * [ldapreader] Fix some school specific requests
+  * [ldapwriter] Remove old write functions
+  * [ldapwriter] Move entry to new OU/DN
+  * [ldapwriter] Add Objectwriter
+  * [ldapwriter] Add / Remove member from subtree
+  * [ldapwriter] Move device to new room
+  * [ldapwriter] Rename device 
+  * [samba] Read smb.conf with right delimiter (thanks @hermanntoast)
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Mon, 18 Nov 2024 18:10:27 +0100
+
 linuxmuster-tools7 (7.2.42) lmn72; urgency=medium
 
   * [ldapconnector] Introduce new writers
