@@ -9,7 +9,7 @@ from .dns import *
 
 
 # Load samba domain
-smbconf = ConfigParser()
+smbconf = ConfigParser(delimiters=("=",))
 SAMBA_DOMAIN, SAMBA_REALM, SAMBA_NETBIOS, SAMBA_WORKGROUP = [''] * 4
 
 def parse_log_level(level):
