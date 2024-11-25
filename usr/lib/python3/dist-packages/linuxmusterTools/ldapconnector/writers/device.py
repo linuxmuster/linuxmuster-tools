@@ -3,6 +3,7 @@ import logging
 from ..ldap_writer import LdapWriter
 from ..urls.ldaprouter import router
 from .object import LMNObjectWriter
+from linuxmusterTools.common import Validator
 
 
 class LMNDeviceWriter:
@@ -55,6 +56,10 @@ class LMNDeviceWriter:
         """
 
 
+        if not Validator.check_host_name(new_name):
+            logging.error(f"{new_name} is not a valid hostname")
+            return
+
         new_name = new_name.upper()
         name = name.upper()
 
@@ -68,8 +73,6 @@ class LMNDeviceWriter:
         if self.lr.get(f'/devices/{new_name}'):
             logging.warning(f"{new_name} is already used, please use another hostname.")
             return
-
-        # TODO : check new_name chars ?
 
         # Update attributes
 
