@@ -38,6 +38,7 @@ def get_results_search_device(query, selection=[]):
     Return a list of LMNDevice data object.
     """
 
+
     # TODO: role filtering through selection variable must be ameliorated
     if selection == 'all':
         selection = '*'
@@ -47,3 +48,16 @@ def get_results_search_device(query, selection=[]):
                                 (objectClass=computer)
                                 (sophomorixRole={selection})
                             )"""
+
+@router.collection(r'/rooms', models.LMNObject)
+def get_rooms():
+    """
+    Get all rooms under the Devices tree.
+    """
+
+
+    return f"""(&
+                                (objectClass=group)
+                                (sophomorixType=room)
+                            )"""
+
