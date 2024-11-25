@@ -141,6 +141,27 @@ class LdapWriter:
 
         self.lc._move(old_dn, new_ou)
 
+    def _add_ou(self, dn):
+        """
+        Create an organisational unit with the given dn.
+
+        :param dn: dn of the object to modify
+        :type dn: basestring
+        """
+
+
+        self.lc._add_ou(dn)
+
+    def _add_group(self, dn, ldif=[]):
+        """
+        Create a group with the given dn.
+
+        :param dn: dn of the object to modify
+        :type dn: basestring
+        """
+
+        self.lc._add_group(dn, ldif)
+
 
 ldap_writer = LdapWriter()
 
