@@ -61,3 +61,15 @@ def get_rooms():
                                 (sophomorixType=room)
                             )"""
 
+@router.single(r'/rooms/(?P<name>[\w\-\_]*)', models.LMNObject)
+def get_room(name):
+    """
+    Get a specific room under the Devices tree.
+    """
+
+
+    return f"""(&
+                                (cn={name})
+                                (objectClass=group)
+                                (sophomorixType=room)
+                            )"""
