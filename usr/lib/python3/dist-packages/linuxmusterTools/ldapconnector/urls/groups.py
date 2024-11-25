@@ -2,7 +2,7 @@ import linuxmusterTools.ldapconnector.models as models
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router, SCHOOL_MARKER
 
 
-@router.collection(r'/units', models.LMNGroup, subdn=f'OU={SCHOOL_MARKER},OU=SCHOOLS,', level="single")
+@router.collection(r'/units', models.LMNGroup, subdn=f'OU={SCHOOL_MARKER},OU=SCHOOLS,')
 def get_all_units():
     """
     Get all units. The terminology "unit" was chosen in order to differenciate with a "group" from
@@ -14,7 +14,7 @@ def get_all_units():
 
     return ldap_filter
 
-@router.single(r'/units/(?P<name>[\w\-_]*)', models.LMNGroup, subdn=f'OU={SCHOOL_MARKER},OU=SCHOOLS,', level="single")
+@router.single(r'/units/(?P<name>[\w\-_]*)', models.LMNGroup, subdn=f'OU={SCHOOL_MARKER},OU=SCHOOLS,')
 def get_group(name=''):
     """
     Get a unit specified by its name. The terminology "unit" was chosen in order to differenciate with a "group" from
@@ -30,7 +30,7 @@ def get_group(name=''):
     return ldap_filter
 
 
-@router.collection(r'/groups', models.LMNGroup, subdn=f'OU={SCHOOL_MARKER},OU=SCHOOLS,', level="single")
+@router.collection(r'/groups', models.LMNGroup, subdn=f'OU={SCHOOL_MARKER},OU=SCHOOLS,')
 def get_all_groups():
     """
     Get all groups (meaning units with sophomorixType sophomorix-group).
@@ -44,7 +44,7 @@ def get_all_groups():
 
     return ldap_filter
 
-@router.single(r'/groups/(?P<name>[\w\-_]*)', models.LMNGroup, subdn=f'OU={SCHOOL_MARKER},OU=SCHOOLS,', level="single")
+@router.single(r'/groups/(?P<name>[\w\-_]*)', models.LMNGroup, subdn=f'OU={SCHOOL_MARKER},OU=SCHOOLS,')
 def get_group(name=''):
     """
     Get a group (meaning units with sophomorixType sophomorix-group) specified by its name.
