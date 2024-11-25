@@ -99,6 +99,14 @@ class LMNDeviceWriter:
         """
 
 
+        if not Validator.check_host_name(new_room):
+            logging.error(f"{new_room} is not a valid hostname")
+            return
+
+        if not  self.lr.getval(f"/rooms/{new_room}", 'cn'):
+            logging.error(f"Can not move to {new_room}, this group does not exist in LDAP.")
+            return
+
         name = name.upper()
 
         details = self.lr.get(f'/devices/{name}')
