@@ -44,6 +44,8 @@ try:
     SAMBA_WORKGROUP = smbconf["global"]["workgroup"]
     SAMBA_NETBIOS = smbconf["global"]["netbios name"].lower()
     SAMBA_DOMAIN = f'{SAMBA_NETBIOS}.{SAMBA_REALM}'
+    SAMBA_TLD = SAMBA_REALM.split('.')[-1].upper()
+    LDAP_CONTEXT = f"OU=SCHOOLS,DC={SAMBA_WORKGROUP},DC={SAMBA_TLD}"
 except Exception as e:
     logging.error(f"Can not read realm and domain from smb.conf: {str(e)}")
 
