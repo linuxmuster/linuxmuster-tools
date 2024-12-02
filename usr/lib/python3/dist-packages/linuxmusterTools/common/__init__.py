@@ -1,5 +1,6 @@
 from .convert import *
 from .string_checker import *
+from .samba import *
 
 Validator = StringChecker()
 
