@@ -68,10 +68,10 @@ def check_attic_dir(school='default-school'):
 
     attic_dir = "/srv/samba/schools/default-school/students/attic"
 
+    result = {}
     for user in os.listdir(attic_dir):
         if not lr.get(f'/users/{user}'):
             killdate = get_killdate(user)
-            if killdate is not None:
-                logging.info(f"Account of user {user} was killed at {killdate}, the directory {attic_dir}/{user} can be deleted.")
-            else:
-                logging.warning(f'Could not find any informations about user {user}.')
+            result[user] = killdate
+
+    return result
