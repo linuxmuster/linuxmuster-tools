@@ -72,6 +72,6 @@ def check_attic_dir(school='default-school'):
         if not lr.get(f'/users/{user}'):
             killdate = get_killdate(user)
             if killdate is not None:
-                print(f"Account of user {user} was killed at {killdate}, the directory {attic_dir}/{user} can be deleted.")
+                logging.info(f"Account of user {user} was killed at {killdate}, the directory {attic_dir}/{user} can be deleted.")
             else:
-                print(f'Could not find any informations about user {user}.')
+                logging.warning(f'Could not find any informations about user {user}.')
