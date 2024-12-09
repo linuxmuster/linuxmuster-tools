@@ -1,3 +1,16 @@
+linuxmuster-tools7 (7.2.44) lmn72; urgency=medium
+
+  * [common] Convert sophomorix time as human readable
+  * [common] Check user's status in attic 
+  * [ldapreader] Get all rooms and a specific room
+  * [ldapreader] Fix subtree search in groups requests
+  * [ldapwriter] Check devices hostnames
+  * [ldapwriter] Add OU and CN in Ldap
+  * [lmnconfig] Add samba, sophomorix and setup config
+  * [lmnconfig] Add LDAP_CONTEXT and SAMBA_TLD
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Mon, 09 Dec 2024 16:46:40 +0100
+
 linuxmuster-tools7 (7.2.43) lmn72; urgency=medium
 
   * [ldapreader] Fix some school specific requests
