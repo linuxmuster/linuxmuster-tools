@@ -1,4 +1,5 @@
 import math
+from datetime import datetime
 
 
 def format_size(num, suffix='B', base=2):
@@ -19,3 +20,19 @@ def format_size(num, suffix='B', base=2):
     if scale > 7:
         return f'{value:.2f} Yi{suffix}'
     return f'{value:3.2f} {units[scale]}{suffix}'
+
+def convert_sophomorix_time(t):
+    """
+    Convert sophomorix datetime to readable info.
+
+    :param t: Sophomorix date like 20081030125303.0Z
+    :type t: basestring
+    :return: Human-readable date like 30 Oct 2008 12:53:30
+    :rtype:
+    """
+
+
+    try:
+        return  datetime.strptime(t, '%Y%m%d%H%M%S.%fZ').strftime("%d %b %Y %H:%M:%S")
+    except Exception:
+        return t

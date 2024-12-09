@@ -1,26 +1,9 @@
 import os
 import logging
-from datetime import datetime
 
 from linuxmusterTools.ldapconnector import LMNLdapReader as lr
+from .convert import convert_sophomorix_time
 
-
-def convert_sophomorix_time(t):
-    """
-    Convert sophomorix datetime to readable info.
-    May not be the right place here.
-
-    :param t: Sophomorix date like 20081030125303.0Z
-    :type t: basestring
-    :return: Human-readable date like 30 Oct 2008 12:53:30
-    :rtype:
-    """
-
-
-    try:
-        return  datetime.strptime(t, '%Y%m%d%H%M%S.%fZ').strftime("%d %b %Y %H:%M:%S")
-    except Exception:
-        return t
 
 def get_killdate(user, school='default-school'):
     """
