@@ -47,6 +47,7 @@ class LMNUser(LMNParent):
     sophomorixFirstnameInitial: str
     sophomorixFirstPassword: str
     sophomorixIntrinsic2: list
+    sophomorixIntrinsic3: list
     sophomorixMailQuotaCalculated: list
     sophomorixMailQuota: list
     sophomorixQuota: list

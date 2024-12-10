@@ -57,6 +57,7 @@ class LMNObject(LMNParent):
     sophomorixFirstPassword: str
     sophomorixHidden: bool
     sophomorixIntrinsic2: list
+    sophomorixIntrinsic3: list
     sophomorixIntrinsicMulti1: list
     sophomorixJoinable: bool
     sophomorixMailAlias: bool
