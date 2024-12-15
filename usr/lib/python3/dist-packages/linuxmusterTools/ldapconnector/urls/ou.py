@@ -15,7 +15,7 @@ def get_all_ou():
 
     return ldap_filter
 
-@router.collection(r'/ou/devices', models.LMNOU, subdn=f'OU=Devices,OU={SCHOOL_MARKER},OU=SCHOOLS,')
+@router.collection(r'/ou/devices', models.LMNOU, subdn=f'OU=Devices,OU={SCHOOL_MARKER},OU=SCHOOLS,', level='single')
 def get_devices_ou():
     """
     Get all details from the devices organizational unit.
