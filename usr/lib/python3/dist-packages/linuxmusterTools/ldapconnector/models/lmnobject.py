@@ -69,6 +69,9 @@ class LMNObject(LMNParent):
     sophomorixMembers: list
     sophomorixQuota: list
     sophomorixRole: str
+    sophomorixRoomComputers: list
+    sophomorixRoomIPs: list
+    sophomorixRoomMACs: list
     sophomorixSchoolname: str
     sophomorixSchoolPrefix: str
     sophomorixSessions: list
