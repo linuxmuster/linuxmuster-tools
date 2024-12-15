@@ -1,5 +1,5 @@
 import linuxmusterTools.ldapconnector.models as models
-from linuxmusterTools.ldapconnector.urls.ldaprouter import router
+from linuxmusterTools.ldapconnector.urls.ldaprouter import router, SCHOOL_MARKER
 
 
 @router.collection(r'/devices', models.LMNDevice)
@@ -49,7 +49,7 @@ def get_results_search_device(query, selection=[]):
                                 (sophomorixRole={selection})
                             )"""
 
-@router.collection(r'/rooms', models.LMNRoom)
+@router.collection(r'/rooms', models.LMNRoom, subdn=f'OU=Devices,OU={SCHOOL_MARKER},OU=SCHOOLS,')
 def get_rooms():
     """
     Get all rooms under the Devices tree.
@@ -58,10 +58,9 @@ def get_rooms():
 
     return f"""(&
                                 (objectClass=group)
-                                (sophomorixType=room)
                             )"""
 
-@router.single(r'/rooms/(?P<name>[\w\-\_]*)', models.LMNRoom)
+@router.single(r'/rooms/(?P<name>[\w\-\_]*)', models.LMNRoom, subdn=f'OU=Devices,OU={SCHOOL_MARKER},OU=SCHOOLS,')
 def get_room(name):
     """
     Get a specific room under the Devices tree.
@@ -71,5 +70,4 @@ def get_room(name):
     return f"""(&
                                 (cn={name})
                                 (objectClass=group)
-                                (sophomorixType=room)
                             )"""
