@@ -3,7 +3,7 @@ import logging
 from functools import partialmethod
 
 
-STRING_RULES = {
+NAME_RULES = {
     'password': re.compile(r"^[a-zA-Z0-9?!@#§+\-$%&*{}()\]\[]+$"),
     'strong_password': re.compile(r"(?=.*[a-z])(?=.*[A-Z])(?=.*[?!@#§+\-$%&*{}()]|(?=.*\d)).{7,}"),
     'project': re.compile(r"^[a-z0-9_\-]*$"),
@@ -44,15 +44,15 @@ ROLES = [
 ]
 
 def set_check_method(cls, *args):
-    for string_type in STRING_RULES:
-        setattr(cls, f"check_{string_type}_name", partialmethod(cls.check, string_type))
+    for name_type in NAME_RULES:
+        setattr(cls, f"check_{name_type}_name", partialmethod(cls.check, name_type))
     return cls
 
 @set_check_method
-class StringChecker:
+class NameChecker:
 
-    def check(self, string_type, string):
-        pattern = STRING_RULES.get(string_type, None)
+    def check(self, name_type, string):
+        pattern = NAME_RULES.get(name_type, None)
         if pattern:
             return re.match(pattern, string) is not None
         return False

@@ -1,8 +1,8 @@
 from .convert import *
-from .string_checker import *
+from .checks import *
 
 
-Validator = StringChecker()
+Validator = NameChecker()
 
 try:
     from aj.plugins.lmn_common.api import ldap_config as params
