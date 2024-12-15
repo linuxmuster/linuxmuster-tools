@@ -26,3 +26,15 @@ class LMNParent:
             return self.split_dn(dn)[0][1]
         except KeyError:
             return ''
+
+@dataclass
+class LMNOU(LMNParent):
+    distinguishedName: str
+    dn: str
+    name: str
+    objectCategory: list
+    objectClass: list
+    ou: str
+
+    def __post_init__(self):
+        self.dn = self.distinguishedName

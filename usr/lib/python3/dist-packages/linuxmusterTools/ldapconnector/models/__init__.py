@@ -1,3 +1,4 @@
+from .common import *
 from .lmnuser import *
 from .lmnsession import *
 from .lmnschoolclass import *
