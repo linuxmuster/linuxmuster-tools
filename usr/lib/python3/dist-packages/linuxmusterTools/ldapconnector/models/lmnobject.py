@@ -61,9 +61,7 @@ class LMNObject(LMNParent):
     sophomorixIntrinsicMulti1: list
     sophomorixJoinable: bool
     sophomorixMailAlias: bool
-    sophomorixMailAlias: list
     sophomorixMailList: bool
-    sophomorixMailList: list
     sophomorixMailQuotaCalculated: list
     sophomorixMailQuota: list
     sophomorixMaxMembers: int
