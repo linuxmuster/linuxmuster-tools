@@ -1,6 +1,7 @@
 import logging
 
 from linuxmusterTools.ldapconnector import LMNLdapReader as lr
+from linuxmusterTools.lmnconfig import SAMBA_REALM
 
 
 def empty_ou_rooms():
@@ -11,6 +12,7 @@ def empty_ou_rooms():
     :return: Report with list of error types
     :rtype: dict
     """
+
 
     rooms = lr.get('/ou/devices')
 
@@ -42,3 +44,50 @@ def empty_ou_rooms():
             logging.warning(f"Room {r['name']} doesn't contain any device.")
 
     return report
+
+
+def devices():
+    """
+    Check if devices attributes are consistent.
+
+    :return:
+    :rtype:
+    """
+
+
+    devices = lr.get('/devices')
+
+    for device in devices:
+        cn = device['cn']
+        ou = [node.split("=") for node in device['dn'].split(',')][1][1]
+        ou_group = device['dn'].replace(f"CN={cn}", f"CN={ou}")
+
+        try:
+            # Check dNS
+            assert device['dNSHostName'] == f'{cn}.{SAMBA_REALM}'
+
+            # Check name
+            assert device['name'] == cn
+
+            # Check memberOf
+            # TODO: missing tests
+            assert ou_group in device['memberOf']
+
+            # Check sAMAccountName
+            assert device['sAMAccountName'] == f'{cn}$'
+
+            # Check servicePrincipalName
+            assert f"HOST/{cn}" in device["servicePrincipalName"]
+            assert f"HOST/{cn}.{SAMBA_REALM}" in device["servicePrincipalName"]
+            assert f"RestrictedKrbHost/{cn}" in device["servicePrincipalName"]
+            assert f"RestrictedKrbHost/{cn}.{SAMBA_REALM}" in device["servicePrincipalName"]
+
+            # Check sophomorix attributes
+            assert device['sophomorixAdminClass'] == ou
+            assert device['sophomorixComputerRoom'] == ou
+            assert device['sophomorixDnsNodename'] == cn.lower()
+            assert device['sophomorixAdminFile'] == "devices.csv" # Ok for multischool ?
+
+        except AssertionError as e:
+            print(device)
+            raise
