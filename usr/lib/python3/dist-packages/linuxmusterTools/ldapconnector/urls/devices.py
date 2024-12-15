@@ -49,7 +49,7 @@ def get_results_search_device(query, selection=[]):
                                 (sophomorixRole={selection})
                             )"""
 
-@router.collection(r'/rooms', models.LMNObject)
+@router.collection(r'/rooms', models.LMNRoom)
 def get_rooms():
     """
     Get all rooms under the Devices tree.
@@ -61,7 +61,7 @@ def get_rooms():
                                 (sophomorixType=room)
                             )"""
 
-@router.single(r'/rooms/(?P<name>[\w\-\_]*)', models.LMNObject)
+@router.single(r'/rooms/(?P<name>[\w\-\_]*)', models.LMNRoom)
 def get_room(name):
     """
     Get a specific room under the Devices tree.
