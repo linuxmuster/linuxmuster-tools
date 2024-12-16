@@ -59,6 +59,11 @@ def devices():
 
     for device in devices:
         cn = device['cn']
+        assert device['sophomorixSchoolname'] == device['sophomorixSchoolPrefix']
+        schoolprefix = ''
+        if device['sophomorixSchoolname'] != 'default-school':
+            schoolprefix = f"{device['sophomorixSchoolname']}."
+
         ou = [node.split("=") for node in device['dn'].split(',')][1][1]
         ou_group = device['dn'].replace(f"CN={cn}", f"CN={ou}")
 
@@ -86,7 +91,7 @@ def devices():
             assert device['sophomorixAdminClass'] == ou
             assert device['sophomorixComputerRoom'] == ou
             assert device['sophomorixDnsNodename'] == cn.lower()
-            assert device['sophomorixAdminFile'] == "devices.csv" # Ok for multischool ?
+            assert device['sophomorixAdminFile'] == f"{schoolprefix}devices.csv"
 
         except AssertionError as e:
             print(device)
