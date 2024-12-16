@@ -15,12 +15,13 @@ def get_all_ou():
 
     return ldap_filter
 
-@router.collection(r'/ou/devices', models.LMNOU, subdn=f'OU=Devices,OU={SCHOOL_MARKER},OU=SCHOOLS,', level='single')
+@router.collection(r'/ou/rooms', models.LMNOU, subdn=f'OU=Devices,OU={SCHOOL_MARKER},OU=SCHOOLS,', level='single')
 def get_devices_ou():
     """
-    Get all details from the devices organizational unit.
+    Get all details from the Devices organizational unit.
     Return a LMNOU data object.
     """
+
 
     ldap_filter = f"""(&
                                 (objectClass=organizationalUnit)
@@ -35,6 +36,7 @@ def get_students_ou():
     Return a LMNOU data object.
     Quit the same as a schoolclasses request.
     """
+
 
     ldap_filter = f"""(&
                                 (objectClass=organizationalUnit)
