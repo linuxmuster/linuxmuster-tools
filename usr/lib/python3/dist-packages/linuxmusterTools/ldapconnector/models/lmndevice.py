@@ -34,6 +34,10 @@ class LMNDevice(LMNParent):
 
 @dataclass
 class LMNRoom(LMNParent):
+    """
+    ObjectClass group for a room.
+    """
+
     cn: str
     description: str
     distinguishedName: str

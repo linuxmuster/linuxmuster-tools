@@ -1,9 +1,13 @@
+import ldap
 import logging
+from dataclasses import fields
 
 from ..ldap_writer import LdapWriter
 from ..urls.ldaprouter import router
 from .object import LMNObjectWriter
+from ..models import LMNRoom
 from linuxmusterTools.common import Validator
+from linuxmusterTools.lmnconfig import LDAP_CONTEXT
 
 
 class LMNDeviceWriter:
@@ -92,18 +96,18 @@ class LMNDeviceWriter:
         """
         Move a device to another room, e.g. to another OU
 
-        :param new_ou:
-        :type new_ou:
-        :return:
-        :rtype:
+        :param name: name of the device to move
+        :type name: basestring
+        :param new_room: New OU for the device
+        :type new_room: basestring
         """
 
 
         if not Validator.check_host_name(new_room):
-            logging.error(f"{new_room} is not a valid hostname")
+            logging.error(f"{new_room} is not a valid room name")
             return
 
-        if not  self.lr.getval(f"/rooms/{new_room}", 'cn'):
+        if not self.lr.getval(f"/rooms/{new_room}", 'cn'):
             logging.error(f"Can not move to {new_room}, this group does not exist in LDAP.")
             return
 
@@ -142,3 +146,45 @@ class LMNDeviceWriter:
         self.ow.remove_member(old_group, new_dn)
         self.ow.add_member(new_group, new_dn)
 
+
+    def create_room(self, new_room, school='default-school', data={}):
+        """
+        Create a new room, e.g. another OU
+
+        :param new_room: New OU to create
+        :type new_room: basestring
+        """
+
+
+        if not Validator.check_host_name(new_room):
+            logging.error(f"{new_room} is not a valid room name")
+            return
+
+        if new_room in self.lr.getval(f"/ou/rooms", 'name'):
+            logging.error(f"Organizational unit {new_room} already exists in LDAP.")
+            return
+
+        if self.lr.getval(f"/rooms/{new_room}", 'cn'):
+            logging.error(f"Group {new_room} already exists in LDAP.")
+            return
+
+        ## Create OU
+        ou_dn = f"OU={new_room},OU=Devices,OU={school},{LDAP_CONTEXT}"
+        self.lw._add_ou(ou_dn)
+
+        ## Create group
+        ldif = []
+        group_dn = f"CN={new_room},{ou_dn}"
+        valid_fields = {field.name:field.type() for field in fields(LMNRoom) if field.init}
+
+        for attr,value in data.items():
+            if attr in valid_fields:
+                if isinstance(valid_fields[attr], list) and isinstance(value, list):
+                    for val in value:
+                        ldif.append((attr, [f"{val}".encode()]))
+                else:
+                    ldif.append((attr, [f"{value}".encode()]))
+            else:
+                logging.warning(f"Attribute {attr} not found in LMNRoom details")
+
+        self.lw._add_group(group_dn, ldif)
