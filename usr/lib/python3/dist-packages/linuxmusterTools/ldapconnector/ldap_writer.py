@@ -162,6 +162,17 @@ class LdapWriter:
 
         self.lc._add_group(dn, ldif)
 
+    def _del(self, dn):
+        """
+        Delete an Ldap object.
+
+        :param dn: dn of the object to delete
+        :type dn: basestring
+        """
+
+
+        self.lc._del(dn)
+
 
 ldap_writer = LdapWriter()
 
