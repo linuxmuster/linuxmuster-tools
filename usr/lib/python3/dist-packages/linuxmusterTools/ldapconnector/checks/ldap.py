@@ -14,7 +14,7 @@ def check_empty_ou_rooms():
     """
 
 
-    rooms = lr.get('/ou/devices')
+    rooms = lr.get('/ou/rooms')
 
     report = {
         'NO_CN':[],
@@ -50,8 +50,8 @@ def check_devices():
     """
     Check if devices attributes are consistent.
 
-    :return:
-    :rtype:
+    :return: Report with all errors
+    :rtype: dict
     """
 
 
