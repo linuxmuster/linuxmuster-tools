@@ -4,7 +4,7 @@ from linuxmusterTools.ldapconnector import LMNLdapReader as lr
 from linuxmusterTools.lmnconfig import SAMBA_REALM
 
 
-def empty_ou_rooms():
+def check_empty_ou_rooms():
     """
     List all organizational units in devices which have no associated group and
     no devices.
@@ -46,7 +46,7 @@ def empty_ou_rooms():
     return report
 
 
-def devices():
+def check_devices():
     """
     Check if devices attributes are consistent.
 
@@ -57,42 +57,83 @@ def devices():
 
     devices = lr.get('/devices')
 
+    report = {}
+
     for device in devices:
+
+        if "Domain Controllers" in device['dn']:
+            # Not checking domain controllers
+            continue
+
+        error = False
+
         cn = device['cn']
-        assert device['sophomorixSchoolname'] == device['sophomorixSchoolPrefix']
-        schoolprefix = ''
+        report[cn] = []
+
         if device['sophomorixSchoolname'] != 'default-school':
             schoolprefix = f"{device['sophomorixSchoolname']}."
+            if device['sophomorixSchoolname'] != device['sophomorixSchoolPrefix']:
+                error = True
+                report[cn].append(f"sophomorixSchoolname and sophomorixSchoolPrefix are different ({device['sophomorixSchoolname']} != {device['sophomorixSchoolPrefix']}")
+        else:
+            schoolprefix = ''
+            if device['sophomorixSchoolPrefix'] != '---':
+                error = True
+                report[cn].append(f"sophomorixSchoolPrefix should be '---'")
 
         ou = [node.split("=") for node in device['dn'].split(',')][1][1]
         ou_group = device['dn'].replace(f"CN={cn}", f"CN={ou}")
 
-        try:
-            # Check dNS
-            assert device['dNSHostName'] == f'{cn}.{SAMBA_REALM}'
+        # Check dNS
+        if device['dNSHostName'] != f'{cn}.{SAMBA_REALM}':
+            error = True
+            report[cn].append(f"dNSHotName should be {f'{cn}.{SAMBA_REALM}'} and not {device['dNSHostName']}")
 
-            # Check name
-            assert device['name'] == cn
+        # Check name
+        if device['name'] != cn:
+            error = True
+            report[cn].append(f"name should be {cn} and not {device['name']}")
 
-            # Check memberOf
-            # TODO: missing tests
-            assert ou_group in device['memberOf']
+        # Check memberOf
+        # TODO: missing tests
+        if ou_group not in device['memberOf']:
+            error = True
+            report[cn].append(f"memberOf should contain {ou_group}")
 
-            # Check sAMAccountName
-            assert device['sAMAccountName'] == f'{cn}$'
+        # Check sAMAccountName
+        if device['sAMAccountName'] != f'{cn}$':
+            error = True
+            report[cn].append(f"sAMAccountName should be {cn} and not {device['sAMAccountName']}")
 
-            # Check servicePrincipalName
-            assert f"HOST/{cn}" in device["servicePrincipalName"]
-            assert f"HOST/{cn}.{SAMBA_REALM}" in device["servicePrincipalName"]
-            assert f"RestrictedKrbHost/{cn}" in device["servicePrincipalName"]
-            assert f"RestrictedKrbHost/{cn}.{SAMBA_REALM}" in device["servicePrincipalName"]
+        # Check servicePrincipalName
+        if f"HOST/{cn}" not in device["servicePrincipalName"]:
+            error = True
+            report[cn].append(f"servicePrincipalName should contain {f'HOST/{cn}'}")
+        if f"HOST/{cn}.{SAMBA_REALM}" not in device["servicePrincipalName"]:
+            error = True
+            report[cn].append(f"servicePrincipalName should contain {f'HOST/{cn}.{SAMBA_REALM}'}")
+        if f"RestrictedKrbHost/{cn}" not in device["servicePrincipalName"]:
+            error = True
+            report[cn].append(f"servicePrincipalName should contain {f'RestrictedKrbHost/{cn}'}")
+        if f"RestrictedKrbHost/{cn}.{SAMBA_REALM}" not in device["servicePrincipalName"]:
+            error = True
+            report[cn].append(f"servicePrincipalName should contain {f'RestrictedKrbHost/{cn}.{SAMBA_REALM}'}")
 
-            # Check sophomorix attributes
-            assert device['sophomorixAdminClass'] == ou
-            assert device['sophomorixComputerRoom'] == ou
-            assert device['sophomorixDnsNodename'] == cn.lower()
-            assert device['sophomorixAdminFile'] == f"{schoolprefix}devices.csv"
+        # Check sophomorix attributes
+        if device['sophomorixAdminClass'] != ou:
+            error = True
+            report[cn].append(f"sophomorixAdminClass should be {ou}")
+        if device['sophomorixComputerRoom'] != ou:
+            error = True
+            report[cn].append(f"sophomorixComputerRoom should be {ou}")
+        if device['sophomorixDnsNodename'] != cn.lower():
+            error = True
+            report[cn].append(f"sophomorixDnsNodename should be {cn.lower()}")
+        if device['sophomorixAdminFile'] != f"{schoolprefix}devices.csv":
+            error = True
+            report[cn].append(f"ophomorixAdminFile should be {f'{schoolprefix}devices.csv'}")
 
-        except AssertionError as e:
-            print(device)
-            raise
+        if not error:
+            del report[cn]
+
+    return report
