@@ -146,6 +146,28 @@ class LMNDeviceWriter:
         self.ow.remove_member(old_group, new_dn)
         self.ow.add_member(new_group, new_dn)
 
+    def delete_room(self, room, school='default-school'):
+        """
+        Delete the OU and his group associated to a room, if this does not contain any device.
+
+        :param room: Name of the room to dele
+        :type room: basestring
+        :param school: Concerned school
+        :type school: basestring
+        """
+
+
+        if room not in self.lr.getval(f"/ou/rooms", 'name'):
+            logging.error(f"Organizational unit {room} doesn't exist in LDAP.")
+            return
+
+        group = self.lr.get(f'/rooms/{room}')
+        if group and len(group['member']) > 0:
+            logging.error(f"Room {room} still contain some devices, can not delete it.")
+            return
+
+        ou_dn = f"OU={room},OU=Devices,OU={school},{LDAP_CONTEXT}"
+        self.lw._del(ou_dn)
 
     def create_room(self, new_room, school='default-school', data={}):
         """
@@ -153,6 +175,8 @@ class LMNDeviceWriter:
 
         :param new_room: New OU to create
         :type new_room: basestring
+        :param school: Concerned school
+        :type school: basestring
         """
 
 
