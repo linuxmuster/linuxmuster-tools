@@ -63,6 +63,7 @@ class LMNUser(LMNParent):
     sophomorixUserToken: str
     sophomorixWebuiDashboard: list
     sophomorixWebuiPermissionsCalculated: list
+    thumbnailPhoto: str
     unixHomeDirectory: str
     whenChanged: str
     dn:             str  = field(init=False)
