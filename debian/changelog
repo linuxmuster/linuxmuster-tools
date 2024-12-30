@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.2.46) lmn72-testing; urgency=medium
+
+  * Use env var instead of option
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Mon, 30 Dec 2024 19:45:00 +0100
+
 linuxmuster-tools7 (7.2.45) lmn72-testing; urgency=medium
 
   * Temporary fix for newer pip versions
