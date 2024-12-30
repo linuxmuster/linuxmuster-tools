@@ -6,6 +6,8 @@
 
 set -e
 
+export PIP_BREAK_SYSTEM_PACKAGES=1
+
 msg()
 {
     message=$1
@@ -18,7 +20,7 @@ msg()
 case "$1" in
     install|configure)
         msg "Install Python requirements"
-        /usr/bin/python3 -m pip install -r /usr/lib/python3/dist-packages/linuxmusterTools/requirements.txt --break-system-packages
+        /usr/bin/python3 -m pip install -r /usr/lib/python3/dist-packages/linuxmusterTools/requirements.txt
 
         msg "Checking post-hooks directories"
         mkdir -p /etc/linuxmuster/tools/hooks/group-manager
