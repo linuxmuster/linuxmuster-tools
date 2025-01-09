@@ -22,8 +22,8 @@ class LMNSchoolClass(LMNParent):
     sophomorixCreationDate: str # datetime
     sophomorixHidden: bool
     sophomorixJoinable: bool
-    sophomorixMailAlias: list
-    sophomorixMailList: list
+    sophomorixMailAlias: bool
+    sophomorixMailList: bool
     sophomorixMailQuota: list
     sophomorixMaxMembers: int
     sophomorixMembers: list
