@@ -5,6 +5,7 @@ Given a CSV containing all lastnames, firstnames and codes from all teachers, sc
 all "teacher codes" (Kürzel) in the attribute sophomorixCustom1 and subjects in sophomorixCustomMulti1.
 """
 
+import csv
 from linuxmusterTools.ldapconnector import LMNLdapReader as lr, UserWriter as uw
 from linuxmusterTools.quotas import get_user_quotas
 
@@ -21,11 +22,11 @@ with open('MYCSV.csv','r') as f:
     teacher_csv = csv.reader(f, delimiter=';')
     for entry in teacher_csv:
         
-        ldapname = f"{teacher['sn'].lower()};{teacher['givenName'].lower();}"
         csvname = f"{entry[0].lower()};{entry[1].lower()}"
         code = entry[2]
         
         for teacher in teachers:
+            ldapname = f"{teacher['sn'].lower()};{teacher['givenName'].lower()}"
             # Matching teachers
             if ldapname == csvname:
                 subjects = entry[3].split(',')
@@ -38,6 +39,6 @@ with open('MYCSV.csv','r') as f:
                 uw.setattr(teacher['cn'], data={'sophomorixCustom2': f"{quotas['hard_limit']};{quotas['used']}"})
                 break
         else:
-            print(f"Teacher {name} not found.")
+            print(f"Teacher {csvname} not found.")
 
 
