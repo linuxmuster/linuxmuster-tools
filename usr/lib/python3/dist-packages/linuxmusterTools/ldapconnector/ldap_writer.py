@@ -56,8 +56,14 @@ class LdapWriter:
                         ldif.append((ldap.MOD_ADD, attr, [f"{new_val}".encode()]))
 
                 else:
+                    if attr == 'thumbnailPhoto' and not new_val:
+                        # Special case for binary attribute
+                        # Could be better handled
+                        ldif.append((ldap.MOD_DELETE, attr, None))
+                        continue
+
                     # Single-value
-                    if obj_details[attr]:
+                    elif obj_details[attr]:
                         # Delete attribute first
                         ldif.append((ldap.MOD_DELETE, attr, None))
 
