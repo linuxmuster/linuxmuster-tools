@@ -12,11 +12,13 @@ import sphinx_rtd_theme
 # Fix gettext syntax
 builtins._ = lambda x:x
 
-extensions = ['sphinx.ext.autodoc',
+extensions = [
+    'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
-    'sphinx.ext.autosummary']
+    'sphinx.ext.autosummary'
+]
 autosummary_generate = True
 
 templates_path = ['_templates']

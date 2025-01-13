@@ -28,10 +28,8 @@ This documentation is still under construction.
    :caption: Users
    :hidden:
 
-.. toctree::
-   :maxdepth: 1
-   :caption: Python Modules
-   :hidden:
+.. autosummary::
+   :toctree: _autosummary
+   :recursive:
 
-   python/ldapconnector.rst
-
+    linuxmusterTools
