@@ -1,6 +1,6 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: linuxmuster-tools7
-Source: https://github.com/linuxmuster/linuxmuster-cli
+Source: https://github.com/linuxmuster/linuxmuster-tools7
 
 Files: *
 Copyright: GPL V3
