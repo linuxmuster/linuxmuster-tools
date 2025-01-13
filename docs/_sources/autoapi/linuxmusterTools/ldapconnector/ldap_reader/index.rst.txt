@@ -1,0 +1,76 @@
+linuxmusterTools.ldapconnector.ldap_reader
+==========================================
+
+.. py:module:: linuxmusterTools.ldapconnector.ldap_reader
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.ldap_reader.LdapReader
+
+
+Module Contents
+---------------
+
+.. py:class:: LdapReader
+
+   .. py:attribute:: lc
+
+
+   .. py:method:: _create_result_object(result, objectclass, dict=True, school='', attributes=[], dn_filter='', custom_config={})
+
+      Formatting one ldap result object into a dict or a LMN model object.
+
+
+
+   .. py:method:: get_single(objectclass, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn='', attributes=[], **kwargs)
+
+      Handle a single result from a ldap request (with required ldap filter)
+      and convert it in the given object class.
+
+      :param objectclass: dataclass like LMNUser
+      :type objectclass:
+      :param ldap_filter: A valid ldap filter
+      :type ldap_filter: basestring
+      :param dict: if True, returns a dict, else an object
+      :type dict: bool
+      :param school: school to search
+      :typee school: str
+      :param attributes: list of attributes to return
+      :typee attributes: list
+
+
+
+   .. py:method:: get_collection(objectclass, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn='', sortkey=None, attributes=[], **kwargs)
+
+      Handle multiples results from a ldap request (with required ldap filter)
+      and convert it in a list of given object class.
+
+      :param objectclass: dataclass like LMNUser
+      :type objectclass:
+      :param ldap_filter: A valid ldap filter
+      :type ldap_filter: basestring
+      :param dict: if True, returns a list of dict, else a list of objects
+      :type dict: bool
+      :param sortkey: if given, sorts the list with the given attribute
+      :type sortkey: basestring
+      :param school: school to search
+      :typee school: str
+      :param attributes: list of attributes to return
+      :typee attributes: list
+
+
+
+   .. py:method:: _filter_value(field, value)
+      :staticmethod:
+
+
+      Middleware to decode values and convert it in an usable format (mostly
+      compatible with json). Parameter field is given in order to find out the
+      type of object.
+
+
+

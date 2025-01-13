@@ -1,0 +1,54 @@
+linuxmusterTools.ldapconnector.checks
+=====================================
+
+.. py:module:: linuxmusterTools.ldapconnector.checks
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/linuxmusterTools/ldapconnector/checks/ldap/index
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.checks.lr
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.checks.check_empty_ou_rooms
+   linuxmusterTools.ldapconnector.checks.check_devices
+
+
+Package Contents
+----------------
+
+.. py:data:: lr
+
+.. py:function:: check_empty_ou_rooms()
+
+   List all organizational units in devices which have no associated group and
+   no devices.
+
+   :return: Report with list of error types
+   :rtype: dict
+
+
+.. py:function:: check_devices()
+
+   Check if devices attributes are consistent.
+
+   :return: Report with all errors
+   :rtype: dict
+
+

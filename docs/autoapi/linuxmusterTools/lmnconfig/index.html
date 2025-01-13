@@ -1,0 +1,567 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.lmnconfig &mdash; linuxmuster-tools7 7.2.44 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="linuxmusterTools.lmnconfig.samba" href="samba/index.html" />
+    <link rel="prev" title="linuxmusterTools.linbo.images" href="../linbo/images/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">linuxmusterTools</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../common/index.html">linuxmusterTools.common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../devices/index.html">linuxmusterTools.devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../ldapconnector/index.html">linuxmusterTools.ldapconnector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../linbo/index.html">linuxmusterTools.linbo</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">linuxmusterTools.lmnconfig</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../lmnfile/index.html">linuxmusterTools.lmnfile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../quotas/index.html">linuxmusterTools.quotas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../samba_util/index.html">linuxmusterTools.samba_util</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">linuxmusterTools</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.lmnconfig</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/autoapi/linuxmusterTools/lmnconfig/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-linuxmusterTools.lmnconfig">
+<span id="linuxmustertools-lmnconfig"></span><h1>linuxmusterTools.lmnconfig<a class="headerlink" href="#module-linuxmusterTools.lmnconfig" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="samba/index.html">linuxmusterTools.lmnconfig.samba</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup/index.html">linuxmusterTools.lmnconfig.setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sophomorix/index.html">linuxmusterTools.lmnconfig.sophomorix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webui/index.html">linuxmusterTools.lmnconfig.webui</a></li>
+</ul>
+</div>
+</section>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.lmnconfig.WEBUI_IMPORT" title="linuxmusterTools.lmnconfig.WEBUI_IMPORT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WEBUI_IMPORT</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.lmnconfig.smbconf" title="linuxmusterTools.lmnconfig.smbconf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smbconf</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.lmnconfig.LOG_LEVEL" title="linuxmusterTools.lmnconfig.LOG_LEVEL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LOG_LEVEL</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id15" title="linuxmusterTools.lmnconfig.LMNFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNFile</span></code></a></p></td>
+<td><p>Meta class to handle all type of config file used in linuxmuster's project,</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.lmnconfig.CustomFieldsConfig" title="linuxmusterTools.lmnconfig.CustomFieldsConfig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CustomFieldsConfig</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id15" title="linuxmusterTools.lmnconfig.LMNFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNFile</span></code></a></p></td>
+<td><p>Meta class to handle all type of config file used in linuxmuster's project,</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.lmnconfig.SophomorixConfig" title="linuxmusterTools.lmnconfig.SophomorixConfig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SophomorixConfig</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id15" title="linuxmusterTools.lmnconfig.LMNFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNFile</span></code></a></p></td>
+<td><p>Meta class to handle all type of config file used in linuxmuster's project,</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.lmnconfig.SetupConfig" title="linuxmusterTools.lmnconfig.SetupConfig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetupConfig</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.lmnconfig.parse_log_level" title="linuxmusterTools.lmnconfig.parse_log_level"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_log_level</span></code></a>(level)</p></td>
+<td><p>A level entry should look like</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="package-contents">
+<h2>Package Contents<a class="headerlink" href="#package-contents" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.LMNFile">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.lmnconfig.</span></span><span class="sig-name descname"><span class="pre">LMNFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">';'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldnames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.lmnconfig.LMNFile" title="Link to this definition"></a></dt>
+<dd><p>Meta class to handle all type of config file used in linuxmuster’s project,
+e.g. ini, csv, linbo config files.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.LMNFile.file">
+<span class="sig-name descname"><span class="pre">file</span></span><a class="headerlink" href="#linuxmusterTools.lmnconfig.LMNFile.file" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.LMNFile.opened">
+<span class="sig-name descname"><span class="pre">opened</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#linuxmusterTools.lmnconfig.LMNFile.opened" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.LMNFile.data">
+<span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#linuxmusterTools.lmnconfig.LMNFile.data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.LMNFile.mode">
+<span class="sig-name descname"><span class="pre">mode</span></span><a class="headerlink" href="#linuxmusterTools.lmnconfig.LMNFile.mode" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.LMNFile.encoding">
+<span class="sig-name descname"><span class="pre">encoding</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'utf-8'</span></em><a class="headerlink" href="#linuxmusterTools.lmnconfig.LMNFile.encoding" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.LMNFile.comments">
+<span class="sig-name descname"><span class="pre">comments</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#linuxmusterTools.lmnconfig.LMNFile.comments" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.LMNFile.delimiter">
+<span class="sig-name descname"><span class="pre">delimiter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">';'</span></em><a class="headerlink" href="#linuxmusterTools.lmnconfig.LMNFile.delimiter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.LMNFile.hasExtension">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hasExtension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ext</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.hasExtension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.lmnconfig.LMNFile.hasExtension" title="Link to this definition"></a></dt>
+<dd><p>Determine if file should be handled here.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ext</strong> (<em>string</em>) – Extension of a file, e.g. ini</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>File handled or not</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.LMNFile.__enter__">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__enter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.__enter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.lmnconfig.LMNFile.__enter__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.LMNFile.__exit__">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__exit__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_tb</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.__exit__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.lmnconfig.LMNFile.__exit__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.LMNFile.read">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.lmnconfig.LMNFile.read" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.LMNFile.backup">
+<span class="sig-name descname"><span class="pre">backup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.backup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.lmnconfig.LMNFile.backup" title="Link to this definition"></a></dt>
+<dd><p>Create a backup of a file if in allowed paths, but on ly keeps 10 backups.
+Backup files names scheme is <cite>.&lt;name&gt;.bak.&lt;timestamp&gt;</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.LMNFile.check_allowed_path">
+<span class="sig-name descname"><span class="pre">check_allowed_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.check_allowed_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.lmnconfig.LMNFile.check_allowed_path" title="Link to this definition"></a></dt>
+<dd><p>Check path before modifying files for security reasons.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>File path in allowed paths.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.LMNFile.detect_encoding">
+<span class="sig-name descname"><span class="pre">detect_encoding</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.detect_encoding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.lmnconfig.LMNFile.detect_encoding" title="Link to this definition"></a></dt>
+<dd><p>Try to detect encoding of the file through magic numbers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Detected encoding</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.WEBUI_IMPORT">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.lmnconfig.</span></span><span class="sig-name descname"><span class="pre">WEBUI_IMPORT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="reference internal" href="../../../_modules/linuxmusterTools/common.html#WEBUI_IMPORT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.lmnconfig.WEBUI_IMPORT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.CustomFieldsConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.lmnconfig.</span></span><span class="sig-name descname"><span class="pre">CustomFieldsConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnconfig/webui.html#CustomFieldsConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.lmnconfig.CustomFieldsConfig" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="id0">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.lmnconfig.</span></span><span class="sig-name descname"><span class="pre">LMNFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">';'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldnames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
+<dd><p>Meta class to handle all type of config file used in linuxmuster’s project,
+e.g. ini, csv, linbo config files.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">file</span></span><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">opened</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#id3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">mode</span></span><a class="headerlink" href="#id4" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">encoding</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'utf-8'</span></em><a class="headerlink" href="#id5" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">comments</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#id6" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">delimiter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">';'</span></em><a class="headerlink" href="#id7" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id8">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hasExtension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ext</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.hasExtension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id8" title="Link to this definition"></a></dt>
+<dd><p>Determine if file should be handled here.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ext</strong> (<em>string</em>) – Extension of a file, e.g. ini</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>File handled or not</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id9">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__enter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.__enter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id9" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id10">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__exit__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_tb</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.__exit__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id10" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id11" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id12">
+<span class="sig-name descname"><span class="pre">backup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.backup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id12" title="Link to this definition"></a></dt>
+<dd><p>Create a backup of a file if in allowed paths, but on ly keeps 10 backups.
+Backup files names scheme is <cite>.&lt;name&gt;.bak.&lt;timestamp&gt;</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id13">
+<span class="sig-name descname"><span class="pre">check_allowed_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.check_allowed_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id13" title="Link to this definition"></a></dt>
+<dd><p>Check path before modifying files for security reasons.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>File path in allowed paths.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id14">
+<span class="sig-name descname"><span class="pre">detect_encoding</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.detect_encoding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id14" title="Link to this definition"></a></dt>
+<dd><p>Try to detect encoding of the file through magic numbers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Detected encoding</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.SophomorixConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.lmnconfig.</span></span><span class="sig-name descname"><span class="pre">SophomorixConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnconfig/sophomorix.html#SophomorixConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.lmnconfig.SophomorixConfig" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.smbconf">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.lmnconfig.</span></span><span class="sig-name descname"><span class="pre">smbconf</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnconfig/samba.html#smbconf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.lmnconfig.smbconf" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.parse_log_level">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.lmnconfig.</span></span><span class="sig-name descname"><span class="pre">parse_log_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnconfig/samba.html#parse_log_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.lmnconfig.parse_log_level" title="Link to this definition"></a></dt>
+<dd><p>A level entry should look like</p>
+<blockquote>
+<div><p>log level = auth_audit:2</p>
+</div></blockquote>
+<dl class="simple">
+<dt>or</dt><dd><p>log level = 2</p>
+</dd>
+<dt>or</dt><dd><p>log level = 1 auth_audit:3 winbind:5</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.LOG_LEVEL">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.lmnconfig.</span></span><span class="sig-name descname"><span class="pre">LOG_LEVEL</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnconfig/samba.html#LOG_LEVEL"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.lmnconfig.LOG_LEVEL" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="id15">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.lmnconfig.</span></span><span class="sig-name descname"><span class="pre">LMNFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">';'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldnames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id15" title="Link to this definition"></a></dt>
+<dd><p>Meta class to handle all type of config file used in linuxmuster’s project,
+e.g. ini, csv, linbo config files.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id16">
+<span class="sig-name descname"><span class="pre">file</span></span><a class="headerlink" href="#id16" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id17">
+<span class="sig-name descname"><span class="pre">opened</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#id17" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id18">
+<span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#id18" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id19">
+<span class="sig-name descname"><span class="pre">mode</span></span><a class="headerlink" href="#id19" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id20">
+<span class="sig-name descname"><span class="pre">encoding</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'utf-8'</span></em><a class="headerlink" href="#id20" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id21">
+<span class="sig-name descname"><span class="pre">comments</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#id21" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id22">
+<span class="sig-name descname"><span class="pre">delimiter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">';'</span></em><a class="headerlink" href="#id22" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id23">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hasExtension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ext</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.hasExtension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id23" title="Link to this definition"></a></dt>
+<dd><p>Determine if file should be handled here.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ext</strong> (<em>string</em>) – Extension of a file, e.g. ini</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>File handled or not</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id24">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__enter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.__enter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id24" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id25">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__exit__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_tb</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.__exit__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id25" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id26">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id26" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id27">
+<span class="sig-name descname"><span class="pre">backup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.backup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id27" title="Link to this definition"></a></dt>
+<dd><p>Create a backup of a file if in allowed paths, but on ly keeps 10 backups.
+Backup files names scheme is <cite>.&lt;name&gt;.bak.&lt;timestamp&gt;</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id28">
+<span class="sig-name descname"><span class="pre">check_allowed_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.check_allowed_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id28" title="Link to this definition"></a></dt>
+<dd><p>Check path before modifying files for security reasons.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>File path in allowed paths.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id29">
+<span class="sig-name descname"><span class="pre">detect_encoding</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.detect_encoding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id29" title="Link to this definition"></a></dt>
+<dd><p>Try to detect encoding of the file through magic numbers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Detected encoding</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.SetupConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.lmnconfig.</span></span><span class="sig-name descname"><span class="pre">SetupConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnconfig/setup.html#SetupConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.lmnconfig.SetupConfig" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../linbo/images/index.html" class="btn btn-neutral float-left" title="linuxmusterTools.linbo.images" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="samba/index.html" class="btn btn-neutral float-right" title="linuxmusterTools.lmnconfig.samba" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

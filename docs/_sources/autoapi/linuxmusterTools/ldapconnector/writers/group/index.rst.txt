@@ -1,0 +1,43 @@
+linuxmusterTools.ldapconnector.writers.group
+============================================
+
+.. py:module:: linuxmusterTools.ldapconnector.writers.group
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.writers.group.LMNGroupWriter
+
+
+Module Contents
+---------------
+
+.. py:class:: LMNGroupWriter
+
+   .. py:attribute:: lw
+
+
+   .. py:attribute:: lr
+
+
+   .. py:method:: setattr(name, **kwargs)
+
+      Middleware to check if the object exists.
+
+      :param name: cn of the object
+      :type name: basestring
+
+
+
+   .. py:method:: delattr(name, **kwargs)
+
+      Middleware to check if the object exists.
+
+      :param name: cn of the object
+      :type name: basestring
+
+
+

@@ -1,0 +1,342 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.ldapconnector.models.lmnproject &mdash; linuxmuster-tools7 7.2.44 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ldapconnector.html">linuxmusterTools.ldapconnector</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.ldapconnector.models.lmnproject</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for linuxmusterTools.ldapconnector.models.lmnproject</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">router</span> <span class="k">as</span> <span class="n">lr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">LMNParent</span>
+
+
+<span class="nd">@dataclass</span>
+<div class="viewcode-block" id="LMNProject">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LMNProject</span><span class="p">(</span><span class="n">LMNParent</span><span class="p">):</span>
+<div class="viewcode-block" id="LMNProject.cn">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.cn">[docs]</a>
+    <span class="n">cn</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNProject.description">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.description">[docs]</a>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNProject.displayName">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.displayName">[docs]</a>
+    <span class="n">displayName</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNProject.distinguishedName">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.distinguishedName">[docs]</a>
+    <span class="n">distinguishedName</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNProject.mail">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.mail">[docs]</a>
+    <span class="n">mail</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNProject.member">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.member">[docs]</a>
+    <span class="n">member</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNProject.name">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.name">[docs]</a>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNProject.objectClass">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.objectClass">[docs]</a>
+    <span class="n">objectClass</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNProject.proxyAddresses">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.proxyAddresses">[docs]</a>
+    <span class="n">proxyAddresses</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNProject.sAMAccountName">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.sAMAccountName">[docs]</a>
+    <span class="n">sAMAccountName</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNProject.sAMAccountType">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.sAMAccountType">[docs]</a>
+    <span class="n">sAMAccountType</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNProject.sophomorixAddMailQuota">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.sophomorixAddMailQuota">[docs]</a>
+    <span class="n">sophomorixAddMailQuota</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNProject.sophomorixAddQuota">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.sophomorixAddQuota">[docs]</a>
+    <span class="n">sophomorixAddQuota</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNProject.sophomorixAdminGroups">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.sophomorixAdminGroups">[docs]</a>
+    <span class="n">sophomorixAdminGroups</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNProject.sophomorixAdmins">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.sophomorixAdmins">[docs]</a>
+    <span class="n">sophomorixAdmins</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNProject.sophomorixCreationDate">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.sophomorixCreationDate">[docs]</a>
+    <span class="n">sophomorixCreationDate</span><span class="p">:</span> <span class="nb">str</span> <span class="c1"># datetime</span></div>
+
+<div class="viewcode-block" id="LMNProject.sophomorixHidden">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.sophomorixHidden">[docs]</a>
+    <span class="n">sophomorixHidden</span><span class="p">:</span> <span class="nb">bool</span></div>
+
+<div class="viewcode-block" id="LMNProject.sophomorixIntrinsicMulti1">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.sophomorixIntrinsicMulti1">[docs]</a>
+    <span class="n">sophomorixIntrinsicMulti1</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNProject.sophomorixJoinable">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.sophomorixJoinable">[docs]</a>
+    <span class="n">sophomorixJoinable</span><span class="p">:</span> <span class="nb">bool</span></div>
+
+<div class="viewcode-block" id="LMNProject.sophomorixMailAlias">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.sophomorixMailAlias">[docs]</a>
+    <span class="n">sophomorixMailAlias</span><span class="p">:</span> <span class="nb">bool</span></div>
+
+<div class="viewcode-block" id="LMNProject.sophomorixMailList">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.sophomorixMailList">[docs]</a>
+    <span class="n">sophomorixMailList</span><span class="p">:</span> <span class="nb">bool</span></div>
+
+<div class="viewcode-block" id="LMNProject.sophomorixMailQuota">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.sophomorixMailQuota">[docs]</a>
+    <span class="n">sophomorixMailQuota</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNProject.sophomorixMaxMembers">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.sophomorixMaxMembers">[docs]</a>
+    <span class="n">sophomorixMaxMembers</span><span class="p">:</span> <span class="nb">int</span></div>
+
+<div class="viewcode-block" id="LMNProject.sophomorixMemberGroups">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.sophomorixMemberGroups">[docs]</a>
+    <span class="n">sophomorixMemberGroups</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNProject.sophomorixMembers">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.sophomorixMembers">[docs]</a>
+    <span class="n">sophomorixMembers</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNProject.sophomorixQuota">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.sophomorixQuota">[docs]</a>
+    <span class="n">sophomorixQuota</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNProject.sophomorixSchoolname">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.sophomorixSchoolname">[docs]</a>
+    <span class="n">sophomorixSchoolname</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNProject.sophomorixStatus">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.sophomorixStatus">[docs]</a>
+    <span class="n">sophomorixStatus</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNProject.sophomorixType">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.sophomorixType">[docs]</a>
+    <span class="n">sophomorixType</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNProject.dn">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.dn">[docs]</a>
+    <span class="n">dn</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LMNProject.all_members">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.all_members">[docs]</a>
+    <span class="n">all_members</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LMNProject.all_admins">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.all_admins">[docs]</a>
+    <span class="n">all_admins</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LMNProject.membersCount">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.membersCount">[docs]</a>
+    <span class="n">membersCount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LMNProject.adminsCount">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.adminsCount">[docs]</a>
+    <span class="n">adminsCount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNProject.__post_init__">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.__post_init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distinguishedName</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_admins</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_members</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">membersCount</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adminsCount</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="LMNProject.get_all_members">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index.html#linuxmusterTools.ldapconnector.models.LMNProject.get_all_members">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_all_members</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set a members and admins list by recursively scanning all groups and their members which are members</span>
+<span class="sd">        or admins of this project.</span>
+
+<span class="sd">        This is not called as post init because of nested projects. So it&#39;s necessary to call this method</span>
+<span class="sd">        afterwards:</span>
+
+<span class="sd">        p = lr.get(&#39;/projects/p_test&#39;, dict=False)</span>
+<span class="sd">        p.get_all_members()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">members</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sophomorixMembers</span><span class="p">)</span>
+        <span class="n">admins</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sophomorixAdmins</span><span class="p">)</span>
+
+        <span class="c1">## Unfortunately there&#39;s members which are not in sophomorixMembers</span>
+        <span class="k">for</span> <span class="n">dn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">member</span><span class="p">:</span>
+            <span class="n">details</span> <span class="o">=</span> <span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/dn/</span><span class="si">{</span><span class="n">dn</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="c1"># TODO : handles group too ?</span>
+            <span class="k">if</span> <span class="s1">&#39;person&#39;</span> <span class="ow">in</span> <span class="n">details</span><span class="p">[</span><span class="s2">&quot;objectClass&quot;</span><span class="p">]:</span>
+                <span class="n">members</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">details</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">])</span>
+
+        <span class="n">to_scan</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sophomorixMemberGroups</span>
+        <span class="n">already_scanned</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">while</span> <span class="n">to_scan</span><span class="p">:</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">to_scan</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">group</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">already_scanned</span><span class="p">:</span>
+                <span class="n">already_scanned</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+
+                <span class="c1"># I assume a group is a project or a schoolclass</span>
+                <span class="k">if</span> <span class="n">group</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;p_&#39;</span><span class="p">):</span>
+                    <span class="n">group_details</span> <span class="o">=</span> <span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/projects/</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sophomorixMembers&#39;</span><span class="p">,</span> <span class="s1">&#39;sophomorixMemberGroups&#39;</span><span class="p">])</span>
+                    <span class="n">group_members</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">group_details</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sophomorixMembers&#39;</span><span class="p">,</span> <span class="p">[]))</span>
+                    <span class="n">subgroups</span> <span class="o">=</span> <span class="n">group_details</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sophomorixMemberGroups&#39;</span><span class="p">,</span> <span class="p">[])</span>
+
+                    <span class="c1"># Subgroups must eventually come in the scan list</span>
+                    <span class="k">for</span> <span class="n">subgroup</span> <span class="ow">in</span> <span class="n">subgroups</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">subgroup</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">already_scanned</span><span class="p">:</span>
+                            <span class="n">to_scan</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subgroup</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">group_members</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/schoolclasses/</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sophomorixMembers&#39;</span><span class="p">,</span> <span class="p">[]))</span>
+
+                <span class="n">members</span> <span class="o">=</span> <span class="n">members</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">group_members</span><span class="p">)</span>
+
+            <span class="n">to_scan</span> <span class="o">=</span> <span class="n">to_scan</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">membersCount</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">members</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_members</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">members</span><span class="p">)</span>
+
+        <span class="n">to_scan</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sophomorixAdminGroups</span>
+        <span class="n">already_scanned</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">while</span> <span class="n">to_scan</span><span class="p">:</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">to_scan</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">group</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">already_scanned</span><span class="p">:</span>
+                <span class="n">already_scanned</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+
+                <span class="c1"># I assume a group is a project or a schoolclass</span>
+                <span class="k">if</span> <span class="n">group</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;p_&#39;</span><span class="p">):</span>
+                    <span class="n">group_details</span> <span class="o">=</span> <span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/projects/</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sophomorixMembers&#39;</span><span class="p">,</span> <span class="s1">&#39;sophomorixMemberGroups&#39;</span><span class="p">])</span>
+                    <span class="n">group_members</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">group_details</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sophomorixMembers&#39;</span><span class="p">,</span> <span class="p">[]))</span>
+                    <span class="n">subgroups</span> <span class="o">=</span> <span class="n">group_details</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sophomorixMemberGroups&#39;</span><span class="p">,</span> <span class="p">[])</span>
+
+                    <span class="c1"># Subgroups must eventually come in the scan list</span>
+                    <span class="k">for</span> <span class="n">subgroup</span> <span class="ow">in</span> <span class="n">subgroups</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">subgroup</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">already_scanned</span><span class="p">:</span>
+                            <span class="n">to_scan</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subgroup</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">group_members</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/schoolclasses/</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sophomorixMembers&#39;</span><span class="p">,</span> <span class="p">[]))</span>
+
+                <span class="n">admins</span> <span class="o">=</span> <span class="n">admins</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">group_members</span><span class="p">)</span>
+
+            <span class="n">to_scan</span> <span class="o">=</span> <span class="n">to_scan</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">adminsCount</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">admins</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_admins</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">admins</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

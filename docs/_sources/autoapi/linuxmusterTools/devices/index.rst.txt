@@ -1,0 +1,258 @@
+linuxmusterTools.devices
+========================
+
+.. py:module:: linuxmusterTools.devices
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/linuxmusterTools/devices/devices/index
+   /autoapi/linuxmusterTools/devices/ping/index
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.devices.CLIENT_ROLES
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.devices.Devices
+   linuxmusterTools.devices.UPChecker
+   linuxmusterTools.devices.LMNFile
+   linuxmusterTools.devices.Devices
+
+
+Package Contents
+----------------
+
+.. py:class:: Devices(school='default-school')
+
+   .. py:attribute:: school
+      :value: 'default-school'
+
+
+
+   .. py:method:: switch(school)
+
+
+   .. py:method:: load()
+
+
+   .. py:method:: filter(roles=[], groups=[])
+
+
+   .. py:method:: get_hostname(hostname, roles=[], groups=[])
+
+
+   .. py:method:: get_client(hostname, groups=[])
+
+
+   .. py:method:: get_clients(groups=[])
+
+
+.. py:class:: UPChecker(school='default-school')
+
+   .. py:attribute:: devicesmgr
+
+
+   .. py:attribute:: devices
+
+
+   .. py:method:: checkhost(hostname)
+
+
+   .. py:method:: check(groups=[])
+
+
+   .. py:method:: test_online(device)
+
+      Launch a nmap on a host to test if the os is up, and return OS type.
+
+      :param device: device entry in devices.csv
+      :type device: dict
+      :return: OS type (Off, Linbo, OS Linux, OS Windows, OS Unknown)
+      :rtype: string
+
+
+
+   .. py:method:: get_os_from_ports(ports)
+
+      Convert a dict of ports to an OS string.
+
+      :param openPorts: The dict of open ports (key: port number, value: port state)
+      :type openPorts: dict
+      :return: OS type (Linbo, OS Linux, OS Windows, OS Unknown)
+      :rtype: string
+
+
+
+   .. py:method:: is_port_signature_linbo(ports)
+      :staticmethod:
+
+
+      Check if a dict of ports belongs to a Linbo host.
+      The criteria for Linbo is, that ONLY port 2222 is open
+
+      :param openPorts: The dict of open ports (key: port number, value: port state)
+      :type openPorts: dict
+      :return: Whether it's a Linbo host
+      :rtype: bool
+
+
+
+   .. py:method:: is_port_signature_linux(ports)
+      :staticmethod:
+
+
+      Check if a dict of ports belongs to a Linux host.
+      The criteria for Linux is, that port 22 is open and 135 is closed.
+
+      :param openPorts: The dict of open ports (key: port number, value: port state)
+      :type openPorts: dict
+      :return: Whether it's a Linux host
+      :rtype: bool
+
+
+
+   .. py:method:: is_port_signature_windows(ports)
+      :staticmethod:
+
+
+      Check if a dict of ports belongs to a Windows host.
+      The criteria for Windows is, that port 135 is open and 22 is not open.
+
+      :param openPorts: The dict of open ports (key: port number, value: port state)
+      :type openPorts: dict
+      :return: Whether it's a Windows host
+      :rtype: bool
+
+
+
+.. py:class:: LMNFile(file, mode, delimiter=';', fieldnames=None)
+
+   Meta class to handle all type of config file used in linuxmuster's project,
+   e.g. ini, csv, linbo config files.
+
+
+   .. py:attribute:: file
+
+
+   .. py:attribute:: opened
+      :value: ''
+
+
+
+   .. py:attribute:: data
+      :value: ''
+
+
+
+   .. py:attribute:: mode
+
+
+   .. py:attribute:: encoding
+      :value: 'utf-8'
+
+
+
+   .. py:attribute:: comments
+      :value: []
+
+
+
+   .. py:attribute:: delimiter
+      :value: ';'
+
+
+
+   .. py:method:: hasExtension(ext)
+      :classmethod:
+
+
+      Determine if file should be handled here.
+
+      :param ext: Extension of a file, e.g. ini
+      :type ext: string
+      :return: File handled or not
+      :rtype: bool
+
+
+
+   .. py:method:: __enter__()
+      :abstractmethod:
+
+
+
+   .. py:method:: __exit__(exc_type, exc_val, exc_tb)
+      :abstractmethod:
+
+
+
+   .. py:method:: read()
+
+
+   .. py:method:: backup()
+
+      Create a backup of a file if in allowed paths, but on ly keeps 10 backups.
+      Backup files names scheme is `.<name>.bak.<timestamp>`
+
+
+
+   .. py:method:: check_allowed_path()
+
+      Check path before modifying files for security reasons.
+
+      :return: File path in allowed paths.
+      :rtype: bool
+
+
+
+   .. py:method:: detect_encoding()
+
+      Try to detect encoding of the file through magic numbers.
+
+      :return: Detected encoding
+      :rtype: string
+
+
+
+.. py:data:: CLIENT_ROLES
+   :value: ['classroom-teachercomputer', 'classroom-studentcomputer', 'faculty-teachercomputer',...
+
+
+.. py:class:: Devices(school='default-school')
+
+   .. py:attribute:: school
+      :value: 'default-school'
+
+
+
+   .. py:method:: switch(school)
+
+
+   .. py:method:: load()
+
+
+   .. py:method:: filter(roles=[], groups=[])
+
+
+   .. py:method:: get_hostname(hostname, roles=[], groups=[])
+
+
+   .. py:method:: get_client(hostname, groups=[])
+
+
+   .. py:method:: get_clients(groups=[])
+
+

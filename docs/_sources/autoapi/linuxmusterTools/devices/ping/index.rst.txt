@@ -1,0 +1,95 @@
+linuxmusterTools.devices.ping
+=============================
+
+.. py:module:: linuxmusterTools.devices.ping
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.devices.ping.UPChecker
+
+
+Module Contents
+---------------
+
+.. py:class:: UPChecker(school='default-school')
+
+   .. py:attribute:: devicesmgr
+
+
+   .. py:attribute:: devices
+
+
+   .. py:method:: checkhost(hostname)
+
+
+   .. py:method:: check(groups=[])
+
+
+   .. py:method:: test_online(device)
+
+      Launch a nmap on a host to test if the os is up, and return OS type.
+
+      :param device: device entry in devices.csv
+      :type device: dict
+      :return: OS type (Off, Linbo, OS Linux, OS Windows, OS Unknown)
+      :rtype: string
+
+
+
+   .. py:method:: get_os_from_ports(ports)
+
+      Convert a dict of ports to an OS string.
+
+      :param openPorts: The dict of open ports (key: port number, value: port state)
+      :type openPorts: dict
+      :return: OS type (Linbo, OS Linux, OS Windows, OS Unknown)
+      :rtype: string
+
+
+
+   .. py:method:: is_port_signature_linbo(ports)
+      :staticmethod:
+
+
+      Check if a dict of ports belongs to a Linbo host.
+      The criteria for Linbo is, that ONLY port 2222 is open
+
+      :param openPorts: The dict of open ports (key: port number, value: port state)
+      :type openPorts: dict
+      :return: Whether it's a Linbo host
+      :rtype: bool
+
+
+
+   .. py:method:: is_port_signature_linux(ports)
+      :staticmethod:
+
+
+      Check if a dict of ports belongs to a Linux host.
+      The criteria for Linux is, that port 22 is open and 135 is closed.
+
+      :param openPorts: The dict of open ports (key: port number, value: port state)
+      :type openPorts: dict
+      :return: Whether it's a Linux host
+      :rtype: bool
+
+
+
+   .. py:method:: is_port_signature_windows(ports)
+      :staticmethod:
+
+
+      Check if a dict of ports belongs to a Windows host.
+      The criteria for Windows is, that port 135 is open and 22 is not open.
+
+      :param openPorts: The dict of open ports (key: port number, value: port state)
+      :type openPorts: dict
+      :return: Whether it's a Windows host
+      :rtype: bool
+
+
+

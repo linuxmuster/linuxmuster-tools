@@ -1,0 +1,347 @@
+linuxmusterTools.ldapconnector.models.lmnobject
+===============================================
+
+.. py:module:: linuxmusterTools.ldapconnector.models.lmnobject
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.models.lmnobject.LMNObject
+
+
+Module Contents
+---------------
+
+.. py:class:: LMNObject
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+
+
+   Common linuxmuster.net object with all attributes for global search queries.
+
+
+   .. py:attribute:: cn
+      :type:  str
+
+
+   .. py:attribute:: description
+      :type:  str
+
+
+   .. py:attribute:: displayName
+      :type:  str
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+   .. py:attribute:: givenName
+      :type:  str
+
+
+   .. py:attribute:: homeDirectory
+      :type:  str
+
+
+   .. py:attribute:: homeDrive
+      :type:  str
+
+
+   .. py:attribute:: mail
+      :type:  list
+
+
+   .. py:attribute:: member
+      :type:  list
+
+
+   .. py:attribute:: memberOf
+      :type:  list
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:attribute:: ou
+      :type:  str
+
+
+   .. py:attribute:: proxyAddresses
+      :type:  list
+
+
+   .. py:attribute:: sAMAccountName
+      :type:  str
+
+
+   .. py:attribute:: sAMAccountType
+      :type:  str
+
+
+   .. py:attribute:: sn
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAddMailQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixAddQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixAdminClass
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAdminFile
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAdminGroups
+      :type:  list
+
+
+   .. py:attribute:: sophomorixAdmins
+      :type:  list
+
+
+   .. py:attribute:: sophomorixBirthdate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCloudQuotaCalculated
+      :type:  list
+
+
+   .. py:attribute:: sophomorixComment
+      :type:  str
+
+
+   .. py:attribute:: sophomorixComputerIP
+      :type:  str
+
+
+   .. py:attribute:: sophomorixComputerMAC
+      :type:  str
+
+
+   .. py:attribute:: sophomorixComputerRoom
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCreationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom1
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom2
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom3
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom4
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom5
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustomMulti1
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti2
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti3
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti4
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti5
+      :type:  list
+
+
+   .. py:attribute:: sophomorixDeactivationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixExamMode
+      :type:  list
+
+
+   .. py:attribute:: sophomorixExitAdminClass
+      :type:  str
+
+
+   .. py:attribute:: sophomorixFirstnameASCII
+      :type:  str
+
+
+   .. py:attribute:: sophomorixFirstnameInitial
+      :type:  str
+
+
+   .. py:attribute:: sophomorixFirstPassword
+      :type:  str
+
+
+   .. py:attribute:: sophomorixHidden
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixIntrinsic2
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsic3
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti1
+      :type:  list
+
+
+   .. py:attribute:: sophomorixJoinable
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailAlias
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailList
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailQuotaCalculated
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMailQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMaxMembers
+      :type:  int
+
+
+   .. py:attribute:: sophomorixMemberGroups
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMembers
+      :type:  list
+
+
+   .. py:attribute:: sophomorixQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixRole
+      :type:  str
+
+
+   .. py:attribute:: sophomorixRoomComputers
+      :type:  list
+
+
+   .. py:attribute:: sophomorixRoomIPs
+      :type:  list
+
+
+   .. py:attribute:: sophomorixRoomMACs
+      :type:  list
+
+
+   .. py:attribute:: sophomorixSchoolname
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSchoolPrefix
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSessions
+      :type:  list
+
+
+   .. py:attribute:: sophomorixStatus
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSurnameASCII
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSurnameInitial
+      :type:  str
+
+
+   .. py:attribute:: sophomorixTolerationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixType
+      :type:  str
+
+
+   .. py:attribute:: sophomorixUnid
+      :type:  str
+
+
+   .. py:attribute:: sophomorixUserToken
+      :type:  str
+
+
+   .. py:attribute:: sophomorixWebuiDashboard
+      :type:  list
+
+
+   .. py:attribute:: sophomorixWebuiPermissionsCalculated
+      :type:  list
+
+
+   .. py:attribute:: unixHomeDirectory
+      :type:  str
+
+
+   .. py:attribute:: whenChanged
+      :type:  str
+
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:attribute:: type
+      :type:  str
+
+
+   .. py:method:: get_type()
+
+
+   .. py:method:: __post_init__()
+
+

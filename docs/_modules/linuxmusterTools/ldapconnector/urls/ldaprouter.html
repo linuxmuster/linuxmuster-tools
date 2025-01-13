@@ -1,0 +1,328 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.ldapconnector.urls.ldaprouter &mdash; linuxmuster-tools7 7.2.44 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ldapconnector.html">linuxmusterTools.ldapconnector</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.ldapconnector.urls.ldaprouter</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for linuxmusterTools.ldapconnector.urls.ldaprouter</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ldap</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">csv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.ldapconnector.ldap_reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">LdapReader</span>
+
+
+<span class="c1"># This marker will be replaced by the selected school, or default-school</span>
+<div class="viewcode-block" id="SCHOOL_MARKER">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.SCHOOL_MARKER">[docs]</a>
+<span class="n">SCHOOL_MARKER</span> <span class="o">=</span> <span class="s2">&quot;##SCHOOL_MARKER##&quot;</span></div>
+
+
+<div class="viewcode-block" id="LMNLdapRouter">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.LMNLdapRouter">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LMNLdapRouter</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LMNLdapRouter.lr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.LMNLdapRouter.lr">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">LdapReader</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LMNLdapRouter.urls">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.LMNLdapRouter.urls">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">urls</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+
+<div class="viewcode-block" id="LMNLdapRouter._find_method">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.LMNLdapRouter._find_method">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_find_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+       <span class="k">for</span> <span class="n">url_model</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">urls</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">url_pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groupdict</span><span class="p">()</span>
+                <span class="k">return</span> <span class="n">func</span><span class="p">,</span> <span class="n">data</span>
+       <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Requested search </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s1"> unknown&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNLdapRouter.get">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.LMNLdapRouter.get">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse all urls and find the right method to handle the request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">func</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_method</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">ldap_filter</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="c1"># Replace selected school in the subdn where we are searching</span>
+        <span class="k">if</span> <span class="s1">&#39;school&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">school</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;school&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">school</span> <span class="o">=</span> <span class="s1">&#39;default-school&#39;</span>
+
+        <span class="n">subdn</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">subdn</span>
+
+        <span class="c1"># Global search for globaladmin if the subdn is restricted to a school</span>
+        <span class="c1"># search like &quot;ou=default-school,ou=schools,&quot;.</span>
+        <span class="c1"># If the subdn is more specific in a school, like</span>
+        <span class="c1"># &quot;ou=management,ou=default-school,ou=schools,&quot;, then the parameter</span>
+        <span class="c1"># school is necessary, and we throw an error when missing.</span>
+
+        <span class="k">if</span> <span class="n">subdn</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">school</span> <span class="o">==</span> <span class="s1">&#39;global&#39;</span><span class="p">:</span>
+                <span class="n">subdn</span> <span class="o">=</span> <span class="s2">&quot;OU=SCHOOLS,&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">subdn</span> <span class="o">=</span> <span class="n">subdn</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">SCHOOL_MARKER</span><span class="p">,</span> <span class="n">school</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;single&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get_single</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">ldap_filter</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="n">scope</span><span class="p">,</span> <span class="n">subdn</span><span class="o">=</span><span class="n">subdn</span><span class="p">,</span> <span class="n">dn_filter</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="n">dn_filter</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;collection&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get_collection</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">ldap_filter</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="n">scope</span><span class="p">,</span> <span class="n">subdn</span><span class="o">=</span><span class="n">subdn</span><span class="p">,</span> <span class="n">dn_filter</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="n">dn_filter</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNLdapRouter.getval">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.LMNLdapRouter.getval">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">attribute</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attribute</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">attrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">attribute</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Attribute </span><span class="si">{</span><span class="n">attribute</span><span class="si">}</span><span class="s2"> should be a string.&quot;</span><span class="p">)</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attrs</span><span class="p">,</span> <span class="nb">dict</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="c1"># results is a collection</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">attribute</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">attribute</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNLdapRouter.getvalues">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.LMNLdapRouter.getvalues">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getvalues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="nb">dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attributes</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">attrs</span> <span class="o">=</span> <span class="n">attributes</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Attributes </span><span class="si">{</span><span class="n">attributes</span><span class="si">}</span><span class="s2"> should be a list of valid attributes.&quot;</span><span class="p">)</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attrs</span><span class="p">,</span> <span class="nb">dict</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="c1"># results is a collection</span>
+            <span class="k">if</span> <span class="nb">dict</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[{</span><span class="n">attr</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">}</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[{</span><span class="n">attr</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">}</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">dict</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span><span class="n">attr</span><span class="p">:</span> <span class="n">results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span><span class="n">attr</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="LMNLdapRouter.ascsv">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.LMNLdapRouter.ascsv">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ascsv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="n">csvfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">[],</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">csvfile</span><span class="p">:</span>
+            <span class="c1"># TODO: find a better path</span>
+            <span class="n">obj_type</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">-%H-%M-%S&#39;</span><span class="p">)</span>
+            <span class="n">csvfile</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;/tmp/export_csv_</span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s1">.csv&#39;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attributes</span><span class="p">,</span> <span class="nb">dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="p">]</span>
+
+        <span class="n">headers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csv_io</span><span class="p">:</span>
+            <span class="n">csv_writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">csv_io</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="n">delimiter</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">header</span><span class="p">:</span>
+                <span class="n">csv_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">headers</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">csv_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="n">entry</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">headers</span><span class="p">])</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CSV file successfully exported to </span><span class="si">{</span><span class="n">csvfile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CSV file successfully exported to </span><span class="si">{</span><span class="n">csvfile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNLdapRouter.add_url">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.LMNLdapRouter.add_url">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check collisions between URLs before adding to self.urls.</span>
+
+<span class="sd">        :param url: Regexp to match</span>
+<span class="sd">        :type url: re.pattern</span>
+<span class="sd">        :param method: Method to run</span>
+<span class="sd">        :type method: function</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">url</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">urls</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;URL </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2"> already listed in the methods, not adding it!&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">urls</span><span class="p">[</span><span class="n">url</span><span class="p">]</span> <span class="o">=</span> <span class="n">method</span></div>
+
+
+<div class="viewcode-block" id="LMNLdapRouter.single">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.LMNLdapRouter.single">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">single</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">subdn</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">dn_filter</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s2">&quot;subtree&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Search a single entry in the whole subtree of the base dn.</span>
+
+<span class="sd">        :param pattern: URL pattern</span>
+<span class="sd">        :type pattern: basestring</span>
+<span class="sd">        :param model: model obejct to return, can be e.g. LMNUser</span>
+<span class="sd">        :type model: dataclass object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">url_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;^</span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s1">$&#39;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s1">&#39;single&#39;</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+            <span class="k">if</span> <span class="n">level</span> <span class="o">==</span> <span class="s2">&quot;single&quot;</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">scope</span> <span class="o">=</span> <span class="n">ldap</span><span class="o">.</span><span class="n">SCOPE_ONELEVEL</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">scope</span> <span class="o">=</span> <span class="n">ldap</span><span class="o">.</span><span class="n">SCOPE_SUBTREE</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">subdn</span> <span class="o">=</span> <span class="n">subdn</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">dn_filter</span> <span class="o">=</span> <span class="n">dn_filter</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_url</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">url_pattern</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">f</span>
+        <span class="k">return</span> <span class="n">decorator</span></div>
+
+
+<div class="viewcode-block" id="LMNLdapRouter.collection">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.LMNLdapRouter.collection">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">collection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">subdn</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">dn_filter</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s2">&quot;subtree&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Search multiple entries in the whole subtree of the base dn.</span>
+
+<span class="sd">        :param pattern: URL pattern</span>
+<span class="sd">        :type pattern: basestring</span>
+<span class="sd">        :param model: model obejct to return, can be e.g. LMNUser</span>
+<span class="sd">        :type model: dataclass object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">url_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;^</span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s1">$&#39;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s1">&#39;collection&#39;</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+            <span class="k">if</span> <span class="n">level</span> <span class="o">==</span> <span class="s2">&quot;single&quot;</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">scope</span> <span class="o">=</span> <span class="n">ldap</span><span class="o">.</span><span class="n">SCOPE_ONELEVEL</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">scope</span> <span class="o">=</span> <span class="n">ldap</span><span class="o">.</span><span class="n">SCOPE_SUBTREE</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">subdn</span> <span class="o">=</span> <span class="n">subdn</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">dn_filter</span> <span class="o">=</span> <span class="n">dn_filter</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_url</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">url_pattern</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">f</span>
+        <span class="k">return</span> <span class="n">decorator</span></div>
+</div>
+
+
+<div class="viewcode-block" id="router">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.router">[docs]</a>
+<span class="n">router</span> <span class="o">=</span> <span class="n">LMNLdapRouter</span><span class="p">()</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

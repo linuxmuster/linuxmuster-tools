@@ -1,0 +1,35 @@
+linuxmusterTools.ldapconnector.models.lmnschool
+===============================================
+
+.. py:module:: linuxmusterTools.ldapconnector.models.lmnschool
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.models.lmnschool.LMNSchool
+
+
+Module Contents
+---------------
+
+.. py:class:: LMNSchool
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:attribute:: ou
+      :type:  str
+
+
+   .. py:attribute:: displayName
+      :type:  str
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+

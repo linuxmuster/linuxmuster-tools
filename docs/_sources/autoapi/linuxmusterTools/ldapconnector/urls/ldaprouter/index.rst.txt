@@ -1,0 +1,91 @@
+linuxmusterTools.ldapconnector.urls.ldaprouter
+==============================================
+
+.. py:module:: linuxmusterTools.ldapconnector.urls.ldaprouter
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.urls.ldaprouter.SCHOOL_MARKER
+   linuxmusterTools.ldapconnector.urls.ldaprouter.router
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.urls.ldaprouter.LMNLdapRouter
+
+
+Module Contents
+---------------
+
+.. py:data:: SCHOOL_MARKER
+   :value: '##SCHOOL_MARKER##'
+
+
+.. py:class:: LMNLdapRouter
+
+   .. py:attribute:: lr
+
+
+   .. py:attribute:: urls
+
+
+   .. py:method:: _find_method(url)
+
+
+   .. py:method:: get(url, **kwargs)
+
+      Parse all urls and find the right method to handle the request.
+
+
+
+   .. py:method:: getval(url, attribute, **kwargs)
+
+
+   .. py:method:: getvalues(url, attributes, dict=True, **kwargs)
+
+
+   .. py:method:: ascsv(url, delimiter=';', csvfile=None, attributes=[], header=True, **kwargs)
+
+
+   .. py:method:: add_url(url, method)
+
+      Check collisions between URLs before adding to self.urls.
+
+      :param url: Regexp to match
+      :type url: re.pattern
+      :param method: Method to run
+      :type method: function
+
+
+
+   .. py:method:: single(pattern, model, subdn='', dn_filter='', level='subtree')
+
+      Search a single entry in the whole subtree of the base dn.
+
+      :param pattern: URL pattern
+      :type pattern: basestring
+      :param model: model obejct to return, can be e.g. LMNUser
+      :type model: dataclass object
+
+
+
+   .. py:method:: collection(pattern, model, subdn='', dn_filter='', level='subtree')
+
+      Search multiple entries in the whole subtree of the base dn.
+
+      :param pattern: URL pattern
+      :type pattern: basestring
+      :param model: model obejct to return, can be e.g. LMNUser
+      :type model: dataclass object
+
+
+
+.. py:data:: router
+

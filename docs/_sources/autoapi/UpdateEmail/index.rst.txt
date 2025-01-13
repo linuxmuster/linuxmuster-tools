@@ -1,0 +1,33 @@
+UpdateEmail
+===========
+
+.. py:module:: UpdateEmail
+
+.. autoapi-nested-parse::
+
+   Script to update all email addresses in the attribute proxyAddresses
+   with the template lastname-firstname@mydomain.school.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   UpdateEmail.teachers
+   UpdateEmail.domain
+   UpdateEmail.email
+
+
+Module Contents
+---------------
+
+.. py:data:: teachers
+
+.. py:data:: domain
+   :value: 'mydomain.school'
+
+
+.. py:data:: email
+

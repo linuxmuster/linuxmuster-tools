@@ -1,0 +1,115 @@
+linuxmusterTools.ldapconnector.ldap_writer
+==========================================
+
+.. py:module:: linuxmusterTools.ldapconnector.ldap_writer
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.ldap_writer.OBJECT_MAPPING
+   linuxmusterTools.ldapconnector.ldap_writer.ldap_writer
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.ldap_writer.LdapWriter
+
+
+Module Contents
+---------------
+
+.. py:data:: OBJECT_MAPPING
+
+.. py:class:: LdapWriter
+
+   .. py:attribute:: lc
+
+
+   .. py:attribute:: lr
+
+
+   .. py:method:: _setattr(obj_details, data=None, add=False)
+
+      Set one or more attributes only for a ldap entry.
+
+      :param obj_details: object to modify (project, ...)
+      :type obj_details: dict
+      :param data: Dict of attributes:values to write
+      :type data: dict
+      :type add: bool
+      :param add: Define if the attribute should be added, even if the
+      attribute is already present
+
+
+
+   .. py:method:: _delattr(obj_details, data=None)
+
+      Delete one or more attributes only for a ldap entry.
+
+      :param name: cn
+      :type name: basestring
+      :param objecttype: user, device, etc ... see OBJECT_MAPPING above
+      :type objecttype: basestring
+      :param data: Dict of attributes:values to delete.
+      Value may be empty if the attribute is not ambiguous
+      :type data: dict
+
+
+
+   .. py:method:: _rename(old_dn, new_cn)
+
+      :param old_dn:
+      :type old_dn:
+      :param new_cn:
+      :type new_cn:
+      :return:
+      :rtype:
+
+
+
+   .. py:method:: _move(old_dn, new_ou)
+
+      :param old_dn:
+      :type old_dn:
+      :param new_dn:
+      :type new_dn:
+      :return:
+      :rtype:
+
+
+
+   .. py:method:: _add_ou(dn)
+
+      Create an organisational unit with the given dn.
+
+      :param dn: dn of the object to modify
+      :type dn: basestring
+
+
+
+   .. py:method:: _add_group(dn, ldif=[])
+
+      Create a group with the given dn.
+
+      :param dn: dn of the object to modify
+      :type dn: basestring
+
+
+
+   .. py:method:: _del(dn)
+
+      Delete an Ldap object.
+
+      :param dn: dn of the object to delete
+      :type dn: basestring
+
+
+
+.. py:data:: ldap_writer
+

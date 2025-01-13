@@ -1,0 +1,359 @@
+linuxmusterTools.ldapconnector.models.lmnuser
+=============================================
+
+.. py:module:: linuxmusterTools.ldapconnector.models.lmnuser
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.models.lmnuser.LMNUser
+
+
+Module Contents
+---------------
+
+.. py:class:: LMNUser
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+
+
+   Common parent class to gather common methods.
+
+
+   .. py:attribute:: cn
+      :type:  str
+
+
+   .. py:attribute:: custom_fields_config
+      :type:  dataclasses.InitVar[dict]
+
+
+   .. py:attribute:: displayName
+      :type:  str
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+   .. py:attribute:: givenName
+      :type:  str
+
+
+   .. py:attribute:: homeDirectory
+      :type:  str
+
+
+   .. py:attribute:: homeDrive
+      :type:  str
+
+
+   .. py:attribute:: mail
+      :type:  list
+
+
+   .. py:attribute:: memberOf
+      :type:  list
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:attribute:: proxyAddresses
+      :type:  list
+
+
+   .. py:attribute:: sAMAccountName
+      :type:  str
+
+
+   .. py:attribute:: sAMAccountType
+      :type:  str
+
+
+   .. py:attribute:: sn
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAdminClass
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAdminFile
+      :type:  str
+
+
+   .. py:attribute:: sophomorixBirthdate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCloudQuotaCalculated
+      :type:  list
+
+
+   .. py:attribute:: sophomorixComment
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCreationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom1
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom2
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom3
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom4
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom5
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustomMulti1
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti2
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti3
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti4
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti5
+      :type:  list
+
+
+   .. py:attribute:: sophomorixDeactivationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixExamMode
+      :type:  list
+
+
+   .. py:attribute:: sophomorixExitAdminClass
+      :type:  str
+
+
+   .. py:attribute:: sophomorixFirstnameASCII
+      :type:  str
+
+
+   .. py:attribute:: sophomorixFirstnameInitial
+      :type:  str
+
+
+   .. py:attribute:: sophomorixFirstPassword
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic2
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsic3
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMailQuotaCalculated
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMailQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixRole
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSchoolname
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSchoolPrefix
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSessions
+      :type:  list
+
+
+   .. py:attribute:: sophomorixStatus
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSurnameASCII
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSurnameInitial
+      :type:  str
+
+
+   .. py:attribute:: sophomorixTolerationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixUnid
+      :type:  str
+
+
+   .. py:attribute:: sophomorixUserToken
+      :type:  str
+
+
+   .. py:attribute:: sophomorixWebuiDashboard
+      :type:  list
+
+
+   .. py:attribute:: sophomorixWebuiPermissionsCalculated
+      :type:  list
+
+
+   .. py:attribute:: thumbnailPhoto
+      :type:  str
+
+
+   .. py:attribute:: unixHomeDirectory
+      :type:  str
+
+
+   .. py:attribute:: whenChanged
+      :type:  str
+
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:attribute:: customFields
+      :type:  dict
+
+
+   .. py:attribute:: examMode
+      :type:  bool
+
+
+   .. py:attribute:: examTeacher
+      :type:  str
+
+
+   .. py:attribute:: examBaseCn
+      :type:  str
+
+
+   .. py:attribute:: internet
+      :type:  bool
+
+
+   .. py:attribute:: intranet
+      :type:  bool
+
+
+   .. py:attribute:: isAdmin
+      :type:  bool
+
+
+   .. py:attribute:: lmnsessions
+      :type:  list
+
+
+   .. py:attribute:: permissions
+      :type:  list
+
+
+   .. py:attribute:: printers
+      :type:  list
+
+
+   .. py:attribute:: printing
+      :type:  bool
+
+
+   .. py:attribute:: projects
+      :type:  list
+
+
+   .. py:attribute:: schoolclasses
+      :type:  list
+
+
+   .. py:attribute:: school
+      :type:  str
+
+
+   .. py:attribute:: webfilter
+      :type:  bool
+
+
+   .. py:attribute:: wifi
+      :type:  bool
+
+
+   .. py:method:: _check_schoolclass_number(s)
+      :staticmethod:
+
+
+
+   .. py:method:: extract_schoolclasses(membership)
+
+
+   .. py:method:: extract_projects(membership)
+
+
+   .. py:method:: extract_printers(membership)
+
+
+   .. py:method:: extract_management()
+
+
+   .. py:method:: parse_permissions()
+
+
+   .. py:method:: parse_sessions()
+
+
+   .. py:method:: parse_exam()
+
+
+   .. py:method:: create_custom_fields_objects(custom_config={})
+
+
+   .. py:method:: __post_init__(custom_fields_config={})
+
+
+   .. py:method:: test_password(password='')
+
+
+   .. py:method:: test_first_password()
+
+

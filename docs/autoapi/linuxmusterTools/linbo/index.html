@@ -1,0 +1,983 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.linbo &mdash; linuxmuster-tools7 7.2.44 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="linuxmusterTools.linbo.config" href="config/index.html" />
+    <link rel="prev" title="linuxmusterTools.ldapconnector.writers.user" href="../ldapconnector/writers/user/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">linuxmusterTools</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../common/index.html">linuxmusterTools.common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../devices/index.html">linuxmusterTools.devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../ldapconnector/index.html">linuxmusterTools.ldapconnector</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">linuxmusterTools.linbo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../lmnconfig/index.html">linuxmusterTools.lmnconfig</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../lmnfile/index.html">linuxmusterTools.lmnfile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../quotas/index.html">linuxmusterTools.quotas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../samba_util/index.html">linuxmusterTools.samba_util</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">linuxmusterTools</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.linbo</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/autoapi/linuxmusterTools/linbo/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-linuxmusterTools.linbo">
+<span id="linuxmustertools-linbo"></span><h1>linuxmusterTools.linbo<a class="headerlink" href="#module-linuxmusterTools.linbo" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="config/index.html">linuxmusterTools.linbo.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="images/index.html">linuxmusterTools.linbo.images</a></li>
+</ul>
+</div>
+</section>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id0" title="linuxmusterTools.linbo.LINBO_PATH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LINBO_PATH</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.TIMESTAMP_FMT" title="linuxmusterTools.linbo.TIMESTAMP_FMT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TIMESTAMP_FMT</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.DATE_UI_FMT" title="linuxmusterTools.linbo.DATE_UI_FMT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DATE_UI_FMT</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.EXTRA_IMAGE_FILES" title="linuxmusterTools.linbo.EXTRA_IMAGE_FILES"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EXTRA_IMAGE_FILES</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.EXTRA_NONEDITABLE_IMAGE_FILES" title="linuxmusterTools.linbo.EXTRA_NONEDITABLE_IMAGE_FILES"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EXTRA_NONEDITABLE_IMAGE_FILES</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.EXTRA_COMMON_FILES" title="linuxmusterTools.linbo.EXTRA_COMMON_FILES"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EXTRA_COMMON_FILES</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.EXTRA_PERMISSIONS_MAPPING" title="linuxmusterTools.linbo.EXTRA_PERMISSIONS_MAPPING"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EXTRA_PERMISSIONS_MAPPING</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.IMAGE" title="linuxmusterTools.linbo.IMAGE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IMAGE</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.DIFF_IMAGE" title="linuxmusterTools.linbo.DIFF_IMAGE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DIFF_IMAGE</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id0" title="linuxmusterTools.linbo.LINBO_PATH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LINBO_PATH</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.LMNFile" title="linuxmusterTools.linbo.LMNFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNFile</span></code></a></p></td>
+<td><p>Meta class to handle all type of config file used in linuxmuster's project,</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.LinboImage" title="linuxmusterTools.linbo.LinboImage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinboImage</span></code></a></p></td>
+<td><p>A class to manage a linbo image or a backup image</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.LinboImageGroup" title="linuxmusterTools.linbo.LinboImageGroup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinboImageGroup</span></code></a></p></td>
+<td><p>Class to handle a basic LinboImage and all his backups.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.LinboImageManager" title="linuxmusterTools.linbo.LinboImageManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinboImageManager</span></code></a></p></td>
+<td><p>Manager for all Linbo Images.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.Devices" title="linuxmusterTools.linbo.Devices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Devices</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.Partition" title="linuxmusterTools.linbo.Partition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Partition</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.OS" title="linuxmusterTools.linbo.OS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OS</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.Linbo" title="linuxmusterTools.linbo.Linbo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Linbo</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.LinboConfig" title="linuxmusterTools.linbo.LinboConfig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinboConfig</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.LinboConfigManager" title="linuxmusterTools.linbo.LinboConfigManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinboConfigManager</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.date2timestamp" title="linuxmusterTools.linbo.date2timestamp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">date2timestamp</span></code></a>(date)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.timestamp2date" title="linuxmusterTools.linbo.timestamp2date"><code class="xref py py-obj docutils literal notranslate"><span class="pre">timestamp2date</span></code></a>(timestamp)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.read_config" title="linuxmusterTools.linbo.read_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_config</span></code></a>(group)</p></td>
+<td><p>Get the os config from linbo config file start.conf.&lt;group&gt;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.last_sync" title="linuxmusterTools.linbo.last_sync"><code class="xref py py-obj docutils literal notranslate"><span class="pre">last_sync</span></code></a>(workstation, image)</p></td>
+<td><p>Get the date of the last sync date for a workstation w.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.group_os" title="linuxmusterTools.linbo.group_os"><code class="xref py py-obj docutils literal notranslate"><span class="pre">group_os</span></code></a>(workstations)</p></td>
+<td><p>Get all os infos from linbo config file and inject it in workstations dict.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.list_workstations" title="linuxmusterTools.linbo.list_workstations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list_workstations</span></code></a>([school, groups])</p></td>
+<td><p>Generate a dict with workstations and parameters out of devices file</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.linbo.last_sync_all" title="linuxmusterTools.linbo.last_sync_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">last_sync_all</span></code></a>(workstations)</p></td>
+<td><p>Add last synchronisation informations into the workstations dict,</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="package-contents">
+<h2>Package Contents<a class="headerlink" href="#package-contents" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LMNFile">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">LMNFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">';'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldnames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LMNFile" title="Link to this definition"></a></dt>
+<dd><p>Meta class to handle all type of config file used in linuxmuster’s project,
+e.g. ini, csv, linbo config files.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LMNFile.file">
+<span class="sig-name descname"><span class="pre">file</span></span><a class="headerlink" href="#linuxmusterTools.linbo.LMNFile.file" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LMNFile.opened">
+<span class="sig-name descname"><span class="pre">opened</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#linuxmusterTools.linbo.LMNFile.opened" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LMNFile.data">
+<span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#linuxmusterTools.linbo.LMNFile.data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LMNFile.mode">
+<span class="sig-name descname"><span class="pre">mode</span></span><a class="headerlink" href="#linuxmusterTools.linbo.LMNFile.mode" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LMNFile.encoding">
+<span class="sig-name descname"><span class="pre">encoding</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'utf-8'</span></em><a class="headerlink" href="#linuxmusterTools.linbo.LMNFile.encoding" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LMNFile.comments">
+<span class="sig-name descname"><span class="pre">comments</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#linuxmusterTools.linbo.LMNFile.comments" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LMNFile.delimiter">
+<span class="sig-name descname"><span class="pre">delimiter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">';'</span></em><a class="headerlink" href="#linuxmusterTools.linbo.LMNFile.delimiter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LMNFile.hasExtension">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hasExtension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ext</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.hasExtension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LMNFile.hasExtension" title="Link to this definition"></a></dt>
+<dd><p>Determine if file should be handled here.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ext</strong> (<em>string</em>) – Extension of a file, e.g. ini</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>File handled or not</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LMNFile.__enter__">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__enter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.__enter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LMNFile.__enter__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LMNFile.__exit__">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__exit__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_tb</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.__exit__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LMNFile.__exit__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LMNFile.read">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LMNFile.read" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LMNFile.backup">
+<span class="sig-name descname"><span class="pre">backup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.backup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LMNFile.backup" title="Link to this definition"></a></dt>
+<dd><p>Create a backup of a file if in allowed paths, but on ly keeps 10 backups.
+Backup files names scheme is <cite>.&lt;name&gt;.bak.&lt;timestamp&gt;</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LMNFile.check_allowed_path">
+<span class="sig-name descname"><span class="pre">check_allowed_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.check_allowed_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LMNFile.check_allowed_path" title="Link to this definition"></a></dt>
+<dd><p>Check path before modifying files for security reasons.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>File path in allowed paths.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LMNFile.detect_encoding">
+<span class="sig-name descname"><span class="pre">detect_encoding</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.detect_encoding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LMNFile.detect_encoding" title="Link to this definition"></a></dt>
+<dd><p>Try to detect encoding of the file through magic numbers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Detected encoding</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LINBO_PATH">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">LINBO_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/srv/linbo/images'</span></em><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/config.html#LINBO_PATH"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LINBO_PATH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.TIMESTAMP_FMT">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">TIMESTAMP_FMT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%Y%m%d%H%M'</span></em><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#TIMESTAMP_FMT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.TIMESTAMP_FMT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.DATE_UI_FMT">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">DATE_UI_FMT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%d/%m/%Y</span> <span class="pre">%H:%M'</span></em><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#DATE_UI_FMT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.DATE_UI_FMT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.EXTRA_IMAGE_FILES">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">EXTRA_IMAGE_FILES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['desc',</span> <span class="pre">'info',</span> <span class="pre">'vdi']</span></em><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#EXTRA_IMAGE_FILES"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.EXTRA_IMAGE_FILES" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.EXTRA_NONEDITABLE_IMAGE_FILES">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">EXTRA_NONEDITABLE_IMAGE_FILES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['torrent',</span> <span class="pre">'macct']</span></em><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#EXTRA_NONEDITABLE_IMAGE_FILES"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.EXTRA_NONEDITABLE_IMAGE_FILES" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.EXTRA_COMMON_FILES">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">EXTRA_COMMON_FILES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['reg',</span> <span class="pre">'postsync',</span> <span class="pre">'prestart']</span></em><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#EXTRA_COMMON_FILES"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.EXTRA_COMMON_FILES" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.EXTRA_PERMISSIONS_MAPPING">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">EXTRA_PERMISSIONS_MAPPING</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#EXTRA_PERMISSIONS_MAPPING"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.EXTRA_PERMISSIONS_MAPPING" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.IMAGE">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">IMAGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'qcow2'</span></em><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#IMAGE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.IMAGE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.DIFF_IMAGE">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">DIFF_IMAGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'qdiff'</span></em><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#DIFF_IMAGE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.DIFF_IMAGE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.date2timestamp">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">date2timestamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#date2timestamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.date2timestamp" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.timestamp2date">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">timestamp2date</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestamp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#timestamp2date"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.timestamp2date" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">LinboImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImage" title="Link to this definition"></a></dt>
+<dd><p>A class to manage a linbo image or a backup image</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImage.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#linuxmusterTools.linbo.LinboImage.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImage.backup">
+<span class="sig-name descname"><span class="pre">backup</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#linuxmusterTools.linbo.LinboImage.backup" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImage.diff">
+<span class="sig-name descname"><span class="pre">diff</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#linuxmusterTools.linbo.LinboImage.diff" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImage.timestamp">
+<span class="sig-name descname"><span class="pre">timestamp</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#linuxmusterTools.linbo.LinboImage.timestamp" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImage._torrent_stop">
+<span class="sig-name descname"><span class="pre">_torrent_stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImage._torrent_stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImage._torrent_stop" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImage.load_info">
+<span class="sig-name descname"><span class="pre">load_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImage.load_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImage.load_info" title="Link to this definition"></a></dt>
+<dd><p>Prepare all variables to manage the image object ( path, name, extra files )</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImage.get_extra">
+<span class="sig-name descname"><span class="pre">get_extra</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImage.get_extra"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImage.get_extra" title="Link to this definition"></a></dt>
+<dd><p>Load extra editables config files for the image.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImage.get_timestamp">
+<span class="sig-name descname"><span class="pre">get_timestamp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImage.get_timestamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImage.get_timestamp" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImage.delete_files">
+<span class="sig-name descname"><span class="pre">delete_files</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImage.delete_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImage.delete_files" title="Link to this definition"></a></dt>
+<dd><p>Delete all files from a LinboImage.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImage.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImage.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImage.delete" title="Link to this definition"></a></dt>
+<dd><p>Completely remove an image and its directory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImage.rename">
+<span class="sig-name descname"><span class="pre">rename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImage.rename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImage.rename" title="Link to this definition"></a></dt>
+<dd><p>Rename a LinboImage and all its files.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImage.save_extras">
+<span class="sig-name descname"><span class="pre">save_extras</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImage.save_extras"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImage.save_extras" title="Link to this definition"></a></dt>
+<dd><p>Save all extra files content.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Data to save</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImage.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImage.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImage.to_dict" title="Link to this definition"></a></dt>
+<dd><p>Convert all necessary infos into a dict for angular.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImageGroup">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">LinboImageGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImageGroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImageGroup" title="Link to this definition"></a></dt>
+<dd><p>Class to handle a basic LinboImage and all his backups.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImageGroup.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#linuxmusterTools.linbo.LinboImageGroup.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImageGroup.path">
+<span class="sig-name descname"><span class="pre">path</span></span><a class="headerlink" href="#linuxmusterTools.linbo.LinboImageGroup.path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImageGroup.backup_path">
+<span class="sig-name descname"><span class="pre">backup_path</span></span><a class="headerlink" href="#linuxmusterTools.linbo.LinboImageGroup.backup_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImageGroup.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImageGroup.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImageGroup.load" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImageGroup.get_backups">
+<span class="sig-name descname"><span class="pre">get_backups</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImageGroup.get_backups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImageGroup.get_backups" title="Link to this definition"></a></dt>
+<dd><p>Browse current tree to find all backups image.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImageGroup.get_diff">
+<span class="sig-name descname"><span class="pre">get_diff</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImageGroup.get_diff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImageGroup.get_diff" title="Link to this definition"></a></dt>
+<dd><p>Browse current tree to find a differential image.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImageGroup.rename">
+<span class="sig-name descname"><span class="pre">rename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImageGroup.rename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImageGroup.rename" title="Link to this definition"></a></dt>
+<dd><p>Rename an image and all his backups.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImageGroup.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImageGroup.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImageGroup.delete" title="Link to this definition"></a></dt>
+<dd><p>Delete basic image, all backups, diff image and all config files.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImageGroup.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImageGroup.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImageGroup.to_dict" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImageManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">LinboImageManager</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImageManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImageManager" title="Link to this definition"></a></dt>
+<dd><p>Manager for all Linbo Images.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImageManager.list">
+<span class="sig-name descname"><span class="pre">list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImageManager.list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImageManager.list" title="Link to this definition"></a></dt>
+<dd><p>Browse LINBO_PATH to discover all linbo images.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImageManager.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImageManager.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImageManager.delete" title="Link to this definition"></a></dt>
+<dd><p>Delete a whole image and its backups. If date is given, only delete an
+associated backup. date and diff parameter excludes each other.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>group</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Name of the linbo image</p></li>
+<li><p><strong>date</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – timestamp of a backup</p></li>
+<li><p><strong>diff</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – only delete a differential image</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImageManager.rename">
+<span class="sig-name descname"><span class="pre">rename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImageManager.rename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImageManager.rename" title="Link to this definition"></a></dt>
+<dd><p>Rename a whole linbo image and its backups recursiverly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>group</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Name of the linbo image</p></li>
+<li><p><strong>new_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – New name for the linbo image</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImageManager.duplicate">
+<span class="sig-name descname"><span class="pre">duplicate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImageManager.duplicate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImageManager.duplicate" title="Link to this definition"></a></dt>
+<dd><p>Duplicate a whole linbo image without backups.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>group</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Name of the linbo image to duplicate</p></li>
+<li><p><strong>new_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – New name for the linbo image</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImageManager.restore">
+<span class="sig-name descname"><span class="pre">restore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImageManager.restore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImageManager.restore" title="Link to this definition"></a></dt>
+<dd><p>Delete a basic linbo image and restore a backup.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>group</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Name of the linbo image</p></li>
+<li><p><strong>date</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – timestamp of a backup</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboImageManager.save_extras">
+<span class="sig-name descname"><span class="pre">save_extras</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/images.html#LinboImageManager.save_extras"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboImageManager.save_extras" title="Link to this definition"></a></dt>
+<dd><p>Save extra files for a base image, a backup or a differential
+image. timestamp and diff parameters excludes each other.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>group</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Name of the linbo image</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Content of the extra files</p></li>
+<li><p><strong>timestamp</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – timestamp of a backup</p></li>
+<li><p><strong>diff</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – data onlyc concern a diff image</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Devices">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">Devices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/devices/devices.html#Devices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.Devices" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Devices.school">
+<span class="sig-name descname"><span class="pre">school</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'default-school'</span></em><a class="headerlink" href="#linuxmusterTools.linbo.Devices.school" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Devices.switch">
+<span class="sig-name descname"><span class="pre">switch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/devices/devices.html#Devices.switch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.Devices.switch" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Devices.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/devices/devices.html#Devices.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.Devices.load" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Devices.filter">
+<span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">roles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/devices/devices.html#Devices.filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.Devices.filter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Devices.get_hostname">
+<span class="sig-name descname"><span class="pre">get_hostname</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hostname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/devices/devices.html#Devices.get_hostname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.Devices.get_hostname" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Devices.get_client">
+<span class="sig-name descname"><span class="pre">get_client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hostname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/devices/devices.html#Devices.get_client"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.Devices.get_client" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Devices.get_clients">
+<span class="sig-name descname"><span class="pre">get_clients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/devices/devices.html#Devices.get_clients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.Devices.get_clients" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Partition">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">Partition</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/config.html#Partition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.Partition" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Partition.Bootable">
+<span class="sig-name descname"><span class="pre">Bootable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.Partition.Bootable" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Partition.Dev">
+<span class="sig-name descname"><span class="pre">Dev</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.Partition.Dev" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Partition.FSType">
+<span class="sig-name descname"><span class="pre">FSType</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.Partition.FSType" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Partition.Id">
+<span class="sig-name descname"><span class="pre">Id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.Partition.Id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Partition.Label">
+<span class="sig-name descname"><span class="pre">Label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.Partition.Label" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Partition.Size">
+<span class="sig-name descname"><span class="pre">Size</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.Partition.Size" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.OS">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">OS</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/config.html#OS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.OS" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.OS.Append">
+<span class="sig-name descname"><span class="pre">Append</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.OS.Append" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.OS.Autostart">
+<span class="sig-name descname"><span class="pre">Autostart</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.OS.Autostart" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.OS.AutostartTimeout">
+<span class="sig-name descname"><span class="pre">AutostartTimeout</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.OS.AutostartTimeout" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.OS.BaseImage">
+<span class="sig-name descname"><span class="pre">BaseImage</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.OS.BaseImage" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.OS.Boot">
+<span class="sig-name descname"><span class="pre">Boot</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.OS.Boot" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.OS.DefaultAction">
+<span class="sig-name descname"><span class="pre">DefaultAction</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.OS.DefaultAction" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.OS.Description">
+<span class="sig-name descname"><span class="pre">Description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.OS.Description" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.OS.Hidden">
+<span class="sig-name descname"><span class="pre">Hidden</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.OS.Hidden" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.OS.IconName">
+<span class="sig-name descname"><span class="pre">IconName</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.OS.IconName" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.OS.Initrd">
+<span class="sig-name descname"><span class="pre">Initrd</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.OS.Initrd" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.OS.Kernel">
+<span class="sig-name descname"><span class="pre">Kernel</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.OS.Kernel" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.OS.NewEnabled">
+<span class="sig-name descname"><span class="pre">NewEnabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.OS.NewEnabled" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.OS.Root">
+<span class="sig-name descname"><span class="pre">Root</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.OS.Root" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.OS.StartEnabled">
+<span class="sig-name descname"><span class="pre">StartEnabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.OS.StartEnabled" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.OS.SyncEnabled">
+<span class="sig-name descname"><span class="pre">SyncEnabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.OS.SyncEnabled" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.OS.Version">
+<span class="sig-name descname"><span class="pre">Version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.OS.Version" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Linbo">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">Linbo</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/config.html#Linbo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.Linbo" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Linbo.AutoFormat">
+<span class="sig-name descname"><span class="pre">AutoFormat</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.Linbo.AutoFormat" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Linbo.AutoInitCache">
+<span class="sig-name descname"><span class="pre">AutoInitCache</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.Linbo.AutoInitCache" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Linbo.AutoPartition">
+<span class="sig-name descname"><span class="pre">AutoPartition</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.Linbo.AutoPartition" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Linbo.Cache">
+<span class="sig-name descname"><span class="pre">Cache</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.Linbo.Cache" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Linbo.DownloadType">
+<span class="sig-name descname"><span class="pre">DownloadType</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.Linbo.DownloadType" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Linbo.Group">
+<span class="sig-name descname"><span class="pre">Group</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.Linbo.Group" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Linbo.GuiDisabled">
+<span class="sig-name descname"><span class="pre">GuiDisabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.Linbo.GuiDisabled" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Linbo.KernelOptions">
+<span class="sig-name descname"><span class="pre">KernelOptions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.Linbo.KernelOptions" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Linbo.Locale">
+<span class="sig-name descname"><span class="pre">Locale</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.Linbo.Locale" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Linbo.RootTimeout">
+<span class="sig-name descname"><span class="pre">RootTimeout</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.Linbo.RootTimeout" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Linbo.Server">
+<span class="sig-name descname"><span class="pre">Server</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.Linbo.Server" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Linbo.SystemType">
+<span class="sig-name descname"><span class="pre">SystemType</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.Linbo.SystemType" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.Linbo.UseMinimalLayout">
+<span class="sig-name descname"><span class="pre">UseMinimalLayout</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.Linbo.UseMinimalLayout" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">LinboConfig</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/config.html#LinboConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboConfig" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboConfig.LINBO">
+<span class="sig-name descname"><span class="pre">LINBO</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#linuxmusterTools.linbo.Linbo" title="linuxmusterTools.linbo.Linbo"><span class="pre">Linbo</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.LinboConfig.LINBO" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboConfig.Partitions">
+<span class="sig-name descname"><span class="pre">Partitions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.LinboConfig.Partitions" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboConfig.OS">
+<span class="sig-name descname"><span class="pre">OS</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="headerlink" href="#linuxmusterTools.linbo.LinboConfig.OS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.LinboConfigManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">LinboConfigManager</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/config.html#LinboConfigManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.LinboConfigManager" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">LINBO_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/srv/linbo'</span></em><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/config.html#LINBO_PATH"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.read_config">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">read_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/config.html#read_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.read_config" title="Link to this definition"></a></dt>
+<dd><p>Get the os config from linbo config file start.conf.&lt;group&gt;</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>group</strong> (<em>string</em>) – Linbo group</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Config as list of dict</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.last_sync">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">last_sync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workstation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/config.html#last_sync"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.last_sync" title="Link to this definition"></a></dt>
+<dd><p>Get the date of the last sync date for a workstation w.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>w</strong> (<em>string</em>) – Workstation</p></li>
+<li><p><strong>image</strong> (<em>string</em>) – Name of the image file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Last synchronisation time</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>datetime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.group_os">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">group_os</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workstations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/config.html#group_os"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.group_os" title="Link to this definition"></a></dt>
+<dd><p>Get all os infos from linbo config file and inject it in workstations dict.
+The workstations dict is set in the function list_workstations().</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>workstations</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Dict containing all workstations</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Completed workstations dict with linbo informations</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.list_workstations">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">list_workstations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/config.html#list_workstations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.list_workstations" title="Link to this definition"></a></dt>
+<dd><p>Generate a dict with workstations and parameters out of devices file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>context</strong> – user context set in views.py</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict with all linbo informations for all workstations.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.last_sync_all">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.</span></span><span class="sig-name descname"><span class="pre">last_sync_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workstations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/linbo/config.html#last_sync_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.last_sync_all" title="Link to this definition"></a></dt>
+<dd><p>Add last synchronisation informations into the workstations dict,
+and status attribute to use as class for bootstrap.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>workstations</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Dict of workstations set in list_workstations().</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Completed dict of workstations</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../ldapconnector/writers/user/index.html" class="btn btn-neutral float-left" title="linuxmusterTools.ldapconnector.writers.user" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="config/index.html" class="btn btn-neutral float-right" title="linuxmusterTools.linbo.config" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

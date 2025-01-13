@@ -1,0 +1,110 @@
+linuxmusterTools.samba_util.smbstatus
+=====================================
+
+.. py:module:: linuxmusterTools.samba_util.smbstatus
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.samba_util.smbstatus.users_regex
+   linuxmusterTools.samba_util.smbstatus.machine_regex
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.samba_util.smbstatus.SMBConnection
+   linuxmusterTools.samba_util.smbstatus.SMBConnections
+
+
+Module Contents
+---------------
+
+.. py:class:: SMBConnection
+
+   .. py:attribute:: encryption
+      :type:  str
+
+
+   .. py:attribute:: ip
+      :type:  str
+
+
+   .. py:attribute:: ip4
+      :type:  str
+
+
+   .. py:attribute:: ip6
+      :type:  str
+
+
+   .. py:attribute:: group
+      :type:  str
+
+
+   .. py:attribute:: machine
+      :type:  str
+
+
+   .. py:attribute:: pid
+      :type:  str
+
+
+   .. py:attribute:: protocol
+      :type:  str
+
+
+   .. py:attribute:: signing
+      :type:  str
+
+
+   .. py:attribute:: username
+      :type:  str
+
+
+   .. py:attribute:: version
+      :type:  str
+
+
+   .. py:attribute:: hostnames
+      :type:  dataclasses.InitVar[dict]
+
+
+   .. py:attribute:: hostname
+      :type:  str
+
+
+   .. py:method:: __post_init__(hostnames)
+
+
+.. py:data:: users_regex
+
+.. py:data:: machine_regex
+
+.. py:class:: SMBConnections(school='default-school')
+
+   .. py:attribute:: school
+      :value: 'default-school'
+
+
+
+   .. py:attribute:: hostnames
+
+
+   .. py:method:: switch(school)
+
+
+   .. py:method:: load_hostnames()
+
+
+   .. py:method:: get_users()
+
+
+   .. py:method:: get_machines()
+
+

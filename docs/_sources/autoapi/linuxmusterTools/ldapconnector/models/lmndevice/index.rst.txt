@@ -1,0 +1,240 @@
+linuxmusterTools.ldapconnector.models.lmndevice
+===============================================
+
+.. py:module:: linuxmusterTools.ldapconnector.models.lmndevice
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.models.lmndevice.LMNDevice
+   linuxmusterTools.ldapconnector.models.lmndevice.LMNRoom
+
+
+Module Contents
+---------------
+
+.. py:class:: LMNDevice
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+
+
+   Common parent class to gather common methods.
+
+
+   .. py:attribute:: cn
+      :type:  str
+
+
+   .. py:attribute:: displayName
+      :type:  str
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+   .. py:attribute:: dNSHostName
+      :type:  str
+
+
+   .. py:attribute:: memberOf
+      :type:  list
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:attribute:: proxyAddresses
+      :type:  list
+
+
+   .. py:attribute:: sAMAccountName
+      :type:  str
+
+
+   .. py:attribute:: sAMAccountType
+      :type:  str
+
+
+   .. py:attribute:: servicePrincipalName
+      :type:  list
+
+
+   .. py:attribute:: sophomorixAdminClass
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAdminFile
+      :type:  str
+
+
+   .. py:attribute:: sophomorixComment
+      :type:  str
+
+
+   .. py:attribute:: sophomorixComputerIP
+      :type:  str
+
+
+   .. py:attribute:: sophomorixComputerMAC
+      :type:  str
+
+
+   .. py:attribute:: sophomorixComputerRoom
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCreationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixDnsNodename
+      :type:  str
+
+
+   .. py:attribute:: sophomorixRole
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSchoolname
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSchoolPrefix
+      :type:  str
+
+
+   .. py:attribute:: sophomorixStatus
+      :type:  str
+
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:method:: __post_init__()
+
+
+.. py:class:: LMNRoom
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+
+
+   ObjectClass group for a room.
+
+
+   .. py:attribute:: cn
+      :type:  str
+
+
+   .. py:attribute:: description
+      :type:  str
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+   .. py:attribute:: mail
+      :type:  list
+
+
+   .. py:attribute:: member
+      :type:  list
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:attribute:: sAMAccountName
+      :type:  str
+
+
+   .. py:attribute:: sAMAccountType
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAddMailQuota
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAddQuota
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCreationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixHidden
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixJoinable
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailAlias
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailList
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMaxMembers
+      :type:  int
+
+
+   .. py:attribute:: sophomorixQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixRoomComputers
+      :type:  list
+
+
+   .. py:attribute:: sophomorixRoomIPs
+      :type:  list
+
+
+   .. py:attribute:: sophomorixRoomMACs
+      :type:  list
+
+
+   .. py:attribute:: sophomorixSchoolname
+      :type:  str
+
+
+   .. py:attribute:: sophomorixStatus
+      :type:  str
+
+
+   .. py:attribute:: sophomorixType
+      :type:  str
+
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:method:: __post_init__()
+
+

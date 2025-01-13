@@ -1,0 +1,19 @@
+linuxmusterTools.lmnfile.fieldnames
+===================================
+
+.. py:module:: linuxmusterTools.lmnfile.fieldnames
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.lmnfile.fieldnames.csv_fieldnames
+
+
+Module Contents
+---------------
+
+.. py:data:: csv_fieldnames
+

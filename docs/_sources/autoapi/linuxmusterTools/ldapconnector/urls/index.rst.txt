@@ -1,0 +1,448 @@
+linuxmusterTools.ldapconnector.urls
+===================================
+
+.. py:module:: linuxmusterTools.ldapconnector.urls
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/linuxmusterTools/ldapconnector/urls/devices/index
+   /autoapi/linuxmusterTools/ldapconnector/urls/groups/index
+   /autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index
+   /autoapi/linuxmusterTools/ldapconnector/urls/managementgroups/index
+   /autoapi/linuxmusterTools/ldapconnector/urls/objects/index
+   /autoapi/linuxmusterTools/ldapconnector/urls/ou/index
+   /autoapi/linuxmusterTools/ldapconnector/urls/projects/index
+   /autoapi/linuxmusterTools/ldapconnector/urls/roles/index
+   /autoapi/linuxmusterTools/ldapconnector/urls/schoolclasses/index
+   /autoapi/linuxmusterTools/ldapconnector/urls/schools/index
+   /autoapi/linuxmusterTools/ldapconnector/urls/search/index
+   /autoapi/linuxmusterTools/ldapconnector/urls/users/index
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.urls.SCHOOL_MARKER
+   linuxmusterTools.ldapconnector.urls.router
+   linuxmusterTools.ldapconnector.urls.router
+   linuxmusterTools.ldapconnector.urls.router
+   linuxmusterTools.ldapconnector.urls.router
+   linuxmusterTools.ldapconnector.urls.router
+   linuxmusterTools.ldapconnector.urls.router
+   linuxmusterTools.ldapconnector.urls.router
+   linuxmusterTools.ldapconnector.urls.SCHOOL_MARKER
+   linuxmusterTools.ldapconnector.urls.router
+   linuxmusterTools.ldapconnector.urls.SCHOOL_MARKER
+   linuxmusterTools.ldapconnector.urls.router
+   linuxmusterTools.ldapconnector.urls.router
+   linuxmusterTools.ldapconnector.urls.SCHOOL_MARKER
+   linuxmusterTools.ldapconnector.urls.router
+   linuxmusterTools.ldapconnector.urls.router
+   linuxmusterTools.ldapconnector.urls.SCHOOL_MARKER
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.urls.LdapReader
+   linuxmusterTools.ldapconnector.urls.LMNLdapRouter
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.urls.get_all_users
+   linuxmusterTools.ldapconnector.urls.get_exam_users
+   linuxmusterTools.ldapconnector.urls.get_exam_user
+   linuxmusterTools.ldapconnector.urls.get_user
+   linuxmusterTools.ldapconnector.urls.get_results_search_user
+   linuxmusterTools.ldapconnector.urls.get_all_from_role
+   linuxmusterTools.ldapconnector.urls.get_schoolclass
+   linuxmusterTools.ldapconnector.urls.get_all_students_from_schoolclass
+   linuxmusterTools.ldapconnector.urls.get_all_schoolclasses
+   linuxmusterTools.ldapconnector.urls.get_results_search_schoolclasses
+   linuxmusterTools.ldapconnector.urls.get_project
+   linuxmusterTools.ldapconnector.urls.get_all_projects
+   linuxmusterTools.ldapconnector.urls.get_all_schools
+   linuxmusterTools.ldapconnector.urls.get_specific_school
+   linuxmusterTools.ldapconnector.urls.get_all_devices
+   linuxmusterTools.ldapconnector.urls.get_device
+   linuxmusterTools.ldapconnector.urls.get_results_search_device
+   linuxmusterTools.ldapconnector.urls.get_rooms
+   linuxmusterTools.ldapconnector.urls.get_room
+   linuxmusterTools.ldapconnector.urls.get_all_units
+   linuxmusterTools.ldapconnector.urls.get_group
+   linuxmusterTools.ldapconnector.urls.get_all_groups
+   linuxmusterTools.ldapconnector.urls.get_all_printers
+   linuxmusterTools.ldapconnector.urls.get_printer
+   linuxmusterTools.ldapconnector.urls.global_search
+   linuxmusterTools.ldapconnector.urls.get_all_management_groups
+   linuxmusterTools.ldapconnector.urls.get_management_group
+   linuxmusterTools.ldapconnector.urls.get_from_dn
+   linuxmusterTools.ldapconnector.urls.get_all_ou
+   linuxmusterTools.ldapconnector.urls.get_devices_ou
+   linuxmusterTools.ldapconnector.urls.get_students_ou
+
+
+Package Contents
+----------------
+
+.. py:class:: LdapReader
+
+   .. py:attribute:: lc
+
+
+   .. py:method:: _create_result_object(result, objectclass, dict=True, school='', attributes=[], dn_filter='', custom_config={})
+
+      Formatting one ldap result object into a dict or a LMN model object.
+
+
+
+   .. py:method:: get_single(objectclass, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn='', attributes=[], **kwargs)
+
+      Handle a single result from a ldap request (with required ldap filter)
+      and convert it in the given object class.
+
+      :param objectclass: dataclass like LMNUser
+      :type objectclass:
+      :param ldap_filter: A valid ldap filter
+      :type ldap_filter: basestring
+      :param dict: if True, returns a dict, else an object
+      :type dict: bool
+      :param school: school to search
+      :typee school: str
+      :param attributes: list of attributes to return
+      :typee attributes: list
+
+
+
+   .. py:method:: get_collection(objectclass, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn='', sortkey=None, attributes=[], **kwargs)
+
+      Handle multiples results from a ldap request (with required ldap filter)
+      and convert it in a list of given object class.
+
+      :param objectclass: dataclass like LMNUser
+      :type objectclass:
+      :param ldap_filter: A valid ldap filter
+      :type ldap_filter: basestring
+      :param dict: if True, returns a list of dict, else a list of objects
+      :type dict: bool
+      :param sortkey: if given, sorts the list with the given attribute
+      :type sortkey: basestring
+      :param school: school to search
+      :typee school: str
+      :param attributes: list of attributes to return
+      :typee attributes: list
+
+
+
+   .. py:method:: _filter_value(field, value)
+      :staticmethod:
+
+
+      Middleware to decode values and convert it in an usable format (mostly
+      compatible with json). Parameter field is given in order to find out the
+      type of object.
+
+
+
+.. py:data:: SCHOOL_MARKER
+   :value: '##SCHOOL_MARKER##'
+
+
+.. py:class:: LMNLdapRouter
+
+   .. py:attribute:: lr
+
+
+   .. py:attribute:: urls
+
+
+   .. py:method:: _find_method(url)
+
+
+   .. py:method:: get(url, **kwargs)
+
+      Parse all urls and find the right method to handle the request.
+
+
+
+   .. py:method:: getval(url, attribute, **kwargs)
+
+
+   .. py:method:: getvalues(url, attributes, dict=True, **kwargs)
+
+
+   .. py:method:: ascsv(url, delimiter=';', csvfile=None, attributes=[], header=True, **kwargs)
+
+
+   .. py:method:: add_url(url, method)
+
+      Check collisions between URLs before adding to self.urls.
+
+      :param url: Regexp to match
+      :type url: re.pattern
+      :param method: Method to run
+      :type method: function
+
+
+
+   .. py:method:: single(pattern, model, subdn='', dn_filter='', level='subtree')
+
+      Search a single entry in the whole subtree of the base dn.
+
+      :param pattern: URL pattern
+      :type pattern: basestring
+      :param model: model obejct to return, can be e.g. LMNUser
+      :type model: dataclass object
+
+
+
+   .. py:method:: collection(pattern, model, subdn='', dn_filter='', level='subtree')
+
+      Search multiple entries in the whole subtree of the base dn.
+
+      :param pattern: URL pattern
+      :type pattern: basestring
+      :param model: model obejct to return, can be e.g. LMNUser
+      :type model: dataclass object
+
+
+
+.. py:data:: router
+
+.. py:data:: router
+
+.. py:function:: get_all_users()
+
+   Get all details from all users.
+   Return a list of LMNUser data object.
+
+
+.. py:function:: get_exam_users()
+
+   Get all details from all users in exam mode.
+   Return a LMNUser data object.
+
+
+.. py:function:: get_exam_user(username)
+
+   Get all details from a specific user in exam mode.
+   Return a LMNUser data object.
+
+
+.. py:function:: get_user(username)
+
+   Get all details from a specific user.
+   Return a LMNUser data object.
+
+
+.. py:function:: get_results_search_user(query='', selection=[])
+
+   Get all details from a search on a specific user login scheme and a
+   selection of roles.
+   Return a list of LMNUser data object.
+
+
+.. py:data:: router
+
+.. py:function:: get_all_from_role(role='teacher')
+
+   Get all user from a same role.
+   Return a list of LMNUser data objects.
+
+
+.. py:data:: router
+
+.. py:function:: get_schoolclass(schoolclass)
+
+   Get all details from a specific schoolclass.
+   Return a LMNSchoolClass data object
+
+
+.. py:function:: get_all_students_from_schoolclass(schoolclass)
+
+   Get all students details from a specific schoolclass.
+   Return a list of LMNUser data objects.
+
+
+.. py:function:: get_all_schoolclasses()
+
+   Get all schoolclasses details.
+   Return a list of LMNSchoolClass data objects.
+
+
+.. py:function:: get_results_search_schoolclasses(query)
+
+   Get all details from a search about schoolclasses.
+   Return a list of LMNSchoolClass data objects.
+
+
+.. py:data:: router
+
+.. py:function:: get_project(project)
+
+   Get all details from a specific project.
+   Return a LMNProject data object
+
+
+.. py:function:: get_all_projects()
+
+   Get all projects details.
+   Return a list of LMNProject data objects.
+
+
+.. py:data:: router
+
+.. py:function:: get_all_schools()
+
+   Get all schools.
+   Return a LMNSchool data object
+
+
+.. py:function:: get_specific_school(school)
+
+   Get a specific school.
+   Return a LMNSchool data object
+
+
+.. py:data:: router
+
+.. py:data:: SCHOOL_MARKER
+   :value: '##SCHOOL_MARKER##'
+
+
+.. py:function:: get_all_devices()
+
+   Get all devices.
+   Return a a list of LMNDevice data object.
+
+
+.. py:function:: get_device(name)
+
+   Get all details from a specific device.
+   Return a LMNDevice data object.
+
+
+.. py:function:: get_results_search_device(query, selection=[])
+
+   Get all details from a search on a specific device scheme and having a specific role
+   (something like 'printer', 'server', ...).
+   Return a list of LMNDevice data object.
+
+
+.. py:function:: get_rooms()
+
+   Get all rooms under the Devices tree.
+
+
+.. py:function:: get_room(name)
+
+   Get a specific room under the Devices tree.
+
+
+.. py:data:: router
+
+.. py:data:: SCHOOL_MARKER
+   :value: '##SCHOOL_MARKER##'
+
+
+.. py:function:: get_all_units()
+
+   Get all units. The terminology "unit" was chosen in order to differenciate with a "group" from
+   sophomorix-group. A unit can be a schoolclass, a project, a group, etc ...
+   Return a list of LMNGroup data objects.
+
+
+.. py:function:: get_group(name='')
+
+   Get a group (meaning units with sophomorixType sophomorix-group) specified by its name.
+   Return a LMNGroup data object.
+
+
+.. py:function:: get_all_groups()
+
+   Get all groups (meaning units with sophomorixType sophomorix-group).
+   Return a list of LMNGroup data objects.
+
+
+.. py:function:: get_all_printers()
+
+   Get all printer groups.
+   Return a list of LMNGroup data objects.
+
+
+.. py:function:: get_printer(name='')
+
+   Get a specific printer.
+   Return a LMNGroup data object.
+
+
+.. py:data:: router
+
+.. py:function:: global_search(query='')
+
+   Search all cn containing the query search
+
+
+.. py:data:: router
+
+.. py:data:: SCHOOL_MARKER
+   :value: '##SCHOOL_MARKER##'
+
+
+.. py:function:: get_all_management_groups()
+
+   Get all management groups.
+   Return a list of LMNGroup data objects.
+
+
+.. py:function:: get_management_group(name='')
+
+   Get a management group specified by its name.
+   Return a LMNGroup data object.
+
+
+.. py:data:: router
+
+.. py:function:: get_from_dn(dn)
+
+   Search for a specific dn and retrieve a common LMNObject from it.
+
+
+.. py:data:: router
+
+.. py:data:: SCHOOL_MARKER
+   :value: '##SCHOOL_MARKER##'
+
+
+.. py:function:: get_all_ou()
+
+   Get all organizational units.
+   Return a a list of LMNOU data object.
+
+
+.. py:function:: get_devices_ou()
+
+   Get all details from the Devices organizational unit.
+   Return a LMNOU data object.
+
+
+.. py:function:: get_students_ou()
+
+   Get all details from the students organizational unit.
+   Return a LMNOU data object.
+   Quit the same as a schoolclasses request.
+
+

@@ -1,0 +1,19 @@
+linuxmusterTools.lmnconfig.sophomorix
+=====================================
+
+.. py:module:: linuxmusterTools.lmnconfig.sophomorix
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.lmnconfig.sophomorix.SophomorixConfig
+
+
+Module Contents
+---------------
+
+.. py:class:: SophomorixConfig(school='default-school')
+

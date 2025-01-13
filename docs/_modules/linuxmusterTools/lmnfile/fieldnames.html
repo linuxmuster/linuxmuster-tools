@@ -1,0 +1,172 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.lmnfile.fieldnames &mdash; linuxmuster-tools7 7.2.44 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.lmnfile.fieldnames</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for linuxmusterTools.lmnfile.fieldnames</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="csv_fieldnames">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnfile/index.html#linuxmusterTools.lmnfile.fieldnames.csv_fieldnames">[docs]</a>
+<span></span><span class="n">csv_fieldnames</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;devices&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;room&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;hostname&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;group&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;mac&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ip&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;officeKey&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;windowsKey&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;dhcpOptions&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;sophomorixRole&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;lmnReserved10&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;pxeFlag&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;lmnReserved12&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;lmnReserved13&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;lmnReserved14&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;sophomorixComment&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;options&#39;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s1">&#39;subnets&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;network&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;routerIp&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;beginRange&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;endRange&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;nameServer&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;nextServer&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;setupFlag&#39;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s1">&#39;students&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;class&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;last_name&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;first_name&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;birthday&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;id&#39;</span>
+    <span class="p">],</span>
+    <span class="s1">&#39;teachers&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;class&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;last_name&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;first_name&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;birthday&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;login&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;password&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;usertoken&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;quota&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;mailquota&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;reserved&#39;</span>
+    <span class="p">],</span>
+    <span class="s1">&#39;extrastudents&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;class&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;last_name&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;first_name&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;birthday&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;login&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;reserved&#39;</span>
+    <span class="p">],</span>
+    <span class="s1">&#39;extraclasses&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;course&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;base_name&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;count&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;birthday&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;gecos&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;password&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;removal_date&#39;</span>
+    <span class="p">]</span>
+<span class="p">}</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

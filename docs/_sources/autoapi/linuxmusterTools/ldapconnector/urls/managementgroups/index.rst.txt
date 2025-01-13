@@ -1,0 +1,30 @@
+linuxmusterTools.ldapconnector.urls.managementgroups
+====================================================
+
+.. py:module:: linuxmusterTools.ldapconnector.urls.managementgroups
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.urls.managementgroups.get_all_management_groups
+   linuxmusterTools.ldapconnector.urls.managementgroups.get_management_group
+
+
+Module Contents
+---------------
+
+.. py:function:: get_all_management_groups()
+
+   Get all management groups.
+   Return a list of LMNGroup data objects.
+
+
+.. py:function:: get_management_group(name='')
+
+   Get a management group specified by its name.
+   Return a LMNGroup data object.
+
+

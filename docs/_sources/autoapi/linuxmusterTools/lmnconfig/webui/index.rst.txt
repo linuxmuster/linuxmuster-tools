@@ -1,0 +1,19 @@
+linuxmusterTools.lmnconfig.webui
+================================
+
+.. py:module:: linuxmusterTools.lmnconfig.webui
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.lmnconfig.webui.CustomFieldsConfig
+
+
+Module Contents
+---------------
+
+.. py:class:: CustomFieldsConfig(school='default-school')
+

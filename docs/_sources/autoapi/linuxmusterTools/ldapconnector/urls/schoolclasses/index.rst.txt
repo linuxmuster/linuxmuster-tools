@@ -1,0 +1,44 @@
+linuxmusterTools.ldapconnector.urls.schoolclasses
+=================================================
+
+.. py:module:: linuxmusterTools.ldapconnector.urls.schoolclasses
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.urls.schoolclasses.get_schoolclass
+   linuxmusterTools.ldapconnector.urls.schoolclasses.get_all_students_from_schoolclass
+   linuxmusterTools.ldapconnector.urls.schoolclasses.get_all_schoolclasses
+   linuxmusterTools.ldapconnector.urls.schoolclasses.get_results_search_schoolclasses
+
+
+Module Contents
+---------------
+
+.. py:function:: get_schoolclass(schoolclass)
+
+   Get all details from a specific schoolclass.
+   Return a LMNSchoolClass data object
+
+
+.. py:function:: get_all_students_from_schoolclass(schoolclass)
+
+   Get all students details from a specific schoolclass.
+   Return a list of LMNUser data objects.
+
+
+.. py:function:: get_all_schoolclasses()
+
+   Get all schoolclasses details.
+   Return a list of LMNSchoolClass data objects.
+
+
+.. py:function:: get_results_search_schoolclasses(query)
+
+   Get all details from a search about schoolclasses.
+   Return a list of LMNSchoolClass data objects.
+
+

@@ -1,0 +1,598 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.ldapconnector.models.lmnuser &mdash; linuxmuster-tools7 7.2.44 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ldapconnector.html">linuxmusterTools.ldapconnector</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.ldapconnector.models.lmnuser</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for linuxmusterTools.ldapconnector.models.lmnuser</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">InitVar</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ldap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.lmnsession</span><span class="w"> </span><span class="kn">import</span> <span class="n">LMNSession</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">LMNParent</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">WEBUI_IMPORT</span>
+
+
+<span class="nd">@dataclass</span>
+<div class="viewcode-block" id="LMNUser">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LMNUser</span><span class="p">(</span><span class="n">LMNParent</span><span class="p">):</span>
+<div class="viewcode-block" id="LMNUser.cn">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.cn">[docs]</a>
+    <span class="n">cn</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.custom_fields_config">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.custom_fields_config">[docs]</a>
+    <span class="n">custom_fields_config</span><span class="p">:</span> <span class="n">InitVar</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="LMNUser.displayName">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.displayName">[docs]</a>
+    <span class="n">displayName</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.distinguishedName">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.distinguishedName">[docs]</a>
+    <span class="n">distinguishedName</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.givenName">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.givenName">[docs]</a>
+    <span class="n">givenName</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.homeDirectory">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.homeDirectory">[docs]</a>
+    <span class="n">homeDirectory</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.homeDrive">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.homeDrive">[docs]</a>
+    <span class="n">homeDrive</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.mail">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.mail">[docs]</a>
+    <span class="n">mail</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNUser.memberOf">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.memberOf">[docs]</a>
+    <span class="n">memberOf</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNUser.name">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.name">[docs]</a>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.objectClass">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.objectClass">[docs]</a>
+    <span class="n">objectClass</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNUser.proxyAddresses">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.proxyAddresses">[docs]</a>
+    <span class="n">proxyAddresses</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNUser.sAMAccountName">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sAMAccountName">[docs]</a>
+    <span class="n">sAMAccountName</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sAMAccountType">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sAMAccountType">[docs]</a>
+    <span class="n">sAMAccountType</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sn">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sn">[docs]</a>
+    <span class="n">sn</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixAdminClass">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixAdminClass">[docs]</a>
+    <span class="n">sophomorixAdminClass</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixAdminFile">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixAdminFile">[docs]</a>
+    <span class="n">sophomorixAdminFile</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixBirthdate">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixBirthdate">[docs]</a>
+    <span class="n">sophomorixBirthdate</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixCloudQuotaCalculated">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixCloudQuotaCalculated">[docs]</a>
+    <span class="n">sophomorixCloudQuotaCalculated</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixComment">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixComment">[docs]</a>
+    <span class="n">sophomorixComment</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixCreationDate">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixCreationDate">[docs]</a>
+    <span class="n">sophomorixCreationDate</span><span class="p">:</span> <span class="nb">str</span> <span class="c1"># datetime</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixCustom1">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixCustom1">[docs]</a>
+    <span class="n">sophomorixCustom1</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixCustom2">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixCustom2">[docs]</a>
+    <span class="n">sophomorixCustom2</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixCustom3">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixCustom3">[docs]</a>
+    <span class="n">sophomorixCustom3</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixCustom4">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixCustom4">[docs]</a>
+    <span class="n">sophomorixCustom4</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixCustom5">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixCustom5">[docs]</a>
+    <span class="n">sophomorixCustom5</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixCustomMulti1">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixCustomMulti1">[docs]</a>
+    <span class="n">sophomorixCustomMulti1</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixCustomMulti2">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixCustomMulti2">[docs]</a>
+    <span class="n">sophomorixCustomMulti2</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixCustomMulti3">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixCustomMulti3">[docs]</a>
+    <span class="n">sophomorixCustomMulti3</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixCustomMulti4">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixCustomMulti4">[docs]</a>
+    <span class="n">sophomorixCustomMulti4</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixCustomMulti5">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixCustomMulti5">[docs]</a>
+    <span class="n">sophomorixCustomMulti5</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixDeactivationDate">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixDeactivationDate">[docs]</a>
+    <span class="n">sophomorixDeactivationDate</span><span class="p">:</span> <span class="nb">str</span> <span class="c1"># datetime</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixExamMode">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixExamMode">[docs]</a>
+    <span class="n">sophomorixExamMode</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixExitAdminClass">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixExitAdminClass">[docs]</a>
+    <span class="n">sophomorixExitAdminClass</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixFirstnameASCII">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixFirstnameASCII">[docs]</a>
+    <span class="n">sophomorixFirstnameASCII</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixFirstnameInitial">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixFirstnameInitial">[docs]</a>
+    <span class="n">sophomorixFirstnameInitial</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixFirstPassword">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixFirstPassword">[docs]</a>
+    <span class="n">sophomorixFirstPassword</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixIntrinsic2">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixIntrinsic2">[docs]</a>
+    <span class="n">sophomorixIntrinsic2</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixIntrinsic3">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixIntrinsic3">[docs]</a>
+    <span class="n">sophomorixIntrinsic3</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixMailQuotaCalculated">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixMailQuotaCalculated">[docs]</a>
+    <span class="n">sophomorixMailQuotaCalculated</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixMailQuota">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixMailQuota">[docs]</a>
+    <span class="n">sophomorixMailQuota</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixQuota">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixQuota">[docs]</a>
+    <span class="n">sophomorixQuota</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixRole">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixRole">[docs]</a>
+    <span class="n">sophomorixRole</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixSchoolname">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixSchoolname">[docs]</a>
+    <span class="n">sophomorixSchoolname</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixSchoolPrefix">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixSchoolPrefix">[docs]</a>
+    <span class="n">sophomorixSchoolPrefix</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixSessions">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixSessions">[docs]</a>
+    <span class="n">sophomorixSessions</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixStatus">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixStatus">[docs]</a>
+    <span class="n">sophomorixStatus</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixSurnameASCII">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixSurnameASCII">[docs]</a>
+    <span class="n">sophomorixSurnameASCII</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixSurnameInitial">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixSurnameInitial">[docs]</a>
+    <span class="n">sophomorixSurnameInitial</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixTolerationDate">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixTolerationDate">[docs]</a>
+    <span class="n">sophomorixTolerationDate</span><span class="p">:</span> <span class="nb">str</span> <span class="c1"># datetime</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixUnid">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixUnid">[docs]</a>
+    <span class="n">sophomorixUnid</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixUserToken">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixUserToken">[docs]</a>
+    <span class="n">sophomorixUserToken</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixWebuiDashboard">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixWebuiDashboard">[docs]</a>
+    <span class="n">sophomorixWebuiDashboard</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNUser.sophomorixWebuiPermissionsCalculated">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.sophomorixWebuiPermissionsCalculated">[docs]</a>
+    <span class="n">sophomorixWebuiPermissionsCalculated</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNUser.thumbnailPhoto">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.thumbnailPhoto">[docs]</a>
+    <span class="n">thumbnailPhoto</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.unixHomeDirectory">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.unixHomeDirectory">[docs]</a>
+    <span class="n">unixHomeDirectory</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.whenChanged">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.whenChanged">[docs]</a>
+    <span class="n">whenChanged</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNUser.dn">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.dn">[docs]</a>
+    <span class="n">dn</span><span class="p">:</span>             <span class="nb">str</span>  <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LMNUser.customFields">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.customFields">[docs]</a>
+    <span class="n">customFields</span><span class="p">:</span>   <span class="nb">dict</span>  <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LMNUser.examMode">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.examMode">[docs]</a>
+    <span class="n">examMode</span><span class="p">:</span>       <span class="nb">bool</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LMNUser.examTeacher">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.examTeacher">[docs]</a>
+    <span class="n">examTeacher</span><span class="p">:</span>    <span class="nb">str</span>  <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LMNUser.examBaseCn">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.examBaseCn">[docs]</a>
+    <span class="n">examBaseCn</span><span class="p">:</span>     <span class="nb">str</span>  <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LMNUser.internet">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.internet">[docs]</a>
+    <span class="n">internet</span><span class="p">:</span>       <span class="nb">bool</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LMNUser.intranet">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.intranet">[docs]</a>
+    <span class="n">intranet</span><span class="p">:</span>       <span class="nb">bool</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LMNUser.isAdmin">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.isAdmin">[docs]</a>
+    <span class="n">isAdmin</span><span class="p">:</span>        <span class="nb">bool</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LMNUser.lmnsessions">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.lmnsessions">[docs]</a>
+    <span class="n">lmnsessions</span><span class="p">:</span>    <span class="nb">list</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LMNUser.permissions">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.permissions">[docs]</a>
+    <span class="n">permissions</span><span class="p">:</span>    <span class="nb">list</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LMNUser.printers">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.printers">[docs]</a>
+    <span class="n">printers</span><span class="p">:</span>       <span class="nb">list</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LMNUser.printing">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.printing">[docs]</a>
+    <span class="n">printing</span><span class="p">:</span>       <span class="nb">bool</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LMNUser.projects">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.projects">[docs]</a>
+    <span class="n">projects</span><span class="p">:</span>       <span class="nb">list</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LMNUser.schoolclasses">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.schoolclasses">[docs]</a>
+    <span class="n">schoolclasses</span><span class="p">:</span>  <span class="nb">list</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LMNUser.school">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.school">[docs]</a>
+    <span class="n">school</span><span class="p">:</span>         <span class="nb">str</span>  <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LMNUser.webfilter">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.webfilter">[docs]</a>
+    <span class="n">webfilter</span><span class="p">:</span>      <span class="nb">bool</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LMNUser.wifi">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.wifi">[docs]</a>
+    <span class="n">wifi</span><span class="p">:</span>           <span class="nb">bool</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="LMNUser._check_schoolclass_number">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser._check_schoolclass_number">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_schoolclass_number</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\d+&#39;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">10000000</span> <span class="c1"># just a big number to come after all schoolclasses</span></div>
+
+
+<div class="viewcode-block" id="LMNUser.extract_schoolclasses">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.extract_schoolclasses">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_schoolclasses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">membership</span><span class="p">):</span>
+        <span class="n">schoolclasses</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">dn</span> <span class="ow">in</span> <span class="n">membership</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;OU=Students&#39;</span> <span class="ow">in</span> <span class="n">dn</span><span class="p">:</span>
+                <span class="n">schoolclass</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">common_name</span><span class="p">(</span><span class="n">dn</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">schoolclass</span><span class="p">:</span>
+                    <span class="n">schoolclasses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">schoolclass</span><span class="p">)</span>
+        <span class="n">schoolclasses</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">schoolclasses</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_check_schoolclass_number</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">s</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">schoolclasses</span></div>
+
+
+<div class="viewcode-block" id="LMNUser.extract_projects">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.extract_projects">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_projects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">membership</span><span class="p">):</span>
+        <span class="n">projects</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">dn</span> <span class="ow">in</span> <span class="n">membership</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;OU=Projects&#39;</span> <span class="ow">in</span> <span class="n">dn</span><span class="p">:</span>
+                <span class="n">project</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">common_name</span><span class="p">(</span><span class="n">dn</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">project</span><span class="p">:</span>
+                    <span class="n">projects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">project</span><span class="p">)</span>
+        <span class="n">projects</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">projects</span></div>
+
+
+<div class="viewcode-block" id="LMNUser.extract_printers">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.extract_printers">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_printers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">membership</span><span class="p">):</span>
+        <span class="n">printers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">dn</span> <span class="ow">in</span> <span class="n">membership</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;OU=printer-groups&#39;</span> <span class="ow">in</span> <span class="n">dn</span><span class="p">:</span>
+                <span class="n">printer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">common_name</span><span class="p">(</span><span class="n">dn</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">printer</span><span class="p">:</span>
+                    <span class="n">printers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">printer</span><span class="p">)</span>
+        <span class="n">printers</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">printers</span></div>
+
+
+<div class="viewcode-block" id="LMNUser.extract_management">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.extract_management">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_management</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">school_prefix</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sophomorixSchoolname</span> <span class="o">!=</span> <span class="s1">&#39;default-school&#39;</span><span class="p">:</span>
+            <span class="n">school_prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sophomorixSchoolname</span><span class="si">}</span><span class="s2">-&quot;</span>
+
+        <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;internet&#39;</span><span class="p">,</span> <span class="s1">&#39;intranet&#39;</span><span class="p">,</span> <span class="s1">&#39;printing&#39;</span><span class="p">,</span> <span class="s1">&#39;webfilter&#39;</span><span class="p">,</span> <span class="s1">&#39;wifi&#39;</span><span class="p">]:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">dn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">memberOf</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">dn</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CN=</span><span class="si">{</span><span class="n">school_prefix</span><span class="si">}{</span><span class="n">group</span><span class="si">}</span><span class="s2">,OU=Management&quot;</span><span class="p">):</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNUser.parse_permissions">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.parse_permissions">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">permissions</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sophomorixWebuiPermissionsCalculated</span><span class="p">:</span>
+            <span class="n">module</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">perm</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;: &#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">permissions</span><span class="p">[</span><span class="n">module</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span> <span class="o">==</span> <span class="s1">&#39;true&#39;</span></div>
+
+
+<div class="viewcode-block" id="LMNUser.parse_sessions">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.parse_sessions">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_sessions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lmnsessions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sophomorixSessions</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+            <span class="n">members</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">else</span> <span class="p">[]</span>
+            <span class="n">membersCount</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">members</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lmnsessions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">LMNSession</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">members</span><span class="p">,</span> <span class="n">membersCount</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="LMNUser.parse_exam">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.parse_exam">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_exam</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">sophomorixExamMode</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">examMode</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">examTeacher</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">examBaseCn</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">sophomorixExamMode</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;---&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">examMode</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">examTeacher</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">examBaseCn</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">examMode</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">examTeacher</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sophomorixExamMode</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">examBaseCn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-exam&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNUser.create_custom_fields_objects">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.create_custom_fields_objects">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_custom_fields_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">custom_config</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">customFields</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">proxy_add</span> <span class="o">=</span> <span class="n">custom_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;proxyAddresses&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sophomorixRole</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;editable&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;show&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">:</span><span class="s1">&#39;&#39;</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">customFields</span><span class="p">[</span><span class="s1">&#39;proxyAddresses&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">proxy_add</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;canRead&#39;</span><span class="p">:</span> <span class="n">proxy_add</span><span class="p">[</span><span class="s1">&#39;show&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;canWrite&#39;</span><span class="p">:</span> <span class="n">proxy_add</span><span class="p">[</span><span class="s1">&#39;editable&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxyAddresses</span>
+        <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">custom_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;custom&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sophomorixRole</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="p">{</span><span class="s1">&#39;editable&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;show&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">:</span><span class="s1">&#39;&#39;</span><span class="p">})</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">customFields</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;sophomorixCustom</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;canRead&#39;</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;show&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;canWrite&#39;</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;editable&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;sophomorixCustom</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">custom_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;customMulti&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sophomorixRole</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="p">{</span><span class="s1">&#39;editable&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;show&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">})</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">customFields</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;sophomorixCustomMulti</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;canRead&#39;</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;show&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;canWrite&#39;</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;editable&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;sophomorixCustomMulti</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="LMNUser.__post_init__">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.__post_init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">custom_fields_config</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">schoolclasses</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_schoolclasses</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">memberOf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projects</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_projects</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">memberOf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">printers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_printers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">memberOf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distinguishedName</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">school</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sophomorixSchoolname</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extract_management</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parse_permissions</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parse_sessions</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parse_exam</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">WEBUI_IMPORT</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_custom_fields_objects</span><span class="p">(</span><span class="n">custom_fields_config</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">customFields</span> <span class="o">=</span> <span class="p">{}</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">isAdmin</span> <span class="o">=</span> <span class="s2">&quot;administrator&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sophomorixRole</span></div>
+
+
+<div class="viewcode-block" id="LMNUser.test_password">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.test_password">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_password</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">l</span> <span class="o">=</span> <span class="n">ldap</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;ldap://localhost:389/&quot;</span><span class="p">)</span>
+        <span class="n">l</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="n">ldap</span><span class="o">.</span><span class="n">OPT_REFERRALS</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">l</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="n">ldap</span><span class="o">.</span><span class="n">OPT_RESTART</span><span class="p">,</span> <span class="n">ldap</span><span class="o">.</span><span class="n">OPT_ON</span><span class="p">)</span>
+        <span class="n">l</span><span class="o">.</span><span class="n">protocol_version</span> <span class="o">=</span> <span class="n">ldap</span><span class="o">.</span><span class="n">VERSION3</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">l</span><span class="o">.</span><span class="n">bind_s</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dn</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="n">ldap</span><span class="o">.</span><span class="n">INVALID_CREDENTIALS</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="LMNUser.test_first_password">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.html#linuxmusterTools.ldapconnector.models.LMNUser.test_first_password">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_first_password</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sophomorixFirstPassword</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_password</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sophomorixFirstPassword</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;Insufficient permissions to read first password from LDAP.&#39;</span></div>
+</div>
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

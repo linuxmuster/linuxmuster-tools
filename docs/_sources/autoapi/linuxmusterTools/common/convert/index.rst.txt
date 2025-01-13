@@ -1,0 +1,30 @@
+linuxmusterTools.common.convert
+===============================
+
+.. py:module:: linuxmusterTools.common.convert
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   linuxmusterTools.common.convert.format_size
+   linuxmusterTools.common.convert.convert_sophomorix_time
+
+
+Module Contents
+---------------
+
+.. py:function:: format_size(num, suffix='B', base=2)
+
+.. py:function:: convert_sophomorix_time(t)
+
+   Convert sophomorix datetime to readable info.
+
+   :param t: Sophomorix date like 20081030125303.0Z
+   :type t: basestring
+   :return: Human-readable date like 30 Oct 2008 12:53:30
+   :rtype:
+
+

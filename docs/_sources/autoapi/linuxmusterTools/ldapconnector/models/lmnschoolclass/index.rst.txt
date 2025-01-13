@@ -1,0 +1,143 @@
+linuxmusterTools.ldapconnector.models.lmnschoolclass
+====================================================
+
+.. py:module:: linuxmusterTools.ldapconnector.models.lmnschoolclass
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.models.lmnschoolclass.LMNSchoolClass
+
+
+Module Contents
+---------------
+
+.. py:class:: LMNSchoolClass
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+
+
+   Common parent class to gather common methods.
+
+
+   .. py:attribute:: cn
+      :type:  str
+
+
+   .. py:attribute:: description
+      :type:  str
+
+
+   .. py:attribute:: displayName
+      :type:  str
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+   .. py:attribute:: mail
+      :type:  list
+
+
+   .. py:attribute:: member
+      :type:  list
+
+
+   .. py:attribute:: memberOf
+      :type:  list
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:attribute:: sAMAccountName
+      :type:  str
+
+
+   .. py:attribute:: sAMAccountType
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAddMailQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixAddQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixAdmins
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCreationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixHidden
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixJoinable
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailAlias
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailList
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMaxMembers
+      :type:  int
+
+
+   .. py:attribute:: sophomorixMembers
+      :type:  list
+
+
+   .. py:attribute:: sophomorixQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixSchoolname
+      :type:  str
+
+
+   .. py:attribute:: sophomorixStatus
+      :type:  str
+
+
+   .. py:attribute:: sophomorixType
+      :type:  str
+
+
+   .. py:attribute:: membersCount
+      :type:  int
+
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:method:: __post_init__()
+
+
+   .. py:method:: get_first_passwords()
+
+

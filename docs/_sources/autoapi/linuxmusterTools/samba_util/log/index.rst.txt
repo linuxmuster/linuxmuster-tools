@@ -1,0 +1,45 @@
+linuxmusterTools.samba_util.log
+===============================
+
+.. py:module:: linuxmusterTools.samba_util.log
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.samba_util.log.SAMBA_LOG
+   linuxmusterTools.samba_util.log.SAMBA_LOG_OLD
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   linuxmusterTools.samba_util.log.check_audit_level
+   linuxmusterTools.samba_util.log.format_log_data
+   linuxmusterTools.samba_util.log.parse_log_content
+   linuxmusterTools.samba_util.log.last_login
+
+
+Module Contents
+---------------
+
+.. py:data:: SAMBA_LOG
+   :value: '/var/log/samba/log.samba'
+
+
+.. py:data:: SAMBA_LOG_OLD
+   :value: '/var/log/samba/log.samba.1'
+
+
+.. py:function:: check_audit_level()
+
+.. py:function:: format_log_data(entry)
+
+.. py:function:: parse_log_content(content, pattern)
+
+.. py:function:: last_login(pattern, include_gz=False)
+

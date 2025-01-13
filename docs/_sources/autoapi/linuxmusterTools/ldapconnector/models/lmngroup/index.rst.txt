@@ -1,0 +1,141 @@
+linuxmusterTools.ldapconnector.models.lmngroup
+==============================================
+
+.. py:module:: linuxmusterTools.ldapconnector.models.lmngroup
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup
+
+
+Module Contents
+---------------
+
+.. py:class:: LMNGroup
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+
+
+   Common parent class to gather common methods.
+
+
+   .. py:attribute:: cn
+      :type:  str
+
+
+   .. py:attribute:: description
+      :type:  str
+
+
+   .. py:attribute:: displayName
+      :type:  str
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+   .. py:attribute:: member
+      :type:  list
+
+
+   .. py:attribute:: memberOf
+      :type:  list
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:attribute:: proxyAddresses
+      :type:  list
+
+
+   .. py:attribute:: sAMAccountName
+      :type:  str
+
+
+   .. py:attribute:: sAMAccountType
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAdminClass
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCreationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixHidden
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti1
+      :type:  list
+
+
+   .. py:attribute:: sophomorixJoinable
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMembers
+      :type:  list
+
+
+   .. py:attribute:: sophomorixRole
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSchoolname
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSchoolPrefix
+      :type:  str
+
+
+   .. py:attribute:: sophomorixStatus
+      :type:  str
+
+
+   .. py:attribute:: sophomorixType
+      :type:  str
+
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:attribute:: all_members
+      :type:  list
+
+
+   .. py:attribute:: membersCount
+      :type:  int
+
+
+   .. py:method:: __post_init__()
+
+
+   .. py:method:: get_all_members()
+
+      Set a members and admins list by recursively scanning all groups and their members which are members
+      or admins of this project.
+
+      This is not called as post init because of nested projects. So it's necessary to call this method
+      afterwards:
+
+      p = lr.get('/projects/p_test', dict=False)
+      p.get_all_members()
+
+
+

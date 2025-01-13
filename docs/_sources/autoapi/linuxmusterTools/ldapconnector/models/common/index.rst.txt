@@ -1,0 +1,72 @@
+linuxmusterTools.ldapconnector.models.common
+============================================
+
+.. py:module:: linuxmusterTools.ldapconnector.models.common
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.models.common.LMNParent
+   linuxmusterTools.ldapconnector.models.common.LMNOU
+
+
+Module Contents
+---------------
+
+.. py:class:: LMNParent
+
+   Common parent class to gather common methods.
+
+
+   .. py:method:: asdict()
+
+
+   .. py:method:: asjson()
+
+
+   .. py:method:: split_dn(dn)
+      :staticmethod:
+
+
+
+   .. py:method:: common_name(dn)
+
+
+.. py:class:: LMNOU
+
+   Bases: :py:obj:`LMNParent`
+
+
+   Common parent class to gather common methods.
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: objectCategory
+      :type:  list
+
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:attribute:: ou
+      :type:  str
+
+
+   .. py:method:: __post_init__()
+
+

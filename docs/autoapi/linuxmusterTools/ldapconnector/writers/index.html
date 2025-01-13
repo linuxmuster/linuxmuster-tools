@@ -1,0 +1,1688 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.ldapconnector.writers &mdash; linuxmuster-tools7 7.2.44 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="linuxmusterTools.ldapconnector.writers.device" href="device/index.html" />
+    <link rel="prev" title="linuxmusterTools.ldapconnector.urls.users" href="../urls/users/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">linuxmusterTools</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../../common/index.html">linuxmusterTools.common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../devices/index.html">linuxmusterTools.devices</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html">linuxmusterTools.ldapconnector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../linbo/index.html">linuxmusterTools.linbo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../lmnconfig/index.html">linuxmusterTools.lmnconfig</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../lmnfile/index.html">linuxmusterTools.lmnfile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../quotas/index.html">linuxmusterTools.quotas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../samba_util/index.html">linuxmusterTools.samba_util</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">linuxmusterTools</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">linuxmusterTools.ldapconnector</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.ldapconnector.writers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/autoapi/linuxmusterTools/ldapconnector/writers/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-linuxmusterTools.ldapconnector.writers">
+<span id="linuxmustertools-ldapconnector-writers"></span><h1>linuxmusterTools.ldapconnector.writers<a class="headerlink" href="#module-linuxmusterTools.ldapconnector.writers" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="device/index.html">linuxmusterTools.ldapconnector.writers.device</a></li>
+<li class="toctree-l1"><a class="reference internal" href="group/index.html">linuxmusterTools.ldapconnector.writers.group</a></li>
+<li class="toctree-l1"><a class="reference internal" href="managementgroup/index.html">linuxmusterTools.ldapconnector.writers.managementgroup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="object/index.html">linuxmusterTools.ldapconnector.writers.object</a></li>
+<li class="toctree-l1"><a class="reference internal" href="printer/index.html">linuxmusterTools.ldapconnector.writers.printer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project/index.html">linuxmusterTools.ldapconnector.writers.project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="schoolclass/index.html">linuxmusterTools.ldapconnector.writers.schoolclass</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user/index.html">linuxmusterTools.ldapconnector.writers.user</a></li>
+</ul>
+</div>
+</section>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id65" title="linuxmusterTools.ldapconnector.writers.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id65" title="linuxmusterTools.ldapconnector.writers.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id65" title="linuxmusterTools.ldapconnector.writers.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id65" title="linuxmusterTools.ldapconnector.writers.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id65" title="linuxmusterTools.ldapconnector.writers.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.Validator" title="linuxmusterTools.ldapconnector.writers.Validator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Validator</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id65" title="linuxmusterTools.ldapconnector.writers.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id65" title="linuxmusterTools.ldapconnector.writers.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.DeviceWriter" title="linuxmusterTools.ldapconnector.writers.DeviceWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DeviceWriter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.MgmtGroupWriter" title="linuxmusterTools.ldapconnector.writers.MgmtGroupWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MgmtGroupWriter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.ObjectWriter" title="linuxmusterTools.ldapconnector.writers.ObjectWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObjectWriter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.PrinterWriter" title="linuxmusterTools.ldapconnector.writers.PrinterWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PrinterWriter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.ProjectWriter" title="linuxmusterTools.ldapconnector.writers.ProjectWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ProjectWriter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.SchoolclassWriter" title="linuxmusterTools.ldapconnector.writers.SchoolclassWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SchoolclassWriter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.UserWriter" title="linuxmusterTools.ldapconnector.writers.UserWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UserWriter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id55" title="linuxmusterTools.ldapconnector.writers.LdapWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LdapWriter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.LMNUserWriter" title="linuxmusterTools.ldapconnector.writers.LMNUserWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNUserWriter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id55" title="linuxmusterTools.ldapconnector.writers.LdapWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LdapWriter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.LMNPrinterWriter" title="linuxmusterTools.ldapconnector.writers.LMNPrinterWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNPrinterWriter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id55" title="linuxmusterTools.ldapconnector.writers.LdapWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LdapWriter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.LMNMGMTGroupWriter" title="linuxmusterTools.ldapconnector.writers.LMNMGMTGroupWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNMGMTGroupWriter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id55" title="linuxmusterTools.ldapconnector.writers.LdapWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LdapWriter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.LMNProjectWriter" title="linuxmusterTools.ldapconnector.writers.LMNProjectWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNProjectWriter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id55" title="linuxmusterTools.ldapconnector.writers.LdapWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LdapWriter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id66" title="linuxmusterTools.ldapconnector.writers.LMNObjectWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNObjectWriter</span></code></a></p></td>
+<td><p>Search per dn, may not be the best solution.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.LMNRoom" title="linuxmusterTools.ldapconnector.writers.LMNRoom"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNRoom</span></code></a></p></td>
+<td><p>ObjectClass group for a room.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.LMNDeviceWriter" title="linuxmusterTools.ldapconnector.writers.LMNDeviceWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNDeviceWriter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id55" title="linuxmusterTools.ldapconnector.writers.LdapWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LdapWriter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.LMNSchoolclassWriter" title="linuxmusterTools.ldapconnector.writers.LMNSchoolclassWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNSchoolclassWriter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id55" title="linuxmusterTools.ldapconnector.writers.LdapWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LdapWriter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id66" title="linuxmusterTools.ldapconnector.writers.LMNObjectWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNObjectWriter</span></code></a></p></td>
+<td><p>Search per dn, may not be the best solution.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="package-contents">
+<h2>Package Contents<a class="headerlink" href="#package-contents" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LdapWriter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">LdapWriter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LdapWriter" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LdapWriter.lc">
+<span class="sig-name descname"><span class="pre">lc</span></span><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LdapWriter.lc" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LdapWriter.lr">
+<span class="sig-name descname"><span class="pre">lr</span></span><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LdapWriter.lr" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LdapWriter._setattr">
+<span class="sig-name descname"><span class="pre">_setattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._setattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LdapWriter._setattr" title="Link to this definition"></a></dt>
+<dd><p>Set one or more attributes only for a ldap entry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_details</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – object to modify (project, …)</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Dict of attributes:values to write</p></li>
+<li><p><strong>add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Define if the attribute should be added, even if the</p></li>
+</ul>
+</dd>
+</dl>
+<p>attribute is already present</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LdapWriter._delattr">
+<span class="sig-name descname"><span class="pre">_delattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._delattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LdapWriter._delattr" title="Link to this definition"></a></dt>
+<dd><p>Delete one or more attributes only for a ldap entry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>basestring</em>) – cn</p></li>
+<li><p><strong>objecttype</strong> (<em>basestring</em>) – user, device, etc … see OBJECT_MAPPING above</p></li>
+<li><p><strong>data</strong> – Dict of attributes:values to delete.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Value may be empty if the attribute is not ambiguous
+:type data: dict</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LdapWriter._rename">
+<span class="sig-name descname"><span class="pre">_rename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_cn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._rename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LdapWriter._rename" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>old_dn</strong></p></li>
+<li><p><strong>new_cn</strong></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LdapWriter._move">
+<span class="sig-name descname"><span class="pre">_move</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_ou</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LdapWriter._move" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>old_dn</strong></p></li>
+<li><p><strong>new_dn</strong></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LdapWriter._add_ou">
+<span class="sig-name descname"><span class="pre">_add_ou</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._add_ou"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LdapWriter._add_ou" title="Link to this definition"></a></dt>
+<dd><p>Create an organisational unit with the given dn.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dn</strong> (<em>basestring</em>) – dn of the object to modify</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LdapWriter._add_group">
+<span class="sig-name descname"><span class="pre">_add_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ldif</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._add_group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LdapWriter._add_group" title="Link to this definition"></a></dt>
+<dd><p>Create a group with the given dn.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dn</strong> (<em>basestring</em>) – dn of the object to modify</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LdapWriter._del">
+<span class="sig-name descname"><span class="pre">_del</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._del"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LdapWriter._del" title="Link to this definition"></a></dt>
+<dd><p>Delete an Ldap object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dn</strong> (<em>basestring</em>) – dn of the object to delete</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.router">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">router</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/ldaprouter.html#router"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.router" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNUserWriter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">LMNUserWriter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNUserWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNUserWriter" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNUserWriter.lw">
+<span class="sig-name descname"><span class="pre">lw</span></span><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNUserWriter.lw" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNUserWriter.lr">
+<span class="sig-name descname"><span class="pre">lr</span></span><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNUserWriter.lr" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNUserWriter.setattr">
+<span class="sig-name descname"><span class="pre">setattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNUserWriter.setattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNUserWriter.setattr" title="Link to this definition"></a></dt>
+<dd><p>Middleware to check if the object exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>basestring</em>) – cn of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNUserWriter.delattr">
+<span class="sig-name descname"><span class="pre">delattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNUserWriter.delattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNUserWriter.delattr" title="Link to this definition"></a></dt>
+<dd><p>Middleware to check if the object exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>basestring</em>) – cn of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="id0">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">LdapWriter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">lc</span></span><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">lr</span></span><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">_setattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._setattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Link to this definition"></a></dt>
+<dd><p>Set one or more attributes only for a ldap entry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_details</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – object to modify (project, …)</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Dict of attributes:values to write</p></li>
+<li><p><strong>add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Define if the attribute should be added, even if the</p></li>
+</ul>
+</dd>
+</dl>
+<p>attribute is already present</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">_delattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._delattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Link to this definition"></a></dt>
+<dd><p>Delete one or more attributes only for a ldap entry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>basestring</em>) – cn</p></li>
+<li><p><strong>objecttype</strong> (<em>basestring</em>) – user, device, etc … see OBJECT_MAPPING above</p></li>
+<li><p><strong>data</strong> – Dict of attributes:values to delete.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Value may be empty if the attribute is not ambiguous
+:type data: dict</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">_rename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_cn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._rename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id5" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>old_dn</strong></p></li>
+<li><p><strong>new_cn</strong></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">_move</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_ou</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id6" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>old_dn</strong></p></li>
+<li><p><strong>new_dn</strong></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">_add_ou</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._add_ou"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id7" title="Link to this definition"></a></dt>
+<dd><p>Create an organisational unit with the given dn.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dn</strong> (<em>basestring</em>) – dn of the object to modify</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">_add_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ldif</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._add_group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id8" title="Link to this definition"></a></dt>
+<dd><p>Create a group with the given dn.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dn</strong> (<em>basestring</em>) – dn of the object to modify</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">_del</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._del"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id9" title="Link to this definition"></a></dt>
+<dd><p>Delete an Ldap object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dn</strong> (<em>basestring</em>) – dn of the object to delete</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">router</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/ldaprouter.html#router"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id10" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNPrinterWriter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">LMNPrinterWriter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/printer.html#LMNPrinterWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNPrinterWriter" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNPrinterWriter.lw">
+<span class="sig-name descname"><span class="pre">lw</span></span><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNPrinterWriter.lw" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNPrinterWriter.lr">
+<span class="sig-name descname"><span class="pre">lr</span></span><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNPrinterWriter.lr" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNPrinterWriter.setattr">
+<span class="sig-name descname"><span class="pre">setattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/printer.html#LMNPrinterWriter.setattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNPrinterWriter.setattr" title="Link to this definition"></a></dt>
+<dd><p>Middleware to check if the object exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>basestring</em>) – cn of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNPrinterWriter.delattr">
+<span class="sig-name descname"><span class="pre">delattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/printer.html#LMNPrinterWriter.delattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNPrinterWriter.delattr" title="Link to this definition"></a></dt>
+<dd><p>Middleware to check if the object exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>basestring</em>) – cn of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="id11">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">LdapWriter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id11" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="id12">
+<span class="sig-name descname"><span class="pre">lc</span></span><a class="headerlink" href="#id12" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id13">
+<span class="sig-name descname"><span class="pre">lr</span></span><a class="headerlink" href="#id13" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id14">
+<span class="sig-name descname"><span class="pre">_setattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._setattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id14" title="Link to this definition"></a></dt>
+<dd><p>Set one or more attributes only for a ldap entry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_details</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – object to modify (project, …)</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Dict of attributes:values to write</p></li>
+<li><p><strong>add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Define if the attribute should be added, even if the</p></li>
+</ul>
+</dd>
+</dl>
+<p>attribute is already present</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id15">
+<span class="sig-name descname"><span class="pre">_delattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._delattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id15" title="Link to this definition"></a></dt>
+<dd><p>Delete one or more attributes only for a ldap entry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>basestring</em>) – cn</p></li>
+<li><p><strong>objecttype</strong> (<em>basestring</em>) – user, device, etc … see OBJECT_MAPPING above</p></li>
+<li><p><strong>data</strong> – Dict of attributes:values to delete.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Value may be empty if the attribute is not ambiguous
+:type data: dict</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id16">
+<span class="sig-name descname"><span class="pre">_rename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_cn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._rename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id16" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>old_dn</strong></p></li>
+<li><p><strong>new_cn</strong></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id17">
+<span class="sig-name descname"><span class="pre">_move</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_ou</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id17" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>old_dn</strong></p></li>
+<li><p><strong>new_dn</strong></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id18">
+<span class="sig-name descname"><span class="pre">_add_ou</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._add_ou"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id18" title="Link to this definition"></a></dt>
+<dd><p>Create an organisational unit with the given dn.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dn</strong> (<em>basestring</em>) – dn of the object to modify</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id19">
+<span class="sig-name descname"><span class="pre">_add_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ldif</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._add_group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id19" title="Link to this definition"></a></dt>
+<dd><p>Create a group with the given dn.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dn</strong> (<em>basestring</em>) – dn of the object to modify</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id20">
+<span class="sig-name descname"><span class="pre">_del</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._del"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id20" title="Link to this definition"></a></dt>
+<dd><p>Delete an Ldap object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dn</strong> (<em>basestring</em>) – dn of the object to delete</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="id21">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">router</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/ldaprouter.html#router"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id21" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNMGMTGroupWriter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">LMNMGMTGroupWriter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/managementgroup.html#LMNMGMTGroupWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNMGMTGroupWriter" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNMGMTGroupWriter.lw">
+<span class="sig-name descname"><span class="pre">lw</span></span><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNMGMTGroupWriter.lw" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNMGMTGroupWriter.lr">
+<span class="sig-name descname"><span class="pre">lr</span></span><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNMGMTGroupWriter.lr" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNMGMTGroupWriter.setattr">
+<span class="sig-name descname"><span class="pre">setattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/managementgroup.html#LMNMGMTGroupWriter.setattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNMGMTGroupWriter.setattr" title="Link to this definition"></a></dt>
+<dd><p>Middleware to check if the object exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>basestring</em>) – cn of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNMGMTGroupWriter.delattr">
+<span class="sig-name descname"><span class="pre">delattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/managementgroup.html#LMNMGMTGroupWriter.delattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNMGMTGroupWriter.delattr" title="Link to this definition"></a></dt>
+<dd><p>Middleware to check if the object exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>basestring</em>) – cn of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="id22">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">LdapWriter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id22" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="id23">
+<span class="sig-name descname"><span class="pre">lc</span></span><a class="headerlink" href="#id23" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id24">
+<span class="sig-name descname"><span class="pre">lr</span></span><a class="headerlink" href="#id24" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id25">
+<span class="sig-name descname"><span class="pre">_setattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._setattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id25" title="Link to this definition"></a></dt>
+<dd><p>Set one or more attributes only for a ldap entry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_details</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – object to modify (project, …)</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Dict of attributes:values to write</p></li>
+<li><p><strong>add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Define if the attribute should be added, even if the</p></li>
+</ul>
+</dd>
+</dl>
+<p>attribute is already present</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id26">
+<span class="sig-name descname"><span class="pre">_delattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._delattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id26" title="Link to this definition"></a></dt>
+<dd><p>Delete one or more attributes only for a ldap entry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>basestring</em>) – cn</p></li>
+<li><p><strong>objecttype</strong> (<em>basestring</em>) – user, device, etc … see OBJECT_MAPPING above</p></li>
+<li><p><strong>data</strong> – Dict of attributes:values to delete.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Value may be empty if the attribute is not ambiguous
+:type data: dict</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id27">
+<span class="sig-name descname"><span class="pre">_rename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_cn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._rename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id27" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>old_dn</strong></p></li>
+<li><p><strong>new_cn</strong></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id28">
+<span class="sig-name descname"><span class="pre">_move</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_ou</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id28" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>old_dn</strong></p></li>
+<li><p><strong>new_dn</strong></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id29">
+<span class="sig-name descname"><span class="pre">_add_ou</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._add_ou"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id29" title="Link to this definition"></a></dt>
+<dd><p>Create an organisational unit with the given dn.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dn</strong> (<em>basestring</em>) – dn of the object to modify</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id30">
+<span class="sig-name descname"><span class="pre">_add_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ldif</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._add_group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id30" title="Link to this definition"></a></dt>
+<dd><p>Create a group with the given dn.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dn</strong> (<em>basestring</em>) – dn of the object to modify</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id31">
+<span class="sig-name descname"><span class="pre">_del</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._del"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id31" title="Link to this definition"></a></dt>
+<dd><p>Delete an Ldap object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dn</strong> (<em>basestring</em>) – dn of the object to delete</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="id32">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">router</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/ldaprouter.html#router"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id32" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNProjectWriter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">LMNProjectWriter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/project.html#LMNProjectWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNProjectWriter" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNProjectWriter.lw">
+<span class="sig-name descname"><span class="pre">lw</span></span><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNProjectWriter.lw" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNProjectWriter.lr">
+<span class="sig-name descname"><span class="pre">lr</span></span><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNProjectWriter.lr" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNProjectWriter.setattr">
+<span class="sig-name descname"><span class="pre">setattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/project.html#LMNProjectWriter.setattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNProjectWriter.setattr" title="Link to this definition"></a></dt>
+<dd><p>Middleware to check if the object exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>basestring</em>) – cn of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNProjectWriter.delattr">
+<span class="sig-name descname"><span class="pre">delattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/project.html#LMNProjectWriter.delattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNProjectWriter.delattr" title="Link to this definition"></a></dt>
+<dd><p>Middleware to check if the object exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>basestring</em>) – cn of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="id33">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">LdapWriter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id33" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="id34">
+<span class="sig-name descname"><span class="pre">lc</span></span><a class="headerlink" href="#id34" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id35">
+<span class="sig-name descname"><span class="pre">lr</span></span><a class="headerlink" href="#id35" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id36">
+<span class="sig-name descname"><span class="pre">_setattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._setattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id36" title="Link to this definition"></a></dt>
+<dd><p>Set one or more attributes only for a ldap entry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_details</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – object to modify (project, …)</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Dict of attributes:values to write</p></li>
+<li><p><strong>add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Define if the attribute should be added, even if the</p></li>
+</ul>
+</dd>
+</dl>
+<p>attribute is already present</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id37">
+<span class="sig-name descname"><span class="pre">_delattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._delattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id37" title="Link to this definition"></a></dt>
+<dd><p>Delete one or more attributes only for a ldap entry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>basestring</em>) – cn</p></li>
+<li><p><strong>objecttype</strong> (<em>basestring</em>) – user, device, etc … see OBJECT_MAPPING above</p></li>
+<li><p><strong>data</strong> – Dict of attributes:values to delete.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Value may be empty if the attribute is not ambiguous
+:type data: dict</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id38">
+<span class="sig-name descname"><span class="pre">_rename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_cn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._rename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id38" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>old_dn</strong></p></li>
+<li><p><strong>new_cn</strong></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id39">
+<span class="sig-name descname"><span class="pre">_move</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_ou</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id39" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>old_dn</strong></p></li>
+<li><p><strong>new_dn</strong></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id40">
+<span class="sig-name descname"><span class="pre">_add_ou</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._add_ou"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id40" title="Link to this definition"></a></dt>
+<dd><p>Create an organisational unit with the given dn.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dn</strong> (<em>basestring</em>) – dn of the object to modify</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id41">
+<span class="sig-name descname"><span class="pre">_add_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ldif</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._add_group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id41" title="Link to this definition"></a></dt>
+<dd><p>Create a group with the given dn.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dn</strong> (<em>basestring</em>) – dn of the object to modify</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id42">
+<span class="sig-name descname"><span class="pre">_del</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._del"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id42" title="Link to this definition"></a></dt>
+<dd><p>Delete an Ldap object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dn</strong> (<em>basestring</em>) – dn of the object to delete</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="id43">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">router</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/ldaprouter.html#router"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id43" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNObjectWriter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">LMNObjectWriter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObjectWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNObjectWriter" title="Link to this definition"></a></dt>
+<dd><p>Search per dn, may not be the best solution.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNObjectWriter.lw">
+<span class="sig-name descname"><span class="pre">lw</span></span><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNObjectWriter.lw" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNObjectWriter.lr">
+<span class="sig-name descname"><span class="pre">lr</span></span><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNObjectWriter.lr" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNObjectWriter.setattr">
+<span class="sig-name descname"><span class="pre">setattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObjectWriter.setattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNObjectWriter.setattr" title="Link to this definition"></a></dt>
+<dd><p>Middleware to check if the object exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>basestring</em>) – cn of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNObjectWriter.delattr">
+<span class="sig-name descname"><span class="pre">delattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObjectWriter.delattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNObjectWriter.delattr" title="Link to this definition"></a></dt>
+<dd><p>Middleware to check if the object exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>basestring</em>) – cn of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNObjectWriter.remove_member">
+<span class="sig-name descname"><span class="pre">remove_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member_dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObjectWriter.remove_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNObjectWriter.remove_member" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNObjectWriter.add_member">
+<span class="sig-name descname"><span class="pre">add_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member_dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObjectWriter.add_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNObjectWriter.add_member" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">LMNRoom</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/models/lmndevice.html#LMNRoom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../models/common/index.html#linuxmusterTools.ldapconnector.models.common.LMNParent" title="linuxmusterTools.ldapconnector.models.common.LMNParent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linuxmusterTools.ldapconnector.models.common.LMNParent</span></code></a></p>
+<p>ObjectClass group for a room.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.cn">
+<span class="sig-name descname"><span class="pre">cn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.cn" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.description" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.distinguishedName">
+<span class="sig-name descname"><span class="pre">distinguishedName</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.distinguishedName" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.mail">
+<span class="sig-name descname"><span class="pre">mail</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.mail" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.member">
+<span class="sig-name descname"><span class="pre">member</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.member" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.objectClass">
+<span class="sig-name descname"><span class="pre">objectClass</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.objectClass" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.sAMAccountName">
+<span class="sig-name descname"><span class="pre">sAMAccountName</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.sAMAccountName" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.sAMAccountType">
+<span class="sig-name descname"><span class="pre">sAMAccountType</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.sAMAccountType" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixAddMailQuota">
+<span class="sig-name descname"><span class="pre">sophomorixAddMailQuota</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixAddMailQuota" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixAddQuota">
+<span class="sig-name descname"><span class="pre">sophomorixAddQuota</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixAddQuota" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixCreationDate">
+<span class="sig-name descname"><span class="pre">sophomorixCreationDate</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixCreationDate" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixHidden">
+<span class="sig-name descname"><span class="pre">sophomorixHidden</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixHidden" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixJoinable">
+<span class="sig-name descname"><span class="pre">sophomorixJoinable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixJoinable" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixMailAlias">
+<span class="sig-name descname"><span class="pre">sophomorixMailAlias</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixMailAlias" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixMailList">
+<span class="sig-name descname"><span class="pre">sophomorixMailList</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixMailList" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixMailQuota">
+<span class="sig-name descname"><span class="pre">sophomorixMailQuota</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixMailQuota" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixMaxMembers">
+<span class="sig-name descname"><span class="pre">sophomorixMaxMembers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixMaxMembers" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixQuota">
+<span class="sig-name descname"><span class="pre">sophomorixQuota</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixQuota" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixRoomComputers">
+<span class="sig-name descname"><span class="pre">sophomorixRoomComputers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixRoomComputers" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixRoomIPs">
+<span class="sig-name descname"><span class="pre">sophomorixRoomIPs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixRoomIPs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixRoomMACs">
+<span class="sig-name descname"><span class="pre">sophomorixRoomMACs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixRoomMACs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixSchoolname">
+<span class="sig-name descname"><span class="pre">sophomorixSchoolname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixSchoolname" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixStatus">
+<span class="sig-name descname"><span class="pre">sophomorixStatus</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixStatus" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixType">
+<span class="sig-name descname"><span class="pre">sophomorixType</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.sophomorixType" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.dn">
+<span class="sig-name descname"><span class="pre">dn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.dn" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNRoom.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/models/lmndevice.html#LMNRoom.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNRoom.__post_init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.Validator">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">Validator</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/common.html#Validator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.Validator" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNDeviceWriter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">LMNDeviceWriter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/device.html#LMNDeviceWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNDeviceWriter" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNDeviceWriter.lw">
+<span class="sig-name descname"><span class="pre">lw</span></span><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNDeviceWriter.lw" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNDeviceWriter.lr">
+<span class="sig-name descname"><span class="pre">lr</span></span><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNDeviceWriter.lr" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNDeviceWriter.ow">
+<span class="sig-name descname"><span class="pre">ow</span></span><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNDeviceWriter.ow" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNDeviceWriter.setattr">
+<span class="sig-name descname"><span class="pre">setattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/device.html#LMNDeviceWriter.setattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNDeviceWriter.setattr" title="Link to this definition"></a></dt>
+<dd><p>Middleware to check if the object exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>basestring</em>) – cn of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNDeviceWriter.delattr">
+<span class="sig-name descname"><span class="pre">delattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/device.html#LMNDeviceWriter.delattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNDeviceWriter.delattr" title="Link to this definition"></a></dt>
+<dd><p>Middleware to check if the object exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>basestring</em>) – cn of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNDeviceWriter.rename">
+<span class="sig-name descname"><span class="pre">rename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/device.html#LMNDeviceWriter.rename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNDeviceWriter.rename" title="Link to this definition"></a></dt>
+<dd><p>Rename a device inside a room.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>new_name</strong></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNDeviceWriter.move">
+<span class="sig-name descname"><span class="pre">move</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_room</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/device.html#LMNDeviceWriter.move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNDeviceWriter.move" title="Link to this definition"></a></dt>
+<dd><p>Move a device to another room, e.g. to another OU</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>basestring</em>) – name of the device to move</p></li>
+<li><p><strong>new_room</strong> (<em>basestring</em>) – New OU for the device</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNDeviceWriter.delete_room">
+<span class="sig-name descname"><span class="pre">delete_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/device.html#LMNDeviceWriter.delete_room"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNDeviceWriter.delete_room" title="Link to this definition"></a></dt>
+<dd><p>Delete the OU and his group associated to a room, if this does not contain any device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>room</strong> (<em>basestring</em>) – Name of the room to dele</p></li>
+<li><p><strong>school</strong> (<em>basestring</em>) – Concerned school</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNDeviceWriter.create_room">
+<span class="sig-name descname"><span class="pre">create_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_room</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/device.html#LMNDeviceWriter.create_room"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNDeviceWriter.create_room" title="Link to this definition"></a></dt>
+<dd><p>Create a new room, e.g. another OU</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>new_room</strong> (<em>basestring</em>) – New OU to create</p></li>
+<li><p><strong>school</strong> (<em>basestring</em>) – Concerned school</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="id44">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">LdapWriter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id44" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="id45">
+<span class="sig-name descname"><span class="pre">lc</span></span><a class="headerlink" href="#id45" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id46">
+<span class="sig-name descname"><span class="pre">lr</span></span><a class="headerlink" href="#id46" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id47">
+<span class="sig-name descname"><span class="pre">_setattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._setattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id47" title="Link to this definition"></a></dt>
+<dd><p>Set one or more attributes only for a ldap entry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_details</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – object to modify (project, …)</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Dict of attributes:values to write</p></li>
+<li><p><strong>add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Define if the attribute should be added, even if the</p></li>
+</ul>
+</dd>
+</dl>
+<p>attribute is already present</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id48">
+<span class="sig-name descname"><span class="pre">_delattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._delattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id48" title="Link to this definition"></a></dt>
+<dd><p>Delete one or more attributes only for a ldap entry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>basestring</em>) – cn</p></li>
+<li><p><strong>objecttype</strong> (<em>basestring</em>) – user, device, etc … see OBJECT_MAPPING above</p></li>
+<li><p><strong>data</strong> – Dict of attributes:values to delete.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Value may be empty if the attribute is not ambiguous
+:type data: dict</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id49">
+<span class="sig-name descname"><span class="pre">_rename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_cn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._rename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id49" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>old_dn</strong></p></li>
+<li><p><strong>new_cn</strong></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id50">
+<span class="sig-name descname"><span class="pre">_move</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_ou</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id50" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>old_dn</strong></p></li>
+<li><p><strong>new_dn</strong></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id51">
+<span class="sig-name descname"><span class="pre">_add_ou</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._add_ou"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id51" title="Link to this definition"></a></dt>
+<dd><p>Create an organisational unit with the given dn.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dn</strong> (<em>basestring</em>) – dn of the object to modify</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id52">
+<span class="sig-name descname"><span class="pre">_add_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ldif</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._add_group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id52" title="Link to this definition"></a></dt>
+<dd><p>Create a group with the given dn.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dn</strong> (<em>basestring</em>) – dn of the object to modify</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id53">
+<span class="sig-name descname"><span class="pre">_del</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._del"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id53" title="Link to this definition"></a></dt>
+<dd><p>Delete an Ldap object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dn</strong> (<em>basestring</em>) – dn of the object to delete</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="id54">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">router</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/ldaprouter.html#router"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id54" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNSchoolclassWriter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">LMNSchoolclassWriter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclassWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNSchoolclassWriter" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNSchoolclassWriter.lw">
+<span class="sig-name descname"><span class="pre">lw</span></span><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNSchoolclassWriter.lw" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNSchoolclassWriter.lr">
+<span class="sig-name descname"><span class="pre">lr</span></span><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNSchoolclassWriter.lr" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNSchoolclassWriter.setattr">
+<span class="sig-name descname"><span class="pre">setattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclassWriter.setattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNSchoolclassWriter.setattr" title="Link to this definition"></a></dt>
+<dd><p>Middleware to check if the object exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>basestring</em>) – cn of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.LMNSchoolclassWriter.delattr">
+<span class="sig-name descname"><span class="pre">delattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclassWriter.delattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.LMNSchoolclassWriter.delattr" title="Link to this definition"></a></dt>
+<dd><p>Middleware to check if the object exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>basestring</em>) – cn of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="id55">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">LdapWriter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id55" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="id56">
+<span class="sig-name descname"><span class="pre">lc</span></span><a class="headerlink" href="#id56" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id57">
+<span class="sig-name descname"><span class="pre">lr</span></span><a class="headerlink" href="#id57" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id58">
+<span class="sig-name descname"><span class="pre">_setattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._setattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id58" title="Link to this definition"></a></dt>
+<dd><p>Set one or more attributes only for a ldap entry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_details</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – object to modify (project, …)</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Dict of attributes:values to write</p></li>
+<li><p><strong>add</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Define if the attribute should be added, even if the</p></li>
+</ul>
+</dd>
+</dl>
+<p>attribute is already present</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id59">
+<span class="sig-name descname"><span class="pre">_delattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._delattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id59" title="Link to this definition"></a></dt>
+<dd><p>Delete one or more attributes only for a ldap entry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>basestring</em>) – cn</p></li>
+<li><p><strong>objecttype</strong> (<em>basestring</em>) – user, device, etc … see OBJECT_MAPPING above</p></li>
+<li><p><strong>data</strong> – Dict of attributes:values to delete.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Value may be empty if the attribute is not ambiguous
+:type data: dict</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id60">
+<span class="sig-name descname"><span class="pre">_rename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_cn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._rename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id60" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>old_dn</strong></p></li>
+<li><p><strong>new_cn</strong></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id61">
+<span class="sig-name descname"><span class="pre">_move</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_ou</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id61" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>old_dn</strong></p></li>
+<li><p><strong>new_dn</strong></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id62">
+<span class="sig-name descname"><span class="pre">_add_ou</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._add_ou"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id62" title="Link to this definition"></a></dt>
+<dd><p>Create an organisational unit with the given dn.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dn</strong> (<em>basestring</em>) – dn of the object to modify</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id63">
+<span class="sig-name descname"><span class="pre">_add_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ldif</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._add_group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id63" title="Link to this definition"></a></dt>
+<dd><p>Create a group with the given dn.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dn</strong> (<em>basestring</em>) – dn of the object to modify</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id64">
+<span class="sig-name descname"><span class="pre">_del</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_writer.html#LdapWriter._del"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id64" title="Link to this definition"></a></dt>
+<dd><p>Delete an Ldap object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dn</strong> (<em>basestring</em>) – dn of the object to delete</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="id65">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">router</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/ldaprouter.html#router"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id65" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="id66">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">LMNObjectWriter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObjectWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id66" title="Link to this definition"></a></dt>
+<dd><p>Search per dn, may not be the best solution.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id67">
+<span class="sig-name descname"><span class="pre">lw</span></span><a class="headerlink" href="#id67" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id68">
+<span class="sig-name descname"><span class="pre">lr</span></span><a class="headerlink" href="#id68" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id69">
+<span class="sig-name descname"><span class="pre">setattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObjectWriter.setattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id69" title="Link to this definition"></a></dt>
+<dd><p>Middleware to check if the object exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>basestring</em>) – cn of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id70">
+<span class="sig-name descname"><span class="pre">delattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObjectWriter.delattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id70" title="Link to this definition"></a></dt>
+<dd><p>Middleware to check if the object exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>basestring</em>) – cn of the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id71">
+<span class="sig-name descname"><span class="pre">remove_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member_dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObjectWriter.remove_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id71" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id72">
+<span class="sig-name descname"><span class="pre">add_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member_dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObjectWriter.add_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id72" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.DeviceWriter">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">DeviceWriter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers.html#DeviceWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.DeviceWriter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.MgmtGroupWriter">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">MgmtGroupWriter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers.html#MgmtGroupWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.MgmtGroupWriter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.ObjectWriter">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">ObjectWriter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers.html#ObjectWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.ObjectWriter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.PrinterWriter">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">PrinterWriter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers.html#PrinterWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.PrinterWriter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.ProjectWriter">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">ProjectWriter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers.html#ProjectWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.ProjectWriter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.SchoolclassWriter">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">SchoolclassWriter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers.html#SchoolclassWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.SchoolclassWriter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.UserWriter">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.</span></span><span class="sig-name descname"><span class="pre">UserWriter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/writers.html#UserWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.UserWriter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../urls/users/index.html" class="btn btn-neutral float-left" title="linuxmusterTools.ldapconnector.urls.users" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="device/index.html" class="btn btn-neutral float-right" title="linuxmusterTools.ldapconnector.writers.device" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

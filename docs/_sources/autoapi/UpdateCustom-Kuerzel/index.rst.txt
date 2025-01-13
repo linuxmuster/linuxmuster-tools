@@ -1,0 +1,28 @@
+UpdateCustom-Kuerzel
+====================
+
+.. py:module:: UpdateCustom-Kuerzel
+
+.. autoapi-nested-parse::
+
+   Given a CSV containing all lastnames, firstnames and codes from all teachers, script to update 
+   all "teacher codes" (Kürzel) in the attribute sophomorixCustom1 and subjects in sophomorixCustomMulti1.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   UpdateCustom-Kuerzel.teachers
+   UpdateCustom-Kuerzel.teacher_csv
+
+
+Module Contents
+---------------
+
+.. py:data:: teachers
+
+.. py:data:: teacher_csv
+

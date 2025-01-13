@@ -1,12 +1,7 @@
 .. linuxmuster-tools7 documentation
 
-Linuxmuster-tools7's developer documentation
+Linuxmuster-tools7's documentation
 ============================================
-
-.. autosummary::
-   :toctree: _autosummary
-   :recursive:
-   :caption: Contents:
 
 About
 -----
@@ -19,17 +14,14 @@ You can find the whole description of the install process on the `official docum
 
 In particularly, some `appliances (Proxmox, XCP-ng and KVM) are prepared <https://docs.linuxmuster.net/de/latest/getting-started/installoptions/index.html>`_ in order to permit a fast deployment for test use.
 
-Linuxmuster-tools7 is a collection of tool to manage data on a Linuxmuster.net's server, and is used as backend for `linuxmùuster-webui7`, `linuxmuster-api` and `linuxmuster-cli`.
+Linuxmuster-tools7 is a collection of tool to manage data on a Linuxmuster.net's server, and is used as backend for `linuxmuster-webui7`, `linuxmuster-api` and `linuxmuster-cli`.
 
 This documentation is still under construction.
 
+
 .. toctree::
-   :maxdepth: 1
-   :caption: Users
-   :hidden:
+   :maxdepth: 3
 
-.. autosummary::
-   :toctree: _autosummary
-   :recursive:
+   autoapi/index
 
-    linuxmusterTools
+

@@ -1,0 +1,489 @@
+linuxmusterTools.samba_util
+===========================
+
+.. py:module:: linuxmusterTools.samba_util
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/linuxmusterTools/samba_util/dns/index
+   /autoapi/linuxmusterTools/samba_util/drives/index
+   /autoapi/linuxmusterTools/samba_util/log/index
+   /autoapi/linuxmusterTools/samba_util/samba_tool/index
+   /autoapi/linuxmusterTools/samba_util/smbstatus/index
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.samba_util.smbconf
+   linuxmusterTools.samba_util.LOG_LEVEL
+   linuxmusterTools.samba_util.lr
+   linuxmusterTools.samba_util.lp
+   linuxmusterTools.samba_util.SAMDB_PATH
+   linuxmusterTools.samba_util.DFS
+   linuxmusterTools.samba_util.config
+   linuxmusterTools.samba_util.dfs_proxy
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.samba_util.DriveManager
+   linuxmusterTools.samba_util.GPO
+   linuxmusterTools.samba_util.GPOManager
+   linuxmusterTools.samba_util.GroupManager
+   linuxmusterTools.samba_util.UserManager
+   linuxmusterTools.samba_util.Drive
+   linuxmusterTools.samba_util.DriveManager
+   linuxmusterTools.samba_util.LMNFile
+   linuxmusterTools.samba_util.SambaToolDNS
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   linuxmusterTools.samba_util.parse_log_level
+
+
+Package Contents
+----------------
+
+.. py:data:: smbconf
+
+.. py:function:: parse_log_level(level)
+
+   A level entry should look like
+
+       log level = auth_audit:2
+   or
+       log level = 2
+   or
+       log level = 1 auth_audit:3 winbind:5
+
+
+.. py:data:: LOG_LEVEL
+
+.. py:class:: DriveManager(policy_path)
+
+   Object to store data from Drives.xml
+
+
+   .. py:attribute:: usedLetters
+      :value: []
+
+
+
+   .. py:method:: load()
+
+      Parse the Drives.xml in the policy directory in order to get all shares
+      properties.
+
+
+
+   .. py:method:: _parseProperties(drive)
+      :staticmethod:
+
+
+
+   .. py:method:: _parseFilters(drive)
+      :staticmethod:
+
+
+
+   .. py:method:: save(content)
+
+      Save all configuration and properties from the drives and then reload
+      the configuration.
+
+      :param content: All drives configuration and properties
+      :type content: dict
+
+
+
+   .. py:method:: aslist()
+
+
+.. py:data:: lr
+
+.. py:data:: lp
+
+.. py:data:: SAMDB_PATH
+   :value: '/var/lib/samba/private/sam.ldb'
+
+
+.. py:class:: GPO
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:attribute:: drivemgr
+      :type:  linuxmusterTools.samba_util.drives.DriveManager
+
+
+   .. py:attribute:: gpo
+      :type:  str
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: path
+      :type:  str
+
+
+   .. py:attribute:: unix_path
+      :type:  str
+
+
+.. py:class:: GPOManager
+
+   Sample object to manage all GPOs informations.
+
+
+   .. py:attribute:: gpos
+
+
+.. py:class:: GroupManager(school='default-school')
+
+   Samble class to manage samba groups via samba-tool.
+
+
+   .. py:attribute:: POST_HOOK_DIR
+      :value: '/etc/linuxmuster/tools/hooks/group-manager'
+
+
+
+   .. py:attribute:: school
+      :value: 'default-school'
+
+
+
+   .. py:attribute:: school_prefix
+      :value: ''
+
+
+
+   .. py:method:: _run_post_hook(action, group, members)
+
+      Runs alls the scripts located in self.POST_HOOK_DIR in alphanum order, passing 3 arguments:
+
+      :param action: actually 'remove' or 'add'
+      :type action: basestring
+      :param group: group name
+      :type group: basestring
+      :param members: members list, will be given coma separated as argument
+      :type members: list
+
+
+
+   .. py:method:: list()
+
+
+   .. py:method:: remove_members(group, members)
+
+      Remove members from a group. samdb throw an Exception if the group or the user
+      does not exist.
+
+      :param group: group name
+      :type group: basestring
+      :param members: members list
+      :type members: list
+
+
+
+   .. py:method:: add_members(group, members)
+
+      Add members to a group. samdb throw an Exception if the group or the user
+      does not exist.
+
+      :param group: group name
+      :type group: basestring
+      :param members: members list
+      :type members: list
+
+
+
+.. py:class:: UserManager
+
+   Sample class to manage samba users via samba-tool.
+
+
+   .. py:attribute:: POST_HOOK_DIR
+      :value: '/etc/linuxmuster/tools/hooks/user-manager'
+
+
+
+   .. py:method:: _check_password_strength(password)
+
+      Passwords must contain at least one lowercase, one uppercase, one special char or number, and at least 7 chars.
+
+
+
+   .. py:method:: _generate_password()
+
+      Passwords must contain at least one lowercase, one uppercase, one special char or number, and at least 7 chars.
+
+
+
+   .. py:method:: set_password(username, password)
+
+
+.. py:class:: Drive
+
+   .. py:attribute:: disabled
+      :type:  bool
+
+
+   .. py:attribute:: filters
+      :type:  dict
+
+
+   .. py:attribute:: label
+      :type:  str
+
+
+   .. py:attribute:: letter
+      :type:  str
+
+
+   .. py:attribute:: properties
+      :type:  dict
+
+
+   .. py:attribute:: userLetter
+      :type:  str
+
+
+   .. py:attribute:: id
+      :type:  str
+
+
+   .. py:method:: __post_init__()
+
+
+.. py:class:: DriveManager(policy_path)
+
+   Object to store data from Drives.xml
+
+
+   .. py:attribute:: usedLetters
+      :value: []
+
+
+
+   .. py:method:: load()
+
+      Parse the Drives.xml in the policy directory in order to get all shares
+      properties.
+
+
+
+   .. py:method:: _parseProperties(drive)
+      :staticmethod:
+
+
+
+   .. py:method:: _parseFilters(drive)
+      :staticmethod:
+
+
+
+   .. py:method:: save(content)
+
+      Save all configuration and properties from the drives and then reload
+      the configuration.
+
+      :param content: All drives configuration and properties
+      :type content: dict
+
+
+
+   .. py:method:: aslist()
+
+
+.. py:class:: LMNFile(file, mode, delimiter=';', fieldnames=None)
+
+   Meta class to handle all type of config file used in linuxmuster's project,
+   e.g. ini, csv, linbo config files.
+
+
+   .. py:attribute:: file
+
+
+   .. py:attribute:: opened
+      :value: ''
+
+
+
+   .. py:attribute:: data
+      :value: ''
+
+
+
+   .. py:attribute:: mode
+
+
+   .. py:attribute:: encoding
+      :value: 'utf-8'
+
+
+
+   .. py:attribute:: comments
+      :value: []
+
+
+
+   .. py:attribute:: delimiter
+      :value: ';'
+
+
+
+   .. py:method:: hasExtension(ext)
+      :classmethod:
+
+
+      Determine if file should be handled here.
+
+      :param ext: Extension of a file, e.g. ini
+      :type ext: string
+      :return: File handled or not
+      :rtype: bool
+
+
+
+   .. py:method:: __enter__()
+      :abstractmethod:
+
+
+
+   .. py:method:: __exit__(exc_type, exc_val, exc_tb)
+      :abstractmethod:
+
+
+
+   .. py:method:: read()
+
+
+   .. py:method:: backup()
+
+      Create a backup of a file if in allowed paths, but on ly keeps 10 backups.
+      Backup files names scheme is `.<name>.bak.<timestamp>`
+
+
+
+   .. py:method:: check_allowed_path()
+
+      Check path before modifying files for security reasons.
+
+      :return: File path in allowed paths.
+      :rtype: bool
+
+
+
+   .. py:method:: detect_encoding()
+
+      Try to detect encoding of the file through magic numbers.
+
+      :return: Detected encoding
+      :rtype: string
+
+
+
+.. py:class:: SambaToolDNS
+
+   Object to manage current samba dns entries on the system. 
+
+
+   .. py:method:: _get_zone()
+
+      Parse setup.ini to get the current zone and store it in self.zone.
+
+
+
+   .. py:method:: _get_ignore_list()
+
+      Get list of LMN devices to ignore them and store it in self.lmn_hosts,
+      because the list of DNS entries would be too long.
+
+
+
+   .. py:method:: _samba_tool_process(action, options)
+
+      Execute samba-tool dns with parameter.
+
+      :param action: query, add, delete or update
+      :type action: string
+      :param options: Tuple of necessary options for the query
+      :type options: tuple
+      :return: List of lines as strings
+      :rtype: list
+
+
+
+   .. py:method:: list()
+
+      Query all dns entries and parse it to sort it in a dict, but removes the devices entries.
+
+      :return: Separate dns values from root and subdomains
+      :rtype: dict
+
+
+
+   .. py:method:: add(sub)
+
+      Add subdomain entry to dns.
+
+      :param sub: Subdomain details
+      :type sub: dict
+      :return: Result of samba-tool
+      :rtype: string
+
+
+
+   .. py:method:: update(old, new)
+
+      Update dns entry with new details.
+
+      :param old: Old subdomain details
+      :type old: dict
+      :param new: New subdomain details
+      :type new: dict
+      :return: Result of samba-tool
+      :rtype: string
+
+
+
+   .. py:method:: delete(sub, type, entry)
+
+      Delete dns entry.
+
+      :param sub: Subdomain
+      :type sub: string
+      :param type: Type of entry
+      :type type: string
+      :param entry: Value of the entry
+      :type entry: string
+      :return: Result of samba-tool
+      :rtype: string
+
+
+
+.. py:data:: DFS
+
+.. py:data:: config
+
+.. py:data:: dfs_proxy
+

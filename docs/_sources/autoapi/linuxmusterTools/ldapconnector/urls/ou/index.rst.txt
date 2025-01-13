@@ -1,0 +1,38 @@
+linuxmusterTools.ldapconnector.urls.ou
+======================================
+
+.. py:module:: linuxmusterTools.ldapconnector.urls.ou
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.urls.ou.get_all_ou
+   linuxmusterTools.ldapconnector.urls.ou.get_devices_ou
+   linuxmusterTools.ldapconnector.urls.ou.get_students_ou
+
+
+Module Contents
+---------------
+
+.. py:function:: get_all_ou()
+
+   Get all organizational units.
+   Return a a list of LMNOU data object.
+
+
+.. py:function:: get_devices_ou()
+
+   Get all details from the Devices organizational unit.
+   Return a LMNOU data object.
+
+
+.. py:function:: get_students_ou()
+
+   Get all details from the students organizational unit.
+   Return a LMNOU data object.
+   Quit the same as a schoolclasses request.
+
+

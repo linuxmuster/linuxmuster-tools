@@ -1,0 +1,30 @@
+linuxmusterTools.ldapconnector.urls.schools
+===========================================
+
+.. py:module:: linuxmusterTools.ldapconnector.urls.schools
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.urls.schools.get_all_schools
+   linuxmusterTools.ldapconnector.urls.schools.get_specific_school
+
+
+Module Contents
+---------------
+
+.. py:function:: get_all_schools()
+
+   Get all schools.
+   Return a LMNSchool data object
+
+
+.. py:function:: get_specific_school(school)
+
+   Get a specific school.
+   Return a LMNSchool data object
+
+

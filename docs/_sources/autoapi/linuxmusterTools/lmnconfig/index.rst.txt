@@ -1,0 +1,341 @@
+linuxmusterTools.lmnconfig
+==========================
+
+.. py:module:: linuxmusterTools.lmnconfig
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/linuxmusterTools/lmnconfig/samba/index
+   /autoapi/linuxmusterTools/lmnconfig/setup/index
+   /autoapi/linuxmusterTools/lmnconfig/sophomorix/index
+   /autoapi/linuxmusterTools/lmnconfig/webui/index
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.lmnconfig.WEBUI_IMPORT
+   linuxmusterTools.lmnconfig.smbconf
+   linuxmusterTools.lmnconfig.LOG_LEVEL
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.lmnconfig.LMNFile
+   linuxmusterTools.lmnconfig.CustomFieldsConfig
+   linuxmusterTools.lmnconfig.LMNFile
+   linuxmusterTools.lmnconfig.SophomorixConfig
+   linuxmusterTools.lmnconfig.LMNFile
+   linuxmusterTools.lmnconfig.SetupConfig
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   linuxmusterTools.lmnconfig.parse_log_level
+
+
+Package Contents
+----------------
+
+.. py:class:: LMNFile(file, mode, delimiter=';', fieldnames=None)
+
+   Meta class to handle all type of config file used in linuxmuster's project,
+   e.g. ini, csv, linbo config files.
+
+
+   .. py:attribute:: file
+
+
+   .. py:attribute:: opened
+      :value: ''
+
+
+
+   .. py:attribute:: data
+      :value: ''
+
+
+
+   .. py:attribute:: mode
+
+
+   .. py:attribute:: encoding
+      :value: 'utf-8'
+
+
+
+   .. py:attribute:: comments
+      :value: []
+
+
+
+   .. py:attribute:: delimiter
+      :value: ';'
+
+
+
+   .. py:method:: hasExtension(ext)
+      :classmethod:
+
+
+      Determine if file should be handled here.
+
+      :param ext: Extension of a file, e.g. ini
+      :type ext: string
+      :return: File handled or not
+      :rtype: bool
+
+
+
+   .. py:method:: __enter__()
+      :abstractmethod:
+
+
+
+   .. py:method:: __exit__(exc_type, exc_val, exc_tb)
+      :abstractmethod:
+
+
+
+   .. py:method:: read()
+
+
+   .. py:method:: backup()
+
+      Create a backup of a file if in allowed paths, but on ly keeps 10 backups.
+      Backup files names scheme is `.<name>.bak.<timestamp>`
+
+
+
+   .. py:method:: check_allowed_path()
+
+      Check path before modifying files for security reasons.
+
+      :return: File path in allowed paths.
+      :rtype: bool
+
+
+
+   .. py:method:: detect_encoding()
+
+      Try to detect encoding of the file through magic numbers.
+
+      :return: Detected encoding
+      :rtype: string
+
+
+
+.. py:data:: WEBUI_IMPORT
+   :value: True
+
+
+.. py:class:: CustomFieldsConfig(school='default-school')
+
+.. py:class:: LMNFile(file, mode, delimiter=';', fieldnames=None)
+
+   Meta class to handle all type of config file used in linuxmuster's project,
+   e.g. ini, csv, linbo config files.
+
+
+   .. py:attribute:: file
+
+
+   .. py:attribute:: opened
+      :value: ''
+
+
+
+   .. py:attribute:: data
+      :value: ''
+
+
+
+   .. py:attribute:: mode
+
+
+   .. py:attribute:: encoding
+      :value: 'utf-8'
+
+
+
+   .. py:attribute:: comments
+      :value: []
+
+
+
+   .. py:attribute:: delimiter
+      :value: ';'
+
+
+
+   .. py:method:: hasExtension(ext)
+      :classmethod:
+
+
+      Determine if file should be handled here.
+
+      :param ext: Extension of a file, e.g. ini
+      :type ext: string
+      :return: File handled or not
+      :rtype: bool
+
+
+
+   .. py:method:: __enter__()
+      :abstractmethod:
+
+
+
+   .. py:method:: __exit__(exc_type, exc_val, exc_tb)
+      :abstractmethod:
+
+
+
+   .. py:method:: read()
+
+
+   .. py:method:: backup()
+
+      Create a backup of a file if in allowed paths, but on ly keeps 10 backups.
+      Backup files names scheme is `.<name>.bak.<timestamp>`
+
+
+
+   .. py:method:: check_allowed_path()
+
+      Check path before modifying files for security reasons.
+
+      :return: File path in allowed paths.
+      :rtype: bool
+
+
+
+   .. py:method:: detect_encoding()
+
+      Try to detect encoding of the file through magic numbers.
+
+      :return: Detected encoding
+      :rtype: string
+
+
+
+.. py:class:: SophomorixConfig(school='default-school')
+
+.. py:data:: smbconf
+
+.. py:function:: parse_log_level(level)
+
+   A level entry should look like
+
+       log level = auth_audit:2
+   or
+       log level = 2
+   or
+       log level = 1 auth_audit:3 winbind:5
+
+
+.. py:data:: LOG_LEVEL
+
+.. py:class:: LMNFile(file, mode, delimiter=';', fieldnames=None)
+
+   Meta class to handle all type of config file used in linuxmuster's project,
+   e.g. ini, csv, linbo config files.
+
+
+   .. py:attribute:: file
+
+
+   .. py:attribute:: opened
+      :value: ''
+
+
+
+   .. py:attribute:: data
+      :value: ''
+
+
+
+   .. py:attribute:: mode
+
+
+   .. py:attribute:: encoding
+      :value: 'utf-8'
+
+
+
+   .. py:attribute:: comments
+      :value: []
+
+
+
+   .. py:attribute:: delimiter
+      :value: ';'
+
+
+
+   .. py:method:: hasExtension(ext)
+      :classmethod:
+
+
+      Determine if file should be handled here.
+
+      :param ext: Extension of a file, e.g. ini
+      :type ext: string
+      :return: File handled or not
+      :rtype: bool
+
+
+
+   .. py:method:: __enter__()
+      :abstractmethod:
+
+
+
+   .. py:method:: __exit__(exc_type, exc_val, exc_tb)
+      :abstractmethod:
+
+
+
+   .. py:method:: read()
+
+
+   .. py:method:: backup()
+
+      Create a backup of a file if in allowed paths, but on ly keeps 10 backups.
+      Backup files names scheme is `.<name>.bak.<timestamp>`
+
+
+
+   .. py:method:: check_allowed_path()
+
+      Check path before modifying files for security reasons.
+
+      :return: File path in allowed paths.
+      :rtype: bool
+
+
+
+   .. py:method:: detect_encoding()
+
+      Try to detect encoding of the file through magic numbers.
+
+      :return: Detected encoding
+      :rtype: string
+
+
+
+.. py:class:: SetupConfig(school='default-school')
+

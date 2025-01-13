@@ -1,0 +1,23 @@
+linuxmusterTools.ldapconnector.urls.roles
+=========================================
+
+.. py:module:: linuxmusterTools.ldapconnector.urls.roles
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.urls.roles.get_all_from_role
+
+
+Module Contents
+---------------
+
+.. py:function:: get_all_from_role(role='teacher')
+
+   Get all user from a same role.
+   Return a list of LMNUser data objects.
+
+

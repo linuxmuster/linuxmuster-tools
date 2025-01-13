@@ -1,0 +1,22 @@
+linuxmusterTools.ldapconnector.urls.objects
+===========================================
+
+.. py:module:: linuxmusterTools.ldapconnector.urls.objects
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.urls.objects.get_from_dn
+
+
+Module Contents
+---------------
+
+.. py:function:: get_from_dn(dn)
+
+   Search for a specific dn and retrieve a common LMNObject from it.
+
+

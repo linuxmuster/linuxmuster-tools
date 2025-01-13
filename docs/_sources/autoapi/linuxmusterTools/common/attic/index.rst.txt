@@ -1,0 +1,56 @@
+linuxmusterTools.common.attic
+=============================
+
+.. py:module:: linuxmusterTools.common.attic
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   linuxmusterTools.common.attic.get_killdate
+   linuxmusterTools.common.attic.get_attic_status
+   linuxmusterTools.common.attic.check_attic_dir
+
+
+Module Contents
+---------------
+
+.. py:function:: get_killdate(user, school='default-school')
+
+   Get kill date of an user, if it exists.
+   Actually only works with default-school on a single school instance.
+
+   :param user: user login
+   :type user: basestring
+   :param school: school of the user
+   :type school: basestring
+   :return: Date when the account was killed, if it was the case
+   :rtype: basestring
+
+
+.. py:function:: get_attic_status(user, school='default-school')
+
+   Get the actual status of an user in attic.
+   Actually only works with default-school on a single school instance.
+
+   :param user: user login
+   :type user: basestring
+   :param school: school of the user
+   :type school: basestring
+   :return: toleration, deactivation or killable status and date
+   :rtype:
+
+
+.. py:function:: check_attic_dir(school='default-school')
+
+   Checks the attic dir if some directories can be definitively be deleted.
+   Actually only works with default-school on a single school instance.
+
+   :param school:
+   :type school:
+   :return:
+   :rtype:
+
+

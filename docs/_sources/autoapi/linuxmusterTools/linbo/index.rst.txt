@@ -1,0 +1,629 @@
+linuxmusterTools.linbo
+======================
+
+.. py:module:: linuxmusterTools.linbo
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/linuxmusterTools/linbo/config/index
+   /autoapi/linuxmusterTools/linbo/images/index
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.linbo.LINBO_PATH
+   linuxmusterTools.linbo.TIMESTAMP_FMT
+   linuxmusterTools.linbo.DATE_UI_FMT
+   linuxmusterTools.linbo.EXTRA_IMAGE_FILES
+   linuxmusterTools.linbo.EXTRA_NONEDITABLE_IMAGE_FILES
+   linuxmusterTools.linbo.EXTRA_COMMON_FILES
+   linuxmusterTools.linbo.EXTRA_PERMISSIONS_MAPPING
+   linuxmusterTools.linbo.IMAGE
+   linuxmusterTools.linbo.DIFF_IMAGE
+   linuxmusterTools.linbo.LINBO_PATH
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.linbo.LMNFile
+   linuxmusterTools.linbo.LinboImage
+   linuxmusterTools.linbo.LinboImageGroup
+   linuxmusterTools.linbo.LinboImageManager
+   linuxmusterTools.linbo.Devices
+   linuxmusterTools.linbo.Partition
+   linuxmusterTools.linbo.OS
+   linuxmusterTools.linbo.Linbo
+   linuxmusterTools.linbo.LinboConfig
+   linuxmusterTools.linbo.LinboConfigManager
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   linuxmusterTools.linbo.date2timestamp
+   linuxmusterTools.linbo.timestamp2date
+   linuxmusterTools.linbo.read_config
+   linuxmusterTools.linbo.last_sync
+   linuxmusterTools.linbo.group_os
+   linuxmusterTools.linbo.list_workstations
+   linuxmusterTools.linbo.last_sync_all
+
+
+Package Contents
+----------------
+
+.. py:class:: LMNFile(file, mode, delimiter=';', fieldnames=None)
+
+   Meta class to handle all type of config file used in linuxmuster's project,
+   e.g. ini, csv, linbo config files.
+
+
+   .. py:attribute:: file
+
+
+   .. py:attribute:: opened
+      :value: ''
+
+
+
+   .. py:attribute:: data
+      :value: ''
+
+
+
+   .. py:attribute:: mode
+
+
+   .. py:attribute:: encoding
+      :value: 'utf-8'
+
+
+
+   .. py:attribute:: comments
+      :value: []
+
+
+
+   .. py:attribute:: delimiter
+      :value: ';'
+
+
+
+   .. py:method:: hasExtension(ext)
+      :classmethod:
+
+
+      Determine if file should be handled here.
+
+      :param ext: Extension of a file, e.g. ini
+      :type ext: string
+      :return: File handled or not
+      :rtype: bool
+
+
+
+   .. py:method:: __enter__()
+      :abstractmethod:
+
+
+
+   .. py:method:: __exit__(exc_type, exc_val, exc_tb)
+      :abstractmethod:
+
+
+
+   .. py:method:: read()
+
+
+   .. py:method:: backup()
+
+      Create a backup of a file if in allowed paths, but on ly keeps 10 backups.
+      Backup files names scheme is `.<name>.bak.<timestamp>`
+
+
+
+   .. py:method:: check_allowed_path()
+
+      Check path before modifying files for security reasons.
+
+      :return: File path in allowed paths.
+      :rtype: bool
+
+
+
+   .. py:method:: detect_encoding()
+
+      Try to detect encoding of the file through magic numbers.
+
+      :return: Detected encoding
+      :rtype: string
+
+
+
+.. py:data:: LINBO_PATH
+   :value: '/srv/linbo/images'
+
+
+.. py:data:: TIMESTAMP_FMT
+   :value: '%Y%m%d%H%M'
+
+
+.. py:data:: DATE_UI_FMT
+   :value: '%d/%m/%Y %H:%M'
+
+
+.. py:data:: EXTRA_IMAGE_FILES
+   :value: ['desc', 'info', 'vdi']
+
+
+.. py:data:: EXTRA_NONEDITABLE_IMAGE_FILES
+   :value: ['torrent', 'macct']
+
+
+.. py:data:: EXTRA_COMMON_FILES
+   :value: ['reg', 'postsync', 'prestart']
+
+
+.. py:data:: EXTRA_PERMISSIONS_MAPPING
+
+.. py:data:: IMAGE
+   :value: 'qcow2'
+
+
+.. py:data:: DIFF_IMAGE
+   :value: 'qdiff'
+
+
+.. py:function:: date2timestamp(date)
+
+.. py:function:: timestamp2date(timestamp)
+
+.. py:class:: LinboImage(name, backup=False, timestamp=None, diff=False)
+
+   A class to manage a linbo image or a backup image
+
+
+   .. py:attribute:: name
+
+
+   .. py:attribute:: backup
+      :value: False
+
+
+
+   .. py:attribute:: diff
+      :value: False
+
+
+
+   .. py:attribute:: timestamp
+      :value: None
+
+
+
+   .. py:method:: _torrent_stop()
+
+
+   .. py:method:: load_info()
+
+      Prepare all variables to manage the image object ( path, name, extra files )
+
+
+
+   .. py:method:: get_extra()
+
+      Load extra editables config files for the image.
+
+
+
+   .. py:method:: get_timestamp()
+
+
+   .. py:method:: delete_files()
+
+      Delete all files from a LinboImage.
+
+
+
+   .. py:method:: delete()
+
+      Completely remove an image and its directory.
+
+
+
+   .. py:method:: rename(new_name)
+
+      Rename a LinboImage and all its files.
+
+
+
+   .. py:method:: save_extras(data)
+
+      Save all extra files content.
+
+      :param data: Data to save
+      :type data: dict
+
+
+
+   .. py:method:: to_dict()
+
+      Convert all necessary infos into a dict for angular.
+
+
+
+.. py:class:: LinboImageGroup(name)
+
+   Class to handle a basic LinboImage and all his backups.
+
+
+   .. py:attribute:: name
+
+
+   .. py:attribute:: path
+
+
+   .. py:attribute:: backup_path
+
+
+   .. py:method:: load()
+
+
+   .. py:method:: get_backups()
+
+      Browse current tree to find all backups image.
+
+
+
+   .. py:method:: get_diff()
+
+      Browse current tree to find a differential image.
+
+
+
+   .. py:method:: rename(new_name)
+
+      Rename an image and all his backups.
+
+
+
+   .. py:method:: delete()
+
+      Delete basic image, all backups, diff image and all config files.
+
+
+
+   .. py:method:: to_dict()
+
+
+.. py:class:: LinboImageManager
+
+   Manager for all Linbo Images.
+
+
+   .. py:method:: list()
+
+      Browse LINBO_PATH to discover all linbo images.
+
+
+
+   .. py:method:: delete(group, date=0, diff=False)
+
+      Delete a whole image and its backups. If date is given, only delete an
+      associated backup. date and diff parameter excludes each other.
+
+      :param group: Name of the linbo image
+      :type group: str
+      :param date: timestamp of a backup
+      :type date: str
+      :param diff: only delete a differential image
+      :type diff: bool
+
+
+
+   .. py:method:: rename(group, new_name)
+
+      Rename a whole linbo image and its backups recursiverly.
+
+      :param group: Name of the linbo image
+      :type group: str
+      :param new_name: New name for the linbo image
+      :type new_name: str
+
+
+
+   .. py:method:: duplicate(group, new_name)
+
+      Duplicate a whole linbo image without backups.
+
+      :param group: Name of the linbo image to duplicate
+      :type group: str
+      :param new_name: New name for the linbo image
+      :type new_name: str
+
+
+
+   .. py:method:: restore(group, date)
+
+      Delete a basic linbo image and restore a backup.
+
+      :param group: Name of the linbo image
+      :type group: str
+      :param date: timestamp of a backup
+      :type date: str
+
+
+
+   .. py:method:: save_extras(group, data, timestamp=None, diff=False)
+
+      Save extra files for a base image, a backup or a differential
+      image. timestamp and diff parameters excludes each other.
+
+      :param group: Name of the linbo image
+      :type group: str
+      :param data: Content of the extra files
+      :type data: dict
+      :param timestamp: timestamp of a backup
+      :type timestamp: str
+      :param diff: data onlyc concern a diff image
+      :type diff: bool
+
+
+
+.. py:class:: Devices(school='default-school')
+
+   .. py:attribute:: school
+      :value: 'default-school'
+
+
+
+   .. py:method:: switch(school)
+
+
+   .. py:method:: load()
+
+
+   .. py:method:: filter(roles=[], groups=[])
+
+
+   .. py:method:: get_hostname(hostname, roles=[], groups=[])
+
+
+   .. py:method:: get_client(hostname, groups=[])
+
+
+   .. py:method:: get_clients(groups=[])
+
+
+.. py:class:: Partition
+
+   .. py:attribute:: Bootable
+      :type:  bool
+
+
+   .. py:attribute:: Dev
+      :type:  str
+
+
+   .. py:attribute:: FSType
+      :type:  str
+
+
+   .. py:attribute:: Id
+      :type:  int
+
+
+   .. py:attribute:: Label
+      :type:  str
+
+
+   .. py:attribute:: Size
+      :type:  str
+
+
+.. py:class:: OS
+
+   .. py:attribute:: Append
+      :type:  str
+
+
+   .. py:attribute:: Autostart
+      :type:  bool
+
+
+   .. py:attribute:: AutostartTimeout
+      :type:  int
+
+
+   .. py:attribute:: BaseImage
+      :type:  str
+
+
+   .. py:attribute:: Boot
+      :type:  str
+
+
+   .. py:attribute:: DefaultAction
+      :type:  str
+
+
+   .. py:attribute:: Description
+      :type:  str
+
+
+   .. py:attribute:: Hidden
+      :type:  bool
+
+
+   .. py:attribute:: IconName
+      :type:  str
+
+
+   .. py:attribute:: Initrd
+      :type:  str
+
+
+   .. py:attribute:: Kernel
+      :type:  str
+
+
+   .. py:attribute:: NewEnabled
+      :type:  bool
+
+
+   .. py:attribute:: Root
+      :type:  str
+
+
+   .. py:attribute:: StartEnabled
+      :type:  bool
+
+
+   .. py:attribute:: SyncEnabled
+      :type:  bool
+
+
+   .. py:attribute:: Version
+      :type:  str
+
+
+.. py:class:: Linbo
+
+   .. py:attribute:: AutoFormat
+      :type:  bool
+
+
+   .. py:attribute:: AutoInitCache
+      :type:  bool
+
+
+   .. py:attribute:: AutoPartition
+      :type:  bool
+
+
+   .. py:attribute:: Cache
+      :type:  str
+
+
+   .. py:attribute:: DownloadType
+      :type:  str
+
+
+   .. py:attribute:: Group
+      :type:  str
+
+
+   .. py:attribute:: GuiDisabled
+      :type:  bool
+
+
+   .. py:attribute:: KernelOptions
+      :type:  str
+
+
+   .. py:attribute:: Locale
+      :type:  str
+
+
+   .. py:attribute:: RootTimeout
+      :type:  int
+
+
+   .. py:attribute:: Server
+      :type:  str
+
+
+   .. py:attribute:: SystemType
+      :type:  str
+
+
+   .. py:attribute:: UseMinimalLayout
+      :type:  bool
+
+
+.. py:class:: LinboConfig
+
+   .. py:attribute:: LINBO
+      :type:  Linbo
+
+
+   .. py:attribute:: Partitions
+      :type:  list
+
+
+   .. py:attribute:: OS
+      :type:  list
+
+
+.. py:class:: LinboConfigManager
+
+.. py:data:: LINBO_PATH
+   :value: '/srv/linbo'
+
+
+.. py:function:: read_config(group)
+
+   Get the os config from linbo config file start.conf.<group>
+
+   :param group: Linbo group
+   :type group: string
+   :return: Config as list of dict
+   :rtype: list of dict
+
+
+.. py:function:: last_sync(workstation, image)
+
+   Get the date of the last sync date for a workstation w.
+
+   :param w: Workstation
+   :type w: string
+   :param image: Name of the image file
+   :type image: string
+   :return: Last synchronisation time
+   :rtype: datetime
+
+
+.. py:function:: group_os(workstations)
+
+   Get all os infos from linbo config file and inject it in workstations dict.
+   The workstations dict is set in the function list_workstations().
+
+   :param workstations: Dict containing all workstations
+   :type workstations: dict
+   :return: Completed workstations dict with linbo informations
+   :rtype: dict
+
+
+.. py:function:: list_workstations(school='default-school', groups=[])
+
+   Generate a dict with workstations and parameters out of devices file
+
+   :param context: user context set in views.py
+   :return: Dict with all linbo informations for all workstations.
+   :rtype: dict
+
+
+.. py:function:: last_sync_all(workstations)
+
+   Add last synchronisation informations into the workstations dict,
+   and status attribute to use as class for bootstrap.
+
+   :param workstations: Dict of workstations set in list_workstations().
+   :type workstations: dict
+   :return: Completed dict of workstations
+   :rtype: dict
+
+

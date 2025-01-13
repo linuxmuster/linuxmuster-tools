@@ -1,0 +1,582 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.ldapconnector.models.lmnuser &mdash; linuxmuster-tools7 7.2.44 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="linuxmusterTools.ldapconnector.urls" href="../../urls/index.html" />
+    <link rel="prev" title="linuxmusterTools.ldapconnector.models.lmnsession" href="../lmnsession/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../index.html">linuxmusterTools</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../../index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../../../common/index.html">linuxmusterTools.common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../devices/index.html">linuxmusterTools.devices</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../../index.html">linuxmusterTools.ldapconnector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../linbo/index.html">linuxmusterTools.linbo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lmnconfig/index.html">linuxmusterTools.lmnconfig</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lmnfile/index.html">linuxmusterTools.lmnfile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../quotas/index.html">linuxmusterTools.quotas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../samba_util/index.html">linuxmusterTools.samba_util</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">linuxmusterTools</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">linuxmusterTools.ldapconnector</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">linuxmusterTools.ldapconnector.models</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.ldapconnector.models.lmnuser</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../_sources/autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-linuxmusterTools.ldapconnector.models.lmnuser">
+<span id="linuxmustertools-ldapconnector-models-lmnuser"></span><h1>linuxmusterTools.ldapconnector.models.lmnuser<a class="headerlink" href="#module-linuxmusterTools.ldapconnector.models.lmnuser" title="Link to this heading"></a></h1>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser" title="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNUser</span></code></a></p></td>
+<td><p>Common parent class to gather common methods.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.models.lmnuser.</span></span><span class="sig-name descname"><span class="pre">LMNUser</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../common/index.html#linuxmusterTools.ldapconnector.models.common.LMNParent" title="linuxmusterTools.ldapconnector.models.common.LMNParent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linuxmusterTools.ldapconnector.models.common.LMNParent</span></code></a></p>
+<p>Common parent class to gather common methods.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.cn">
+<span class="sig-name descname"><span class="pre">cn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.cn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.cn" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.custom_fields_config">
+<span class="sig-name descname"><span class="pre">custom_fields_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dataclasses.InitVar</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.custom_fields_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.custom_fields_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.displayName">
+<span class="sig-name descname"><span class="pre">displayName</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.displayName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.displayName" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.distinguishedName">
+<span class="sig-name descname"><span class="pre">distinguishedName</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.distinguishedName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.distinguishedName" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.givenName">
+<span class="sig-name descname"><span class="pre">givenName</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.givenName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.givenName" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.homeDirectory">
+<span class="sig-name descname"><span class="pre">homeDirectory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.homeDirectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.homeDirectory" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.homeDrive">
+<span class="sig-name descname"><span class="pre">homeDrive</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.homeDrive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.homeDrive" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.mail">
+<span class="sig-name descname"><span class="pre">mail</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.mail"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.mail" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.memberOf">
+<span class="sig-name descname"><span class="pre">memberOf</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.memberOf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.memberOf" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.objectClass">
+<span class="sig-name descname"><span class="pre">objectClass</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.objectClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.objectClass" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.proxyAddresses">
+<span class="sig-name descname"><span class="pre">proxyAddresses</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.proxyAddresses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.proxyAddresses" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sAMAccountName">
+<span class="sig-name descname"><span class="pre">sAMAccountName</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sAMAccountName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sAMAccountName" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sAMAccountType">
+<span class="sig-name descname"><span class="pre">sAMAccountType</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sAMAccountType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sAMAccountType" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sn">
+<span class="sig-name descname"><span class="pre">sn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sn" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixAdminClass">
+<span class="sig-name descname"><span class="pre">sophomorixAdminClass</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixAdminClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixAdminClass" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixAdminFile">
+<span class="sig-name descname"><span class="pre">sophomorixAdminFile</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixAdminFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixAdminFile" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixBirthdate">
+<span class="sig-name descname"><span class="pre">sophomorixBirthdate</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixBirthdate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixBirthdate" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCloudQuotaCalculated">
+<span class="sig-name descname"><span class="pre">sophomorixCloudQuotaCalculated</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixCloudQuotaCalculated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCloudQuotaCalculated" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixComment">
+<span class="sig-name descname"><span class="pre">sophomorixComment</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixComment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixComment" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCreationDate">
+<span class="sig-name descname"><span class="pre">sophomorixCreationDate</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixCreationDate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCreationDate" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCustom1">
+<span class="sig-name descname"><span class="pre">sophomorixCustom1</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixCustom1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCustom1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCustom2">
+<span class="sig-name descname"><span class="pre">sophomorixCustom2</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixCustom2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCustom2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCustom3">
+<span class="sig-name descname"><span class="pre">sophomorixCustom3</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixCustom3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCustom3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCustom4">
+<span class="sig-name descname"><span class="pre">sophomorixCustom4</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixCustom4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCustom4" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCustom5">
+<span class="sig-name descname"><span class="pre">sophomorixCustom5</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixCustom5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCustom5" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCustomMulti1">
+<span class="sig-name descname"><span class="pre">sophomorixCustomMulti1</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixCustomMulti1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCustomMulti1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCustomMulti2">
+<span class="sig-name descname"><span class="pre">sophomorixCustomMulti2</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixCustomMulti2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCustomMulti2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCustomMulti3">
+<span class="sig-name descname"><span class="pre">sophomorixCustomMulti3</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixCustomMulti3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCustomMulti3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCustomMulti4">
+<span class="sig-name descname"><span class="pre">sophomorixCustomMulti4</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixCustomMulti4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCustomMulti4" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCustomMulti5">
+<span class="sig-name descname"><span class="pre">sophomorixCustomMulti5</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixCustomMulti5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixCustomMulti5" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixDeactivationDate">
+<span class="sig-name descname"><span class="pre">sophomorixDeactivationDate</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixDeactivationDate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixDeactivationDate" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixExamMode">
+<span class="sig-name descname"><span class="pre">sophomorixExamMode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixExamMode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixExamMode" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixExitAdminClass">
+<span class="sig-name descname"><span class="pre">sophomorixExitAdminClass</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixExitAdminClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixExitAdminClass" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixFirstnameASCII">
+<span class="sig-name descname"><span class="pre">sophomorixFirstnameASCII</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixFirstnameASCII"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixFirstnameASCII" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixFirstnameInitial">
+<span class="sig-name descname"><span class="pre">sophomorixFirstnameInitial</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixFirstnameInitial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixFirstnameInitial" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixFirstPassword">
+<span class="sig-name descname"><span class="pre">sophomorixFirstPassword</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixFirstPassword"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixFirstPassword" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixIntrinsic2">
+<span class="sig-name descname"><span class="pre">sophomorixIntrinsic2</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixIntrinsic2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixIntrinsic2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixIntrinsic3">
+<span class="sig-name descname"><span class="pre">sophomorixIntrinsic3</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixIntrinsic3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixIntrinsic3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixMailQuotaCalculated">
+<span class="sig-name descname"><span class="pre">sophomorixMailQuotaCalculated</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixMailQuotaCalculated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixMailQuotaCalculated" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixMailQuota">
+<span class="sig-name descname"><span class="pre">sophomorixMailQuota</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixMailQuota"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixMailQuota" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixQuota">
+<span class="sig-name descname"><span class="pre">sophomorixQuota</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixQuota"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixQuota" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixRole">
+<span class="sig-name descname"><span class="pre">sophomorixRole</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixRole"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixRole" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixSchoolname">
+<span class="sig-name descname"><span class="pre">sophomorixSchoolname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixSchoolname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixSchoolname" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixSchoolPrefix">
+<span class="sig-name descname"><span class="pre">sophomorixSchoolPrefix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixSchoolPrefix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixSchoolPrefix" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixSessions">
+<span class="sig-name descname"><span class="pre">sophomorixSessions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixSessions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixSessions" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixStatus">
+<span class="sig-name descname"><span class="pre">sophomorixStatus</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixStatus" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixSurnameASCII">
+<span class="sig-name descname"><span class="pre">sophomorixSurnameASCII</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixSurnameASCII"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixSurnameASCII" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixSurnameInitial">
+<span class="sig-name descname"><span class="pre">sophomorixSurnameInitial</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixSurnameInitial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixSurnameInitial" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixTolerationDate">
+<span class="sig-name descname"><span class="pre">sophomorixTolerationDate</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixTolerationDate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixTolerationDate" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixUnid">
+<span class="sig-name descname"><span class="pre">sophomorixUnid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixUnid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixUnid" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixUserToken">
+<span class="sig-name descname"><span class="pre">sophomorixUserToken</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixUserToken"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixUserToken" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixWebuiDashboard">
+<span class="sig-name descname"><span class="pre">sophomorixWebuiDashboard</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixWebuiDashboard"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixWebuiDashboard" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixWebuiPermissionsCalculated">
+<span class="sig-name descname"><span class="pre">sophomorixWebuiPermissionsCalculated</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.sophomorixWebuiPermissionsCalculated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.sophomorixWebuiPermissionsCalculated" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.thumbnailPhoto">
+<span class="sig-name descname"><span class="pre">thumbnailPhoto</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.thumbnailPhoto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.thumbnailPhoto" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.unixHomeDirectory">
+<span class="sig-name descname"><span class="pre">unixHomeDirectory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.unixHomeDirectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.unixHomeDirectory" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.whenChanged">
+<span class="sig-name descname"><span class="pre">whenChanged</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.whenChanged"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.whenChanged" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.dn">
+<span class="sig-name descname"><span class="pre">dn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.dn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.dn" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.customFields">
+<span class="sig-name descname"><span class="pre">customFields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><span class="pre">dict</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.customFields"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.customFields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.examMode">
+<span class="sig-name descname"><span class="pre">examMode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.examMode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.examMode" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.examTeacher">
+<span class="sig-name descname"><span class="pre">examTeacher</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.examTeacher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.examTeacher" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.examBaseCn">
+<span class="sig-name descname"><span class="pre">examBaseCn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.examBaseCn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.examBaseCn" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.internet">
+<span class="sig-name descname"><span class="pre">internet</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.internet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.internet" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.intranet">
+<span class="sig-name descname"><span class="pre">intranet</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.intranet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.intranet" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.isAdmin">
+<span class="sig-name descname"><span class="pre">isAdmin</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.isAdmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.isAdmin" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.lmnsessions">
+<span class="sig-name descname"><span class="pre">lmnsessions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.lmnsessions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.lmnsessions" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.permissions">
+<span class="sig-name descname"><span class="pre">permissions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.permissions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.permissions" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.printers">
+<span class="sig-name descname"><span class="pre">printers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.printers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.printers" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.printing">
+<span class="sig-name descname"><span class="pre">printing</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.printing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.printing" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.projects">
+<span class="sig-name descname"><span class="pre">projects</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.projects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.projects" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.schoolclasses">
+<span class="sig-name descname"><span class="pre">schoolclasses</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.schoolclasses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.schoolclasses" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.school">
+<span class="sig-name descname"><span class="pre">school</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.school"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.school" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.webfilter">
+<span class="sig-name descname"><span class="pre">webfilter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.webfilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.webfilter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.wifi">
+<span class="sig-name descname"><span class="pre">wifi</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.wifi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.wifi" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser._check_schoolclass_number">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_check_schoolclass_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser._check_schoolclass_number"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser._check_schoolclass_number" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.extract_schoolclasses">
+<span class="sig-name descname"><span class="pre">extract_schoolclasses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">membership</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.extract_schoolclasses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.extract_schoolclasses" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.extract_projects">
+<span class="sig-name descname"><span class="pre">extract_projects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">membership</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.extract_projects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.extract_projects" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.extract_printers">
+<span class="sig-name descname"><span class="pre">extract_printers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">membership</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.extract_printers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.extract_printers" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.extract_management">
+<span class="sig-name descname"><span class="pre">extract_management</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.extract_management"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.extract_management" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.parse_permissions">
+<span class="sig-name descname"><span class="pre">parse_permissions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.parse_permissions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.parse_permissions" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.parse_sessions">
+<span class="sig-name descname"><span class="pre">parse_sessions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.parse_sessions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.parse_sessions" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.parse_exam">
+<span class="sig-name descname"><span class="pre">parse_exam</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.parse_exam"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.parse_exam" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.create_custom_fields_objects">
+<span class="sig-name descname"><span class="pre">create_custom_fields_objects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">custom_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.create_custom_fields_objects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.create_custom_fields_objects" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">custom_fields_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.__post_init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.test_password">
+<span class="sig-name descname"><span class="pre">test_password</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.test_password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.test_password" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.test_first_password">
+<span class="sig-name descname"><span class="pre">test_first_password</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnuser.html#LMNUser.test_first_password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnuser.LMNUser.test_first_password" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../lmnsession/index.html" class="btn btn-neutral float-left" title="linuxmusterTools.ldapconnector.models.lmnsession" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../urls/index.html" class="btn btn-neutral float-right" title="linuxmusterTools.ldapconnector.urls" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

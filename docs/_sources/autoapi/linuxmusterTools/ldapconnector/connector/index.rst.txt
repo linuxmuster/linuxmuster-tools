@@ -1,0 +1,129 @@
+linuxmusterTools.ldapconnector.connector
+========================================
+
+.. py:module:: linuxmusterTools.ldapconnector.connector
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.connector.webui_import
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.connector.LdapConnector
+
+
+Module Contents
+---------------
+
+.. py:data:: webui_import
+   :value: True
+
+
+.. py:class:: LdapConnector
+
+   .. py:method:: _connect(webui=False)
+
+      Choose the right credentials, depending if the this module is imported in linuxmuster-webui7 or used directly on
+      the server, and the perform a connection to the ldap server.
+
+      :param webui: True only if using the _get method from the webui (no changes possible from the webui)
+      :type webui: bool
+      :return: LDAP object with connection data
+      :rtype: LDAPObject
+
+
+
+   .. py:method:: _get(ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn='')
+
+      Connect to ldap and perform a search.
+
+      :param ldap_filter: Valid ldap filter
+      :type ldap_filter: basestring
+      :param scope: subtree search or one level
+      :type scope: str
+      :param searchdn: special searchdn
+      :type searchdn: str
+      :return: Raw result of the request
+      :rtype: dict
+
+
+
+   .. py:method:: _set(dn, ldif)
+
+      Connect to ldap and apply a ldif on the given dn.
+
+      :param dn: dn of the object to modify
+      :type dn: basestring
+      :param ldif: Valid ldif (list of tuples, one tuple per operation)
+      :type ldif: list
+
+
+
+   .. py:method:: _add(dn, ldif)
+
+      Connect to ldap and insert an object with the given dn and ldif attributes.
+
+      :param dn: dn of the object to modify
+      :type dn: basestring
+      :param ldif: Valid ldif (list of tuples, one tuple per operation)
+      :type ldif: list
+
+
+
+   .. py:method:: _add_ou(dn)
+
+      Connect to ldap and insert an organisational unit with the given dn.
+
+      :param dn: dn of the object to modify
+      :type dn: basestring
+
+
+
+   .. py:method:: _add_group(dn, ldif=[])
+
+      Connect to ldap and insert a group with the given dn.
+
+      :param dn: dn of the object to modify
+      :type dn: basestring
+
+
+
+   .. py:method:: _rename(old_dn, new_cn)
+
+      Rename an entry with a new CN.
+
+      :param old_dn: actual dn to move
+      :type old_dn: basestring
+      :param new_cn: new destination dn
+      :type new_cn: basestring
+
+
+
+   .. py:method:: _move(old_dn, new_ou)
+
+      Move an entry to a new OU.
+
+      :param old_dn: actual dn to move
+      :type old_dn: basestring
+      :param new_ou: new destination OU
+      :type new_ou: basestring
+
+
+
+   .. py:method:: _del(dn)
+
+      Connect to ldap and delete the object with the given dn.
+
+      :param dn: dn of the object to modify
+      :type dn: basestring
+
+
+

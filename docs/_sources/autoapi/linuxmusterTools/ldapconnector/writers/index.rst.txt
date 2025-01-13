@@ -1,0 +1,1083 @@
+linuxmusterTools.ldapconnector.writers
+======================================
+
+.. py:module:: linuxmusterTools.ldapconnector.writers
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/linuxmusterTools/ldapconnector/writers/device/index
+   /autoapi/linuxmusterTools/ldapconnector/writers/group/index
+   /autoapi/linuxmusterTools/ldapconnector/writers/managementgroup/index
+   /autoapi/linuxmusterTools/ldapconnector/writers/object/index
+   /autoapi/linuxmusterTools/ldapconnector/writers/printer/index
+   /autoapi/linuxmusterTools/ldapconnector/writers/project/index
+   /autoapi/linuxmusterTools/ldapconnector/writers/schoolclass/index
+   /autoapi/linuxmusterTools/ldapconnector/writers/user/index
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.writers.router
+   linuxmusterTools.ldapconnector.writers.router
+   linuxmusterTools.ldapconnector.writers.router
+   linuxmusterTools.ldapconnector.writers.router
+   linuxmusterTools.ldapconnector.writers.router
+   linuxmusterTools.ldapconnector.writers.Validator
+   linuxmusterTools.ldapconnector.writers.router
+   linuxmusterTools.ldapconnector.writers.router
+   linuxmusterTools.ldapconnector.writers.DeviceWriter
+   linuxmusterTools.ldapconnector.writers.MgmtGroupWriter
+   linuxmusterTools.ldapconnector.writers.ObjectWriter
+   linuxmusterTools.ldapconnector.writers.PrinterWriter
+   linuxmusterTools.ldapconnector.writers.ProjectWriter
+   linuxmusterTools.ldapconnector.writers.SchoolclassWriter
+   linuxmusterTools.ldapconnector.writers.UserWriter
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.writers.LdapWriter
+   linuxmusterTools.ldapconnector.writers.LMNUserWriter
+   linuxmusterTools.ldapconnector.writers.LdapWriter
+   linuxmusterTools.ldapconnector.writers.LMNPrinterWriter
+   linuxmusterTools.ldapconnector.writers.LdapWriter
+   linuxmusterTools.ldapconnector.writers.LMNMGMTGroupWriter
+   linuxmusterTools.ldapconnector.writers.LdapWriter
+   linuxmusterTools.ldapconnector.writers.LMNProjectWriter
+   linuxmusterTools.ldapconnector.writers.LdapWriter
+   linuxmusterTools.ldapconnector.writers.LMNObjectWriter
+   linuxmusterTools.ldapconnector.writers.LMNRoom
+   linuxmusterTools.ldapconnector.writers.LMNDeviceWriter
+   linuxmusterTools.ldapconnector.writers.LdapWriter
+   linuxmusterTools.ldapconnector.writers.LMNSchoolclassWriter
+   linuxmusterTools.ldapconnector.writers.LdapWriter
+   linuxmusterTools.ldapconnector.writers.LMNObjectWriter
+
+
+Package Contents
+----------------
+
+.. py:class:: LdapWriter
+
+   .. py:attribute:: lc
+
+
+   .. py:attribute:: lr
+
+
+   .. py:method:: _setattr(obj_details, data=None, add=False)
+
+      Set one or more attributes only for a ldap entry.
+
+      :param obj_details: object to modify (project, ...)
+      :type obj_details: dict
+      :param data: Dict of attributes:values to write
+      :type data: dict
+      :type add: bool
+      :param add: Define if the attribute should be added, even if the
+      attribute is already present
+
+
+
+   .. py:method:: _delattr(obj_details, data=None)
+
+      Delete one or more attributes only for a ldap entry.
+
+      :param name: cn
+      :type name: basestring
+      :param objecttype: user, device, etc ... see OBJECT_MAPPING above
+      :type objecttype: basestring
+      :param data: Dict of attributes:values to delete.
+      Value may be empty if the attribute is not ambiguous
+      :type data: dict
+
+
+
+   .. py:method:: _rename(old_dn, new_cn)
+
+      :param old_dn:
+      :type old_dn:
+      :param new_cn:
+      :type new_cn:
+      :return:
+      :rtype:
+
+
+
+   .. py:method:: _move(old_dn, new_ou)
+
+      :param old_dn:
+      :type old_dn:
+      :param new_dn:
+      :type new_dn:
+      :return:
+      :rtype:
+
+
+
+   .. py:method:: _add_ou(dn)
+
+      Create an organisational unit with the given dn.
+
+      :param dn: dn of the object to modify
+      :type dn: basestring
+
+
+
+   .. py:method:: _add_group(dn, ldif=[])
+
+      Create a group with the given dn.
+
+      :param dn: dn of the object to modify
+      :type dn: basestring
+
+
+
+   .. py:method:: _del(dn)
+
+      Delete an Ldap object.
+
+      :param dn: dn of the object to delete
+      :type dn: basestring
+
+
+
+.. py:data:: router
+
+.. py:class:: LMNUserWriter
+
+   .. py:attribute:: lw
+
+
+   .. py:attribute:: lr
+
+
+   .. py:method:: setattr(name, **kwargs)
+
+      Middleware to check if the object exists.
+
+      :param name: cn of the object
+      :type name: basestring
+
+
+
+   .. py:method:: delattr(name, **kwargs)
+
+      Middleware to check if the object exists.
+
+      :param name: cn of the object
+      :type name: basestring
+
+
+
+.. py:class:: LdapWriter
+
+   .. py:attribute:: lc
+
+
+   .. py:attribute:: lr
+
+
+   .. py:method:: _setattr(obj_details, data=None, add=False)
+
+      Set one or more attributes only for a ldap entry.
+
+      :param obj_details: object to modify (project, ...)
+      :type obj_details: dict
+      :param data: Dict of attributes:values to write
+      :type data: dict
+      :type add: bool
+      :param add: Define if the attribute should be added, even if the
+      attribute is already present
+
+
+
+   .. py:method:: _delattr(obj_details, data=None)
+
+      Delete one or more attributes only for a ldap entry.
+
+      :param name: cn
+      :type name: basestring
+      :param objecttype: user, device, etc ... see OBJECT_MAPPING above
+      :type objecttype: basestring
+      :param data: Dict of attributes:values to delete.
+      Value may be empty if the attribute is not ambiguous
+      :type data: dict
+
+
+
+   .. py:method:: _rename(old_dn, new_cn)
+
+      :param old_dn:
+      :type old_dn:
+      :param new_cn:
+      :type new_cn:
+      :return:
+      :rtype:
+
+
+
+   .. py:method:: _move(old_dn, new_ou)
+
+      :param old_dn:
+      :type old_dn:
+      :param new_dn:
+      :type new_dn:
+      :return:
+      :rtype:
+
+
+
+   .. py:method:: _add_ou(dn)
+
+      Create an organisational unit with the given dn.
+
+      :param dn: dn of the object to modify
+      :type dn: basestring
+
+
+
+   .. py:method:: _add_group(dn, ldif=[])
+
+      Create a group with the given dn.
+
+      :param dn: dn of the object to modify
+      :type dn: basestring
+
+
+
+   .. py:method:: _del(dn)
+
+      Delete an Ldap object.
+
+      :param dn: dn of the object to delete
+      :type dn: basestring
+
+
+
+.. py:data:: router
+
+.. py:class:: LMNPrinterWriter
+
+   .. py:attribute:: lw
+
+
+   .. py:attribute:: lr
+
+
+   .. py:method:: setattr(name, **kwargs)
+
+      Middleware to check if the object exists.
+
+      :param name: cn of the object
+      :type name: basestring
+
+
+
+   .. py:method:: delattr(name, **kwargs)
+
+      Middleware to check if the object exists.
+
+      :param name: cn of the object
+      :type name: basestring
+
+
+
+.. py:class:: LdapWriter
+
+   .. py:attribute:: lc
+
+
+   .. py:attribute:: lr
+
+
+   .. py:method:: _setattr(obj_details, data=None, add=False)
+
+      Set one or more attributes only for a ldap entry.
+
+      :param obj_details: object to modify (project, ...)
+      :type obj_details: dict
+      :param data: Dict of attributes:values to write
+      :type data: dict
+      :type add: bool
+      :param add: Define if the attribute should be added, even if the
+      attribute is already present
+
+
+
+   .. py:method:: _delattr(obj_details, data=None)
+
+      Delete one or more attributes only for a ldap entry.
+
+      :param name: cn
+      :type name: basestring
+      :param objecttype: user, device, etc ... see OBJECT_MAPPING above
+      :type objecttype: basestring
+      :param data: Dict of attributes:values to delete.
+      Value may be empty if the attribute is not ambiguous
+      :type data: dict
+
+
+
+   .. py:method:: _rename(old_dn, new_cn)
+
+      :param old_dn:
+      :type old_dn:
+      :param new_cn:
+      :type new_cn:
+      :return:
+      :rtype:
+
+
+
+   .. py:method:: _move(old_dn, new_ou)
+
+      :param old_dn:
+      :type old_dn:
+      :param new_dn:
+      :type new_dn:
+      :return:
+      :rtype:
+
+
+
+   .. py:method:: _add_ou(dn)
+
+      Create an organisational unit with the given dn.
+
+      :param dn: dn of the object to modify
+      :type dn: basestring
+
+
+
+   .. py:method:: _add_group(dn, ldif=[])
+
+      Create a group with the given dn.
+
+      :param dn: dn of the object to modify
+      :type dn: basestring
+
+
+
+   .. py:method:: _del(dn)
+
+      Delete an Ldap object.
+
+      :param dn: dn of the object to delete
+      :type dn: basestring
+
+
+
+.. py:data:: router
+
+.. py:class:: LMNMGMTGroupWriter
+
+   .. py:attribute:: lw
+
+
+   .. py:attribute:: lr
+
+
+   .. py:method:: setattr(name, **kwargs)
+
+      Middleware to check if the object exists.
+
+      :param name: cn of the object
+      :type name: basestring
+
+
+
+   .. py:method:: delattr(name, **kwargs)
+
+      Middleware to check if the object exists.
+
+      :param name: cn of the object
+      :type name: basestring
+
+
+
+.. py:class:: LdapWriter
+
+   .. py:attribute:: lc
+
+
+   .. py:attribute:: lr
+
+
+   .. py:method:: _setattr(obj_details, data=None, add=False)
+
+      Set one or more attributes only for a ldap entry.
+
+      :param obj_details: object to modify (project, ...)
+      :type obj_details: dict
+      :param data: Dict of attributes:values to write
+      :type data: dict
+      :type add: bool
+      :param add: Define if the attribute should be added, even if the
+      attribute is already present
+
+
+
+   .. py:method:: _delattr(obj_details, data=None)
+
+      Delete one or more attributes only for a ldap entry.
+
+      :param name: cn
+      :type name: basestring
+      :param objecttype: user, device, etc ... see OBJECT_MAPPING above
+      :type objecttype: basestring
+      :param data: Dict of attributes:values to delete.
+      Value may be empty if the attribute is not ambiguous
+      :type data: dict
+
+
+
+   .. py:method:: _rename(old_dn, new_cn)
+
+      :param old_dn:
+      :type old_dn:
+      :param new_cn:
+      :type new_cn:
+      :return:
+      :rtype:
+
+
+
+   .. py:method:: _move(old_dn, new_ou)
+
+      :param old_dn:
+      :type old_dn:
+      :param new_dn:
+      :type new_dn:
+      :return:
+      :rtype:
+
+
+
+   .. py:method:: _add_ou(dn)
+
+      Create an organisational unit with the given dn.
+
+      :param dn: dn of the object to modify
+      :type dn: basestring
+
+
+
+   .. py:method:: _add_group(dn, ldif=[])
+
+      Create a group with the given dn.
+
+      :param dn: dn of the object to modify
+      :type dn: basestring
+
+
+
+   .. py:method:: _del(dn)
+
+      Delete an Ldap object.
+
+      :param dn: dn of the object to delete
+      :type dn: basestring
+
+
+
+.. py:data:: router
+
+.. py:class:: LMNProjectWriter
+
+   .. py:attribute:: lw
+
+
+   .. py:attribute:: lr
+
+
+   .. py:method:: setattr(name, **kwargs)
+
+      Middleware to check if the object exists.
+
+      :param name: cn of the object
+      :type name: basestring
+
+
+
+   .. py:method:: delattr(name, **kwargs)
+
+      Middleware to check if the object exists.
+
+      :param name: cn of the object
+      :type name: basestring
+
+
+
+.. py:class:: LdapWriter
+
+   .. py:attribute:: lc
+
+
+   .. py:attribute:: lr
+
+
+   .. py:method:: _setattr(obj_details, data=None, add=False)
+
+      Set one or more attributes only for a ldap entry.
+
+      :param obj_details: object to modify (project, ...)
+      :type obj_details: dict
+      :param data: Dict of attributes:values to write
+      :type data: dict
+      :type add: bool
+      :param add: Define if the attribute should be added, even if the
+      attribute is already present
+
+
+
+   .. py:method:: _delattr(obj_details, data=None)
+
+      Delete one or more attributes only for a ldap entry.
+
+      :param name: cn
+      :type name: basestring
+      :param objecttype: user, device, etc ... see OBJECT_MAPPING above
+      :type objecttype: basestring
+      :param data: Dict of attributes:values to delete.
+      Value may be empty if the attribute is not ambiguous
+      :type data: dict
+
+
+
+   .. py:method:: _rename(old_dn, new_cn)
+
+      :param old_dn:
+      :type old_dn:
+      :param new_cn:
+      :type new_cn:
+      :return:
+      :rtype:
+
+
+
+   .. py:method:: _move(old_dn, new_ou)
+
+      :param old_dn:
+      :type old_dn:
+      :param new_dn:
+      :type new_dn:
+      :return:
+      :rtype:
+
+
+
+   .. py:method:: _add_ou(dn)
+
+      Create an organisational unit with the given dn.
+
+      :param dn: dn of the object to modify
+      :type dn: basestring
+
+
+
+   .. py:method:: _add_group(dn, ldif=[])
+
+      Create a group with the given dn.
+
+      :param dn: dn of the object to modify
+      :type dn: basestring
+
+
+
+   .. py:method:: _del(dn)
+
+      Delete an Ldap object.
+
+      :param dn: dn of the object to delete
+      :type dn: basestring
+
+
+
+.. py:data:: router
+
+.. py:class:: LMNObjectWriter
+
+   Search per dn, may not be the best solution.
+
+
+   .. py:attribute:: lw
+
+
+   .. py:attribute:: lr
+
+
+   .. py:method:: setattr(dn, **kwargs)
+
+      Middleware to check if the object exists.
+
+      :param name: cn of the object
+      :type name: basestring
+
+
+
+   .. py:method:: delattr(dn, **kwargs)
+
+      Middleware to check if the object exists.
+
+      :param name: cn of the object
+      :type name: basestring
+
+
+
+   .. py:method:: remove_member(dn, member_dn)
+
+
+   .. py:method:: add_member(dn, member_dn)
+
+
+.. py:class:: LMNRoom
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+
+
+   ObjectClass group for a room.
+
+
+   .. py:attribute:: cn
+      :type:  str
+
+
+   .. py:attribute:: description
+      :type:  str
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+   .. py:attribute:: mail
+      :type:  list
+
+
+   .. py:attribute:: member
+      :type:  list
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:attribute:: sAMAccountName
+      :type:  str
+
+
+   .. py:attribute:: sAMAccountType
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAddMailQuota
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAddQuota
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCreationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixHidden
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixJoinable
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailAlias
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailList
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMaxMembers
+      :type:  int
+
+
+   .. py:attribute:: sophomorixQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixRoomComputers
+      :type:  list
+
+
+   .. py:attribute:: sophomorixRoomIPs
+      :type:  list
+
+
+   .. py:attribute:: sophomorixRoomMACs
+      :type:  list
+
+
+   .. py:attribute:: sophomorixSchoolname
+      :type:  str
+
+
+   .. py:attribute:: sophomorixStatus
+      :type:  str
+
+
+   .. py:attribute:: sophomorixType
+      :type:  str
+
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:method:: __post_init__()
+
+
+.. py:data:: Validator
+
+.. py:class:: LMNDeviceWriter
+
+   .. py:attribute:: lw
+
+
+   .. py:attribute:: lr
+
+
+   .. py:attribute:: ow
+
+
+   .. py:method:: setattr(name, **kwargs)
+
+      Middleware to check if the object exists.
+
+      :param name: cn of the object
+      :type name: basestring
+
+
+
+   .. py:method:: delattr(name, **kwargs)
+
+      Middleware to check if the object exists.
+
+      :param name: cn of the object
+      :type name: basestring
+
+
+
+   .. py:method:: rename(name, new_name)
+
+      Rename a device inside a room.
+
+      :param new_name:
+      :type new_name:
+      :return:
+      :rtype:
+
+
+
+   .. py:method:: move(name, new_room)
+
+      Move a device to another room, e.g. to another OU
+
+      :param name: name of the device to move
+      :type name: basestring
+      :param new_room: New OU for the device
+      :type new_room: basestring
+
+
+
+   .. py:method:: delete_room(room, school='default-school')
+
+      Delete the OU and his group associated to a room, if this does not contain any device.
+
+      :param room: Name of the room to dele
+      :type room: basestring
+      :param school: Concerned school
+      :type school: basestring
+
+
+
+   .. py:method:: create_room(new_room, school='default-school', data={})
+
+      Create a new room, e.g. another OU
+
+      :param new_room: New OU to create
+      :type new_room: basestring
+      :param school: Concerned school
+      :type school: basestring
+
+
+
+.. py:class:: LdapWriter
+
+   .. py:attribute:: lc
+
+
+   .. py:attribute:: lr
+
+
+   .. py:method:: _setattr(obj_details, data=None, add=False)
+
+      Set one or more attributes only for a ldap entry.
+
+      :param obj_details: object to modify (project, ...)
+      :type obj_details: dict
+      :param data: Dict of attributes:values to write
+      :type data: dict
+      :type add: bool
+      :param add: Define if the attribute should be added, even if the
+      attribute is already present
+
+
+
+   .. py:method:: _delattr(obj_details, data=None)
+
+      Delete one or more attributes only for a ldap entry.
+
+      :param name: cn
+      :type name: basestring
+      :param objecttype: user, device, etc ... see OBJECT_MAPPING above
+      :type objecttype: basestring
+      :param data: Dict of attributes:values to delete.
+      Value may be empty if the attribute is not ambiguous
+      :type data: dict
+
+
+
+   .. py:method:: _rename(old_dn, new_cn)
+
+      :param old_dn:
+      :type old_dn:
+      :param new_cn:
+      :type new_cn:
+      :return:
+      :rtype:
+
+
+
+   .. py:method:: _move(old_dn, new_ou)
+
+      :param old_dn:
+      :type old_dn:
+      :param new_dn:
+      :type new_dn:
+      :return:
+      :rtype:
+
+
+
+   .. py:method:: _add_ou(dn)
+
+      Create an organisational unit with the given dn.
+
+      :param dn: dn of the object to modify
+      :type dn: basestring
+
+
+
+   .. py:method:: _add_group(dn, ldif=[])
+
+      Create a group with the given dn.
+
+      :param dn: dn of the object to modify
+      :type dn: basestring
+
+
+
+   .. py:method:: _del(dn)
+
+      Delete an Ldap object.
+
+      :param dn: dn of the object to delete
+      :type dn: basestring
+
+
+
+.. py:data:: router
+
+.. py:class:: LMNSchoolclassWriter
+
+   .. py:attribute:: lw
+
+
+   .. py:attribute:: lr
+
+
+   .. py:method:: setattr(name, **kwargs)
+
+      Middleware to check if the object exists.
+
+      :param name: cn of the object
+      :type name: basestring
+
+
+
+   .. py:method:: delattr(name, **kwargs)
+
+      Middleware to check if the object exists.
+
+      :param name: cn of the object
+      :type name: basestring
+
+
+
+.. py:class:: LdapWriter
+
+   .. py:attribute:: lc
+
+
+   .. py:attribute:: lr
+
+
+   .. py:method:: _setattr(obj_details, data=None, add=False)
+
+      Set one or more attributes only for a ldap entry.
+
+      :param obj_details: object to modify (project, ...)
+      :type obj_details: dict
+      :param data: Dict of attributes:values to write
+      :type data: dict
+      :type add: bool
+      :param add: Define if the attribute should be added, even if the
+      attribute is already present
+
+
+
+   .. py:method:: _delattr(obj_details, data=None)
+
+      Delete one or more attributes only for a ldap entry.
+
+      :param name: cn
+      :type name: basestring
+      :param objecttype: user, device, etc ... see OBJECT_MAPPING above
+      :type objecttype: basestring
+      :param data: Dict of attributes:values to delete.
+      Value may be empty if the attribute is not ambiguous
+      :type data: dict
+
+
+
+   .. py:method:: _rename(old_dn, new_cn)
+
+      :param old_dn:
+      :type old_dn:
+      :param new_cn:
+      :type new_cn:
+      :return:
+      :rtype:
+
+
+
+   .. py:method:: _move(old_dn, new_ou)
+
+      :param old_dn:
+      :type old_dn:
+      :param new_dn:
+      :type new_dn:
+      :return:
+      :rtype:
+
+
+
+   .. py:method:: _add_ou(dn)
+
+      Create an organisational unit with the given dn.
+
+      :param dn: dn of the object to modify
+      :type dn: basestring
+
+
+
+   .. py:method:: _add_group(dn, ldif=[])
+
+      Create a group with the given dn.
+
+      :param dn: dn of the object to modify
+      :type dn: basestring
+
+
+
+   .. py:method:: _del(dn)
+
+      Delete an Ldap object.
+
+      :param dn: dn of the object to delete
+      :type dn: basestring
+
+
+
+.. py:data:: router
+
+.. py:class:: LMNObjectWriter
+
+   Search per dn, may not be the best solution.
+
+
+   .. py:attribute:: lw
+
+
+   .. py:attribute:: lr
+
+
+   .. py:method:: setattr(dn, **kwargs)
+
+      Middleware to check if the object exists.
+
+      :param name: cn of the object
+      :type name: basestring
+
+
+
+   .. py:method:: delattr(dn, **kwargs)
+
+      Middleware to check if the object exists.
+
+      :param name: cn of the object
+      :type name: basestring
+
+
+
+   .. py:method:: remove_member(dn, member_dn)
+
+
+   .. py:method:: add_member(dn, member_dn)
+
+
+.. py:data:: DeviceWriter
+
+.. py:data:: MgmtGroupWriter
+
+.. py:data:: ObjectWriter
+
+.. py:data:: PrinterWriter
+
+.. py:data:: ProjectWriter
+
+.. py:data:: SchoolclassWriter
+
+.. py:data:: UserWriter
+

@@ -1,0 +1,41 @@
+linuxmusterTools.ldapconnector.models.lmnsession
+================================================
+
+.. py:module:: linuxmusterTools.ldapconnector.models.lmnsession
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.models.lmnsession.LMNSession
+
+
+Module Contents
+---------------
+
+.. py:class:: LMNSession
+
+   .. py:attribute:: sid
+      :type:  str
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: members
+      :type:  list
+
+
+   .. py:attribute:: membersCount
+      :type:  int
+
+
+   .. py:method:: get_first_passwords()
+
+
+   .. py:method:: __str__()
+
+

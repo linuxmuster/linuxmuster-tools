@@ -1,0 +1,148 @@
+conf
+====
+
+.. py:module:: conf
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   conf.extensions
+   conf.autosummary_generate
+   conf.autoapi_dirs
+   conf.autoapi_type
+   conf.autoapi_ignore
+   conf.templates_path
+   conf.source_suffix
+   conf.master_doc
+   conf.project
+   conf.year
+   conf.copyright
+   conf.author
+   conf.version
+   conf.release
+   conf.language
+   conf.exclude_patterns
+   conf.pygments_style
+   conf.todo_include_todos
+   conf.html_theme
+   conf.html_logo
+   conf.html_static_path
+   conf.html_sidebars
+   conf.htmlhelp_basename
+   conf.latex_elements
+   conf.latex_documents
+   conf.man_pages
+   conf.texinfo_documents
+   conf.intersphinx_mapping
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   conf.setup
+
+
+Module Contents
+---------------
+
+.. py:data:: extensions
+   :value: ['sphinx.ext.autodoc', 'sphinx.ext.intersphinx', 'sphinx.ext.ifconfig', 'sphinx.ext.viewcode',...
+
+
+.. py:data:: autosummary_generate
+   :value: True
+
+
+.. py:data:: autoapi_dirs
+   :value: ['../../linuxmuster-tools']
+
+
+.. py:data:: autoapi_type
+   :value: 'python'
+
+
+.. py:data:: autoapi_ignore
+   :value: ['conf.py', 'examples/*']
+
+
+.. py:data:: templates_path
+   :value: ['_templates']
+
+
+.. py:data:: source_suffix
+   :value: '.rst'
+
+
+.. py:data:: master_doc
+   :value: 'index'
+
+
+.. py:data:: project
+   :value: 'linuxmuster-tools7'
+
+
+.. py:data:: year
+
+.. py:data:: copyright
+   :value: 'Arnaud Kientz - Uninferable'
+
+
+.. py:data:: author
+   :value: 'Arnaud Kientz'
+
+
+.. py:function:: setup(app)
+
+.. py:data:: version
+
+.. py:data:: release
+
+.. py:data:: language
+   :value: 'en_GB'
+
+
+.. py:data:: exclude_patterns
+   :value: []
+
+
+.. py:data:: pygments_style
+   :value: 'sphinx'
+
+
+.. py:data:: todo_include_todos
+   :value: False
+
+
+.. py:data:: html_theme
+   :value: 'sphinx_rtd_theme'
+
+
+.. py:data:: html_logo
+   :value: '_static/logo.png'
+
+
+.. py:data:: html_static_path
+   :value: ['_static']
+
+
+.. py:data:: html_sidebars
+
+.. py:data:: htmlhelp_basename
+   :value: 'linuxmuster-tools7doc'
+
+
+.. py:data:: latex_elements
+
+.. py:data:: latex_documents
+
+.. py:data:: man_pages
+
+.. py:data:: texinfo_documents
+
+.. py:data:: intersphinx_mapping
+

@@ -1,0 +1,82 @@
+linuxmusterTools.quotas
+=======================
+
+.. py:module:: linuxmusterTools.quotas
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/linuxmusterTools/quotas/check/index
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.quotas.DFS
+   linuxmusterTools.quotas.lr
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   linuxmusterTools.quotas.format_size
+   linuxmusterTools.quotas.timestamp2date
+   linuxmusterTools.quotas._get_recursive_dir_properties
+   linuxmusterTools.quotas._sum_dir_size
+   linuxmusterTools.quotas.samba_root_tree
+   linuxmusterTools.quotas._samba_dir_size
+   linuxmusterTools.quotas.samba_dir_size
+   linuxmusterTools.quotas.list_user_files
+   linuxmusterTools.quotas.get_user_quotas
+
+
+Package Contents
+----------------
+
+.. py:data:: DFS
+
+.. py:data:: lr
+
+.. py:function:: format_size(num, suffix='B', base=2)
+
+.. py:function:: timestamp2date(t)
+
+.. py:function:: _get_recursive_dir_properties(path)
+
+   Get properties of folder, and call itself recursively for subfolders.
+
+   :param path: Current SAMBA path to scan
+   :type path: basestring
+   :return: Files, subfolders, and their size, last modified date.
+   :rtype: dict
+
+
+.. py:function:: _sum_dir_size(d)
+
+.. py:function:: samba_root_tree(user)
+
+   Recursively list files and folder of a school root share, with size and last-modified properties.
+   This function can only be called with a valid kerberos ticket.
+
+   :param user: LDAP User
+   :type user: basestring
+   :return: All folders and files owned by user
+   :rtype: dict
+
+
+.. py:function:: _samba_dir_size(user, path=None)
+
+.. py:function:: samba_dir_size(user, path=None, raw=False)
+
+.. py:function:: list_user_files(user)
+
+.. py:function:: get_user_quotas(user)
+

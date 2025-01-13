@@ -1,0 +1,91 @@
+linuxmusterTools.samba_util.drives
+==================================
+
+.. py:module:: linuxmusterTools.samba_util.drives
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.samba_util.drives.Drive
+   linuxmusterTools.samba_util.drives.DriveManager
+
+
+Module Contents
+---------------
+
+.. py:class:: Drive
+
+   .. py:attribute:: disabled
+      :type:  bool
+
+
+   .. py:attribute:: filters
+      :type:  dict
+
+
+   .. py:attribute:: label
+      :type:  str
+
+
+   .. py:attribute:: letter
+      :type:  str
+
+
+   .. py:attribute:: properties
+      :type:  dict
+
+
+   .. py:attribute:: userLetter
+      :type:  str
+
+
+   .. py:attribute:: id
+      :type:  str
+
+
+   .. py:method:: __post_init__()
+
+
+.. py:class:: DriveManager(policy_path)
+
+   Object to store data from Drives.xml
+
+
+   .. py:attribute:: usedLetters
+      :value: []
+
+
+
+   .. py:method:: load()
+
+      Parse the Drives.xml in the policy directory in order to get all shares
+      properties.
+
+
+
+   .. py:method:: _parseProperties(drive)
+      :staticmethod:
+
+
+
+   .. py:method:: _parseFilters(drive)
+      :staticmethod:
+
+
+
+   .. py:method:: save(content)
+
+      Save all configuration and properties from the drives and then reload
+      the configuration.
+
+      :param content: All drives configuration and properties
+      :type content: dict
+
+
+
+   .. py:method:: aslist()
+
+

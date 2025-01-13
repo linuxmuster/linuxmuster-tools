@@ -1,0 +1,1613 @@
+linuxmusterTools.ldapconnector.models
+=====================================
+
+.. py:module:: linuxmusterTools.ldapconnector.models
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/linuxmusterTools/ldapconnector/models/common/index
+   /autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index
+   /autoapi/linuxmusterTools/ldapconnector/models/lmngroup/index
+   /autoapi/linuxmusterTools/ldapconnector/models/lmnobject/index
+   /autoapi/linuxmusterTools/ldapconnector/models/lmnproject/index
+   /autoapi/linuxmusterTools/ldapconnector/models/lmnschool/index
+   /autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index
+   /autoapi/linuxmusterTools/ldapconnector/models/lmnsession/index
+   /autoapi/linuxmusterTools/ldapconnector/models/lmnuser/index
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.models.WEBUI_IMPORT
+   linuxmusterTools.ldapconnector.models.lr
+   linuxmusterTools.ldapconnector.models.lr
+   linuxmusterTools.ldapconnector.models.lr
+   linuxmusterTools.ldapconnector.models.lr
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.models.LMNParent
+   linuxmusterTools.ldapconnector.models.LMNOU
+   linuxmusterTools.ldapconnector.models.LMNSession
+   linuxmusterTools.ldapconnector.models.LMNParent
+   linuxmusterTools.ldapconnector.models.LMNUser
+   linuxmusterTools.ldapconnector.models.LMNSession
+   linuxmusterTools.ldapconnector.models.LMNParent
+   linuxmusterTools.ldapconnector.models.LMNSchoolClass
+   linuxmusterTools.ldapconnector.models.LMNParent
+   linuxmusterTools.ldapconnector.models.LMNProject
+   linuxmusterTools.ldapconnector.models.LMNSchool
+   linuxmusterTools.ldapconnector.models.LMNParent
+   linuxmusterTools.ldapconnector.models.LMNDevice
+   linuxmusterTools.ldapconnector.models.LMNRoom
+   linuxmusterTools.ldapconnector.models.LMNParent
+   linuxmusterTools.ldapconnector.models.LMNGroup
+   linuxmusterTools.ldapconnector.models.LMNParent
+   linuxmusterTools.ldapconnector.models.LMNObject
+
+
+Package Contents
+----------------
+
+.. py:class:: LMNParent
+
+   Common parent class to gather common methods.
+
+
+   .. py:method:: asdict()
+
+
+   .. py:method:: asjson()
+
+
+   .. py:method:: split_dn(dn)
+      :staticmethod:
+
+
+
+   .. py:method:: common_name(dn)
+
+
+.. py:class:: LMNOU
+
+   Bases: :py:obj:`LMNParent`
+
+
+   Common parent class to gather common methods.
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: objectCategory
+      :type:  list
+
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:attribute:: ou
+      :type:  str
+
+
+   .. py:method:: __post_init__()
+
+
+.. py:class:: LMNSession
+
+   .. py:attribute:: sid
+      :type:  str
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: members
+      :type:  list
+
+
+   .. py:attribute:: membersCount
+      :type:  int
+
+
+   .. py:method:: get_first_passwords()
+
+
+   .. py:method:: __str__()
+
+
+.. py:class:: LMNParent
+
+   Common parent class to gather common methods.
+
+
+   .. py:method:: asdict()
+
+
+   .. py:method:: asjson()
+
+
+   .. py:method:: split_dn(dn)
+      :staticmethod:
+
+
+
+   .. py:method:: common_name(dn)
+
+
+.. py:data:: WEBUI_IMPORT
+   :value: True
+
+
+.. py:class:: LMNUser
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+
+
+   Common parent class to gather common methods.
+
+
+   .. py:attribute:: cn
+      :type:  str
+
+
+   .. py:attribute:: custom_fields_config
+      :type:  dataclasses.InitVar[dict]
+
+
+   .. py:attribute:: displayName
+      :type:  str
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+   .. py:attribute:: givenName
+      :type:  str
+
+
+   .. py:attribute:: homeDirectory
+      :type:  str
+
+
+   .. py:attribute:: homeDrive
+      :type:  str
+
+
+   .. py:attribute:: mail
+      :type:  list
+
+
+   .. py:attribute:: memberOf
+      :type:  list
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:attribute:: proxyAddresses
+      :type:  list
+
+
+   .. py:attribute:: sAMAccountName
+      :type:  str
+
+
+   .. py:attribute:: sAMAccountType
+      :type:  str
+
+
+   .. py:attribute:: sn
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAdminClass
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAdminFile
+      :type:  str
+
+
+   .. py:attribute:: sophomorixBirthdate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCloudQuotaCalculated
+      :type:  list
+
+
+   .. py:attribute:: sophomorixComment
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCreationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom1
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom2
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom3
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom4
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom5
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustomMulti1
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti2
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti3
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti4
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti5
+      :type:  list
+
+
+   .. py:attribute:: sophomorixDeactivationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixExamMode
+      :type:  list
+
+
+   .. py:attribute:: sophomorixExitAdminClass
+      :type:  str
+
+
+   .. py:attribute:: sophomorixFirstnameASCII
+      :type:  str
+
+
+   .. py:attribute:: sophomorixFirstnameInitial
+      :type:  str
+
+
+   .. py:attribute:: sophomorixFirstPassword
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic2
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsic3
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMailQuotaCalculated
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMailQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixRole
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSchoolname
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSchoolPrefix
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSessions
+      :type:  list
+
+
+   .. py:attribute:: sophomorixStatus
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSurnameASCII
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSurnameInitial
+      :type:  str
+
+
+   .. py:attribute:: sophomorixTolerationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixUnid
+      :type:  str
+
+
+   .. py:attribute:: sophomorixUserToken
+      :type:  str
+
+
+   .. py:attribute:: sophomorixWebuiDashboard
+      :type:  list
+
+
+   .. py:attribute:: sophomorixWebuiPermissionsCalculated
+      :type:  list
+
+
+   .. py:attribute:: thumbnailPhoto
+      :type:  str
+
+
+   .. py:attribute:: unixHomeDirectory
+      :type:  str
+
+
+   .. py:attribute:: whenChanged
+      :type:  str
+
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:attribute:: customFields
+      :type:  dict
+
+
+   .. py:attribute:: examMode
+      :type:  bool
+
+
+   .. py:attribute:: examTeacher
+      :type:  str
+
+
+   .. py:attribute:: examBaseCn
+      :type:  str
+
+
+   .. py:attribute:: internet
+      :type:  bool
+
+
+   .. py:attribute:: intranet
+      :type:  bool
+
+
+   .. py:attribute:: isAdmin
+      :type:  bool
+
+
+   .. py:attribute:: lmnsessions
+      :type:  list
+
+
+   .. py:attribute:: permissions
+      :type:  list
+
+
+   .. py:attribute:: printers
+      :type:  list
+
+
+   .. py:attribute:: printing
+      :type:  bool
+
+
+   .. py:attribute:: projects
+      :type:  list
+
+
+   .. py:attribute:: schoolclasses
+      :type:  list
+
+
+   .. py:attribute:: school
+      :type:  str
+
+
+   .. py:attribute:: webfilter
+      :type:  bool
+
+
+   .. py:attribute:: wifi
+      :type:  bool
+
+
+   .. py:method:: _check_schoolclass_number(s)
+      :staticmethod:
+
+
+
+   .. py:method:: extract_schoolclasses(membership)
+
+
+   .. py:method:: extract_projects(membership)
+
+
+   .. py:method:: extract_printers(membership)
+
+
+   .. py:method:: extract_management()
+
+
+   .. py:method:: parse_permissions()
+
+
+   .. py:method:: parse_sessions()
+
+
+   .. py:method:: parse_exam()
+
+
+   .. py:method:: create_custom_fields_objects(custom_config={})
+
+
+   .. py:method:: __post_init__(custom_fields_config={})
+
+
+   .. py:method:: test_password(password='')
+
+
+   .. py:method:: test_first_password()
+
+
+.. py:data:: lr
+
+.. py:class:: LMNSession
+
+   .. py:attribute:: sid
+      :type:  str
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: members
+      :type:  list
+
+
+   .. py:attribute:: membersCount
+      :type:  int
+
+
+   .. py:method:: get_first_passwords()
+
+
+   .. py:method:: __str__()
+
+
+.. py:data:: lr
+
+.. py:class:: LMNParent
+
+   Common parent class to gather common methods.
+
+
+   .. py:method:: asdict()
+
+
+   .. py:method:: asjson()
+
+
+   .. py:method:: split_dn(dn)
+      :staticmethod:
+
+
+
+   .. py:method:: common_name(dn)
+
+
+.. py:class:: LMNSchoolClass
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+
+
+   Common parent class to gather common methods.
+
+
+   .. py:attribute:: cn
+      :type:  str
+
+
+   .. py:attribute:: description
+      :type:  str
+
+
+   .. py:attribute:: displayName
+      :type:  str
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+   .. py:attribute:: mail
+      :type:  list
+
+
+   .. py:attribute:: member
+      :type:  list
+
+
+   .. py:attribute:: memberOf
+      :type:  list
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:attribute:: sAMAccountName
+      :type:  str
+
+
+   .. py:attribute:: sAMAccountType
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAddMailQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixAddQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixAdmins
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCreationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixHidden
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixJoinable
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailAlias
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailList
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMaxMembers
+      :type:  int
+
+
+   .. py:attribute:: sophomorixMembers
+      :type:  list
+
+
+   .. py:attribute:: sophomorixQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixSchoolname
+      :type:  str
+
+
+   .. py:attribute:: sophomorixStatus
+      :type:  str
+
+
+   .. py:attribute:: sophomorixType
+      :type:  str
+
+
+   .. py:attribute:: membersCount
+      :type:  int
+
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:method:: __post_init__()
+
+
+   .. py:method:: get_first_passwords()
+
+
+.. py:data:: lr
+
+.. py:class:: LMNParent
+
+   Common parent class to gather common methods.
+
+
+   .. py:method:: asdict()
+
+
+   .. py:method:: asjson()
+
+
+   .. py:method:: split_dn(dn)
+      :staticmethod:
+
+
+
+   .. py:method:: common_name(dn)
+
+
+.. py:class:: LMNProject
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+
+
+   Common parent class to gather common methods.
+
+
+   .. py:attribute:: cn
+      :type:  str
+
+
+   .. py:attribute:: description
+      :type:  str
+
+
+   .. py:attribute:: displayName
+      :type:  str
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+   .. py:attribute:: mail
+      :type:  list
+
+
+   .. py:attribute:: member
+      :type:  list
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:attribute:: proxyAddresses
+      :type:  list
+
+
+   .. py:attribute:: sAMAccountName
+      :type:  str
+
+
+   .. py:attribute:: sAMAccountType
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAddMailQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixAddQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixAdminGroups
+      :type:  list
+
+
+   .. py:attribute:: sophomorixAdmins
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCreationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixHidden
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti1
+      :type:  list
+
+
+   .. py:attribute:: sophomorixJoinable
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailAlias
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailList
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMaxMembers
+      :type:  int
+
+
+   .. py:attribute:: sophomorixMemberGroups
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMembers
+      :type:  list
+
+
+   .. py:attribute:: sophomorixQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixSchoolname
+      :type:  str
+
+
+   .. py:attribute:: sophomorixStatus
+      :type:  str
+
+
+   .. py:attribute:: sophomorixType
+      :type:  str
+
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:attribute:: all_members
+      :type:  list
+
+
+   .. py:attribute:: all_admins
+      :type:  list
+
+
+   .. py:attribute:: membersCount
+      :type:  int
+
+
+   .. py:attribute:: adminsCount
+      :type:  int
+
+
+   .. py:method:: __post_init__()
+
+
+   .. py:method:: get_all_members()
+
+      Set a members and admins list by recursively scanning all groups and their members which are members
+      or admins of this project.
+
+      This is not called as post init because of nested projects. So it's necessary to call this method
+      afterwards:
+
+      p = lr.get('/projects/p_test', dict=False)
+      p.get_all_members()
+
+
+
+.. py:class:: LMNSchool
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:attribute:: ou
+      :type:  str
+
+
+   .. py:attribute:: displayName
+      :type:  str
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+.. py:class:: LMNParent
+
+   Common parent class to gather common methods.
+
+
+   .. py:method:: asdict()
+
+
+   .. py:method:: asjson()
+
+
+   .. py:method:: split_dn(dn)
+      :staticmethod:
+
+
+
+   .. py:method:: common_name(dn)
+
+
+.. py:class:: LMNDevice
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+
+
+   Common parent class to gather common methods.
+
+
+   .. py:attribute:: cn
+      :type:  str
+
+
+   .. py:attribute:: displayName
+      :type:  str
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+   .. py:attribute:: dNSHostName
+      :type:  str
+
+
+   .. py:attribute:: memberOf
+      :type:  list
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:attribute:: proxyAddresses
+      :type:  list
+
+
+   .. py:attribute:: sAMAccountName
+      :type:  str
+
+
+   .. py:attribute:: sAMAccountType
+      :type:  str
+
+
+   .. py:attribute:: servicePrincipalName
+      :type:  list
+
+
+   .. py:attribute:: sophomorixAdminClass
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAdminFile
+      :type:  str
+
+
+   .. py:attribute:: sophomorixComment
+      :type:  str
+
+
+   .. py:attribute:: sophomorixComputerIP
+      :type:  str
+
+
+   .. py:attribute:: sophomorixComputerMAC
+      :type:  str
+
+
+   .. py:attribute:: sophomorixComputerRoom
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCreationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixDnsNodename
+      :type:  str
+
+
+   .. py:attribute:: sophomorixRole
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSchoolname
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSchoolPrefix
+      :type:  str
+
+
+   .. py:attribute:: sophomorixStatus
+      :type:  str
+
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:method:: __post_init__()
+
+
+.. py:class:: LMNRoom
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+
+
+   ObjectClass group for a room.
+
+
+   .. py:attribute:: cn
+      :type:  str
+
+
+   .. py:attribute:: description
+      :type:  str
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+   .. py:attribute:: mail
+      :type:  list
+
+
+   .. py:attribute:: member
+      :type:  list
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:attribute:: sAMAccountName
+      :type:  str
+
+
+   .. py:attribute:: sAMAccountType
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAddMailQuota
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAddQuota
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCreationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixHidden
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixJoinable
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailAlias
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailList
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMaxMembers
+      :type:  int
+
+
+   .. py:attribute:: sophomorixQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixRoomComputers
+      :type:  list
+
+
+   .. py:attribute:: sophomorixRoomIPs
+      :type:  list
+
+
+   .. py:attribute:: sophomorixRoomMACs
+      :type:  list
+
+
+   .. py:attribute:: sophomorixSchoolname
+      :type:  str
+
+
+   .. py:attribute:: sophomorixStatus
+      :type:  str
+
+
+   .. py:attribute:: sophomorixType
+      :type:  str
+
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:method:: __post_init__()
+
+
+.. py:data:: lr
+
+.. py:class:: LMNParent
+
+   Common parent class to gather common methods.
+
+
+   .. py:method:: asdict()
+
+
+   .. py:method:: asjson()
+
+
+   .. py:method:: split_dn(dn)
+      :staticmethod:
+
+
+
+   .. py:method:: common_name(dn)
+
+
+.. py:class:: LMNGroup
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+
+
+   Common parent class to gather common methods.
+
+
+   .. py:attribute:: cn
+      :type:  str
+
+
+   .. py:attribute:: description
+      :type:  str
+
+
+   .. py:attribute:: displayName
+      :type:  str
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+   .. py:attribute:: member
+      :type:  list
+
+
+   .. py:attribute:: memberOf
+      :type:  list
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:attribute:: proxyAddresses
+      :type:  list
+
+
+   .. py:attribute:: sAMAccountName
+      :type:  str
+
+
+   .. py:attribute:: sAMAccountType
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAdminClass
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCreationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixHidden
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti1
+      :type:  list
+
+
+   .. py:attribute:: sophomorixJoinable
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMembers
+      :type:  list
+
+
+   .. py:attribute:: sophomorixRole
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSchoolname
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSchoolPrefix
+      :type:  str
+
+
+   .. py:attribute:: sophomorixStatus
+      :type:  str
+
+
+   .. py:attribute:: sophomorixType
+      :type:  str
+
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:attribute:: all_members
+      :type:  list
+
+
+   .. py:attribute:: membersCount
+      :type:  int
+
+
+   .. py:method:: __post_init__()
+
+
+   .. py:method:: get_all_members()
+
+      Set a members and admins list by recursively scanning all groups and their members which are members
+      or admins of this project.
+
+      This is not called as post init because of nested projects. So it's necessary to call this method
+      afterwards:
+
+      p = lr.get('/projects/p_test', dict=False)
+      p.get_all_members()
+
+
+
+.. py:class:: LMNParent
+
+   Common parent class to gather common methods.
+
+
+   .. py:method:: asdict()
+
+
+   .. py:method:: asjson()
+
+
+   .. py:method:: split_dn(dn)
+      :staticmethod:
+
+
+
+   .. py:method:: common_name(dn)
+
+
+.. py:class:: LMNObject
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+
+
+   Common linuxmuster.net object with all attributes for global search queries.
+
+
+   .. py:attribute:: cn
+      :type:  str
+
+
+   .. py:attribute:: description
+      :type:  str
+
+
+   .. py:attribute:: displayName
+      :type:  str
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+   .. py:attribute:: givenName
+      :type:  str
+
+
+   .. py:attribute:: homeDirectory
+      :type:  str
+
+
+   .. py:attribute:: homeDrive
+      :type:  str
+
+
+   .. py:attribute:: mail
+      :type:  list
+
+
+   .. py:attribute:: member
+      :type:  list
+
+
+   .. py:attribute:: memberOf
+      :type:  list
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:attribute:: ou
+      :type:  str
+
+
+   .. py:attribute:: proxyAddresses
+      :type:  list
+
+
+   .. py:attribute:: sAMAccountName
+      :type:  str
+
+
+   .. py:attribute:: sAMAccountType
+      :type:  str
+
+
+   .. py:attribute:: sn
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAddMailQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixAddQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixAdminClass
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAdminFile
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAdminGroups
+      :type:  list
+
+
+   .. py:attribute:: sophomorixAdmins
+      :type:  list
+
+
+   .. py:attribute:: sophomorixBirthdate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCloudQuotaCalculated
+      :type:  list
+
+
+   .. py:attribute:: sophomorixComment
+      :type:  str
+
+
+   .. py:attribute:: sophomorixComputerIP
+      :type:  str
+
+
+   .. py:attribute:: sophomorixComputerMAC
+      :type:  str
+
+
+   .. py:attribute:: sophomorixComputerRoom
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCreationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom1
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom2
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom3
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom4
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom5
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustomMulti1
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti2
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti3
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti4
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti5
+      :type:  list
+
+
+   .. py:attribute:: sophomorixDeactivationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixExamMode
+      :type:  list
+
+
+   .. py:attribute:: sophomorixExitAdminClass
+      :type:  str
+
+
+   .. py:attribute:: sophomorixFirstnameASCII
+      :type:  str
+
+
+   .. py:attribute:: sophomorixFirstnameInitial
+      :type:  str
+
+
+   .. py:attribute:: sophomorixFirstPassword
+      :type:  str
+
+
+   .. py:attribute:: sophomorixHidden
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixIntrinsic2
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsic3
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti1
+      :type:  list
+
+
+   .. py:attribute:: sophomorixJoinable
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailAlias
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailList
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailQuotaCalculated
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMailQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMaxMembers
+      :type:  int
+
+
+   .. py:attribute:: sophomorixMemberGroups
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMembers
+      :type:  list
+
+
+   .. py:attribute:: sophomorixQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixRole
+      :type:  str
+
+
+   .. py:attribute:: sophomorixRoomComputers
+      :type:  list
+
+
+   .. py:attribute:: sophomorixRoomIPs
+      :type:  list
+
+
+   .. py:attribute:: sophomorixRoomMACs
+      :type:  list
+
+
+   .. py:attribute:: sophomorixSchoolname
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSchoolPrefix
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSessions
+      :type:  list
+
+
+   .. py:attribute:: sophomorixStatus
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSurnameASCII
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSurnameInitial
+      :type:  str
+
+
+   .. py:attribute:: sophomorixTolerationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixType
+      :type:  str
+
+
+   .. py:attribute:: sophomorixUnid
+      :type:  str
+
+
+   .. py:attribute:: sophomorixUserToken
+      :type:  str
+
+
+   .. py:attribute:: sophomorixWebuiDashboard
+      :type:  list
+
+
+   .. py:attribute:: sophomorixWebuiPermissionsCalculated
+      :type:  list
+
+
+   .. py:attribute:: unixHomeDirectory
+      :type:  str
+
+
+   .. py:attribute:: whenChanged
+      :type:  str
+
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:attribute:: type
+      :type:  str
+
+
+   .. py:method:: get_type()
+
+
+   .. py:method:: __post_init__()
+
+

@@ -1,7 +1,0 @@
-Module: LMNTools Ldapconnector
-******************************
-
-LMNTools Ldapconnector
-======================
-.. automodule:: linuxmusterTools.ldapconnector
-   :members:

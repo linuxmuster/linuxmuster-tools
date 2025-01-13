@@ -1,0 +1,19 @@
+linuxmusterTools.lmnconfig.setup
+================================
+
+.. py:module:: linuxmusterTools.lmnconfig.setup
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.lmnconfig.setup.SetupConfig
+
+
+Module Contents
+---------------
+
+.. py:class:: SetupConfig(school='default-school')
+

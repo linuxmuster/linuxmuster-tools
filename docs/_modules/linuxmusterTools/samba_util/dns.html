@@ -1,0 +1,294 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.samba_util.dns &mdash; linuxmuster-tools7 7.2.44 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../samba_util.html">linuxmusterTools.samba_util</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.samba_util.dns</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for linuxmusterTools.samba_util.dns</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">configparser</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pexpect</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..lmnfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">LMNFile</span>
+
+
+<div class="viewcode-block" id="SambaToolDNS">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/index.html#linuxmusterTools.samba_util.dns.SambaToolDNS">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SambaToolDNS</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Object to manage current samba dns entries on the system. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_get_zone</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">zone</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_ignore_list</span><span class="p">()</span>
+
+<div class="viewcode-block" id="SambaToolDNS._get_zone">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/index.html#linuxmusterTools.samba_util.dns.SambaToolDNS._get_zone">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_zone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse setup.ini to get the current zone and store it in self.zone.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Used for pageTitle, see lmn_auth.api</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">LMNFile</span><span class="p">(</span><span class="s1">&#39;/var/lib/linuxmuster/setup.ini&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">setup</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">zone</span> <span class="o">=</span> <span class="n">setup</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;setup&#39;</span><span class="p">][</span><span class="s1">&#39;domainname&#39;</span><span class="p">]</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">zone</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zone</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span></div>
+
+
+<div class="viewcode-block" id="SambaToolDNS._get_ignore_list">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/index.html#linuxmusterTools.samba_util.dns.SambaToolDNS._get_ignore_list">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_ignore_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get list of LMN devices to ignore them and store it in self.lmn_hosts,</span>
+<span class="sd">        because the list of DNS entries would be too long.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/etc/linuxmuster/sophomorix/default-school/devices.csv&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lmn_hosts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">with</span> <span class="n">LMNFile</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">devices</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">devices</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+                <span class="c1"># Ignore comment lines</span>
+                <span class="k">if</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">lmn_hosts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="SambaToolDNS._samba_tool_process">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/index.html#linuxmusterTools.samba_util.dns.SambaToolDNS._samba_tool_process">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_samba_tool_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Execute samba-tool dns with parameter.</span>
+
+<span class="sd">        :param action: query, add, delete or update</span>
+<span class="sd">        :type action: string</span>
+<span class="sd">        :param options: Tuple of necessary options for the query</span>
+<span class="sd">        :type options: tuple</span>
+<span class="sd">        :return: List of lines as strings</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">action</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="s1">&#39;delete&#39;</span><span class="p">,</span> <span class="s1">&#39;update&#39;</span><span class="p">]:</span>
+            <span class="k">return</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/etc/linuxmuster/.secret/administrator&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">password</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;samba-tool&#39;</span><span class="p">,</span> <span class="s1">&#39;dns&#39;</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">zone</span><span class="p">,</span> <span class="o">*</span><span class="n">options</span><span class="p">,</span> <span class="s1">&#39;-U&#39;</span><span class="p">,</span> <span class="s1">&#39;administrator&#39;</span><span class="p">]</span>
+        <span class="n">child</span> <span class="o">=</span> <span class="n">pexpect</span><span class="o">.</span><span class="n">spawn</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cmd</span><span class="p">))</span>
+        <span class="n">child</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="s2">&quot;Password for .*:&quot;</span><span class="p">)</span>
+        <span class="n">child</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">child</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SambaToolDNS.list">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/index.html#linuxmusterTools.samba_util.dns.SambaToolDNS.list">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Query all dns entries and parse it to sort it in a dict, but removes the devices entries.</span>
+
+<span class="sd">        :return: Separate dns values from root and subdomains</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_samba_tool_process</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">,</span> <span class="s1">&#39;ALL&#39;</span><span class="p">))</span>
+
+        <span class="c1"># Filter results</span>
+        <span class="n">entries</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;root&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;sub&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+        <span class="n">host</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">tmp_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;AAAA&#39;</span><span class="p">,</span> <span class="s1">&#39;SOA&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;PTR&#39;</span><span class="p">,</span> <span class="s1">&#39;CNAME&#39;</span><span class="p">,</span> <span class="s1">&#39;NS&#39;</span><span class="p">,</span> <span class="s1">&#39;MX&#39;</span><span class="p">,</span> <span class="s1">&#39;TXT&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="s2">&quot;Name=,&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="c1"># First header</span>
+                <span class="n">host</span> <span class="o">=</span> <span class="s1">&#39;root&#39;</span>
+
+            <span class="k">elif</span> <span class="s2">&quot;Name=&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">host</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">host</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmn_hosts</span><span class="p">:</span>
+                    <span class="n">host</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+            <span class="k">elif</span> <span class="n">host</span><span class="p">:</span>
+                <span class="k">for</span> <span class="nb">type</span> <span class="ow">in</span> <span class="n">types</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s1">&#39; &#39;</span><span class="o">+</span><span class="nb">type</span><span class="o">+</span><span class="s1">&#39;:&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s1">&#39;: ([^(]*) \(&#39;</span><span class="p">,</span> <span class="n">line</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">details</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s1">&#39;\(([^)]*)\)&#39;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">details</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                            <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">details</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">options</span> <span class="o">=</span> <span class="p">{}</span>
+                        <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;MX&quot;</span><span class="p">:</span>
+                            <span class="n">options</span><span class="p">[</span><span class="s1">&#39;priority&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">details</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">host</span> <span class="o">==</span> <span class="s1">&#39;root&#39;</span><span class="p">:</span>
+                            <span class="n">entries</span><span class="p">[</span><span class="s1">&#39;root&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">({</span><span class="s1">&#39;host&#39;</span><span class="p">:</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="nb">type</span><span class="p">,</span><span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="n">value</span><span class="p">},</span> <span class="o">**</span><span class="n">options</span><span class="p">))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">entries</span><span class="p">[</span><span class="s1">&#39;sub&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">({</span><span class="s1">&#39;host&#39;</span><span class="p">:</span><span class="n">host</span><span class="p">,</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="nb">type</span><span class="p">,</span><span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="n">value</span><span class="p">},</span> <span class="o">**</span><span class="n">options</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">entries</span></div>
+
+
+<div class="viewcode-block" id="SambaToolDNS.add">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/index.html#linuxmusterTools.samba_util.dns.SambaToolDNS.add">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sub</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add subdomain entry to dns.</span>
+
+<span class="sd">        :param sub: Subdomain details</span>
+<span class="sd">        :type sub: dict</span>
+<span class="sd">        :return: Result of samba-tool</span>
+<span class="sd">        :rtype: string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">sub</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;MX&quot;</span><span class="p">:</span>
+            <span class="n">sub</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sub</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="n">sub</span><span class="p">[</span><span class="s1">&#39;priority&#39;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_samba_tool_process</span><span class="p">(</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">sub</span><span class="p">[</span><span class="s1">&#39;host&#39;</span><span class="p">],</span> <span class="n">sub</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span> <span class="n">sub</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]))</span></div>
+
+
+<div class="viewcode-block" id="SambaToolDNS.update">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/index.html#linuxmusterTools.samba_util.dns.SambaToolDNS.update">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update dns entry with new details.</span>
+
+<span class="sd">        :param old: Old subdomain details</span>
+<span class="sd">        :type old: dict</span>
+<span class="sd">        :param new: New subdomain details</span>
+<span class="sd">        :type new: dict</span>
+<span class="sd">        :return: Result of samba-tool</span>
+<span class="sd">        :rtype: string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">old</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;MX&quot;</span><span class="p">:</span>
+            <span class="n">old</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">old</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="n">old</span><span class="p">[</span><span class="s1">&#39;priority&#39;</span><span class="p">]</span>
+            <span class="n">new</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="n">new</span><span class="p">[</span><span class="s1">&#39;priority&#39;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_samba_tool_process</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">old</span><span class="p">[</span><span class="s1">&#39;host&#39;</span><span class="p">],</span> <span class="n">old</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span> <span class="n">old</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">],</span> <span class="n">new</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]))</span></div>
+
+
+<div class="viewcode-block" id="SambaToolDNS.delete">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/index.html#linuxmusterTools.samba_util.dns.SambaToolDNS.delete">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sub</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">entry</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete dns entry.</span>
+
+<span class="sd">        :param sub: Subdomain</span>
+<span class="sd">        :type sub: string</span>
+<span class="sd">        :param type: Type of entry</span>
+<span class="sd">        :type type: string</span>
+<span class="sd">        :param entry: Value of the entry</span>
+<span class="sd">        :type entry: string</span>
+<span class="sd">        :return: Result of samba-tool</span>
+<span class="sd">        :rtype: string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_samba_tool_process</span><span class="p">(</span><span class="s1">&#39;delete&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">sub</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">entry</span><span class="p">))</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,248 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.ldapconnector.models.lmnschoolclass &mdash; linuxmuster-tools7 7.2.44 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../ldapconnector.html">linuxmusterTools.ldapconnector</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.ldapconnector.models.lmnschoolclass</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for linuxmusterTools.ldapconnector.models.lmnschoolclass</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">router</span> <span class="k">as</span> <span class="n">lr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">LMNParent</span>
+
+
+<span class="nd">@dataclass</span>
+<div class="viewcode-block" id="LMNSchoolClass">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LMNSchoolClass</span><span class="p">(</span><span class="n">LMNParent</span><span class="p">):</span>
+<div class="viewcode-block" id="LMNSchoolClass.cn">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.cn">[docs]</a>
+    <span class="n">cn</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.description">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.description">[docs]</a>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.displayName">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.displayName">[docs]</a>
+    <span class="n">displayName</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.distinguishedName">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.distinguishedName">[docs]</a>
+    <span class="n">distinguishedName</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.mail">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.mail">[docs]</a>
+    <span class="n">mail</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.member">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.member">[docs]</a>
+    <span class="n">member</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.memberOf">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.memberOf">[docs]</a>
+    <span class="n">memberOf</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.name">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.name">[docs]</a>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.objectClass">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.objectClass">[docs]</a>
+    <span class="n">objectClass</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.sAMAccountName">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.sAMAccountName">[docs]</a>
+    <span class="n">sAMAccountName</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.sAMAccountType">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.sAMAccountType">[docs]</a>
+    <span class="n">sAMAccountType</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.sophomorixAddMailQuota">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.sophomorixAddMailQuota">[docs]</a>
+    <span class="n">sophomorixAddMailQuota</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.sophomorixAddQuota">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.sophomorixAddQuota">[docs]</a>
+    <span class="n">sophomorixAddQuota</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.sophomorixAdmins">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.sophomorixAdmins">[docs]</a>
+    <span class="n">sophomorixAdmins</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.sophomorixCreationDate">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.sophomorixCreationDate">[docs]</a>
+    <span class="n">sophomorixCreationDate</span><span class="p">:</span> <span class="nb">str</span> <span class="c1"># datetime</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.sophomorixHidden">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.sophomorixHidden">[docs]</a>
+    <span class="n">sophomorixHidden</span><span class="p">:</span> <span class="nb">bool</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.sophomorixJoinable">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.sophomorixJoinable">[docs]</a>
+    <span class="n">sophomorixJoinable</span><span class="p">:</span> <span class="nb">bool</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.sophomorixMailAlias">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.sophomorixMailAlias">[docs]</a>
+    <span class="n">sophomorixMailAlias</span><span class="p">:</span> <span class="nb">bool</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.sophomorixMailList">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.sophomorixMailList">[docs]</a>
+    <span class="n">sophomorixMailList</span><span class="p">:</span> <span class="nb">bool</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.sophomorixMailQuota">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.sophomorixMailQuota">[docs]</a>
+    <span class="n">sophomorixMailQuota</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.sophomorixMaxMembers">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.sophomorixMaxMembers">[docs]</a>
+    <span class="n">sophomorixMaxMembers</span><span class="p">:</span> <span class="nb">int</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.sophomorixMembers">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.sophomorixMembers">[docs]</a>
+    <span class="n">sophomorixMembers</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.sophomorixQuota">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.sophomorixQuota">[docs]</a>
+    <span class="n">sophomorixQuota</span><span class="p">:</span> <span class="nb">list</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.sophomorixSchoolname">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.sophomorixSchoolname">[docs]</a>
+    <span class="n">sophomorixSchoolname</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.sophomorixStatus">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.sophomorixStatus">[docs]</a>
+    <span class="n">sophomorixStatus</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.sophomorixType">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.sophomorixType">[docs]</a>
+    <span class="n">sophomorixType</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.membersCount">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.membersCount">[docs]</a>
+    <span class="n">membersCount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LMNSchoolClass.dn">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.dn">[docs]</a>
+    <span class="n">dn</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNSchoolClass.__post_init__">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.__post_init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distinguishedName</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">membersCount</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sophomorixMembers</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNSchoolClass.get_first_passwords">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnschoolclass/index.html#linuxmusterTools.ldapconnector.models.LMNSchoolClass.get_first_passwords">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_first_passwords</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">student</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sophomorixMembers</span><span class="p">:</span>
+            <span class="n">lmnuser</span> <span class="o">=</span> <span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/users/</span><span class="si">{</span><span class="n">student</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">response</span><span class="p">[</span><span class="n">student</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;firstPassword&#39;</span><span class="p">:</span> <span class="n">lmnuser</span><span class="o">.</span><span class="n">sophomorixFirstPassword</span><span class="p">,</span>
+                <span class="s1">&#39;firstPasswordStillSet&#39;</span><span class="p">:</span> <span class="n">lmnuser</span><span class="o">.</span><span class="n">test_first_password</span><span class="p">(),</span>
+            <span class="p">}</span>
+        <span class="k">return</span> <span class="n">response</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,154 @@
+linuxmusterTools.samba_util.samba_tool
+======================================
+
+.. py:module:: linuxmusterTools.samba_util.samba_tool
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.samba_util.samba_tool.lp
+   linuxmusterTools.samba_util.samba_tool.SAMDB_PATH
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.samba_util.samba_tool.GPO
+   linuxmusterTools.samba_util.samba_tool.GPOManager
+   linuxmusterTools.samba_util.samba_tool.GroupManager
+   linuxmusterTools.samba_util.samba_tool.UserManager
+
+
+Module Contents
+---------------
+
+.. py:data:: lp
+
+.. py:data:: SAMDB_PATH
+   :value: '/var/lib/samba/private/sam.ldb'
+
+
+.. py:class:: GPO
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:attribute:: drivemgr
+      :type:  linuxmusterTools.samba_util.drives.DriveManager
+
+
+   .. py:attribute:: gpo
+      :type:  str
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: path
+      :type:  str
+
+
+   .. py:attribute:: unix_path
+      :type:  str
+
+
+.. py:class:: GPOManager
+
+   Sample object to manage all GPOs informations.
+
+
+   .. py:attribute:: gpos
+
+
+.. py:class:: GroupManager(school='default-school')
+
+   Samble class to manage samba groups via samba-tool.
+
+
+   .. py:attribute:: POST_HOOK_DIR
+      :value: '/etc/linuxmuster/tools/hooks/group-manager'
+
+
+
+   .. py:attribute:: school
+      :value: 'default-school'
+
+
+
+   .. py:attribute:: school_prefix
+      :value: ''
+
+
+
+   .. py:method:: _run_post_hook(action, group, members)
+
+      Runs alls the scripts located in self.POST_HOOK_DIR in alphanum order, passing 3 arguments:
+
+      :param action: actually 'remove' or 'add'
+      :type action: basestring
+      :param group: group name
+      :type group: basestring
+      :param members: members list, will be given coma separated as argument
+      :type members: list
+
+
+
+   .. py:method:: list()
+
+
+   .. py:method:: remove_members(group, members)
+
+      Remove members from a group. samdb throw an Exception if the group or the user
+      does not exist.
+
+      :param group: group name
+      :type group: basestring
+      :param members: members list
+      :type members: list
+
+
+
+   .. py:method:: add_members(group, members)
+
+      Add members to a group. samdb throw an Exception if the group or the user
+      does not exist.
+
+      :param group: group name
+      :type group: basestring
+      :param members: members list
+      :type members: list
+
+
+
+.. py:class:: UserManager
+
+   Sample class to manage samba users via samba-tool.
+
+
+   .. py:attribute:: POST_HOOK_DIR
+      :value: '/etc/linuxmuster/tools/hooks/user-manager'
+
+
+
+   .. py:method:: _check_password_strength(password)
+
+      Passwords must contain at least one lowercase, one uppercase, one special char or number, and at least 7 chars.
+
+
+
+   .. py:method:: _generate_password()
+
+      Passwords must contain at least one lowercase, one uppercase, one special char or number, and at least 7 chars.
+
+
+
+   .. py:method:: set_password(username, password)
+
+

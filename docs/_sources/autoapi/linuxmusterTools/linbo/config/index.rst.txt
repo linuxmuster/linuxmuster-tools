@@ -1,0 +1,260 @@
+linuxmusterTools.linbo.config
+=============================
+
+.. py:module:: linuxmusterTools.linbo.config
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.linbo.config.LINBO_PATH
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.linbo.config.Partition
+   linuxmusterTools.linbo.config.OS
+   linuxmusterTools.linbo.config.Linbo
+   linuxmusterTools.linbo.config.LinboConfig
+   linuxmusterTools.linbo.config.LinboConfigManager
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   linuxmusterTools.linbo.config.read_config
+   linuxmusterTools.linbo.config.last_sync
+   linuxmusterTools.linbo.config.group_os
+   linuxmusterTools.linbo.config.list_workstations
+   linuxmusterTools.linbo.config.last_sync_all
+
+
+Module Contents
+---------------
+
+.. py:class:: Partition
+
+   .. py:attribute:: Bootable
+      :type:  bool
+
+
+   .. py:attribute:: Dev
+      :type:  str
+
+
+   .. py:attribute:: FSType
+      :type:  str
+
+
+   .. py:attribute:: Id
+      :type:  int
+
+
+   .. py:attribute:: Label
+      :type:  str
+
+
+   .. py:attribute:: Size
+      :type:  str
+
+
+.. py:class:: OS
+
+   .. py:attribute:: Append
+      :type:  str
+
+
+   .. py:attribute:: Autostart
+      :type:  bool
+
+
+   .. py:attribute:: AutostartTimeout
+      :type:  int
+
+
+   .. py:attribute:: BaseImage
+      :type:  str
+
+
+   .. py:attribute:: Boot
+      :type:  str
+
+
+   .. py:attribute:: DefaultAction
+      :type:  str
+
+
+   .. py:attribute:: Description
+      :type:  str
+
+
+   .. py:attribute:: Hidden
+      :type:  bool
+
+
+   .. py:attribute:: IconName
+      :type:  str
+
+
+   .. py:attribute:: Initrd
+      :type:  str
+
+
+   .. py:attribute:: Kernel
+      :type:  str
+
+
+   .. py:attribute:: NewEnabled
+      :type:  bool
+
+
+   .. py:attribute:: Root
+      :type:  str
+
+
+   .. py:attribute:: StartEnabled
+      :type:  bool
+
+
+   .. py:attribute:: SyncEnabled
+      :type:  bool
+
+
+   .. py:attribute:: Version
+      :type:  str
+
+
+.. py:class:: Linbo
+
+   .. py:attribute:: AutoFormat
+      :type:  bool
+
+
+   .. py:attribute:: AutoInitCache
+      :type:  bool
+
+
+   .. py:attribute:: AutoPartition
+      :type:  bool
+
+
+   .. py:attribute:: Cache
+      :type:  str
+
+
+   .. py:attribute:: DownloadType
+      :type:  str
+
+
+   .. py:attribute:: Group
+      :type:  str
+
+
+   .. py:attribute:: GuiDisabled
+      :type:  bool
+
+
+   .. py:attribute:: KernelOptions
+      :type:  str
+
+
+   .. py:attribute:: Locale
+      :type:  str
+
+
+   .. py:attribute:: RootTimeout
+      :type:  int
+
+
+   .. py:attribute:: Server
+      :type:  str
+
+
+   .. py:attribute:: SystemType
+      :type:  str
+
+
+   .. py:attribute:: UseMinimalLayout
+      :type:  bool
+
+
+.. py:class:: LinboConfig
+
+   .. py:attribute:: LINBO
+      :type:  Linbo
+
+
+   .. py:attribute:: Partitions
+      :type:  list
+
+
+   .. py:attribute:: OS
+      :type:  list
+
+
+.. py:class:: LinboConfigManager
+
+.. py:data:: LINBO_PATH
+   :value: '/srv/linbo'
+
+
+.. py:function:: read_config(group)
+
+   Get the os config from linbo config file start.conf.<group>
+
+   :param group: Linbo group
+   :type group: string
+   :return: Config as list of dict
+   :rtype: list of dict
+
+
+.. py:function:: last_sync(workstation, image)
+
+   Get the date of the last sync date for a workstation w.
+
+   :param w: Workstation
+   :type w: string
+   :param image: Name of the image file
+   :type image: string
+   :return: Last synchronisation time
+   :rtype: datetime
+
+
+.. py:function:: group_os(workstations)
+
+   Get all os infos from linbo config file and inject it in workstations dict.
+   The workstations dict is set in the function list_workstations().
+
+   :param workstations: Dict containing all workstations
+   :type workstations: dict
+   :return: Completed workstations dict with linbo informations
+   :rtype: dict
+
+
+.. py:function:: list_workstations(school='default-school', groups=[])
+
+   Generate a dict with workstations and parameters out of devices file
+
+   :param context: user context set in views.py
+   :return: Dict with all linbo informations for all workstations.
+   :rtype: dict
+
+
+.. py:function:: last_sync_all(workstations)
+
+   Add last synchronisation informations into the workstations dict,
+   and status attribute to use as class for bootstrap.
+
+   :param workstations: Dict of workstations set in list_workstations().
+   :type workstations: dict
+   :return: Completed dict of workstations
+   :rtype: dict
+
+

@@ -1,0 +1,86 @@
+linuxmusterTools.common
+=======================
+
+.. py:module:: linuxmusterTools.common
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/linuxmusterTools/common/attic/index
+   /autoapi/linuxmusterTools/common/checks/index
+   /autoapi/linuxmusterTools/common/convert/index
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.common.NAME_RULES
+   linuxmusterTools.common.ROLES
+   linuxmusterTools.common.Validator
+   linuxmusterTools.common.WEBUI_IMPORT
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.common.NameChecker
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   linuxmusterTools.common.format_size
+   linuxmusterTools.common.convert_sophomorix_time
+   linuxmusterTools.common.set_check_method
+
+
+Package Contents
+----------------
+
+.. py:function:: format_size(num, suffix='B', base=2)
+
+.. py:function:: convert_sophomorix_time(t)
+
+   Convert sophomorix datetime to readable info.
+
+   :param t: Sophomorix date like 20081030125303.0Z
+   :type t: basestring
+   :return: Human-readable date like 30 Oct 2008 12:53:30
+   :rtype:
+
+
+.. py:data:: NAME_RULES
+
+.. py:data:: ROLES
+   :value: ['switch', 'addc', 'wlan', 'staffcomputer', 'mobile', 'printer', 'classroom-teachercomputer',...
+
+
+.. py:function:: set_check_method(cls, *args)
+
+.. py:class:: NameChecker
+
+   .. py:method:: check(name_type, string)
+
+
+   .. py:method:: check_role(role)
+
+
+   .. py:method:: normalize_mac(mac)
+
+
+.. py:data:: Validator
+
+.. py:data:: WEBUI_IMPORT
+   :value: True
+
+

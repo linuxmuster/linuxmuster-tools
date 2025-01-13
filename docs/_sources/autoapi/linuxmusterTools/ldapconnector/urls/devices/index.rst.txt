@@ -1,0 +1,50 @@
+linuxmusterTools.ldapconnector.urls.devices
+===========================================
+
+.. py:module:: linuxmusterTools.ldapconnector.urls.devices
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.urls.devices.get_all_devices
+   linuxmusterTools.ldapconnector.urls.devices.get_device
+   linuxmusterTools.ldapconnector.urls.devices.get_results_search_device
+   linuxmusterTools.ldapconnector.urls.devices.get_rooms
+   linuxmusterTools.ldapconnector.urls.devices.get_room
+
+
+Module Contents
+---------------
+
+.. py:function:: get_all_devices()
+
+   Get all devices.
+   Return a a list of LMNDevice data object.
+
+
+.. py:function:: get_device(name)
+
+   Get all details from a specific device.
+   Return a LMNDevice data object.
+
+
+.. py:function:: get_results_search_device(query, selection=[])
+
+   Get all details from a search on a specific device scheme and having a specific role
+   (something like 'printer', 'server', ...).
+   Return a list of LMNDevice data object.
+
+
+.. py:function:: get_rooms()
+
+   Get all rooms under the Devices tree.
+
+
+.. py:function:: get_room(name)
+
+   Get a specific room under the Devices tree.
+
+

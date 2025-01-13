@@ -1,0 +1,274 @@
+linuxmusterTools.linbo.images
+=============================
+
+.. py:module:: linuxmusterTools.linbo.images
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.linbo.images.LINBO_PATH
+   linuxmusterTools.linbo.images.TIMESTAMP_FMT
+   linuxmusterTools.linbo.images.DATE_UI_FMT
+   linuxmusterTools.linbo.images.EXTRA_IMAGE_FILES
+   linuxmusterTools.linbo.images.EXTRA_NONEDITABLE_IMAGE_FILES
+   linuxmusterTools.linbo.images.EXTRA_COMMON_FILES
+   linuxmusterTools.linbo.images.EXTRA_PERMISSIONS_MAPPING
+   linuxmusterTools.linbo.images.IMAGE
+   linuxmusterTools.linbo.images.DIFF_IMAGE
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.linbo.images.LinboImage
+   linuxmusterTools.linbo.images.LinboImageGroup
+   linuxmusterTools.linbo.images.LinboImageManager
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   linuxmusterTools.linbo.images.date2timestamp
+   linuxmusterTools.linbo.images.timestamp2date
+
+
+Module Contents
+---------------
+
+.. py:data:: LINBO_PATH
+   :value: '/srv/linbo/images'
+
+
+.. py:data:: TIMESTAMP_FMT
+   :value: '%Y%m%d%H%M'
+
+
+.. py:data:: DATE_UI_FMT
+   :value: '%d/%m/%Y %H:%M'
+
+
+.. py:data:: EXTRA_IMAGE_FILES
+   :value: ['desc', 'info', 'vdi']
+
+
+.. py:data:: EXTRA_NONEDITABLE_IMAGE_FILES
+   :value: ['torrent', 'macct']
+
+
+.. py:data:: EXTRA_COMMON_FILES
+   :value: ['reg', 'postsync', 'prestart']
+
+
+.. py:data:: EXTRA_PERMISSIONS_MAPPING
+
+.. py:data:: IMAGE
+   :value: 'qcow2'
+
+
+.. py:data:: DIFF_IMAGE
+   :value: 'qdiff'
+
+
+.. py:function:: date2timestamp(date)
+
+.. py:function:: timestamp2date(timestamp)
+
+.. py:class:: LinboImage(name, backup=False, timestamp=None, diff=False)
+
+   A class to manage a linbo image or a backup image
+
+
+   .. py:attribute:: name
+
+
+   .. py:attribute:: backup
+      :value: False
+
+
+
+   .. py:attribute:: diff
+      :value: False
+
+
+
+   .. py:attribute:: timestamp
+      :value: None
+
+
+
+   .. py:method:: _torrent_stop()
+
+
+   .. py:method:: load_info()
+
+      Prepare all variables to manage the image object ( path, name, extra files )
+
+
+
+   .. py:method:: get_extra()
+
+      Load extra editables config files for the image.
+
+
+
+   .. py:method:: get_timestamp()
+
+
+   .. py:method:: delete_files()
+
+      Delete all files from a LinboImage.
+
+
+
+   .. py:method:: delete()
+
+      Completely remove an image and its directory.
+
+
+
+   .. py:method:: rename(new_name)
+
+      Rename a LinboImage and all its files.
+
+
+
+   .. py:method:: save_extras(data)
+
+      Save all extra files content.
+
+      :param data: Data to save
+      :type data: dict
+
+
+
+   .. py:method:: to_dict()
+
+      Convert all necessary infos into a dict for angular.
+
+
+
+.. py:class:: LinboImageGroup(name)
+
+   Class to handle a basic LinboImage and all his backups.
+
+
+   .. py:attribute:: name
+
+
+   .. py:attribute:: path
+
+
+   .. py:attribute:: backup_path
+
+
+   .. py:method:: load()
+
+
+   .. py:method:: get_backups()
+
+      Browse current tree to find all backups image.
+
+
+
+   .. py:method:: get_diff()
+
+      Browse current tree to find a differential image.
+
+
+
+   .. py:method:: rename(new_name)
+
+      Rename an image and all his backups.
+
+
+
+   .. py:method:: delete()
+
+      Delete basic image, all backups, diff image and all config files.
+
+
+
+   .. py:method:: to_dict()
+
+
+.. py:class:: LinboImageManager
+
+   Manager for all Linbo Images.
+
+
+   .. py:method:: list()
+
+      Browse LINBO_PATH to discover all linbo images.
+
+
+
+   .. py:method:: delete(group, date=0, diff=False)
+
+      Delete a whole image and its backups. If date is given, only delete an
+      associated backup. date and diff parameter excludes each other.
+
+      :param group: Name of the linbo image
+      :type group: str
+      :param date: timestamp of a backup
+      :type date: str
+      :param diff: only delete a differential image
+      :type diff: bool
+
+
+
+   .. py:method:: rename(group, new_name)
+
+      Rename a whole linbo image and its backups recursiverly.
+
+      :param group: Name of the linbo image
+      :type group: str
+      :param new_name: New name for the linbo image
+      :type new_name: str
+
+
+
+   .. py:method:: duplicate(group, new_name)
+
+      Duplicate a whole linbo image without backups.
+
+      :param group: Name of the linbo image to duplicate
+      :type group: str
+      :param new_name: New name for the linbo image
+      :type new_name: str
+
+
+
+   .. py:method:: restore(group, date)
+
+      Delete a basic linbo image and restore a backup.
+
+      :param group: Name of the linbo image
+      :type group: str
+      :param date: timestamp of a backup
+      :type date: str
+
+
+
+   .. py:method:: save_extras(group, data, timestamp=None, diff=False)
+
+      Save extra files for a base image, a backup or a differential
+      image. timestamp and diff parameters excludes each other.
+
+      :param group: Name of the linbo image
+      :type group: str
+      :param data: Content of the extra files
+      :type data: dict
+      :param timestamp: timestamp of a backup
+      :type timestamp: str
+      :param diff: data onlyc concern a diff image
+      :type diff: bool
+
+
+

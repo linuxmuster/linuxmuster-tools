@@ -1,0 +1,54 @@
+linuxmusterTools.devices.devices
+================================
+
+.. py:module:: linuxmusterTools.devices.devices
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.devices.devices.CLIENT_ROLES
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.devices.devices.Devices
+
+
+Module Contents
+---------------
+
+.. py:data:: CLIENT_ROLES
+   :value: ['classroom-teachercomputer', 'classroom-studentcomputer', 'faculty-teachercomputer',...
+
+
+.. py:class:: Devices(school='default-school')
+
+   .. py:attribute:: school
+      :value: 'default-school'
+
+
+
+   .. py:method:: switch(school)
+
+
+   .. py:method:: load()
+
+
+   .. py:method:: filter(roles=[], groups=[])
+
+
+   .. py:method:: get_hostname(hostname, roles=[], groups=[])
+
+
+   .. py:method:: get_client(hostname, groups=[])
+
+
+   .. py:method:: get_clients(groups=[])
+
+
