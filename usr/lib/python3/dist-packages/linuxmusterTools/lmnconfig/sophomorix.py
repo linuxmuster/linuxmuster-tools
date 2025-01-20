@@ -4,6 +4,8 @@ import logging
 from linuxmusterTools.lmnfile import LMNFile
 
 
+logger = logging.getLogger(__name__)
+
 class SophomorixConfig:
 
     def __init__(self, school='default-school'):
@@ -16,5 +18,5 @@ class SophomorixConfig:
             with LMNFile(sophomorix_config_path, 'r') as config:
                 self.config = config.read()
         else:
-            logging.warning(f"No sophomorix config found for the school {school}")
+            logger.warning(f"No sophomorix config found for the school {school}")
             self.config = {}

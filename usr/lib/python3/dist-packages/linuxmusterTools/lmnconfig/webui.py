@@ -5,6 +5,8 @@ from linuxmusterTools.lmnfile import LMNFile
 from linuxmusterTools.common import WEBUI_IMPORT
 
 
+logger = logging.getLogger(__name__)
+
 class CustomFieldsConfig:
 
     def __init__(self, school='default-school'):
@@ -17,7 +19,7 @@ class CustomFieldsConfig:
             with LMNFile(custom_config_path, 'r') as config:
                 self.config = config.read()
         else:
-            logging.warning(f"No custom fields config found for the school {school}")
+            logger.warning(f"No custom fields config found for the school {school}")
             self.config = {}
 
         for role in ['globaladministrators', 'schooladministrators', 'students', 'teachers']:

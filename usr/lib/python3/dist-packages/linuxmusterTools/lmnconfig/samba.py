@@ -3,6 +3,8 @@ import os
 from configparser import ConfigParser
 
 
+logger = logging.getLogger(__name__)
+
 # Load samba domain
 smbconf = ConfigParser(delimiters=("=",))
 SAMBA_DOMAIN, SAMBA_REALM, SAMBA_NETBIOS, SAMBA_WORKGROUP = [''] * 4
@@ -30,7 +32,7 @@ def parse_log_level(level):
     return log_level
 
 if not os.path.isfile('/etc/samba/smb.conf'):
-    logging.warning('Config file /etc/samba/smb.conf not found')
+    logger.warning('Config file /etc/samba/smb.conf not found')
 
 try:
     smbconf.read('/etc/samba/smb.conf')
@@ -42,4 +44,4 @@ try:
     SAMBA_TLD = SAMBA_REALM.split('.')[-1].upper()
     LDAP_CONTEXT = f"OU=SCHOOLS,DC={SAMBA_WORKGROUP},DC={SAMBA_TLD}"
 except Exception as e:
-    logging.error(f"Can not read realm and domain from smb.conf: {str(e)}")
+    logger.error(f"Can not read realm and domain from smb.conf: {str(e)}")
