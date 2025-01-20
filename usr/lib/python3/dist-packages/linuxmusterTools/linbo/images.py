@@ -7,6 +7,8 @@ from datetime import datetime
 from ..lmnfile import LMNFile
 
 
+logger = logging.getLogger(__name__)
+
 LINBO_PATH = '/srv/linbo/images'
 TIMESTAMP_FMT = '%Y%m%d%H%M'
 DATE_UI_FMT = '%d/%m/%Y %H:%M'
@@ -53,7 +55,7 @@ class LinboImage:
         try:
             subprocess.check_output(['/usr/sbin/linbo-torrent', 'stop', os.path.join(self.path, f'{self.image}.torrent')])
         except Exception as e:
-            logging.error(f'Unable to stop torrent service for {self.image} : {e.output}')
+            logger.error(f'Unable to stop torrent service for {self.image} : {e.output}')
 
     def load_info(self):
         """
@@ -114,7 +116,7 @@ class LinboImage:
                         # Support timestamp=2021..
                         # and timestamp="2021..."
                         return line.strip().split('=')[1].strip('"')
-        logging.warning(f"Can not find timestamp for {self.image}, using current time as timestamp !")
+        logger.warning(f"Can not find timestamp for {self.image}, using current time as timestamp !")
         return datetime.now().strftime(TIMESTAMP_FMT)
 
     def delete_files(self):
