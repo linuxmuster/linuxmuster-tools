@@ -3,6 +3,8 @@ from dataclasses import dataclass, field, asdict
 import xml.etree.ElementTree as ElementTree
 
 
+logger = logging.getLogger(__name__)
+
 @dataclass
 class Drive:
     disabled: bool
@@ -50,7 +52,7 @@ class DriveManager:
             self.policy = policy_path.split('/')[-1]
             self.path = f'{policy_path}/User/Preferences/Drives/Drives.xml'
         except Exception:
-            logging.error(f"{policy_path} is not a valid policy path.")
+            logger.error(f"{policy_path} is not a valid policy path.")
             self.path = ''
         self.usedLetters = []
         self.load()

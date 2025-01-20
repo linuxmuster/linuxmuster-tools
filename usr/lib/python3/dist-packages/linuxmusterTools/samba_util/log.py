@@ -7,6 +7,8 @@ from datetime import datetime
 from ..samba_util import SAMBA_REALM, LOG_LEVEL
 
 
+logger = logging.getLogger(__name__)
+
 SAMBA_LOG = '/var/log/samba/log.samba'
 SAMBA_LOG_OLD = '/var/log/samba/log.samba.1'
 
@@ -20,7 +22,7 @@ def check_audit_level():
     if general > 2:
         return True
 
-    logging.error("Can not parse log files from samba, you need to set the log level of auth_audit at least at 3.")
+    logger.error("Can not parse log files from samba, you need to set the log level of auth_audit at least at 3.")
     return False
 
 def format_log_data(entry):

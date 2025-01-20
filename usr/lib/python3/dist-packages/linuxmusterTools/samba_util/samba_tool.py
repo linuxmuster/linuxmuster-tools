@@ -7,6 +7,9 @@ from dataclasses import dataclass, field, asdict
 from .drives import DriveManager
 from ..ldapconnector import LMNLdapReader as lr
 
+
+logger = logging.getLogger(__name__)
+
 try:
     from samba.auth import system_session
     from samba.credentials import Credentials
@@ -19,7 +22,7 @@ try:
     creds = Credentials()
     creds.guess(lp)
 except ImportError as e:
-    logging.error(f"Samba doesn't seem to be installed, this module can not be used: {str(e)}")
+    logger.error(f"Samba doesn't seem to be installed, this module can not be used: {str(e)}")
 
 SAMDB_PATH = '/var/lib/samba/private/sam.ldb'
 
@@ -46,9 +49,9 @@ class GPOManager:
                 samdb = SamDB(url=SAMDB_PATH, session_info=system_session(),credentials=creds, lp=lp)
                 gpos_infos = get_gpo_info(samdb, None)
             except Exception:
-                logging.error(f'Could not load {SAMDB_PATH}, is linuxmuster installed ?')
+                logger.error(f'Could not load {SAMDB_PATH}, is linuxmuster installed ?')
         else:
-            logging.warning(f'{SAMDB_PATH} not found, is linuxmuster installed ?')
+            logger.warning(f'{SAMDB_PATH} not found, is linuxmuster installed ?')
         
         self.gpos = {}
         
@@ -74,9 +77,9 @@ class GroupManager:
             try:
                 self.samdb = SamDB(url=SAMDB_PATH, session_info=system_session(),credentials=creds, lp=lp)
             except Exception:
-                logging.error(f'Could not load {SAMDB_PATH}, is linuxmuster installed ?')
+                logger.error(f'Could not load {SAMDB_PATH}, is linuxmuster installed ?')
         else:
-            logging.warning(f'{SAMDB_PATH} not found, is linuxmuster installed ?')
+            logger.warning(f'{SAMDB_PATH} not found, is linuxmuster installed ?')
 
     def _run_post_hook(self, action, group, members):
         """
@@ -152,9 +155,9 @@ class UserManager:
             try:
                 self.samdb = SamDB(url=SAMDB_PATH, session_info=system_session(),credentials=creds, lp=lp)
             except Exception:
-                logging.error(f'Could not load {SAMDB_PATH}, is linuxmuster installed ?')
+                logger.error(f'Could not load {SAMDB_PATH}, is linuxmuster installed ?')
         else:
-            logging.warning(f'{SAMDB_PATH} not found, is linuxmuster installed ?')
+            logger.warning(f'{SAMDB_PATH} not found, is linuxmuster installed ?')
 
     def _check_password_strength(self, password):
         """
@@ -181,6 +184,6 @@ class UserManager:
         try:
             self.samdb.setpassword(f"samaccountname={username}", password)
         except LdbError as e:
-            logging.error(e.args[1])
+            logger.error(e.args[1])
             raise Exception(e.args[1])
 
