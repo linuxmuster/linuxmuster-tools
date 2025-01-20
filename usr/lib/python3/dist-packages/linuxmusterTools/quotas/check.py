@@ -12,6 +12,8 @@ from ..ldapconnector import LMNLdapReader as lr
 from ..common import format_size
 
 
+logger = logging.getLogger(__name__)
+
 def timestamp2date(t):
     return datetime.fromtimestamp(t).strftime("%Y-%m-%dT%H:%M:%S")
 
@@ -167,7 +169,7 @@ def get_user_quotas(user):
     - Returncode: {smbc_output.returncode}
     - Error: {err}"""
 
-            logging.warning(error)
+            logger.warning(error)
             quotas[share] = {'ERROR': {'output':out, 'error':err, 'code':smbc_output.returncode}}
 
         else:
