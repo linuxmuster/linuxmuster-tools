@@ -16,6 +16,8 @@ from configobj import ConfigObj
 from .fieldnames import csv_fieldnames
 
 
+logger = logging.getLogger(__name__)
+
 # Allow 1 MiB for csv
 csv.field_size_limit(2**20)
 
@@ -186,14 +188,14 @@ class LMNFile(metaclass=abc.ABCMeta):
         """
 
         if not os.path.isfile(self.file):
-            logging.debug(f'Detected encoding for {self.file} : no file, using utf-8')
+            logger.debug(f'Detected encoding for {self.file} : no file, using utf-8')
             return 'utf-8'
         loader = magic.Magic(mime_encoding=True)
         encoding = loader.from_file(self.file)
         if 'ascii' in encoding or encoding == "binary":
-            logging.debug(f'Detected encoding for {self.file} : ascii, but using utf-8')
+            logger.debug(f'Detected encoding for {self.file} : ascii, but using utf-8')
             return 'utf-8'
-        logging.debug(f'Detected encoding for {self.file} : {encoding}')
+        logger.debug(f'Detected encoding for {self.file} : {encoding}')
         return encoding
 
 
