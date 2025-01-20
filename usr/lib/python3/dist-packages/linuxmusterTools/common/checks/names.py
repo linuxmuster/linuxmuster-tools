@@ -3,6 +3,8 @@ import logging
 from functools import partialmethod
 
 
+logger = logging.getLogger(__name__)
+
 NAME_RULES = {
     'password': re.compile(r"^[a-zA-Z0-9?!@#§+\-$%&*{}()\]\[]+$"),
     'strong_password': re.compile(r"(?=.*[a-z])(?=.*[A-Z])(?=.*[?!@#§+\-$%&*{}()]|(?=.*\d)).{7,}"),
@@ -69,7 +71,7 @@ class NameChecker:
             return mac.replace("-", ":")
         elif self.check_mac3(mac):
             return ":".join(re.findall(r"..", mac))
-        logging.warning(f"Mac addresse {mac} does not correspond to any valid mac address.")
+        logger.warning(f"Mac addresse {mac} does not correspond to any valid mac address.")
         return None
 
 

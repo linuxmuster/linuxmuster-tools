@@ -7,6 +7,8 @@ from linuxmusterTools.ldapconnector import LMNLdapReader as lr
 from .convert import convert_sophomorix_time
 
 
+logger = logging.getLogger(__name__)
+
 def get_killdate(user, school='default-school'):
     """
     Get kill date of an user, if it exists.
@@ -22,7 +24,7 @@ def get_killdate(user, school='default-school'):
 
 
     if school != 'default-school':
-        logging.warning("This functionality only works on default-school.")
+        logger.warning("This functionality only works on default-school.")
 
     try:
         killlog = open("/var/log/sophomorix/userlog/user-kill.log", "r")
@@ -33,7 +35,7 @@ def get_killdate(user, school='default-school'):
                 return killdate
     except Exception as e:
         killlog.close()
-        logging.warning(str(e))
+        logger.warning(str(e))
         return None
     return None
 
@@ -52,7 +54,7 @@ def get_attic_status(user, school='default-school'):
 
 
     if school != 'default-school':
-        logging.warning("This functionality only works on default-school.")
+        logger.warning("This functionality only works on default-school.")
 
     details = lr.get(f'/users/{user}')
 
@@ -69,7 +71,7 @@ def get_attic_status(user, school='default-school'):
             return result
 
     if details['sophomorixAdminClass'] != 'attic':
-        logging.warning(f"User {user} is not an attic user, exiting.")
+        logger.warning(f"User {user} is not an attic user, exiting.")
         result['status'] = "Activated"
         return result
 
@@ -113,7 +115,7 @@ def check_attic_dir(school='default-school'):
 
 
     if school != 'default-school':
-        logging.warning("This functionality only works on default-school.")
+        logger.warning("This functionality only works on default-school.")
 
     attic_dir = "/srv/samba/schools/default-school/students/attic"
 
