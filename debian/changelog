@@ -1,3 +1,14 @@
+linuxmuster-tools7 (7.2.47) lmn72; urgency=medium
+
+  * Add documentation
+  * Add examples
+  * Rewrite logger
+  * [ldapwriter] Add GroupWriter
+  * [ldapwriter] Fix resetting thumbnailPhoto
+  * [ldapwriter] Fix quota types 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Mon, 20 Jan 2025 12:29:04 +0100
+
 linuxmuster-tools7 (7.2.46) lmn72-testing; urgency=medium
 
   * Use env var instead of option
