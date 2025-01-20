@@ -7,6 +7,8 @@ from datetime import datetime
 from linuxmusterTools.ldapconnector.ldap_reader import LdapReader
 
 
+logger = logging.getLogger(__name__)
+
 # This marker will be replaced by the selected school, or default-school
 SCHOOL_MARKER = "##SCHOOL_MARKER##"
 
@@ -115,7 +117,7 @@ class LMNLdapRouter:
             for entry in data:
                 csv_writer.writerow([entry[field] for field in headers])
 
-        logging.info(f"CSV file successfully exported to {csvfile}")
+        logger.info(f"CSV file successfully exported to {csvfile}")
         print(f"CSV file successfully exported to {csvfile}")
 
     def add_url(self, url, method):
@@ -129,7 +131,7 @@ class LMNLdapRouter:
         """
 
         if url in self.urls:
-            logging.warning(f"URL {url} already listed in the methods, not adding it!")
+            logger.warning(f"URL {url} already listed in the methods, not adding it!")
         else:
             self.urls[url] = method
 

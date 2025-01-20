@@ -5,6 +5,8 @@ from linuxmusterTools.ldapconnector.connector import LdapConnector
 from .urls.ldaprouter import router as LMNLdapReader
 
 
+logger = logging.getLogger(__name__)
+
 OBJECT_MAPPING = {
     'user': {'url': '/users/'},
     'device': {'url': '/devices/'},
@@ -36,7 +38,7 @@ class LdapWriter:
 
 
         if not data:
-            logging.warning("No data provided, doing nothing.")
+            logger.warning("No data provided, doing nothing.")
             return
 
         ldif = []
@@ -73,7 +75,7 @@ class LdapWriter:
                 ldif.append((ldap.MOD_REPLACE, attr, f'"{new_val}"'.encode('utf-16-le')))
 
             else:
-                logging.warning(f"Attribute {attr} not found in {obj_details['distinguishedName']}.")
+                logger.warning(f"Attribute {attr} not found in {obj_details['distinguishedName']}.")
 
         if ldif:
             self.lc._set(obj_details['distinguishedName'], ldif)
@@ -92,7 +94,7 @@ class LdapWriter:
         """
 
         if not data:
-            logging.warning("No data provided, doing nothing.")
+            logger.warning("No data provided, doing nothing.")
             return
 
         ldif = []
@@ -106,17 +108,17 @@ class LdapWriter:
                         if val in obj_details[attr]:
                             ldif.append((ldap.MOD_DELETE, attr, val.encode()))
                         else:
-                            logging.info(
+                            logger.info(
                                 f"Value {val} not found in attribute {attr} from {obj_details['distinguishedName']}.")
                     elif isinstance(val, list):
                         for v in val:
                             if v in obj_details[attr]:
                                 ldif.append((ldap.MOD_DELETE, attr, v.encode()))
                             else:
-                                logging.info(
+                                logger.info(
                                     f"Value {v} not found in attribute {attr} from {obj_details['distinguishedName']}.")
             else:
-                logging.warning(f"Attribute {attr} not found in {obj_details['distinguishedName']}.")
+                logger.warning(f"Attribute {attr} not found in {obj_details['distinguishedName']}.")
 
         if ldif:
             self.lc._set(obj_details['distinguishedName'], ldif)

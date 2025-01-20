@@ -4,6 +4,8 @@ from linuxmusterTools.ldapconnector import LMNLdapReader as lr
 from linuxmusterTools.lmnconfig import SAMBA_REALM
 
 
+logger = logging.getLogger(__name__)
+
 def check_empty_ou_rooms():
     """
     List all organizational units in devices which have no associated group and
@@ -35,13 +37,13 @@ def check_empty_ou_rooms():
             if orphan_devices:
                 report['NO_CN_WITH_DEVICES'].append(r['name'])
                 devices = " / ".join(orphan_devices)
-                logging.error(f"Room {r['name']} doesn't have an associated group and contains {devices}.")
+                logger.error(f"Room {r['name']} doesn't have an associated group and contains {devices}.")
             else:
                 report['NO_CN'].append(r['name'])
-                logging.warning(f"Room {r['name']} doesn't have an associated group.")
+                logger.warning(f"Room {r['name']} doesn't have an associated group.")
         elif len(group['member']) == 0:
             report['NO_DEVICES'].append(r['name'])
-            logging.warning(f"Room {r['name']} doesn't contain any device.")
+            logger.warning(f"Room {r['name']} doesn't contain any device.")
 
     return report
 

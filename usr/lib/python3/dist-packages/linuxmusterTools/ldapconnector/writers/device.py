@@ -1,4 +1,3 @@
-import ldap
 import logging
 from dataclasses import fields
 
@@ -9,6 +8,8 @@ from ..models import LMNRoom
 from linuxmusterTools.common import Validator
 from linuxmusterTools.lmnconfig import LDAP_CONTEXT
 
+
+logger = logging.getLogger(__name__)
 
 class LMNDeviceWriter:
 
@@ -28,7 +29,7 @@ class LMNDeviceWriter:
         details = self.lr.get(f'/devices/{name}')
 
         if not details:
-            logging.info(f"The device {name} was not found in ldap.")
+            logger.info(f"The device {name} was not found in ldap.")
             raise Exception(f"The device {name} was not found in ldap.")
 
         self.lw._setattr(details, **kwargs)
@@ -44,7 +45,7 @@ class LMNDeviceWriter:
         details = self.lr.get(f'/devices/{name}')
 
         if not details:
-            logging.info(f"The device {name} was not found in ldap.")
+            logger.info(f"The device {name} was not found in ldap.")
             raise Exception(f"The device {name} was not found in ldap.")
 
         self.lw._delattr(details, **kwargs)
@@ -61,7 +62,7 @@ class LMNDeviceWriter:
 
 
         if not Validator.check_host_name(new_name):
-            logging.error(f"{new_name} is not a valid hostname")
+            logger.error(f"{new_name} is not a valid hostname")
             return
 
         new_name = new_name.upper()
@@ -70,12 +71,12 @@ class LMNDeviceWriter:
         details = self.lr.get(f'/devices/{name}')
 
         if not details:
-            logging.warning(f"Device {name} not found in ldap, doing nothing.")
+            logger.warning(f"Device {name} not found in ldap, doing nothing.")
             return
 
         # Check if new_name is already used
         if self.lr.get(f'/devices/{new_name}'):
-            logging.warning(f"{new_name} is already used, please use another hostname.")
+            logger.warning(f"{new_name} is already used, please use another hostname.")
             return
 
         # Update attributes
@@ -104,11 +105,11 @@ class LMNDeviceWriter:
 
 
         if not Validator.check_host_name(new_room):
-            logging.error(f"{new_room} is not a valid room name")
+            logger.error(f"{new_room} is not a valid room name")
             return
 
         if not self.lr.getval(f"/rooms/{new_room}", 'cn'):
-            logging.error(f"Can not move to {new_room}, this group does not exist in LDAP.")
+            logger.error(f"Can not move to {new_room}, this group does not exist in LDAP.")
             return
 
         name = name.upper()
@@ -116,7 +117,7 @@ class LMNDeviceWriter:
         details = self.lr.get(f'/devices/{name}')
 
         if not details:
-            logging.warning(f"Device {name} not found in ldap, doing nothing.")
+            logger.warning(f"Device {name} not found in ldap, doing nothing.")
             return
 
         # Build new parent OU
@@ -158,12 +159,12 @@ class LMNDeviceWriter:
 
 
         if room not in self.lr.getval(f"/ou/rooms", 'name'):
-            logging.error(f"Organizational unit {room} doesn't exist in LDAP.")
+            logger.error(f"Organizational unit {room} doesn't exist in LDAP.")
             return
 
         group = self.lr.get(f'/rooms/{room}')
         if group and len(group['member']) > 0:
-            logging.error(f"Room {room} still contain some devices, can not delete it.")
+            logger.error(f"Room {room} still contain some devices, can not delete it.")
             return
 
         ou_dn = f"OU={room},OU=Devices,OU={school},{LDAP_CONTEXT}"
@@ -181,15 +182,15 @@ class LMNDeviceWriter:
 
 
         if not Validator.check_host_name(new_room):
-            logging.error(f"{new_room} is not a valid room name")
+            logger.error(f"{new_room} is not a valid room name")
             return
 
         if new_room in self.lr.getval(f"/ou/rooms", 'name'):
-            logging.error(f"Organizational unit {new_room} already exists in LDAP.")
+            logger.error(f"Organizational unit {new_room} already exists in LDAP.")
             return
 
         if self.lr.getval(f"/rooms/{new_room}", 'cn'):
-            logging.error(f"Group {new_room} already exists in LDAP.")
+            logger.error(f"Group {new_room} already exists in LDAP.")
             return
 
         ## Create OU
@@ -209,6 +210,6 @@ class LMNDeviceWriter:
                 else:
                     ldif.append((attr, [f"{value}".encode()]))
             else:
-                logging.warning(f"Attribute {attr} not found in LMNRoom details")
+                logger.warning(f"Attribute {attr} not found in LMNRoom details")
 
         self.lw._add_group(group_dn, ldif)

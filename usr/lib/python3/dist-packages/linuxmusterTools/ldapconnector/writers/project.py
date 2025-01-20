@@ -3,6 +3,8 @@ import logging
 from ..ldap_writer import LdapWriter
 from ..urls.ldaprouter import router
 
+logger = logging.getLogger(__name__)
+
 class LMNProjectWriter:
 
     def __init__(self):
@@ -20,7 +22,7 @@ class LMNProjectWriter:
         details = self.lr.get(f'/projects/{name}')
 
         if not details:
-            logging.info(f"The project {name} was not found in ldap.")
+            logger.info(f"The project {name} was not found in ldap.")
             raise Exception(f"The project {name} was not found in ldap.")
 
         self.lw._setattr(details, **kwargs)
@@ -36,7 +38,7 @@ class LMNProjectWriter:
         details = self.lr.get(f'/projects/{name}')
 
         if not details:
-            logging.info(f"The project {name} was not found in ldap.")
+            logger.info(f"The project {name} was not found in ldap.")
             raise Exception(f"The project {name} was not found in ldap.")
 
         self.lw._delattr(details, **kwargs)

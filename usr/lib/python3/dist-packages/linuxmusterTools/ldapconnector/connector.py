@@ -1,8 +1,8 @@
 import logging
 import ldap
-import os
 
 from ..lmnfile import LMNFile
+
 
 try:
     from aj.plugins.lmn_common.api import ldap_config as params
@@ -10,6 +10,7 @@ try:
 except ImportError as e:
     webui_import = False
 
+logger = logging.getLogger(__name__)
 
 class LdapConnector:
 
@@ -70,7 +71,7 @@ class LdapConnector:
                 bindpwd = params['bindpw']
                 searchdn = params['searchdn']
             except KeyError:
-                logging.error('LDAP credentials not found, is linuxmuster installed and configured ?')
+                logger.error('LDAP credentials not found, is linuxmuster installed and configured ?')
                 raise Exception('LDAP credentials not found, is linuxmuster installed and configured ?')
 
         try:
@@ -79,13 +80,13 @@ class LdapConnector:
             # Removing sensitive data
             binddn, bindpwd = '', ''
         except ldap.INVALID_CREDENTIALS as e:
-            logging.error(str(e))
+            logger.error(str(e))
             raise Exception(f'Invalid credentials: {str(e)}')
         except ldap.SERVER_DOWN as e:
-            logging.error(str(e))
+            logger.error(str(e))
             raise Exception(f'Ldap server down: {str(e)}')
         except ldap.LDAPError as e:
-            logging.error(e['desc'])
+            logger.error(e['desc'])
             raise Exception(f"Other ldap error: {e['desc']}")
 
         return conn, searchdn
@@ -112,7 +113,7 @@ class LdapConnector:
             response = conn.search_s(searchdn, scope, ldap_filter)
         except ldap.NO_SUCH_OBJECT:
             # Searchdn is maybe wrong, returning empty response
-            logging.warning(f"Searchdn {searchdn} is maybe wrong")
+            logger.warning(f"Searchdn {searchdn} is maybe wrong")
             return []
 
         # Filter non-interesting values

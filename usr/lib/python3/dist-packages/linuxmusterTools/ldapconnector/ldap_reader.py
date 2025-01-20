@@ -7,6 +7,8 @@ from .connector import LdapConnector
 from ..lmnconfig import CustomFieldsConfig
 
 
+logger = logging.getLogger(__name__)
+
 class LdapReader:
 
     def __init__(self):
@@ -83,7 +85,7 @@ class LdapReader:
 
         if len(results) > 1:
             # Only taking the first entry so warn the user
-            logging.warning("Multiple entries found in LDAP, but only giving the first one as expected.")
+            logger.warning("Multiple entries found in LDAP, but only giving the first one as expected.")
 
         return self._create_result_object(to_handle, objectclass, attributes=attributes, custom_config= custom_fields_config, **kwargs)
 

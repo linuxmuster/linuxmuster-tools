@@ -3,6 +3,9 @@ import logging
 from ..ldap_writer import LdapWriter
 from ..urls.ldaprouter import router
 
+
+logger = logging.getLogger(__name__)
+
 class LMNSchoolclassWriter:
 
     def __init__(self):
@@ -20,7 +23,7 @@ class LMNSchoolclassWriter:
         details = self.lr.get(f'/schoolclasses/{name}')
 
         if not details:
-            logging.info(f"The schoolclass {name} was not found in ldap.")
+            logger.info(f"The schoolclass {name} was not found in ldap.")
             raise Exception(f"The schoolclass {name} was not found in ldap.")
 
         self.lw._setattr(details, **kwargs)
@@ -36,7 +39,7 @@ class LMNSchoolclassWriter:
         details = self.lr.get(f'/schoolclasses/{name}')
 
         if not details:
-            logging.info(f"The schoolclass {name} was not found in ldap.")
+            logger.info(f"The schoolclass {name} was not found in ldap.")
             raise Exception(f"The schoolclass {name} was not found in ldap.")
 
         self.lw._delattr(details, **kwargs)

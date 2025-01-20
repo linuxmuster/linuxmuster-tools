@@ -3,6 +3,9 @@ import logging
 from ..ldap_writer import LdapWriter
 from ..urls.ldaprouter import router
 
+
+logger = logging.getLogger(__name__)
+
 class LMNUserWriter:
 
     def __init__(self):
@@ -20,7 +23,7 @@ class LMNUserWriter:
         details = self.lr.get(f'/users/{name}')
 
         if not details:
-            logging.info(f"The user {name} was not found in ldap.")
+            logger.info(f"The user {name} was not found in ldap.")
             raise Exception(f"The user {name} was not found in ldap.")
 
         self.lw._setattr(details, **kwargs)
@@ -36,7 +39,7 @@ class LMNUserWriter:
         details = self.lr.get(f'/users/{name}')
 
         if not details:
-            logging.info(f"The user {name} was not found in ldap.")
+            logger.info(f"The user {name} was not found in ldap.")
             raise Exception(f"The user {name} was not found in ldap.")
 
         self.lw._delattr(details, **kwargs)
