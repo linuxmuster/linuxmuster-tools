@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.2.48) lmn72; urgency=medium
+
+  * [lmnconfig] Fix LDAP_CONTEXT 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Mon, 27 Jan 2025 11:44:18 +0100
+
 linuxmuster-tools7 (7.2.47) lmn72; urgency=medium
 
   * Add documentation
