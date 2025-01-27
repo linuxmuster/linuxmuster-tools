@@ -22,6 +22,8 @@ logger = logging.getLogger(__name__)
 csv.field_size_limit(2**20)
 
 ALLOWED_PATHS = [
+                # Adminui settings
+                '/etc/linuxmuster/adminui/config.yml',
                 # Webui settings
                 '/etc/linuxmuster/webui/config.yml',
                 # used for school.conf or *.csv in lmn_settings, lmn_devices and lmn_users
