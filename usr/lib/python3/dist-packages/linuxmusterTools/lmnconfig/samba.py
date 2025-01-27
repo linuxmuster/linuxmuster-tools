@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 # Load samba domain
 smbconf = ConfigParser(delimiters=("=",))
 SAMBA_DOMAIN, SAMBA_REALM, SAMBA_NETBIOS, SAMBA_WORKGROUP = [''] * 4
+SAMBA_TLD, LDAP_CONTEXT = [''] * 2
 
 def parse_log_level(level):
     """
@@ -44,4 +45,4 @@ try:
     SAMBA_TLD = SAMBA_REALM.split('.')[-1].upper()
     LDAP_CONTEXT = f"OU=SCHOOLS,DC={SAMBA_WORKGROUP},DC={SAMBA_TLD}"
 except Exception as e:
-    logger.error(f"Can not read realm and domain from smb.conf: {str(e)}")
+    logger.error(f"Can not read realm and domain from smb.conf: {str(e)}. Is linuxmuster.net installed and configured ?")
