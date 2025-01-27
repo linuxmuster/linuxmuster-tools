@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class LdapConnector:
 
-    def _connect(self, webui=False):
+    def _connect(self):
         """
         Choose the right credentials, depending if the this module is imported in linuxmuster-webui7 or used directly on
         the server, and the perform a connection to the ldap server.
@@ -63,7 +63,7 @@ class LdapConnector:
             binddn = f"CN=Administrator,CN=Users,{ldap_params['searchdn']}"
             searchdn = ldap_params['searchdn']
 
-        elif webui:
+        else:
             # Importing lmntools from the Webui will resulting into using the same binddn as the one configured
             # in the config.yml from the Webui
             try:
@@ -105,7 +105,7 @@ class LdapConnector:
         :rtype: dict
         """
 
-        conn, _searchdn = self._connect(webui=True)
+        conn, _searchdn = self._connect()
 
         searchdn = f"{subdn}{_searchdn}"
 
