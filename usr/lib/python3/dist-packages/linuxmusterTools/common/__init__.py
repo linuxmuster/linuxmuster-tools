@@ -1,5 +1,6 @@
 from .convert import *
 from .checks import *
+from .parsers import *
 
 
 Validator = NameChecker()
