@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 
 
-def parse_kill_log(all=False):
+def parse_kill_log(all=False, epoch=None):
 
     log_path = '/var/log/sophomorix/userlog/user-kill.log'
     now = datetime .now().timestamp()
@@ -41,9 +41,16 @@ def parse_kill_log(all=False):
                 'home_deleted': 'TRUE' in entries[10],
             }
 
+    if epoch is not None:
+        try:
+            epoch = int(epoch)
+        except ValueError:
+            raise Exception(f"Given epoch ({epoch}) should be an integer!")
+        return result.get(epoch, {})
+
     return result
 
-def parse_add_log(all=False):
+def parse_add_log(all=False, epoch=None):
 
     log_path = '/var/log/sophomorix/userlog/user-add.log'
     now = datetime .now().timestamp()
@@ -81,10 +88,17 @@ def parse_add_log(all=False):
                 'first_password': entries[9],
             }
 
+    if epoch is not None:
+        try:
+            epoch = int(epoch)
+        except ValueError:
+            raise Exception(f"Given epoch ({epoch}) should be an integer!")
+        return result.get(epoch, {})
+
     return result
 
 
-def parse_update_log(all=False):
+def parse_update_log(all=False, epoch=None):
 
     log_path = '/var/log/sophomorix/userlog/user-update.log'
     now = datetime .now().timestamp()
@@ -130,5 +144,12 @@ def parse_update_log(all=False):
                 'user': entries[5].decode(),
                 'changes': changes,
             }
+
+    if epoch is not None:
+        try:
+            epoch = int(epoch)
+        except ValueError:
+            raise Exception(f"Given epoch ({epoch}) should be an integer!")
+        return result.get(epoch, {})
 
     return result
