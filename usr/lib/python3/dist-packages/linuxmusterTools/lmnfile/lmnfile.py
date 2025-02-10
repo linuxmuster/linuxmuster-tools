@@ -43,6 +43,7 @@ ALLOWED_PATHS = [
                 ]
 
 EMPTY_LINE_MARKER = '###EMPTY#LINE'
+HEADER_MARKER = '#HEADERS#'
 
 
 def convertBool(boolean):
@@ -266,7 +267,15 @@ class CSVLoader(LMNFile):
         if 'r' in self.mode or '+' in self.mode:
             # Removing leading and trailing spaces for all fields
             trim = []
+            headers_found = False
             for line in self.opened:
+
+                if not headers_found and HEADER_MARKER in line:
+                    # Only the first HEADERS marker will be used
+                    self.fieldnames = line.replace(HEADER_MARKER, "").split(self.delimiter)
+                    headers_found = True
+                    continue
+
                 trim.append(self.delimiter.join(
                     [field.strip() for field in line.split(self.delimiter)]
                 ))
