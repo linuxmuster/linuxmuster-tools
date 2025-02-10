@@ -84,3 +84,51 @@ def parse_add_log(all=False):
     return result
 
 
+def parse_update_log(all=False):
+
+    log_path = '/var/log/sophomorix/userlog/user-update.log'
+    now = datetime .now().timestamp()
+    last_year = now - 86400*365
+
+    if not os.path.isfile(log_path):
+        raise Exception(f"File {log_path} does not exist.")
+
+    result = {}
+
+    with open(log_path, 'rb') as log:
+        for line in log:
+            line = line.strip()
+
+            if not line or line.startswith(b'#'):
+                continue
+
+            entries = line.split(b'::')
+            timestamp = int(entries[1])
+
+            # Only get the entries of last year per default
+            if not all and timestamp < last_year:
+                continue
+
+            if timestamp not in result:
+                result[timestamp] = {}
+
+            changes = {}
+            for change in entries[7].split(b','):
+                if b'GROUP:' in change or b'ROLE:' in change:
+                    key, move = change.split(b':')
+                    changes[key.decode().lower()] = move.decode()
+                else:
+                    if b'=' in change:
+                        key, value = change.split(b'=', 1)
+                        if key == 'unicodePwd':
+                            change['unicodePwd'] = "CHANGED-VALUE HIDDEN"
+                        else:
+                            changes[key.decode()] = value.decode()
+
+            result[timestamp] = {
+                'school': entries[3].decode(),
+                'user': entries[5].decode(),
+                'changes': changes,
+            }
+
+    return result
