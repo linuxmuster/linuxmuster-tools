@@ -40,6 +40,21 @@ class SophomorixIni:
         self.sections = list(self.data.keys())
         self.computerrole = [s.replace('computerrole.', '') for s in self.sections if s.startswith('computerrole')]
 
+        self.dict = {}
+        for section in self.sections:
+            self.dict[section] = {}
+            for key,value in self.data[section].items():
+                self.dict[section][key] = self.sanitize(value)
+
+    @staticmethod
+    def sanitize(value):
+        if '\n' in value:
+            result = value.split('\n')
+            for idx,v in enumerate(result):
+                result[idx] = v.split("#")[0].strip()
+            return result
+        else:
+            return value.split("#")[0].strip()
 
     def get(self, section, key):
         if section not in self.sections:
@@ -50,13 +65,6 @@ class SophomorixIni:
         if key not in section:
             raise KeyError(f"Key {key} not found in the section {section} of sophomorix.ini.")
 
-        value = section[key]
+        return self.sanitize(section[key])
 
-        if '\n' in value:
-            result = value.split('\n')
-            for idx,v in enumerate(result):
-                result[idx] = v.split("#")[0].strip()
-            return result
-        else:
-            return value.split("#")[0].strip()
 
