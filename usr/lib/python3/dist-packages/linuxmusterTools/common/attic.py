@@ -2,7 +2,7 @@ import os
 import logging
 import datetime
 
-from linuxmusterTools.lmnconfig import SophomorixConfig
+from linuxmusterTools.lmnconfig import SchoolConfig
 from linuxmusterTools.ldapconnector import LMNLdapReader as lr
 from .convert import convert_sophomorix_time
 
@@ -77,7 +77,7 @@ def get_attic_status(user, school='default-school'):
 
     status = details['sophomorixStatus']
     admin_file = details['sophomorixAdminFile']
-    sophomorix_config = SophomorixConfig().config
+    sophomorix_config = SchoolConfig().config
     role_config = sophomorix_config.get(f'userfile.{admin_file}', {})
 
     if status == "M" or status == "T":

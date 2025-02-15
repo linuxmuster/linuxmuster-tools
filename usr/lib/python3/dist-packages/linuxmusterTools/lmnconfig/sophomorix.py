@@ -8,7 +8,7 @@ from linuxmusterTools.lmnfile import LMNFile
 
 logger = logging.getLogger(__name__)
 
-class SophomorixConfig:
+class SchoolConfig:
 
     def __init__(self, school='default-school'):
         prefix = ""
