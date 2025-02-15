@@ -20,7 +20,7 @@ class SchoolConfig:
             with LMNFile(sophomorix_config_path, 'r') as config:
                 self.config = config.read()
         else:
-            logger.warning(f"No sophomorix config found for the school {school}")
+            logger.warning(f"No sophomorix school config found for the school {school}")
             self.config = {}
 
 class MultiOrderedDict(OrderedDict):
@@ -68,3 +68,14 @@ class SophomorixIni:
         return self.sanitize(section[key])
 
 
+class SophomorixConf:
+
+    def __init__(self):
+        self.path = f'/etc/linuxmuster/sophomorix/sophomorix.conf'
+
+        if os.path.isfile(self.path):
+            with LMNFile(self.path, 'r') as config:
+                self.data = config.data
+        else:
+            logger.warning(f"No sophomorix.conf found on the server.")
+            self.data = {}
