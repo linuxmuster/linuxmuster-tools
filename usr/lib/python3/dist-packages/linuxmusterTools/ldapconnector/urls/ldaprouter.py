@@ -95,6 +95,12 @@ class LMNLdapRouter:
             else:
                 return {attr: getattr(results, attr, None) for attr in attrs}
 
+    def print_urls(self):
+        urls = [ url.pattern for url in self.urls.keys() ]
+        urls.sort()
+        for url in urls:
+            print(url)
+
     def ascsv(self, url, delimiter=";", csvfile=None, attributes=[], header=True, **kwargs):
         if not csvfile:
             # TODO: find a better path
