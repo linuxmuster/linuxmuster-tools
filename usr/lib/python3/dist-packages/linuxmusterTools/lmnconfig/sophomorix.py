@@ -38,13 +38,15 @@ class SophomorixIni:
         self.data = ConfigParser(delimiters=("=",), dict_type=MultiOrderedDict, strict=False)
         self.data.read(self.path)
         self.sections = list(self.data.keys())
-        self.computerrole = [s.replace('computerrole.', '') for s in self.sections if s.startswith('computerrole')]
 
         self.dict = {}
         for section in self.sections:
             self.dict[section] = {}
             for key,value in self.data[section].items():
                 self.dict[section][key] = self.sanitize(value)
+
+        self.computerrole = [s.replace('computerrole.', '') for s in self.sections if s.startswith('computerrole')]
+        self.userrole = list(self.dict['ROLE_USER'].keys())
 
     @staticmethod
     def sanitize(value):

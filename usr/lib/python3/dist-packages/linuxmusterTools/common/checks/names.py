@@ -27,25 +27,6 @@ NAME_RULES = {
     "domain": re.compile(r"^[a-zA-Z0-9\-.]*$"),
 }
 
-# Bad hardcoded list, should be read in ldap or from a config file
-ROLES = [
-    'switch',
-    'addc',
-    'wlan',
-    'staffcomputer',
-    'mobile',
-    'printer',
-    'classroom-teachercomputer',
-    'server',
-    'iponly',
-    'faculty-teachercomputer',
-    'voip',
-    'byod',
-    'classroom-studentcomputer',
-    'thinclient',
-    'router'
-]
-
 def set_check_method(cls, *args):
     for name_type in NAME_RULES:
         setattr(cls, f"check_{name_type}_name", partialmethod(cls.check, name_type))
@@ -59,9 +40,6 @@ class NameChecker:
         if pattern:
             return re.match(pattern, string) is not None
         return False
-
-    def check_role(self, role):
-        return role in ROLES
 
     def normalize_mac(self, mac):
         # TODO: all upper ?
