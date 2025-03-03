@@ -49,7 +49,8 @@ class NameChecker:
             return mac.replace("-", ":")
         elif self.check_mac3_name(mac):
             return ":".join(re.findall(r"..", mac))
-        logger.warning(f"Mac addresse {mac} does not correspond to any valid mac address.")
-        return None
+        else:
+            logger.warning(f"Mac addresse {mac} does not correspond to any valid mac address.")
+            return None
 
 
