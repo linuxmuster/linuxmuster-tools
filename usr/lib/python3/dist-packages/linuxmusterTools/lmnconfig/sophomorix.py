@@ -46,6 +46,16 @@ class SophomorixIni:
                 self.dict[section][key] = self.sanitize(value)
 
         self.computerrole = [s.replace('computerrole.', '') for s in self.sections if s.startswith('computerrole')]
+
+        # TODO: should be loaded, not hardcoded
+        self.clientrole = [
+            'classroom-teachercomputer',
+            'classroom-studentcomputer',
+            'faculty-teachercomputer',
+            'staffcomputer',
+            'thinclient',
+            'iponly',
+        ]
         self.userrole = list(self.dict['ROLE_USER'].keys())
 
     @staticmethod
