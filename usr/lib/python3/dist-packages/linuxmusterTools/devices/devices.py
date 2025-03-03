@@ -18,7 +18,7 @@ class Devices:
         if self.school != 'default-school':
             self.prefix = f'{self.school}.'
         else:
-            self.prefix = 'dev-'
+            self.prefix = ''
 
         self.path = f'/etc/linuxmuster/sophomorix/{self.school}/{self.prefix}devices.csv'
         self.load()
@@ -59,7 +59,7 @@ class Devices:
     def check_conf(self):
         # TODO check
         # MS SOFTWARE KEYS ?
-        # sophomorix Role valid + COMPUTER_ACCOUNT/HOST_GROUP/HOST_GROUP_TYPE flags
+        # COMPUTER_ACCOUNT/HOST_GROUP/HOST_GROUP_TYPE flags ?
 
         report = []
 
@@ -111,7 +111,7 @@ class Devices:
             if len(hosts) > 1:
                 report.append(f"{','.join(hosts)} have the same mac {mac}")
 
-        return '\n'.join(report)
+        return '\t' + '\n\t'.join(report)
 
 
 
