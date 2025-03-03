@@ -64,37 +64,53 @@ class Devices:
 
     def check_conf(self):
         # TODO check
-        # ROOM/HOST: A-Za-z0-9\-
-        # LINBO group: A-Za-z0-9\-_
         # MS SOFTWARE KEYS ?
         # sophomorix Role valid + COMPUTER_ACCOUNT/HOST_GROUP/HOST_GROUP_TYPE flags
-        # PXE: 0-9
 
         report = []
 
-        # Check uniqueness and values from mac and ip addresses
+        # Check values
         ip_rev = {}
         mac_rev = {}
         for device in self.devices:
-            if device['ip'] in ip_rev:
-                ip_rev[device['ip']].append(device['hostname'])
-            else:
-                ip_rev[device['ip']] = [device['hostname']]
+            ip = device['ip']
+            mac = device['mac']
 
-            if device['mac'] in mac_rev:
-                mac_rev[device['mac']].append(device['hostname'])
+            if ip in ip_rev:
+                ip_rev[ip].append(device['hostname'])
             else:
-                mac_rev[device['mac']] = [device['hostname']]
+                ip_rev[ip] = [device['hostname']]
 
-        for ip, hosts in ip_rev.items():
+            if mac in mac_rev:
+                mac_rev[mac].append(device['hostname'])
+            else:
+                mac_rev[mac] = [device['hostname']]
+
+            # Check values
             if not name_checker.check_ip_name(ip):
                 report.append(f"{ip} is not a valid ip address")
+
+            if not name_checker.normalize_mac(mac):
+                report.append(f"{mac} is not a valid mac address")
+
+            if not name_checker.check_group_name(device['group']):
+                report.append(f"{device['group']} is not a valid Linbo group")
+
+            if not name_checker.check_room_name(device['room']):
+                report.append(f"{device['room']} is not a valid room name")
+
+            if not name_checker.check_host_name(device['hostname']):
+                report.append(f"{device['hostname']} is not a valid hostname")
+
+            if device['pxeFlag'] not in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
+                report.append(f"{device['pxeFlag']} is not a valid pxe flag")
+
+        # Check uniqueness
+        for ip, hosts in ip_rev.items():
             if len(hosts) > 1:
                 report.append(f"{','.join(hosts)} have the same ip {ip}")
 
         for mac, hosts in mac_rev.items():
-            if not name_checker.normalize_mac(mac):
-                report.append(f"{mac} is not a valid mac address")
             if len(hosts) > 1:
                 report.append(f"{','.join(hosts)} have the same mac {mac}")
 
