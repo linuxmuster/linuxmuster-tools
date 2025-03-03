@@ -1,18 +1,12 @@
 from ..lmnfile import LMNFile
 from ..common.checks import NameChecker
+from ..lmnconfig import SophomorixIni
 
+sophomorix_ini = SophomorixIni()
+CLIENT_ROLES = sophomorix_ini.clientrole
+COMPUTER_ROLES = sophomorix_ini.computerrole
 
 name_checker = NameChecker()
-
-# TODO: should be loaded, not hardcoded
-CLIENT_ROLES = [
-    'classroom-teachercomputer',
-    'classroom-studentcomputer',
-    'faculty-teachercomputer',
-    'staffcomputer',
-    'thinclient',
-    'iponly',
-]
 
 class Devices:
     def __init__(self, school='default-school'):
@@ -104,6 +98,9 @@ class Devices:
 
             if device['pxeFlag'] not in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
                 report.append(f"{device['pxeFlag']} is not a valid pxe flag")
+
+            if device['sophomorixRole'] not in COMPUTER_ROLES:
+                report.append(f"{device['sophomorixRole']} is not a valid computer role")
 
         # Check uniqueness
         for ip, hosts in ip_rev.items():
