@@ -1,6 +1,10 @@
 from ..lmnfile import LMNFile
+from ..common.checks import NameChecker
 
 
+name_checker = NameChecker()
+
+# TODO: should be loaded, not hardcoded
 CLIENT_ROLES = [
     'classroom-teachercomputer',
     'classroom-studentcomputer',
@@ -20,7 +24,7 @@ class Devices:
         if self.school != 'default-school':
             self.prefix = f'{self.school}.'
         else:
-            self.prefix = ''
+            self.prefix = 'dev-'
 
         self.path = f'/etc/linuxmuster/sophomorix/{self.school}/{self.prefix}devices.csv'
         self.load()
@@ -57,3 +61,43 @@ class Devices:
 
     def get_clients(self, groups=[]):
         return self.filter(roles=CLIENT_ROLES, groups=groups)
+
+    def check_conf(self):
+        # TODO check
+        # ROOM/HOST: A-Za-z0-9\-
+        # LINBO group: A-Za-z0-9\-_
+        # MAC: values
+        # IP: values
+        # MS SOFTWARE KEYS ?
+        # sophomorix Role valid + COMPUTER_ACCOUNT/HOST_GROUP/HOST_GROUP_TYPE flags
+        # PXE: 0-9
+
+        report = []
+
+        # Check uniqueness
+        ip_rev = {}
+        mac_rev = {}
+        for device in self.devices:
+            if device['ip'] in ip_rev:
+                ip_rev[device['ip']].append(device['hostname'])
+            else:
+                ip_rev[device['ip']] = [device['hostname']]
+
+            if device['mac'] in mac_rev:
+                mac_rev[device['mac']].append(device['hostname'])
+            else:
+                mac_rev[device['mac']] = [device['hostname']]
+
+        for ip, hosts in ip_rev.items():
+            if len(hosts) > 1:
+                report.append(f"{','.join(hosts)} have the same ip {ip}")
+
+        for mac, hosts in mac_rev.items():
+            if len(hosts) > 1:
+                report.append(f"{','.join(hosts)} have the same mac {mac}")
+
+        return '\n'.join(report)
+
+
+
+
