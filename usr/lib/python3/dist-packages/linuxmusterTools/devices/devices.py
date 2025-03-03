@@ -66,15 +66,13 @@ class Devices:
         # TODO check
         # ROOM/HOST: A-Za-z0-9\-
         # LINBO group: A-Za-z0-9\-_
-        # MAC: values
-        # IP: values
         # MS SOFTWARE KEYS ?
         # sophomorix Role valid + COMPUTER_ACCOUNT/HOST_GROUP/HOST_GROUP_TYPE flags
         # PXE: 0-9
 
         report = []
 
-        # Check uniqueness
+        # Check uniqueness and values from mac and ip addresses
         ip_rev = {}
         mac_rev = {}
         for device in self.devices:
@@ -89,10 +87,14 @@ class Devices:
                 mac_rev[device['mac']] = [device['hostname']]
 
         for ip, hosts in ip_rev.items():
+            if not name_checker.check_ip_name(ip):
+                report.append(f"{ip} is not a valid ip address")
             if len(hosts) > 1:
                 report.append(f"{','.join(hosts)} have the same ip {ip}")
 
         for mac, hosts in mac_rev.items():
+            if not name_checker.normalize_mac(mac):
+                report.append(f"{mac} is not a valid mac address")
             if len(hosts) > 1:
                 report.append(f"{','.join(hosts)} have the same mac {mac}")
 
