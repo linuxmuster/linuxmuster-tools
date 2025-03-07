@@ -16,6 +16,7 @@ def get_all_users():
                                     (sophomorixRole=schooladministrator)
                                     (sophomorixRole=teacher)
                                     (sophomorixRole=student)
+                                    (sophomorixRole=parent)
                                 )
                             )"""
 
@@ -69,6 +70,7 @@ def get_user(username):
                                     (sophomorixRole=schooladministrator)
                                     (sophomorixRole=teacher)
                                     (sophomorixRole=student)
+                                    (sophomorixRole=parent)
                                 )
                             )"""
 
@@ -88,6 +90,7 @@ def get_results_search_user(query='', selection=[]):
                 (sophomorixRole=schooladministrator)
                 (sophomorixRole=teacher)
                 (sophomorixRole=student)
+                (sophomorixRole=parent)
             """,
         'admins': """
                 (sophomorixRole=globaladministrator)
@@ -95,7 +98,7 @@ def get_results_search_user(query='', selection=[]):
             """,
     }
 
-    for role in ['globaladministrator', 'schooladministrator', 'teacher', 'student']:
+    for role in ['globaladministrator', 'schooladministrator', 'teacher', 'student', 'parent']:
         role_filter[role] = f'(sophomorixRole={role})'
 
     if query:
