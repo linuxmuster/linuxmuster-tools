@@ -1,8 +1,13 @@
 import os
+import logging
 from datetime import datetime, timedelta
 
 
 def parse_kill_log(all=False, epoch=None, today=False, lastweek=False):
+
+    if (all and today) or (all and lastweek) or (today and lastweek):
+        logging.error("Parameter all, today and lastweek are mutually exclusives! Please pick only one of them.")
+        raise Exception("Parameter all, today and lastweek are mutually exclusives! Please pick only one of them.")
 
     log_path = '/var/log/sophomorix/userlog/user-kill.log'
     now = datetime.now().timestamp()
@@ -60,6 +65,10 @@ def parse_kill_log(all=False, epoch=None, today=False, lastweek=False):
 
 def parse_add_log(all=False, epoch=None, today=False, lastweek=False):
 
+    if (all and today) or (all and lastweek) or (today and lastweek):
+        logging.error("Parameter all, today and lastweek are mutually exclusives! Please pick only one of them.")
+        raise Exception("Parameter all, today and lastweek are mutually exclusives! Please pick only one of them.")
+
     log_path = '/var/log/sophomorix/userlog/user-add.log'
     now = datetime.now().timestamp()
     last_year = now - 86400*365
@@ -115,6 +124,10 @@ def parse_add_log(all=False, epoch=None, today=False, lastweek=False):
 
 
 def parse_update_log(all=False, epoch=None, today=False, lastweek=False):
+
+    if (all and today) or (all and lastweek) or (today and lastweek):
+        logging.error("Parameter all, today and lastweek are mutually exclusives! Please pick only one of them.")
+        raise Exception("Parameter all, today and lastweek are mutually exclusives! Please pick only one of them.")
 
     log_path = '/var/log/sophomorix/userlog/user-update.log'
     now = datetime.now().timestamp()
