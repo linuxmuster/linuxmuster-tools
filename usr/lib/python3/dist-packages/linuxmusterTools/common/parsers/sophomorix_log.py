@@ -1,8 +1,8 @@
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
-def parse_kill_log(all=False, epoch=None, today=False):
+def parse_kill_log(all=False, epoch=None, today=False, lastweek=False):
 
     log_path = '/var/log/sophomorix/userlog/user-kill.log'
     now = datetime.now().timestamp()
@@ -31,6 +31,10 @@ def parse_kill_log(all=False, epoch=None, today=False):
             if today and not datetime.fromtimestamp(timestamp).date() == datetime.today().date():
                 continue
 
+            # If flag lastweek is set, only the changes of the last week
+            if lastweek and not datetime.fromtimestamp(timestamp).date() >= datetime.today().date() + timedelta(days=-7):
+                continue
+
             if timestamp not in result:
                 result[timestamp] = {}
 
@@ -54,7 +58,7 @@ def parse_kill_log(all=False, epoch=None, today=False):
 
     return result
 
-def parse_add_log(all=False, epoch=None, today=False):
+def parse_add_log(all=False, epoch=None, today=False, lastweek=False):
 
     log_path = '/var/log/sophomorix/userlog/user-add.log'
     now = datetime.now().timestamp()
@@ -83,6 +87,10 @@ def parse_add_log(all=False, epoch=None, today=False):
             if today and not datetime.fromtimestamp(timestamp).date() == datetime.today().date():
                 continue
 
+            # If flag lastweek is set, only the changes of the last week
+            if lastweek and not datetime.fromtimestamp(timestamp).date() >= datetime.today().date() + timedelta(days=-7):
+                continue
+
             if timestamp not in result:
                 result[timestamp] = {}
 
@@ -106,7 +114,7 @@ def parse_add_log(all=False, epoch=None, today=False):
     return result
 
 
-def parse_update_log(all=False, epoch=None, today=False):
+def parse_update_log(all=False, epoch=None, today=False, lastweek=False):
 
     log_path = '/var/log/sophomorix/userlog/user-update.log'
     now = datetime.now().timestamp()
@@ -133,6 +141,10 @@ def parse_update_log(all=False, epoch=None, today=False):
 
             # If flag today is set, only the changes of the current day
             if today and not datetime.fromtimestamp(timestamp).date() == datetime.today().date():
+                continue
+
+            # If flag lastweek is set, only the changes of the last week
+            if lastweek and not datetime.fromtimestamp(timestamp).date() >= datetime.today().date() + timedelta(days=-7):
                 continue
 
             if timestamp not in result:
