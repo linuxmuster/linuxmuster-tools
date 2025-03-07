@@ -5,7 +5,7 @@ from datetime import datetime
 def parse_kill_log(all=False, epoch=None):
 
     log_path = '/var/log/sophomorix/userlog/user-kill.log'
-    now = datetime .now().timestamp()
+    now = datetime.now().timestamp()
     last_year = now - 86400*365
 
     if not os.path.isfile(log_path):
@@ -53,7 +53,7 @@ def parse_kill_log(all=False, epoch=None):
 def parse_add_log(all=False, epoch=None):
 
     log_path = '/var/log/sophomorix/userlog/user-add.log'
-    now = datetime .now().timestamp()
+    now = datetime.now().timestamp()
     last_year = now - 86400*365
 
     if not os.path.isfile(log_path):
@@ -101,7 +101,7 @@ def parse_add_log(all=False, epoch=None):
 def parse_update_log(all=False, epoch=None):
 
     log_path = '/var/log/sophomorix/userlog/user-update.log'
-    now = datetime .now().timestamp()
+    now = datetime.now().timestamp()
     last_year = now - 86400*365
 
     if not os.path.isfile(log_path):
