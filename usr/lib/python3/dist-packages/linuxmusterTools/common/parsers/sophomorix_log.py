@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 
 
-def parse_kill_log(all=False, epoch=None):
+def parse_kill_log(all=False, epoch=None, today=False):
 
     log_path = '/var/log/sophomorix/userlog/user-kill.log'
     now = datetime.now().timestamp()
@@ -25,6 +25,10 @@ def parse_kill_log(all=False, epoch=None):
 
             # Only get the entries of last year per default
             if not all and timestamp < last_year:
+                continue
+
+            # If flag today is set, only the changes of the current day
+            if today and not datetime.fromtimestamp(timestamp).date() == datetime.today().date():
                 continue
 
             if timestamp not in result:
@@ -50,7 +54,7 @@ def parse_kill_log(all=False, epoch=None):
 
     return result
 
-def parse_add_log(all=False, epoch=None):
+def parse_add_log(all=False, epoch=None, today=False):
 
     log_path = '/var/log/sophomorix/userlog/user-add.log'
     now = datetime.now().timestamp()
@@ -73,6 +77,10 @@ def parse_add_log(all=False, epoch=None):
 
             # Only get the entries of last year per default
             if not all and timestamp < last_year:
+                continue
+
+            # If flag today is set, only the changes of the current day
+            if today and not datetime.fromtimestamp(timestamp).date() == datetime.today().date():
                 continue
 
             if timestamp not in result:
@@ -98,7 +106,7 @@ def parse_add_log(all=False, epoch=None):
     return result
 
 
-def parse_update_log(all=False, epoch=None):
+def parse_update_log(all=False, epoch=None, today=False):
 
     log_path = '/var/log/sophomorix/userlog/user-update.log'
     now = datetime.now().timestamp()
@@ -121,6 +129,10 @@ def parse_update_log(all=False, epoch=None):
 
             # Only get the entries of last year per default
             if not all and timestamp < last_year:
+                continue
+
+            # If flag today is set, only the changes of the current day
+            if today and not datetime.fromtimestamp(timestamp).date() == datetime.today().date():
                 continue
 
             if timestamp not in result:
