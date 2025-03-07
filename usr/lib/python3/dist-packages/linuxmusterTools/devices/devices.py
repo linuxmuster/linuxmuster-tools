@@ -111,7 +111,10 @@ class Devices:
             if len(hosts) > 1:
                 report.append(f"{','.join(hosts)} have the same mac {mac}")
 
-        return '\t' + '\n\t'.join(report)
+        if report:
+            return report
+
+        return False
 
 
 

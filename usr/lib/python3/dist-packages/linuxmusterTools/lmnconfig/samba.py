@@ -36,6 +36,7 @@ if not os.path.isfile('/etc/samba/smb.conf'):
     logger.warning('Config file /etc/samba/smb.conf not found')
 
 try:
+    # TODO: use smb.conf or the output of testparm -sv ?
     smbconf.read('/etc/samba/smb.conf')
     LOG_LEVEL = parse_log_level(smbconf["global"].get("log level", ""))
     SAMBA_REALM = smbconf["global"]["realm"].lower()
