@@ -54,7 +54,10 @@ class LdapReader:
             return {}
 
         # Creating empty object with default values
-        data = {field.name:field.type() for field in fields(objectclass) if field.init }
+        data = {field.name:field.type() for field in fields(objectclass) if field.init}
+        if objectclass.__name__ == 'LMNUser':
+            data['custom_fields_config'] =  custom_config
+
         return objectclass(**data)
 
     def get_single(self, objectclass, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn='', attributes=[], **kwargs):
