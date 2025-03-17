@@ -1,3 +1,15 @@
+linuxmuster-tools7 (7.3.3) lmn73; urgency=medium
+
+  * [common] Parse update, kill and log from sophomorix.
+  * [common] Filter sophomorix per weeks, days,etc ...
+  * [common] Fix MAC devices check
+  * [devices] More checks about devices values
+  * [ldapreader] Add parents filter
+  * [ldapreader] Fix response for non existent users
+  * [lmnconfig] Parsers for sophomorix.ini and sopohmorix.conf 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Mon, 17 Mar 2025 12:35:57 +0100
+
 linuxmuster-tools7 (7.3.2) lmn73; urgency=medium
 
   * Update artifact to v4. 
