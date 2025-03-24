@@ -2,6 +2,7 @@ import logging
 
 from ..ldap_writer import LdapWriter
 from ..urls.ldaprouter import router
+from .object import LMNObjectWriter
 
 
 logger = logging.getLogger(__name__)
@@ -11,6 +12,7 @@ class LMNUserWriter:
     def __init__(self):
         self.lw = LdapWriter()
         self.lr = router
+        self.ow = LMNObjectWriter()
 
     def setattr(self, name, **kwargs):
         """
@@ -67,5 +69,36 @@ class LMNUserWriter:
             return
 
         logging.info(f"Group {parentgroup_dn} already exists !")
+
+    def add_parents(self, name, parents=[]):
+        """
+
+        :param name: cn of the student
+        :type name: basestring
+        :param parents: List of cn of the parents
+        :type parents: list
+        """
+
+        # Check if the users exist
+        student = self.lr.get(f'/users/{name}')
+
+        if student.get('sophomorixRole', None) != 'student':
+            logging.info(f'{name} is not a student, can not add parent.')
+            return
+
+        parents_dn = []
+        for parent in parents:
+            details = self.lr.get(f'/users/{parent}')
+            # Allowing all roles but student
+            if details.get('sophomorixRole', 'student') == 'student':
+                logging.info(f'{parent} do not have a valid role to be parent.')
+                return
+            # At this point, we have a valid role for a parent
+            parents_dn.append(details['dn'])
+
+        parentgroup_dn = student['dn'].replace(name, f"{name}-parents")
+        for dn in parents_dn:
+            self.ow.add_member(parentgroup_dn, dn)
+
 
 
