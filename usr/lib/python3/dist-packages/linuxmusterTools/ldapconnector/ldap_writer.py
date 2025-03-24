@@ -168,6 +168,7 @@ class LdapWriter:
         :type dn: basestring
         """
 
+
         self.lc._add_group(dn, ldif)
 
     def _del(self, dn):

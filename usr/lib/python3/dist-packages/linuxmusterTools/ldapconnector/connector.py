@@ -175,7 +175,10 @@ class LdapConnector:
         :type dn: basestring
         """
 
-        ldif.append(('objectclass', [b'top', b'group']))
+
+        objectclass = ('objectclass', [b'top', b'group'])
+        if objectclass not in ldif:
+            ldif.append(objectclass)
         self._add(dn, ldif)
 
     def _rename(self, old_dn, new_cn):
