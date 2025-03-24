@@ -31,7 +31,15 @@ csv_fieldnames = {
         'last_name',
         'first_name',
         'birthday',
-        'id'
+        'id',
+    ],
+    'parents': [
+        'class',
+        'last_name',
+        'first_name',
+        'birthday', 
+        'id',
+        'students_ref',
     ],
     'teachers': [
         'class',
