@@ -41,9 +41,9 @@ def parse_kill_log(all=False, epoch=None, today=False, lastweek=False):
                 continue
 
             if timestamp not in result:
-                result[timestamp] = {}
+                result[timestamp] = []
 
-            result[timestamp] = {
+            result[timestamp].append({
                 'school': entries[3],
                 'user': entries[4],
                 'firstname': entries[6],
@@ -52,14 +52,14 @@ def parse_kill_log(all=False, epoch=None, today=False, lastweek=False):
                 'role': entries[8],
                 'first_password': entries[9],
                 'home_deleted': 'TRUE' in entries[10],
-            }
+            })
 
     if epoch is not None:
         try:
             epoch = int(epoch)
         except ValueError:
             raise Exception(f"Given epoch ({epoch}) should be an integer!")
-        return result.get(epoch, {})
+        return result.get(epoch, [])
 
     return result
 
@@ -101,9 +101,9 @@ def parse_add_log(all=False, epoch=None, today=False, lastweek=False):
                 continue
 
             if timestamp not in result:
-                result[timestamp] = {}
+                result[timestamp] = []
 
-            result[timestamp] = {
+            result[timestamp].append({
                 'school': entries[3],
                 'user': entries[4],
                 'firstname': entries[6],
@@ -111,14 +111,14 @@ def parse_add_log(all=False, epoch=None, today=False, lastweek=False):
                 'adminclass': entries[7],
                 'role': entries[8],
                 'first_password': entries[9],
-            }
+            })
 
     if epoch is not None:
         try:
             epoch = int(epoch)
         except ValueError:
             raise Exception(f"Given epoch ({epoch}) should be an integer!")
-        return result.get(epoch, {})
+        return result.get(epoch, [])
 
     return result
 
@@ -161,7 +161,7 @@ def parse_update_log(all=False, epoch=None, today=False, lastweek=False):
                 continue
 
             if timestamp not in result:
-                result[timestamp] = {}
+                result[timestamp] = []
 
             changes = {}
             for change in entries[7].split(b','):
@@ -176,17 +176,17 @@ def parse_update_log(all=False, epoch=None, today=False, lastweek=False):
                         else:
                             changes[key.decode()] = value.decode()
 
-            result[timestamp] = {
+            result[timestamp].append({
                 'school': entries[3].decode(),
                 'user': entries[5].decode(),
                 'changes': changes,
-            }
+            })
 
     if epoch is not None:
         try:
             epoch = int(epoch)
         except ValueError:
             raise Exception(f"Given epoch ({epoch}) should be an integer!")
-        return result.get(epoch, {})
+        return result.get(epoch, [])
 
     return result
