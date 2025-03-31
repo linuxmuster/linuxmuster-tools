@@ -101,6 +101,36 @@ class LMNUserWriter:
             logging.info(f"Group {newparentgroup_dn} added successfully !")
             return
 
+    def rename_parent_group(self, old_name, new_name, **kwargs):
+        """
+        Move the parent group OLDNAME-parent to a NEWNAME-parents in case of
+        change of the student sAMAccountName. Wenn this method is called, I assume
+        that the current sAMAccountName is already new_name.
+
+        :param old_name: old cn of the student
+        :type old_name: basestring
+        :param new_name: new cn of the student
+        :type new_name: basestring
+        """
+
+
+        details = self.lr.get(f'/users/{new_name}')
+
+        if details.get('sophomorixRole', None) != 'student':
+            logging.info(f'{new_name} is not a student, no need to check the parent group.')
+            return
+
+        oldparentgroup_dn = details['dn'].replace(new_name, f"{old_name}-parents")
+        newparentgroup_dn = details['dn'].replace(new_name, f"{new_name}-parents")
+        if not self.lr.get(f'/dn/{oldparentgroup_dn}'):
+            self.lw._add_group(newparentgroup_dn)
+            logging.info(f"Group {newparentgroup_dn} added successfully !")
+            return
+        else:
+            self.lw._rename(oldparentgroup_dn, newparentgroup_dn)
+            logging.info(f"Group {newparentgroup_dn} added successfully !")
+            return
+
     def del_parent_group(self, name, **kwargs):
         """
         Delete the parent group STUDENT-parent.
