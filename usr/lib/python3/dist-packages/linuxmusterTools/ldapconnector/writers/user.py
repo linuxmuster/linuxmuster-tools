@@ -175,6 +175,24 @@ class LMNUserWriter:
             logging.info(f"Group {parentgroup_dn} successfully deleted !")
             return
 
+    def get_parents(self, name):
+        """
+        Get parents member of the group STUDENT-parents
+
+        :param name: cn of the student
+        :type name: basestring
+        """
+
+        # Check if the users exist
+        student = self.lr.get(f'/users/{name}')
+
+        if student.get('sophomorixRole', None) != 'student':
+            logging.info(f'{name} is not a student, can not add parent.')
+            return
+
+        parentgroup_dn = student['dn'].replace(name, f"{name}-parents")
+        return self.lr.getval(f'/dn/{parentgroup_dn}', 'member')
+
     def add_parents(self, name, parents=[]):
         """
         Add parents to the group STUDENT-parents
