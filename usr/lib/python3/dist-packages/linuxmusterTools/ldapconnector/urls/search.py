@@ -15,5 +15,6 @@ def global_search(query=''):
     return f"""(
                 |
                 (cn=*{query}*)
+                (ou=*{query}*)
                 (displayName=*{query}*)
     )"""
