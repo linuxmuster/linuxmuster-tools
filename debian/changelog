@@ -1,3 +1,11 @@
+linuxmuster-tools7 (7.3.4) lmn73; urgency=medium
+
+  * [ldapwriter] Add parent utilities (rename, move, add, del  )
+  * [common] Checks for parents groups
+  * [common] Get last update log
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Mon, 31 Mar 2025 21:56:42 +0200
+
 linuxmuster-tools7 (7.3.3) lmn73; urgency=medium
 
   * [common] Parse update, kill and log from sophomorix.
