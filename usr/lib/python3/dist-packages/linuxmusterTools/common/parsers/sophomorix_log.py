@@ -123,7 +123,7 @@ def parse_add_log(all=False, epoch=None, today=False, lastweek=False):
     return result
 
 
-def parse_update_log(all=False, epoch=None, today=False, lastweek=False):
+def parse_update_log(all=False, epoch=None, today=False, lastweek=False, list_changes=True ):
 
     if (all and today) or (all and lastweek) or (today and lastweek):
         logging.error("Parameter all, today and lastweek are mutually exclusives! Please pick only one of them.")
@@ -164,17 +164,18 @@ def parse_update_log(all=False, epoch=None, today=False, lastweek=False):
                 result[timestamp] = []
 
             changes = {}
-            for change in entries[7].split(b','):
-                if b'GROUP:' in change or b'ROLE:' in change:
-                    key, move = change.split(b':')
-                    changes[key.decode().lower()] = move.decode()
-                else:
-                    if b'=' in change:
-                        key, value = change.split(b'=', 1)
-                        if key == 'unicodePwd':
-                            change['unicodePwd'] = "CHANGED-VALUE HIDDEN"
-                        else:
-                            changes[key.decode()] = value.decode()
+            if list_changes:
+                for change in entries[7].split(b','):
+                    if b'GROUP:' in change or b'ROLE:' in change:
+                        key, move = change.split(b':')
+                        changes[key.decode().lower()] = move.decode()
+                    else:
+                        if b'=' in change:
+                            key, value = change.split(b'=', 1)
+                            if b'unicodePwd' in key:
+                                changes['unicodePwd'] = "CHANGED-VALUE HIDDEN"
+                            else:
+                                changes[key.decode()] = value.decode()
 
             result[timestamp].append({
                 'school': entries[3].decode(),
