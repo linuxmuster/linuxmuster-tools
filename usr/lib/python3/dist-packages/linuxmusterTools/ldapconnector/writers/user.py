@@ -111,12 +111,13 @@ class LMNUserWriter:
 
         parentgroup_dn = details['dn'].replace(name, f"{name}-parents")
         newparentgroup_dn = parentgroup_dn.replace(f"OU={old_group}", f"OU={new_group}")
+        newparentgroup_ou = ','.join(newparentgroup_dn.split(',')[1:])
         if not self.lr.get(f'/dn/{parentgroup_dn}'):
             self.lw._add_group(newparentgroup_dn)
             logging.info(f"Group {newparentgroup_dn} added successfully !")
             return
         else:
-            self.lw._rename(parentgroup_dn, newparentgroup_dn)
+            self.lw._move(parentgroup_dn, newparentgroup_ou)
             logging.info(f"Group {newparentgroup_dn} added successfully !")
             return
 
@@ -141,12 +142,15 @@ class LMNUserWriter:
 
         oldparentgroup_dn = details['dn'].replace(new_name, f"{old_name}-parents")
         newparentgroup_dn = details['dn'].replace(new_name, f"{new_name}-parents")
+
         if not self.lr.get(f'/dn/{oldparentgroup_dn}'):
+
             self.lw._add_group(newparentgroup_dn)
+
             logging.info(f"Group {newparentgroup_dn} added successfully !")
             return
         else:
-            self.lw._rename(oldparentgroup_dn, newparentgroup_dn)
+            self.lw._rename(oldparentgroup_dn,f"{new_name}-parents" )
             logging.info(f"Group {newparentgroup_dn} added successfully !")
             return
 
