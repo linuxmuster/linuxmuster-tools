@@ -70,6 +70,25 @@ class LMNUserWriter:
 
         logging.info(f"Group {parentgroup_dn} already exists !")
 
+    def get_parent_group(self, name, **kwargs):
+        """
+        Each student should have an associated parent group, like STUDENT-parent
+        in which the parents are members.
+
+        :param name: cn of the student
+        :type name: basestring
+        """
+
+
+        details = self.lr.get(f'/users/{name}')
+
+        if details.get('sophomorixRole', None) != 'student':
+            logging.info(f'{name} is not a student, no need to check the parent group.')
+            return
+
+        parentgroup_dn = details['dn'].replace(name, f"{name}-parents")
+        return self.lr.get(f'/dn/{parentgroup_dn}')
+
     def move_parent_group(self, name, old_group, new_group, **kwargs):
         """
         Move the parent group STUDENT-parent to a new group (like from schoolclass 5a
