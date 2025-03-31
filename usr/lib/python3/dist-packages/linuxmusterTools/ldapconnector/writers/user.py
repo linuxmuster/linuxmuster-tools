@@ -154,7 +154,28 @@ class LMNUserWriter:
             logging.info(f"Group {newparentgroup_dn} added successfully !")
             return
 
-    def del_parent_group(self, dn, **kwargs):
+    def del_parent_group(self, name, **kwargs):
+        """
+        Delete the parent group STUDENT-parent.
+
+        :param dn: dn of the parent group
+        :type dn: basestring
+        """
+
+
+        details = self.lr.get(f'/users/{name}')
+
+        if details.get('sophomorixRole', None) != 'student':
+            logging.info(f'{name} is not a student, no need to check the parent group.')
+            return
+
+        parentgroup_dn = details['dn'].replace(name, f"{name}-parents")
+        if self.lr.get(f'/dn/{parentgroup_dn}'):
+            self.lw._del(parentgroup_dn)
+            logging.info(f"Group {parentgroup_dn} successfully deleted !")
+            return
+
+    def del_parent_group_per_dn(self, dn, **kwargs):
         """
         Delete the parent group STUDENT-parent.
 
