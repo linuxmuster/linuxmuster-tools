@@ -166,6 +166,7 @@ def parse_update_log(all=False, epoch=None, today=False, lastweek=False, list_ch
             changes = {}
             if list_changes:
                 for change in entries[7].split(b','):
+                    change = change.strip(b'"')
                     if b'GROUP:' in change or b'ROLE:' in change:
                         key, move = change.split(b':')
                         changes[key.decode().lower()] = move.decode()
