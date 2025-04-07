@@ -1,4 +1,5 @@
 from linuxmusterTools.ldapconnector import LMNLdapReader as lr, LMNUserWriter
+from linuxmusterTools.common import lprint
 
 
 uw = LMNUserWriter()
@@ -12,7 +13,7 @@ for idx, student in enumerate(students):
     parent_group = uw.get_parent_group(student)
     if not parent_group:
         orphan_student_cn.append(student)
-    print(f"Checking parent group of student {idx+1:>4} of {count}", end="\r")
+    print(f"First pass: checking parent group of existing student {idx+1:>4} of {count}", end="\r")
 
 print()
 
@@ -21,9 +22,9 @@ if orphan_student_cn:
     print("Creating missing parents group ...")
     for student in orphan_student_cn:
         uw.add_parent_group(student)
-        print(f"Missing parent group for {student} created!")
+        lprint.info(f"Missing parent group for {student} created!")
 else:
-    print("Checks done, everything is alright!")
+    lprint.success("Checks done, everything is alright!")
 
 orphan_parent_dn = []
 
@@ -44,7 +45,7 @@ for idx, group in enumerate(parent_groups):
     student_data = lr.get(f"/users/{student}")
     if not student_data or parentgroup_schoolclass != student_data['sophomorixAdminClass']:
         orphan_parent_dn.append(dn)
-    print(f"Checking parent group {idx+1:>4} of {count}", end="\r")
+    print(f"Second pass: checking existing parent group {idx+1:>4} of {count}", end="\r")
 
 print()
 
@@ -53,7 +54,7 @@ if orphan_parent_dn:
     print("Deleting obsolete parents group ...")
     for parent in orphan_parent_dn:
         uw.del_parent_group_per_dn(parent)
-        print(f"Obsolete parent group {parent} deleted!")
+        lprint.info(f"Obsolete parent group {parent} deleted!")
 else:
-    print("Checks done, everything is alright!")
+    lprint.success("Checks done, everything is alright!")
 
