@@ -90,7 +90,7 @@ class LMNUserWriter:
         parentgroup_dn = details['dn'].replace(name, f"{name}-parents")
         return self.lr.get(f'/dn/{parentgroup_dn}')
 
-    def move_parent_group(self, name, old_group, new_group, **kwargs):
+    def move_parent_group(self, name, new_group, **kwargs):
         """
         Move the parent group STUDENT-parent to a new group (like from schoolclass 5a
         to schoolclass 6a).
@@ -104,23 +104,30 @@ class LMNUserWriter:
         """
 
 
-        details = self.lr.get(f'/users/{name}')
+        parents_dn = self.lr.getval(f'/search/{name}-parents', 'dn')
 
-        if details.get('sophomorixRole', None) != 'student':
-            logging.info(f'{name} is not a student, no need to check the parent group.')
-            return
+        if len(parents_dn) == 0:
+            # Adding new parents group
+            self.add_parent_group(name)
+        elif len(parents_dn) == 1:
+            actual_dn = parents_dn[0]
+            actual_group = actual_dn.split(',')[1].split('=')[1]
 
-        parentgroup_dn = details['dn'].replace(name, f"{name}-parents")
-        newparentgroup_dn = parentgroup_dn.replace(f"OU={old_group}", f"OU={new_group}")
-        newparentgroup_ou = ','.join(newparentgroup_dn.split(',')[1:])
-        if not self.lr.get(f'/dn/{parentgroup_dn}'):
-            self.lw._add_group(newparentgroup_dn)
-            logging.info(f"Group {newparentgroup_dn} added successfully !")
-            return
+            if f'OU={new_group}' in actual_dn:
+                logging.info("Nothing to do, dn already exists")
+                return
+            else:
+                newparentgroup_dn = actual_dn.replace(f"OU={actual_group}", f"OU={new_group}")
+                newparentgroup_ou = ','.join(newparentgroup_dn.split(',')[1:])
+
+                logging.info(f"Moving {actual_dn} to {newparentgroup_dn}")
+                self.lw._move(actual_dn, newparentgroup_ou)
+                logging.success(f"Group {newparentgroup_dn} moved successfully !")
+                return
         else:
-            self.lw._move(parentgroup_dn, newparentgroup_ou)
-            logging.info(f"Group {newparentgroup_dn} added successfully !")
-            return
+            # Too many parents groups for this user, this must be checked first
+            print("TO CHECK")
+
 
     def rename_parent_group(self, old_name, new_name, **kwargs):
         """
