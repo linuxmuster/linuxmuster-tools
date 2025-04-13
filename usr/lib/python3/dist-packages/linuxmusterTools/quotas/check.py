@@ -7,7 +7,7 @@ import smbclient
 from datetime import datetime
 from smbprotocol.exceptions import SMBAuthenticationError
 
-from ..samba_util import SAMBA_WORKGROUP, SAMBA_DOMAIN, SAMBA_NETBIOS, DFS
+from ..samba_util import SAMBA_WORKGROUP, SAMBA_DOMAIN, SAMBA_NETBIOS, DFS, SHARES_LIST
 from ..ldapconnector import LMNLdapReader as lr
 from ..common import format_size
 
@@ -134,12 +134,10 @@ def list_user_files(user):
     return {'directories': directories, 'total': f"{format_size(total)}"}
 
 def get_user_quotas(user):
-    # TODO: find a better way to get shares list
-    sophomorixQuota = lr.getval(f'/users/{user}', 'sophomorixQuota')
-    if sophomorixQuota is None:
+    if lr.getval(f'/users/{user}', 'sophomorixQuota') is None:
         raise Exception(f'User {user} not found in ldap')
 
-    quotas = {share.split(":")[0]: None for share in sophomorixQuota}
+    quotas = {share: None for share in SHARES_LIST}
 
     with open('/etc/linuxmuster/.secret/administrator', 'r') as adm_pw:
         pw = adm_pw.readline().strip()
