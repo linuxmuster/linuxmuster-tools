@@ -134,11 +134,23 @@ def list_user_files(user):
     return {'directories': directories, 'total': f"{format_size(total)}"}
 
 def get_user_quotas(user):
-    special_quotas =  lr.get(f'/users/{user}', attributes=['sophomorixCloudQuotaCalculated','sophomorixMailQuotaCalculated'])
-    if not special_quotas:
+    attributes =  lr.get(f'/users/{user}',
+                             attributes=[
+                                 'sophomorixCloudQuotaCalculated',
+                                 'sophomorixMailQuotaCalculated',
+                                 'sophomorixSchoolname',
+                                 'sophomorixRole'
+                             ])
+    if not attributes:
         raise Exception(f'User {user} not found in ldap')
 
-    quotas = {share: None for share in SHARES_LIST}
+    if 'administrator' in attributes['sophomorixRole']:
+        quotas = {share: None for share in SHARES_LIST}
+    else:
+        quotas = {
+            attributes['sophomorixSchoolname']: None,
+            'linuxmuster-global': None,
+        }
 
     with open('/etc/linuxmuster/.secret/administrator', 'r') as adm_pw:
         pw = adm_pw.readline().strip()
@@ -180,7 +192,7 @@ def get_user_quotas(user):
             }
 
     pw = ''
-    quotas['cloud'] = special_quotas['sophomorixCloudQuotaCalculated'][0].split()[0]
-    quotas['mail'] = special_quotas['sophomorixMailQuotaCalculated'][0]
+    quotas['cloud'] = attributes['sophomorixCloudQuotaCalculated'][0].split()[0]
+    quotas['mail'] = attributes['sophomorixMailQuotaCalculated'][0]
 
     return quotas
