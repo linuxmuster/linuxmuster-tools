@@ -11,6 +11,9 @@ from .dns import *
 DFS = {}
 
 config = ConfigObj(StringIO(check_output(["/usr/bin/net", "conf", "list"], shell=False).decode()))
+
+SHARES_LIST = list(config.keys())
+
 for share_name, share_config in config.items():
     # DFS activated ?
     if share_config.get('msdfs root', 'no') == 'yes':
