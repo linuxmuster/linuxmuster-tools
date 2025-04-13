@@ -134,7 +134,8 @@ def list_user_files(user):
     return {'directories': directories, 'total': f"{format_size(total)}"}
 
 def get_user_quotas(user):
-    if lr.getval(f'/users/{user}', 'sophomorixQuota') is None:
+    special_quotas =  lr.get(f'/users/{user}', attributes=['sophomorixCloudQuotaCalculated','sophomorixMailQuotaCalculated'])
+    if not special_quotas:
         raise Exception(f'User {user} not found in ldap')
 
     quotas = {share: None for share in SHARES_LIST}
@@ -179,5 +180,7 @@ def get_user_quotas(user):
             }
 
     pw = ''
+    quotas['cloud'] = special_quotas['sophomorixCloudQuotaCalculated'][0].split()[0]
+    quotas['mail'] = special_quotas['sophomorixMailQuotaCalculated'][0]
 
     return quotas
