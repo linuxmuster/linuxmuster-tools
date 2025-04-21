@@ -38,3 +38,17 @@ class LMNOU(LMNParent):
 
     def __post_init__(self):
         self.dn = self.distinguishedName
+
+@dataclass
+class LMNGPO(LMNParent):
+    cn: str
+    distinguishedName: str
+    displayName: str
+    dn: str
+    gPCFileSysPath: str
+    name: str
+    objectCategory: list
+    objectClass: list
+
+    def __post_init__(self):
+        self.dn = self.distinguishedName
