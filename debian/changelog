@@ -1,3 +1,11 @@
+linuxmuster-tools7 (7.3.5) lmn73; urgency=medium
+
+  * [ldapreader] Request for all GPOs 
+  * [ldapwriter] Improve parents checks and move workflow
+  * [quotas] Improve quotas and shares listing
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Thu, 24 Apr 2025 12:13:14 +0200
+
 linuxmuster-tools7 (7.3.4) lmn73; urgency=medium
 
   * [ldapwriter] Add parent utilities (rename, move, add, del  )
