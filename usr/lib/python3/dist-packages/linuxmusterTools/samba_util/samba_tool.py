@@ -60,8 +60,11 @@ class GPOManager:
             name = gpo['displayName'][0].decode()
             path = gpo['gPCFileSysPath'][0].decode()
             unix_path = "/var/lib/samba/" + '/'.join(path.split('\\')[3:])
-            drivemgr = DriveManager(unix_path)
-            self.gpos[name] = GPO(str(gpo.dn), drivemgr, gpo_id, name, path, unix_path)
+            try:
+                drivemgr = DriveManager(unix_path)
+                self.gpos[name] = GPO(str(gpo.dn), drivemgr, gpo_id, name, path, unix_path)
+            except Exception as e:
+                logging.error(str(e))
 
 class GroupManager:
     """
