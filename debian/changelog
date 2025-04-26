@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.2.49) lmn72; urgency=medium
+
+  * [samba] Catch parse errors in GPOs 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sat, 26 Apr 2025 13:19:00 +0200
+
 linuxmuster-tools7 (7.2.48) lmn72; urgency=medium
 
   * [lmnconfig] Fix LDAP_CONTEXT 
