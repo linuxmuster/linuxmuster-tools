@@ -1,3 +1,4 @@
+import os
 import logging
 from dataclasses import dataclass, field, asdict
 import xml.etree.ElementTree as ElementTree
@@ -66,9 +67,12 @@ class DriveManager:
         self.drives = []
 
         try:
-            self.tree = ElementTree.parse(self.path)
-        except FileNotFoundError:
-            return
+            if os.path.isfile(self.path):
+                self.tree = ElementTree.parse(self.path)
+            else:
+                return
+        except ElementTree.ParseError:
+            raise Exception(f"Could not parse file {self.path}: syntax error.")
 
         for drive in self.tree.findall('Drive'):
             properties = self._parseProperties(drive)
