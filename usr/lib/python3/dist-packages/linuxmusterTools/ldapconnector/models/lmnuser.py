@@ -20,6 +20,7 @@ class LMNUser(LMNParent):
     memberOf: list
     name: str
     objectClass: list
+    preferredLanguage: str
     proxyAddresses: list
     sAMAccountName: str
     sAMAccountType: str
@@ -46,8 +47,16 @@ class LMNUser(LMNParent):
     sophomorixFirstnameASCII: str
     sophomorixFirstnameInitial: str
     sophomorixFirstPassword: str
-    sophomorixIntrinsic2: list
-    sophomorixIntrinsic3: list
+    sophomorixIntrinsic1: str
+    sophomorixIntrinsic2: list # Wrong type !
+    sophomorixIntrinsic3: list # Wrong type !
+    sophomorixIntrinsic4: str
+    sophomorixIntrinsic5: str
+    sophomorixIntrinsicMulti1: str
+    sophomorixIntrinsicMulti2: list
+    sophomorixIntrinsicMulti3: list
+    sophomorixIntrinsicMulti4: list
+    sophomorixIntrinsicMulti5: list
     sophomorixMailQuotaCalculated: list
     sophomorixMailQuota: list
     sophomorixQuota: list
