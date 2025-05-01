@@ -27,14 +27,18 @@ class LdapWriter:
     def _setattr(self, lmnobject, data=None, add=False):
         """
         Set one or more attributes only for a ldap entry.
+        data is a dict of attributes/values to set.
+        If some attributes are lists, the boolean add permit to decide if the
+        new values must be added to the existing value list (add=True) or
+        if the list must be completely replaced (add=False, default behaviour).
 
-        :param obj_details: object to modify (project, ...)
-        :type obj_details: dict
+        :param lmnobject: object to modify (project, student ...)
+        :type lmnobject: something like User, Project, etc
         :param data: Dict of attributes:values to write
         :type data: dict
+        :param add: Replace a list values with the new values or add the
+        new values to the existing ones.
         :type add: bool
-        :param add: Define if the attribute should be added, even if the
-        attribute is already present
         """
 
 
@@ -87,10 +91,8 @@ class LdapWriter:
         """
         Delete one or more attributes only for a ldap entry.
 
-        :param name: cn
-        :type name: basestring
-        :param objecttype: user, device, etc ... see OBJECT_MAPPING above
-        :type objecttype: basestring
+        :param lmnobject: object to modify (project, student ...)
+        :type lmnobject: something like User, Project, etc
         :param data: Dict of attributes:values to delete.
         Value may be empty if the attribute is not ambiguous
         :type data: dict
