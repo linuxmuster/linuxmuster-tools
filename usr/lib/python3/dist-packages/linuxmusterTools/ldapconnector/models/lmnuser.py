@@ -2,13 +2,13 @@ from dataclasses import dataclass, field, InitVar
 import re
 import ldap
 from .lmnsession import LMNSession
-from .common import LMNParent
+from .common import LMNModel
 
 from linuxmusterTools.common import WEBUI_IMPORT
 
 
 @dataclass
-class LMNUser(LMNParent):
+class LMNUser(LMNModel):
     cn: str
     custom_fields_config: InitVar[dict]
     displayName: str

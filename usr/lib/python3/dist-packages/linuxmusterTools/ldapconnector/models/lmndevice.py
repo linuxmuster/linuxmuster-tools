@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field
-from .common import LMNParent
+from .common import LMNModel
 
 
 @dataclass
-class LMNDevice(LMNParent):
+class LMNDevice(LMNModel):
     cn: str
     displayName: str
     distinguishedName: str
@@ -33,7 +33,7 @@ class LMNDevice(LMNParent):
         self.dn = self.distinguishedName
 
 @dataclass
-class LMNRoom(LMNParent):
+class LMNRoom(LMNModel):
     """
     ObjectClass group for a room.
     """

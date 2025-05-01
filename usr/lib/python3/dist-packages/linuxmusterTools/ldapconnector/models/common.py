@@ -3,7 +3,7 @@ from dataclasses import dataclass, asdict
 
 
 @dataclass
-class LMNParent:
+class LMNModel:
     """
     Common parent class to gather common methods.
     """
@@ -28,7 +28,7 @@ class LMNParent:
             return ''
 
 @dataclass
-class LMNOU(LMNParent):
+class LMNOU(LMNModel):
     distinguishedName: str
     dn: str
     name: str
@@ -40,7 +40,7 @@ class LMNOU(LMNParent):
         self.dn = self.distinguishedName
 
 @dataclass
-class LMNGPO(LMNParent):
+class LMNGPO(LMNModel):
     cn: str
     distinguishedName: str
     displayName: str
