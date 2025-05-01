@@ -1,51 +1,73 @@
 import logging
+from dataclasses import fields
 
 from ..ldap_writer import LdapWriter
 from ..urls.ldaprouter import router
 from .object import LMNObjectWriter
-from linuxmusterTools.common import lprint
+from linuxmusterTools.common import lprint, spinner
+from ..models import LMNUser
 
 
 logger = logging.getLogger(__name__)
 
 class LMNUserWriter:
 
-    def __init__(self):
+    def __init__(self, cn=None):
+        self.cn = cn
         self.lw = LdapWriter()
         self.lr = router
         self.ow = LMNObjectWriter()
+        self.model = LMNUser
+        self.data = {}
+        self.new = False
+        self.load_data()
 
-    def setattr(self, name, **kwargs):
+    def load_data(self):
+        if self.cn is not None:
+            self.data = self.lr.get(f'/users/{self.cn}')
+            if not self.data:
+                logger.info(f"The user {self.cn} was not found in ldap.")
+
+        if self.cn is None or not self.data:
+            self.new = True
+            self.data =  {field.name:field.type() for field in fields(self.model) if field.init}
+
+    def setattr(self, **kwargs):
         """
-        Middleware to check if the object exists.
-
-        :param name: cn of the object
-        :type name: basestring
-        """
-
-        details = self.lr.get(f'/users/{name}')
-
-        if not details:
-            logger.info(f"The user {name} was not found in ldap.")
-            raise Exception(f"The user {name} was not found in ldap.")
-
-        self.lw._setattr(details, **kwargs)
-
-    def delattr(self, name, **kwargs):
-        """
-        Middleware to check if the object exists.
-
-        :param name: cn of the object
-        :type name: basestring
+        Set some attributes of the object directly in Ldap,
+        only for an existing object.
+        kwargs must contain a data dict with attributes/values to set.
         """
 
-        details = self.lr.get(f'/users/{name}')
+        if not self.new:
+            self.lw._setattr(self, **kwargs)
+            self.load_data()
+        else:
+            logging.warning('This object does not exist in Ldap, please create it first using the method .create()')
 
-        if not details:
-            logger.info(f"The user {name} was not found in ldap.")
-            raise Exception(f"The user {name} was not found in ldap.")
+    def delattr(self, **kwargs):
+        """
+        Delete some attributes of the object directly in Ldap,
+        only for an existing object.
+        kwargs must contain a data dict with attributes/values to set.
+        """
 
-        self.lw._delattr(details, **kwargs)
+        if not self.new:
+            self.lw._delattr(self, **kwargs)
+            self.load_data()
+        else:
+            logging.warning('This object does not exist in Ldap, please create it first using the method .create()')
+
+    def getattr(self, attr):
+        """
+        Get a specific attribute of the object.
+        """
+
+
+        return self.data.get(attr, None)
+
+
+#### ALL the next methods should be moved to student class, parent class or students-parents join
 
     def add_parent_group(self, name, **kwargs):
         """
@@ -122,7 +144,7 @@ class LMNUserWriter:
 
                 logging.info(f"Moving {actual_dn} to {newparentgroup_dn}")
                 self.lw._move(actual_dn, newparentgroup_ou)
-                logging.success(f"Group {newparentgroup_dn} moved successfully !")
+                logging.info(f"Group {newparentgroup_dn} moved successfully !")
                 return
         else:
             # Too many parents groups for this user, this must be checked first
@@ -300,12 +322,18 @@ class LMNUserWriter:
         students = self.lr.getval('/roles/student', 'cn')
         count = len(students)
         orphan_student_cn = []
+        report = {
+            'add': [],
+            'move': {},
+            'delete': [],
+        }
 
-        for idx, student in enumerate(students):
-            parent_group = self.get_parent_group(student)
-            if not parent_group:
-                orphan_student_cn.append(student)
-            print(f"First pass: checking parent group of existing student {idx+1:>4} of {count}", end="\r")
+        with spinner:
+            for idx, student in enumerate(students):
+                parent_group = self.get_parent_group(student)
+                if not parent_group:
+                    orphan_student_cn.append(student)
+                spinner.print(f"First pass: checking parent group of existing student {idx+1:>4} of {count}")
 
         print()
 
@@ -313,10 +341,21 @@ class LMNUserWriter:
         if orphan_student_cn:
             print("Creating missing parents group ...")
             for student in orphan_student_cn:
-                self.add_parent_group(student)
-                lprint.info(f"Missing parent group for {student} created!")
-        else:
-            lprint.success("Checks done, everything is alright!")
+                parents_dn = self.lr.getval(f'/search/{student}-parents', 'dn')
+                if len(parents_dn) == 0:
+                    # self.add_parent_group(student)
+                    report['add'].append(student)
+                    # lprint.info(f"Missing parent group for {student} created!")
+                elif len(parents_dn) == 1:
+                    # lprint.info(f"Maybe should {parents_dn[0]} be renamed for student {student}")
+                    report['move'][student] = parents_dn
+                else:
+                    report['move'][student] = parents_dn
+                    # lprint.info(f"Too many parents groups for {student}: ")
+                    # for dn in parents_dn:
+                    #     lprint.info(f"\t{dn}")
+        # else:
+        #     lprint.success("Checks done, everything is alright!")
 
         orphan_parent_dn = []
 
@@ -324,29 +363,32 @@ class LMNUserWriter:
         parent_groups = self.lr.get('/search/-parents', attributes=['cn', 'dn'])
         count = len(parent_groups)
 
-        for idx, group in enumerate(parent_groups):
-            cn = group['cn']
-            dn = group['dn']
+        with spinner:
+            for idx, group in enumerate(parent_groups):
+                cn = group['cn']
+                dn = group['dn']
 
-            # Ignore global groups
-            if cn in ['all-parents', 'global-parents']:
-                continue
+                # Ignore global groups
+                if cn in ['all-parents', 'global-parents']:
+                    continue
 
-            parentgroup_schoolclass = dn.split(',')[1].split('=')[1]
-            student = cn.split('-')[0]
-            student_data = self.lr.get(f"/users/{student}")
-            if not student_data or parentgroup_schoolclass != student_data['sophomorixAdminClass']:
-                orphan_parent_dn.append(dn)
-            print(f"Second pass: checking existing parent group {idx+1:>4} of {count}", end="\r")
+                parentgroup_schoolclass = dn.split(',')[1].split('=')[1]
+                student = cn.split('-')[0]
+                student_data = self.lr.get(f"/users/{student}")
+                if not student_data or parentgroup_schoolclass != student_data['sophomorixAdminClass']:
+                    orphan_parent_dn.append(dn)
+                spinner.print(f"Second pass: checking existing parent group {idx+1:>4} of {count}")
 
         print()
 
         # Delete orphan parents groups
         if orphan_parent_dn:
-            print("Deleting obsolete parents group ...")
+            # print("Deleting obsolete parents group ...")
             for parent in orphan_parent_dn:
-                self.del_parent_group_per_dn(parent)
-                lprint.info(f"Obsolete parent group {parent} deleted!")
-        else:
-            lprint.success("Checks done, everything is alright!")
+                # self.del_parent_group_per_dn(parent)
+                report['delete'].append(parent)
+                # lprint.info(f"Obsolete parent group {parent} can be deleted!")
+        # else:
+        #     lprint.success("Checks done, everything is alright!")
 
+        return report
