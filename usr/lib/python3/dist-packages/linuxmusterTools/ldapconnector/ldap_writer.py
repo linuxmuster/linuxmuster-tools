@@ -1,5 +1,6 @@
 import ldap
 import logging
+from dataclasses import fields
 
 from linuxmusterTools.ldapconnector.connector import LdapConnector
 from .urls.ldaprouter import router as LMNLdapReader
@@ -23,7 +24,7 @@ class LdapWriter:
         self.lc = LdapConnector()
         self.lr = LMNLdapReader
 
-    def _setattr(self, obj_details, data=None, add=False):
+    def _setattr(self, lmnobject, data=None, add=False):
         """
         Set one or more attributes only for a ldap entry.
 
@@ -42,12 +43,14 @@ class LdapWriter:
             return
 
         ldif = []
-        for attr, new_val in data.items():
-            if attr in obj_details:
+        valid_fields = {field.name:field.type() for field in fields(lmnobject.model) if field.init}
 
-                if isinstance(obj_details[attr], list):
+        for attr, new_val in data.items():
+            if attr in valid_fields:
+
+                if isinstance(valid_fields[attr], list):
                     # Multi-value
-                    if not add and obj_details[attr]:
+                    if not add and lmnobject.data[attr]:
                         # Delete attribute first
                         ldif.append((ldap.MOD_DELETE, attr, None))
 
@@ -65,7 +68,7 @@ class LdapWriter:
                         continue
 
                     # Single-value
-                    elif obj_details[attr]:
+                    elif lmnobject.data[attr]:
                         # Delete attribute first
                         ldif.append((ldap.MOD_DELETE, attr, None))
 
@@ -75,12 +78,12 @@ class LdapWriter:
                 ldif.append((ldap.MOD_REPLACE, attr, f'"{new_val}"'.encode('utf-16-le')))
 
             else:
-                logger.warning(f"Attribute {attr} not found in {obj_details['distinguishedName']}.")
+                logger.warning(f"Attribute {attr} not found in {lmnobject.data['distinguishedName']}.")
 
         if ldif:
-            self.lc._set(obj_details['distinguishedName'], ldif)
+            self.lc._set(lmnobject.data['distinguishedName'], ldif)
 
-    def _delattr(self, obj_details, data=None):
+    def _delattr(self, lmnobject, data=None):
         """
         Delete one or more attributes only for a ldap entry.
 
@@ -98,30 +101,32 @@ class LdapWriter:
             return
 
         ldif = []
+        valid_fields = {field.name:field.type() for field in fields(lmnobject.model) if field.init}
+
         for attr, val in data.items():
-            if attr in obj_details:
+            if attr in valid_fields:
                 if not val:
                     # Delete the whole attribute
                     ldif.append((ldap.MOD_DELETE, attr, None))
                 else:
                     if isinstance(val, str):
-                        if val in obj_details[attr]:
+                        if val in lmnobject.data[attr]:
                             ldif.append((ldap.MOD_DELETE, attr, val.encode()))
                         else:
                             logger.info(
-                                f"Value {val} not found in attribute {attr} from {obj_details['distinguishedName']}.")
+                                f"Value {val} not found in attribute {attr} from {lmnobject.data['distinguishedName']}.")
                     elif isinstance(val, list):
                         for v in val:
-                            if v in obj_details[attr]:
+                            if v in lmnobject.data[attr]:
                                 ldif.append((ldap.MOD_DELETE, attr, v.encode()))
                             else:
                                 logger.info(
-                                    f"Value {v} not found in attribute {attr} from {obj_details['distinguishedName']}.")
+                                    f"Value {v} not found in attribute {attr} from {lmnobject.data['distinguishedName']}.")
             else:
-                logger.warning(f"Attribute {attr} not found in {obj_details['distinguishedName']}.")
+                logger.warning(f"Attribute {attr} not found in {lmnobject.data['distinguishedName']}.")
 
         if ldif:
-            self.lc._set(obj_details['distinguishedName'], ldif)
+            self.lc._set(lmnobject.data['distinguishedName'], ldif)
 
     def _rename(self, old_dn, new_cn):
         """
