@@ -45,6 +45,10 @@ class LMNUserWriter:
             self.new = True
             self.data =  {field.name:field.type() for field in fields(self.model) if field.init}
 
+        ## Adding all attributes as class attributes
+        for k,v in self.data.items():
+            setattr(self, k, v)
+
     def setattr(self, **kwargs):
         """
         Set some attributes of the object directly in Ldap,
@@ -89,7 +93,7 @@ class LMNUserWriter:
             if not name_checker.check_login_name(new_cn):
                 logging.warning(f"{new_cn} contains not allowed characters, please check it again.")
             else:
-                self.lw._rename(self.data['distinguishedName'], new_cn)
+                self.lw._rename(self.distinguishedName, new_cn)
                 self.cn = new_cn
                 self.load_data()
         else:
