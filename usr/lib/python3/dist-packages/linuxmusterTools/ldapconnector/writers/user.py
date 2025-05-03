@@ -115,7 +115,18 @@ class LMNUserWriter:
         Move the user to a new Organisational Unit.
         """
 
-        pass
+        # Maybe it is better and safer to implement this method only per role
+        # and avoid movement accross roles.
+
+        if not self.new:
+            # Check OU ?
+            try:
+                self.lw._move(self.distinguishedName, dst_ou)
+                self.load_data()
+            except Exception as e:
+                logging.error(str(e))
+        else:
+            logging.warning('This object does not exist in Ldap, please create it first using the method .create()')
 
     def create(self, dst_ou):
         """
