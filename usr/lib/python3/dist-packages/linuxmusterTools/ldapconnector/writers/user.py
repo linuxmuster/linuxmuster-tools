@@ -25,7 +25,11 @@ name_checker = NameChecker()
 
 class LMNUserWriter:
 
-    def __init__(self, cn=None):
+    def __init__(self, cn):
+
+        if not name_checker.check_login_name(cn):
+            raise Exception(f"{cn} is not a valid CN")
+
         self.cn = cn
         self.lw = LdapWriter()
         self.lr = router
@@ -36,14 +40,13 @@ class LMNUserWriter:
         self.load_data()
 
     def load_data(self):
-        if self.cn is not None:
-            self.data = self.lr.get(f'/users/{self.cn}')
-            if not self.data:
-                logger.info(f"The user {self.cn} was not found in ldap.")
+        self.data = self.lr.get(f'/users/{self.cn}')
 
-        if self.cn is None or not self.data:
+        if not self.data:
+            logger.info(f"The user {self.cn} was not found in ldap.")
             self.new = True
             self.data =  {field.name:field.type() for field in fields(self.model) if field.init}
+            self.data['cn'] = self.cn
 
         ## Adding all attributes as class attributes
         for k,v in self.data.items():
@@ -144,7 +147,7 @@ class LMNUserWriter:
             # Check OU ?
             try:
                 self.dn = f"CN={self.cn},{dst_ou}"
-                self.lc._add(self.dn, ldif=self.data)
+                self.lw._add(self.dn, ldif=self.data)
                 self.new = False
                 self.load_data()
             except Exception as e:
