@@ -36,6 +36,10 @@ def set_check_method(cls, *args):
 class NameChecker:
 
     def check(self, name_type, string):
+        # Wrong types and empty strings are not allowed.
+        if not isinstance(string, str) or not string:
+            return False
+
         pattern = NAME_RULES.get(name_type, None)
         if pattern:
             return re.match(pattern, string) is not None
