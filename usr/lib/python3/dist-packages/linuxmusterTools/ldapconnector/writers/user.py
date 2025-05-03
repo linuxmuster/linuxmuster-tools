@@ -134,9 +134,23 @@ class LMNUserWriter:
         """
 
 
-        self.new = False
-        self.load_data()
-        pass
+        if self.new:
+            if not self.cn:
+                raise Exception("Can not create an entry without a valid CN.")
+
+            if not dst_ou:
+                raise Exception("Can not create an entry without a valid OU.")
+
+            # Check OU ?
+            try:
+                self.dn = f"CN={self.cn},{dst_ou}"
+                self.lc._add(self.dn, ldif=self.data)
+                self.new = False
+                self.load_data()
+            except Exception as e:
+                logging.warning(str(e))
+        else:
+            logging.warning(f"This object already exists in Ldap, it's not possible to create it!")
 
     def check(self):
         """
