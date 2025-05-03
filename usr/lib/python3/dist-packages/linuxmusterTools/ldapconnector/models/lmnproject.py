@@ -22,7 +22,16 @@ class LMNProject(LMNModel):
     sophomorixAdmins: list
     sophomorixCreationDate: str # datetime
     sophomorixHidden: bool
+    sophomorixIntrinsic1: str
+    sophomorixIntrinsic2: str
+    sophomorixIntrinsic3: str
+    sophomorixIntrinsic4: str
+    sophomorixIntrinsic5: str
     sophomorixIntrinsicMulti1: list
+    sophomorixIntrinsicMulti2: list
+    sophomorixIntrinsicMulti3: list
+    sophomorixIntrinsicMulti4: list
+    sophomorixIntrinsicMulti5: list
     sophomorixJoinable: bool
     sophomorixMailAlias: bool
     sophomorixMailList: bool

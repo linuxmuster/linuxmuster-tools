@@ -48,11 +48,11 @@ class LMNUser(LMNModel):
     sophomorixFirstnameInitial: str
     sophomorixFirstPassword: str
     sophomorixIntrinsic1: str
-    sophomorixIntrinsic2: list # Wrong type !
-    sophomorixIntrinsic3: list # Wrong type !
+    sophomorixIntrinsic2: str
+    sophomorixIntrinsic3: str
     sophomorixIntrinsic4: str
     sophomorixIntrinsic5: str
-    sophomorixIntrinsicMulti1: str
+    sophomorixIntrinsicMulti1: list
     sophomorixIntrinsicMulti2: list
     sophomorixIntrinsicMulti3: list
     sophomorixIntrinsicMulti4: list

@@ -56,9 +56,16 @@ class LMNObject(LMNModel):
     sophomorixFirstnameInitial: str
     sophomorixFirstPassword: str
     sophomorixHidden: bool
-    sophomorixIntrinsic2: list
-    sophomorixIntrinsic3: list
+    sophomorixIntrinsic1: str
+    sophomorixIntrinsic2: str
+    sophomorixIntrinsic3: str
+    sophomorixIntrinsic4: str
+    sophomorixIntrinsic5: str
     sophomorixIntrinsicMulti1: list
+    sophomorixIntrinsicMulti2: list
+    sophomorixIntrinsicMulti3: list
+    sophomorixIntrinsicMulti4: list
+    sophomorixIntrinsicMulti5: list
     sophomorixJoinable: bool
     sophomorixMailAlias: bool
     sophomorixMailList: bool

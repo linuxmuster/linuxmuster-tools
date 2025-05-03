@@ -19,8 +19,17 @@ class LMNGroup(LMNModel):
     sophomorixAdminClass: str
     sophomorixCreationDate: str
     sophomorixHidden: bool
-    sophomorixIntrinsicMulti1: list
     sophomorixJoinable: bool
+    sophomorixIntrinsic1: str
+    sophomorixIntrinsic2: str
+    sophomorixIntrinsic3: str
+    sophomorixIntrinsic4: str
+    sophomorixIntrinsic5: str
+    sophomorixIntrinsicMulti1: list
+    sophomorixIntrinsicMulti2: list
+    sophomorixIntrinsicMulti3: list
+    sophomorixIntrinsicMulti4: list
+    sophomorixIntrinsicMulti5: list
     sophomorixMembers: list
     sophomorixRole: str
     sophomorixSchoolname: str
