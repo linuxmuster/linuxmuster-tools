@@ -104,7 +104,11 @@ class LMNUserWriter:
         Delete the user's entry.
         """
 
-        pass
+        if not self.new:
+            self.lw._del(self.distinguishedName)
+            self.load_data() # Will load an empty User
+        else:
+            logging.warning('This object does not exist in Ldap, please create it first using the method .create()')
 
     def move(self, dst_ou):
         """
