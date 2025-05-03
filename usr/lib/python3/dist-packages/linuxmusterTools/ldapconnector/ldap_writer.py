@@ -132,35 +132,37 @@ class LdapWriter:
 
     def _rename(self, old_dn, new_cn):
         """
-
-        :param old_dn:
-        :type old_dn:
-        :param new_cn:
-        :type new_cn:
-        :return:
-        :rtype:
+        Update the CN of an entry, given by its dn.
         """
+
 
         self.lc._rename(old_dn, new_cn)
 
     def _move(self, old_dn, new_ou):
         """
-
-        :param old_dn:
-        :type old_dn:
-        :param new_dn:
-        :type new_dn:
-        :return:
-        :rtype:
+        Move an entry, given by its dn, to a new OU.
         """
 
+
         self.lc._move(old_dn, new_ou)
+
+    def _add(self, dn, ldif=[]):
+        """
+        Create an entry with the given dn.
+        Should be mostly used for users or computers.
+
+        :param dn: dn of the object to add
+        :type dn: basestring
+        """
+
+
+        self.lc._add_group(dn, ldif)
 
     def _add_ou(self, dn):
         """
         Create an organisational unit with the given dn.
 
-        :param dn: dn of the object to modify
+        :param dn: dn of the object to add
         :type dn: basestring
         """
 
@@ -171,7 +173,7 @@ class LdapWriter:
         """
         Create a group with the given dn.
 
-        :param dn: dn of the object to modify
+        :param dn: dn of the object to add
         :type dn: basestring
         """
 
