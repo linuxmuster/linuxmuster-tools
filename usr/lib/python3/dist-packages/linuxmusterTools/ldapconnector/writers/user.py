@@ -5,10 +5,23 @@ from ..ldap_writer import LdapWriter
 from ..urls.ldaprouter import router
 from .object import LMNObjectWriter
 from linuxmusterTools.common import lprint, spinner
+from linuxmusterTools.common.checks import NameChecker
 from ..models import LMNUser
 
 
 logger = logging.getLogger(__name__)
+name_checker = NameChecker()
+
+## TODO:
+# - load data ✅
+# - setattr, delattr, getattr ✅
+# - rename entry (change cn)
+# - delete entry
+# - move (to another OU)
+# - create (self.new == False, needs OU, create new CN with ldif in it)
+# - check ?
+# - Student, Teacher, Staff, Parent, Admins classes
+
 
 class LMNUserWriter:
 
@@ -66,8 +79,54 @@ class LMNUserWriter:
 
         return self.data.get(attr, None)
 
+    def rename(self, new_cn):
+        """
+        Update the cn of an user.
+        """
 
-#### ALL the next methods should be moved to student class, parent class or students-parents join
+
+        if not self.new:
+            if not name_checker.check_login_name(new_cn):
+                logging.warning(f"{new_cn} contains not allowed characters, please check it again.")
+            else:
+                self.lw._rename(self.data['distinguishedName'], new_cn)
+                self.cn = new_cn
+                self.load_data()
+        else:
+            logging.warning('This object does not exist in Ldap, please create it first using the method .create()')
+
+    def delete(self):
+        """
+        Delete the user's entry.
+        """
+
+        pass
+
+    def move(self, dst_ou):
+        """
+        Move the user to a new Organisational Unit.
+        """
+
+        pass
+
+    def create(self, dst_ou):
+        """
+        For an user marked as new, create an entry in the specified OU.
+        """
+
+
+        self.new = False
+        self.load_data()
+        pass
+
+    def check(self):
+        """
+        Check the LDAP consistence of the user's entry.
+        """
+
+        pass
+
+    #### ALL the next methods should be moved to student class, parent class or students-parents join
 
     def add_parent_group(self, name, **kwargs):
         """
