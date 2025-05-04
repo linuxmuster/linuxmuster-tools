@@ -1,5 +1,6 @@
 import logging
 from dataclasses import fields
+from types import new_class
 
 from ..ldap_writer import LdapWriter
 from ..urls.ldaprouter import router
@@ -34,7 +35,7 @@ class LMNUser:
         self.lw = LdapWriter()
         self.lr = router
         self.ow = LMNObject()
-        self.model = LMNUser
+        self.model = LMNUserModel
         self.data = {}
         self.new = False
         self.load_data()
@@ -115,7 +116,7 @@ class LMNUser:
         """
 
         # Maybe it is better and safer to implement this method only per role
-        # and avoid movement accross roles.
+        # and avoid movement across roles.
 
         if not self.new:
             # Check OU ?
@@ -176,6 +177,31 @@ class LMNStudent(LMNUser):
         super().__init__(cn)
         if self.data.get('sophomorixRole', None) != 'student':
             raise Exception(f"{cn} is not a student!")
+
+    def move(self, new_schoolclass):
+
+        valid_schoolclasses = self.lr.getval('/schoolclasses', 'cn')
+
+        if new_schoolclass not in valid_schoolclasses:
+            raise Exception(f'{new_schoolclass} is not even a valid schoolclass!')
+
+        old_schoolclass = self.data['sophomorixAdminClass']
+        dst_ou = self.data['distinguishedName'].replace(f'OU={old_schoolclass}', f'OU={new_schoolclass}')
+        dst_ou = dst_ou.replace(f'CN={self.cn},', '')
+
+        self._move(dst_ou)
+
+        # Only modify the attributes, does not actually move the user's files.
+        # remove membership in old schoolclass
+        # add membership in new schoolclass
+
+        self.setattr(data={
+            'sophomorixAdminClass': new_schoolclass,
+            'homeDirectory': self.data['homeDirectory'].replace(old_schoolclass, new_schoolclass),
+            'unixHomeDirectory': self.data['unixHomeDirectory'].replace(old_schoolclass, new_schoolclass),
+            'sophomorixIntrinsic2': self.data['sophomorixIntrinsic2'].replace(old_schoolclass, new_schoolclass)
+        })
+
 
 class LMNTeacher(LMNUser):
 
