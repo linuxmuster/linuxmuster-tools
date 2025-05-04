@@ -147,7 +147,7 @@ class LMNLdapRouter:
 
         :param pattern: URL pattern
         :type pattern: basestring
-        :param model: model obejct to return, can be e.g. LMNUser
+        :param model: model object to return, can be e.g. LMNUserModel
         :type model: dataclass object
         """
 
@@ -171,7 +171,7 @@ class LMNLdapRouter:
 
         :param pattern: URL pattern
         :type pattern: basestring
-        :param model: model obejct to return, can be e.g. LMNUser
+        :param model: model object to return, can be e.g. LMNUserModel
         :type model: dataclass object
         """
 

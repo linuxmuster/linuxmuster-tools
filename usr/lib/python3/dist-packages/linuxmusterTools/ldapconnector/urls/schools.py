@@ -5,7 +5,7 @@ from linuxmusterTools.ldapconnector.urls.ldaprouter import router
 def get_all_schools():
     """
     Get all schools.
-    Return a LMNSchool data object
+    Return a LMNSchoolModel data object
     """
 
     return f"""(&(objectClass=organizationalUnit))"""
@@ -15,7 +15,7 @@ def get_all_schools():
 def get_specific_school(school):
     """
     Get a specific school.
-    Return a LMNSchool data object
+    Return a LMNSchoolModel data object
     """
 
     return f"""(&(objectClass=organizationalUnit)(name={school}))"""

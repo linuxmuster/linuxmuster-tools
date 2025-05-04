@@ -6,7 +6,7 @@ from linuxmusterTools.ldapconnector.urls.ldaprouter import router
 def get_all_users():
     """
     Get all details from all users.
-    Return a list of LMNUser data object.
+    Return a list of LMNUserModel data object.
     """
 
     ldap_filter = f"""(&
@@ -26,7 +26,7 @@ def get_all_users():
 def get_exam_users():
     """
     Get all details from all users in exam mode.
-    Return a LMNUser data object.
+    Return a LMNUserModel data object.
     """
 
     ldap_filter = f"""(&
@@ -42,7 +42,7 @@ def get_exam_users():
 def get_exam_user(username):
     """
     Get all details from a specific user in exam mode.
-    Return a LMNUser data object.
+    Return a LMNUserModel data object.
     """
 
     ldap_filter = f"""(&
@@ -59,7 +59,7 @@ def get_exam_user(username):
 def get_user(username):
     """
     Get all details from a specific user.
-    Return a LMNUser data object.
+    Return a LMNUserModel data object.
     """
 
     ldap_filter = f"""(&
@@ -81,7 +81,7 @@ def get_results_search_user(query='', selection=[]):
     """
     Get all details from a search on a specific user login scheme and a
     selection of roles.
-    Return a list of LMNUser data object.
+    Return a list of LMNUserModel data object.
     """
 
     role_filter = {

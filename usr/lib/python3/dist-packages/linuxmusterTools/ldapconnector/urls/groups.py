@@ -7,7 +7,7 @@ def get_all_units():
     """
     Get all units. The terminology "unit" was chosen in order to differenciate with a "group" from
     sophomorix-group. A unit can be a schoolclass, a project, a group, etc ...
-    Return a list of LMNGroup data objects.
+    Return a list of LMNGroupModel data objects.
     """
 
     ldap_filter = "(objectClass=group)"
@@ -19,7 +19,7 @@ def get_group(name=''):
     """
     Get a unit specified by its name. The terminology "unit" was chosen in order to differenciate with a "group" from
     sophomorix-group. A unit can be a schoolclass, a project, a group, etc ...
-    Return a LMNGroup data object.
+    Return a LMNGroupModel data object.
     """
 
     ldap_filter = f"""(&
@@ -34,7 +34,7 @@ def get_group(name=''):
 def get_all_groups():
     """
     Get all groups (meaning units with sophomorixType sophomorix-group).
-    Return a list of LMNGroup data objects.
+    Return a list of LMNGroupModel data objects.
     """
 
     ldap_filter = f"""(&
@@ -48,7 +48,7 @@ def get_all_groups():
 def get_group(name=''):
     """
     Get a group (meaning units with sophomorixType sophomorix-group) specified by its name.
-    Return a LMNGroup data object.
+    Return a LMNGroupModel data object.
     """
 
     ldap_filter = f"""(&
@@ -63,7 +63,7 @@ def get_group(name=''):
 def get_all_printers():
     """
     Get all printer groups.
-    Return a list of LMNGroup data objects.
+    Return a list of LMNGroupModel data objects.
     """
 
     ldap_filter = f"""(&
@@ -77,7 +77,7 @@ def get_all_printers():
 def get_printer(name=''):
     """
     Get a specific printer.
-    Return a LMNGroup data object.
+    Return a LMNGroupModel data object.
     """
 
     ldap_filter = f"""(&

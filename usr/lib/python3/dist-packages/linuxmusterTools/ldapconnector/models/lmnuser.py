@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field, InitVar
 import re
 import ldap
-from .lmnsession import LMNSession
+from .lmnsession import LMNSessionModel
 from .common import LMNModel
 
 from linuxmusterTools.common import WEBUI_IMPORT
@@ -156,7 +156,7 @@ class LMNUserModel(LMNModel):
             data = v.split(';')
             members = data[2].split(',') if data[2] else []
             membersCount = len(members)
-            self.lmnsessions.append(LMNSession(data[0], data[1], members, membersCount))
+            self.lmnsessions.append(LMNSessionModel(data[0], data[1], members, membersCount))
 
     def parse_exam(self):
         if not self.sophomorixExamMode:

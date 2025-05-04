@@ -6,7 +6,7 @@ from linuxmusterTools.ldapconnector.urls.ldaprouter import router
 def get_project(project):
     """
     Get all details from a specific project.
-    Return a LMNProject data object
+    Return a LMNProjectModel data object
     """
 
     return f"""(&(cn={project})(objectClass=group)(sophomorixType=project))"""
@@ -15,7 +15,7 @@ def get_project(project):
 def get_all_projects():
     """
     Get all projects details.
-    Return a list of LMNProject data objects.
+    Return a list of LMNProjectModel data objects.
     """
 
     return """(&(objectClass=group)(sophomorixType=project))"""

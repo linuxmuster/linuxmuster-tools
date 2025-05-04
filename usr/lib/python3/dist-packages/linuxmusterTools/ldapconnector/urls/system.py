@@ -6,7 +6,7 @@ from linuxmusterTools.ldapconnector.urls.ldaprouter import router, SCHOOL_MARKER
 def get_all_gpos():
     """
     Get all Group Policies Objects
-    Return a list of LMNGPO data object.
+    Return a list of LMNGPOModel data object.
     """
 
     ldap_filter = f"""(&
@@ -19,7 +19,7 @@ def get_all_gpos():
 def get_one_gpo(name):
     """
     Get one specific Group Policy Object after his displayName
-    Return a LMNGPO data object.
+    Return a LMNGPOModel data object.
     """
 
     ldap_filter = f"""(&

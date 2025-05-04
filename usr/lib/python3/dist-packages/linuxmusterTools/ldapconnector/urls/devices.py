@@ -6,7 +6,7 @@ from linuxmusterTools.ldapconnector.urls.ldaprouter import router, SCHOOL_MARKER
 def get_all_devices():
     """
     Get all devices.
-    Return a a list of LMNDevice data object.
+    Return a a list of LMNDeviceModel data object.
     """
 
     ldap_filter = f"""(&
@@ -20,7 +20,7 @@ def get_all_devices():
 def get_device(name):
     """
     Get all details from a specific device.
-    Return a LMNDevice data object.
+    Return a LMNDeviceModel data object.
     """
 
     ldap_filter = f"""(&
@@ -35,7 +35,7 @@ def get_results_search_device(query, selection=[]):
     """
     Get all details from a search on a specific device scheme and having a specific role
     (something like 'printer', 'server', ...).
-    Return a list of LMNDevice data object.
+    Return a list of LMNDeviceModel data object.
     """
 
 

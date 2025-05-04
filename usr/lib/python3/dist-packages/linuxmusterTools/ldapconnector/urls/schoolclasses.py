@@ -6,7 +6,7 @@ from linuxmusterTools.ldapconnector.urls.ldaprouter import router
 def get_schoolclass(schoolclass):
     """
     Get all details from a specific schoolclass.
-    Return a LMNSchoolClass data object
+    Return a LMNSchoolClassModel data object
     """
 
     return f"""(&(cn={schoolclass})(objectClass=group)(sophomorixType=adminclass))"""
@@ -15,7 +15,7 @@ def get_schoolclass(schoolclass):
 def get_all_students_from_schoolclass(schoolclass):
     """
     Get all students details from a specific schoolclass.
-    Return a list of LMNUser data objects.
+    Return a list of LMNUserModel data objects.
     """
 
     return f"""(&
@@ -28,7 +28,7 @@ def get_all_students_from_schoolclass(schoolclass):
 def get_all_schoolclasses():
     """
     Get all schoolclasses details.
-    Return a list of LMNSchoolClass data objects.
+    Return a list of LMNSchoolClassModel data objects.
     """
 
     return """(&(objectClass=group)(sophomorixType=adminclass))"""
@@ -37,7 +37,7 @@ def get_all_schoolclasses():
 def get_results_search_schoolclasses(query):
     """
     Get all details from a search about schoolclasses.
-    Return a list of LMNSchoolClass data objects.
+    Return a list of LMNSchoolClassModel data objects.
     """
 
     return f"""(&(objectClass=group)(sophomorixType=adminclass)(cn=*{query}*))"""

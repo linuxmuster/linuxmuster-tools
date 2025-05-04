@@ -36,7 +36,7 @@ class LdapReader:
                         value = raw_data.get(field.name, field.type())
                         data[field.name] = self._filter_value(field, value)
                 if dict:
-                    if objectclass.__name__ == 'LMNUser':
+                    if objectclass.__name__ == 'LMNUserModel':
                         model_dict = asdict(objectclass(**data, custom_fields_config=custom_config))
                     else:
                         model_dict = asdict(objectclass(**data))
@@ -45,7 +45,7 @@ class LdapReader:
                         return {k:v for k,v in model_dict.items() if k in attributes}
                     return model_dict
 
-                if objectclass.__name__ == 'LMNUser':
+                if objectclass.__name__ == 'LMNUserModel':
                         return objectclass(**data, custom_fields_config=custom_config)
                 else:
                         return objectclass(**data)
@@ -55,7 +55,7 @@ class LdapReader:
 
         # Creating empty object with default values
         data = {field.name:field.type() for field in fields(objectclass) if field.init}
-        if objectclass.__name__ == 'LMNUser':
+        if objectclass.__name__ == 'LMNUserModel':
             data['custom_fields_config'] =  custom_config
 
         return objectclass(**data)
@@ -65,7 +65,7 @@ class LdapReader:
         Handle a single result from a ldap request (with required ldap filter)
         and convert it in the given object class.
 
-        :param objectclass: dataclass like LMNUser
+        :param objectclass: dataclass like LMNUserModel
         :type objectclass:
         :param ldap_filter: A valid ldap filter
         :type ldap_filter: basestring
@@ -97,7 +97,7 @@ class LdapReader:
         Handle multiples results from a ldap request (with required ldap filter)
         and convert it in a list of given object class.
 
-        :param objectclass: dataclass like LMNUser
+        :param objectclass: dataclass like LMNUserModel
         :type objectclass:
         :param ldap_filter: A valid ldap filter
         :type ldap_filter: basestring

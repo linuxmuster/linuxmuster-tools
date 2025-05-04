@@ -6,7 +6,7 @@ from linuxmusterTools.ldapconnector.urls.ldaprouter import router, SCHOOL_MARKER
 def get_all_ou():
     """
     Get all organizational units.
-    Return a a list of LMNOU data object.
+    Return a list of LMNOUModel data object.
     """
 
     ldap_filter = f"""(&
@@ -19,7 +19,7 @@ def get_all_ou():
 def get_devices_ou():
     """
     Get all details from the Devices organizational unit.
-    Return a LMNOU data object.
+    Return a LMNOUModel data object.
     """
 
 
@@ -33,7 +33,7 @@ def get_devices_ou():
 def get_students_ou():
     """
     Get all details from the students organizational unit.
-    Return a LMNOU data object.
+    Return a LMNOUModel data object.
     Quit the same as a schoolclasses request.
     """
 

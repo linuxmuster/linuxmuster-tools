@@ -5,7 +5,7 @@ from linuxmusterTools.ldapconnector.urls.ldaprouter import router, SCHOOL_MARKER
 def get_all_management_groups():
     """
     Get all management groups.
-    Return a list of LMNGroup data objects.
+    Return a list of LMNGroupModel data objects.
     """
 
     ldap_filter = "(objectClass=group)"
@@ -16,7 +16,7 @@ def get_all_management_groups():
 def get_management_group(name=''):
     """
     Get a management group specified by its name.
-    Return a LMNGroup data object.
+    Return a LMNGroupModel data object.
     """
 
     ldap_filter = f"""(&
