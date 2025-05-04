@@ -140,20 +140,26 @@ class LMNUser:
             if not dst_ou:
                 raise Exception("Can not create an entry without a valid OU.")
 
-            # Check OU ?
-            try:
-                self.data['objectClass'] = ['top', 'user', 'person', 'organizationalPerson']
-                self.data['distinguishedName'] = f"CN={self.cn},{dst_ou}"
-                self.data['sAMAccountName'] = self.cn
-                # userAccountControl:
-                # DONT_EXPIRE_PASSWORD (65536) + NORMAL_ACCOUNT (512)
-                # see https://learn.microsoft.com/fr-fr/troubleshoot/windows-server/active-directory/useraccountcontrol-manipulate-account-properties
-                self.data['userAccountControl'] = 66048
-                self.lw._add(self, data=self.data)
-                self.new = False
-                self.load_data()
-            except Exception as e:
-                logging.warning(str(e))
+            if not name_checker.check_login_name(self.cn):
+                logging.warning(f"{self.cn} contains not allowed characters, please check it again.")
+            else:
+                # Check OU ?
+                try:
+                    self.data['objectClass'] = ['top', 'user', 'person', 'organizationalPerson']
+                    self.data['distinguishedName'] = f"CN={self.cn},{dst_ou}"
+                    self.data['sAMAccountName'] = self.cn
+
+                    # userAccountControl:
+                    # DONT_EXPIRE_PASSWORD (65536) + NORMAL_ACCOUNT (512)
+                    # see https://learn.microsoft.com/fr-fr/troubleshoot/windows-server/active-directory/useraccountcontrol-manipulate-account-properties
+                    self.data['userAccountControl'] = 66048
+
+                    self.lw._add(self, data=self.data)
+
+                    self.new = False
+                    self.load_data()
+                except Exception as e:
+                    logging.warning(str(e))
         else:
             logging.warning(f"This object already exists in Ldap, it's not possible to create it!")
 
