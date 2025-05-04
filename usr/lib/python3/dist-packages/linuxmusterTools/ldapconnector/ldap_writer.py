@@ -24,6 +24,39 @@ class LdapWriter:
         self.lc = LdapConnector()
         self.lr = LMNLdapReader
 
+    def _addLDIF(self, lmnobject, data={}):
+        if not data:
+            logger.warning("No data provided, doing nothing.")
+            return
+
+        ldif = []
+        valid_fields = {field.name:field.type() for field in fields(lmnobject.model) if field.init}
+
+        for attr, new_val in data.items():
+            if not new_val:
+                continue
+
+            if attr in valid_fields:
+                if isinstance(valid_fields[attr], list):
+                    if isinstance(new_val, list):
+                        for val in new_val:
+                            if val:
+                                ldif.append((attr, [f"{val}".encode()]))
+                    else:
+                        ldif.append((attr, [f"{new_val}".encode()]))
+
+                else:
+                    # Single-value
+                    ldif.append((attr, [f"{new_val}".encode()]))
+
+            elif attr == 'unicodePwd':
+                ldif.append(('unicodePwd', f'"{new_val}"'.encode('utf-16-le')))
+
+            else:
+                logger.warning(f"Attribute {attr} not found in {lmnobject.data['distinguishedName']}.")
+
+        return ldif
+
     def _setattr(self, lmnobject, data=None, add=False):
         """
         Set one or more attributes only for a ldap entry.
@@ -146,7 +179,7 @@ class LdapWriter:
 
         self.lc._move(old_dn, new_ou)
 
-    def _add(self, dn, ldif=[]):
+    def _add(self, lmnobject, data={}):
         """
         Create an entry with the given dn.
         Should be mostly used for users or computers.
@@ -156,7 +189,10 @@ class LdapWriter:
         """
 
 
-        self.lc._add_group(dn, ldif)
+        ldif = []
+        if data:
+            ldif = self._addLDIF(lmnobject, data)
+        self.lc._add(lmnobject.data['distinguishedName'], ldif)
 
     def _add_ou(self, dn):
         """
@@ -167,6 +203,7 @@ class LdapWriter:
         """
 
 
+        # TODO: still necessary ? ldif ?
         self.lc._add_ou(dn)
 
     def _add_group(self, dn, ldif=[]):
@@ -178,6 +215,7 @@ class LdapWriter:
         """
 
 
+        # TODO: still necessary ? ldif with createLDIF ?
         self.lc._add_group(dn, ldif)
 
     def _del(self, dn):
