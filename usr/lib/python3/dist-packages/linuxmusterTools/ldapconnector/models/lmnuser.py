@@ -8,7 +8,7 @@ from linuxmusterTools.common import WEBUI_IMPORT
 
 
 @dataclass
-class LMNUser(LMNModel):
+class LMNUserModel(LMNModel):
     cn: str
     custom_fields_config: InitVar[dict]
     displayName: str

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 @dataclass
-class LMNSchool:
+class LMNSchoolModel:
     # TODO: should it be a OU or a CN ?
 
     objectClass: list

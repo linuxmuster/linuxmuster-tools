@@ -4,7 +4,7 @@ from .common import LMNModel
 
 
 @dataclass
-class LMNSchoolClass(LMNModel):
+class LMNSchoolClassModel(LMNModel):
     cn: str
     description: str
     displayName: str

@@ -2,7 +2,7 @@ import linuxmusterTools.ldapconnector.models as models
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router
 
 
-@router.collection(r'/users', models.LMNUser)
+@router.collection(r'/users', models.LMNUserModel)
 def get_all_users():
     """
     Get all details from all users.
@@ -22,7 +22,7 @@ def get_all_users():
 
     return ldap_filter
 
-@router.collection(r'/users/exam', models.LMNUser)
+@router.collection(r'/users/exam', models.LMNUserModel)
 def get_exam_users():
     """
     Get all details from all users in exam mode.
@@ -38,7 +38,7 @@ def get_exam_users():
 
     return ldap_filter
 
-@router.single(r'/users/exam/(?P<username>[\w\-]*)', models.LMNUser)
+@router.single(r'/users/exam/(?P<username>[\w\-]*)', models.LMNUserModel)
 def get_exam_user(username):
     """
     Get all details from a specific user in exam mode.
@@ -55,7 +55,7 @@ def get_exam_user(username):
 
     return ldap_filter
 
-@router.single(r'/users/(?P<username>[\w\-]*)', models.LMNUser)
+@router.single(r'/users/(?P<username>[\w\-]*)', models.LMNUserModel)
 def get_user(username):
     """
     Get all details from a specific user.
@@ -76,7 +76,7 @@ def get_user(username):
 
     return ldap_filter
 
-@router.collection(r'/users/search/(?P<selection>\w*)/(?P<query>[\w\+]*)', models.LMNUser)
+@router.collection(r'/users/search/(?P<selection>\w*)/(?P<query>[\w\+]*)', models.LMNUserModel)
 def get_results_search_user(query='', selection=[]):
     """
     Get all details from a search on a specific user login scheme and a

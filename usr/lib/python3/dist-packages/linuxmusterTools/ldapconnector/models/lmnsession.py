@@ -3,7 +3,7 @@ from ..urls import router as lr
 
 
 @dataclass
-class LMNSession:
+class LMNSessionModel:
     sid: str
     name: str
     members: list

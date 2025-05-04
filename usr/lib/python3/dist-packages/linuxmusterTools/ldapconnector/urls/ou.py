@@ -2,7 +2,7 @@ import linuxmusterTools.ldapconnector.models as models
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router, SCHOOL_MARKER
 
 
-@router.collection(r'/ou', models.LMNOU)
+@router.collection(r'/ou', models.LMNOUModel)
 def get_all_ou():
     """
     Get all organizational units.
@@ -15,7 +15,7 @@ def get_all_ou():
 
     return ldap_filter
 
-@router.collection(r'/ou/rooms', models.LMNOU, subdn=f'OU=Devices,OU={SCHOOL_MARKER},OU=SCHOOLS,', level='single')
+@router.collection(r'/ou/rooms', models.LMNOUModel, subdn=f'OU=Devices,OU={SCHOOL_MARKER},OU=SCHOOLS,', level='single')
 def get_devices_ou():
     """
     Get all details from the Devices organizational unit.
@@ -29,7 +29,7 @@ def get_devices_ou():
 
     return ldap_filter
 
-@router.collection(r'/ou/students', models.LMNOU, subdn=f'OU=Students,OU={SCHOOL_MARKER},OU=SCHOOLS,')
+@router.collection(r'/ou/students', models.LMNOUModel, subdn=f'OU=Students,OU={SCHOOL_MARKER},OU=SCHOOLS,')
 def get_students_ou():
     """
     Get all details from the students organizational unit.

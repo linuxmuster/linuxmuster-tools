@@ -3,7 +3,7 @@ from .common import LMNModel
 
 
 @dataclass
-class LMNDevice(LMNModel):
+class LMNDeviceModel(LMNModel):
     cn: str
     displayName: str
     distinguishedName: str
@@ -33,7 +33,7 @@ class LMNDevice(LMNModel):
         self.dn = self.distinguishedName
 
 @dataclass
-class LMNRoom(LMNModel):
+class LMNRoomModel(LMNModel):
     """
     ObjectClass group for a room.
     """

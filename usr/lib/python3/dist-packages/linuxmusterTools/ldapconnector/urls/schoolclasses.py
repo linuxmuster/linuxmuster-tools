@@ -2,7 +2,7 @@ import linuxmusterTools.ldapconnector.models as models
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router
 
 
-@router.single(r'/schoolclasses/(?P<schoolclass>[\w\-_ ]*)', models.LMNSchoolClass)
+@router.single(r'/schoolclasses/(?P<schoolclass>[\w\-_ ]*)', models.LMNSchoolClassModel)
 def get_schoolclass(schoolclass):
     """
     Get all details from a specific schoolclass.
@@ -11,7 +11,7 @@ def get_schoolclass(schoolclass):
 
     return f"""(&(cn={schoolclass})(objectClass=group)(sophomorixType=adminclass))"""
 
-@router.collection(r'/schoolclasses/(?P<schoolclass>[a-z0-9\-_]*)/students', models.LMNUser)
+@router.collection(r'/schoolclasses/(?P<schoolclass>[a-z0-9\-_]*)/students', models.LMNUserModel)
 def get_all_students_from_schoolclass(schoolclass):
     """
     Get all students details from a specific schoolclass.
@@ -24,7 +24,7 @@ def get_all_students_from_schoolclass(schoolclass):
                                 (sophomorixRole=student)
                             )"""
 
-@router.collection(r'/schoolclasses', models.LMNSchoolClass)
+@router.collection(r'/schoolclasses', models.LMNSchoolClassModel)
 def get_all_schoolclasses():
     """
     Get all schoolclasses details.
@@ -33,7 +33,7 @@ def get_all_schoolclasses():
 
     return """(&(objectClass=group)(sophomorixType=adminclass))"""
 
-@router.collection(r'/schoolclasses/search/(?P<query>\w*)', models.LMNSchoolClass)
+@router.collection(r'/schoolclasses/search/(?P<query>\w*)', models.LMNSchoolClassModel)
 def get_results_search_schoolclasses(query):
     """
     Get all details from a search about schoolclasses.

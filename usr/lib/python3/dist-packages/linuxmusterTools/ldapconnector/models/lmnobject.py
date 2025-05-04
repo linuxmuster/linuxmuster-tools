@@ -3,7 +3,7 @@ from .common import LMNModel
 
 
 @dataclass
-class LMNObject(LMNModel):
+class LMNObjectModel(LMNModel):
     """
     Common linuxmuster.net object with all attributes for global search queries.
     """

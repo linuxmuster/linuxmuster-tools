@@ -1,7 +1,7 @@
 import linuxmusterTools.ldapconnector.models as models
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router, SCHOOL_MARKER
 
-@router.collection(r'/managementgroups', models.LMNGroup, subdn="OU=SCHOOLS,", dn_filter=f'OU=Management,')
+@router.collection(r'/managementgroups', models.LMNGroupModel, subdn="OU=SCHOOLS,", dn_filter=f'OU=Management,')
 def get_all_management_groups():
     """
     Get all management groups.
@@ -12,7 +12,7 @@ def get_all_management_groups():
 
     return ldap_filter
 
-@router.single(r'/managementgroups/(?P<name>[\w\-_]*)', models.LMNGroup, subdn="OU=SCHOOLS,", dn_filter=f'OU=Management,')
+@router.single(r'/managementgroups/(?P<name>[\w\-_]*)', models.LMNGroupModel, subdn="OU=SCHOOLS,", dn_filter=f'OU=Management,')
 def get_management_group(name=''):
     """
     Get a management group specified by its name.

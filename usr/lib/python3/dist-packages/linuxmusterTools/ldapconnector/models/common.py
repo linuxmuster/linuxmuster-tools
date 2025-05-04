@@ -28,7 +28,7 @@ class LMNModel:
             return ''
 
 @dataclass
-class LMNOU(LMNModel):
+class LMNOUModel(LMNModel):
     distinguishedName: str
     dn: str
     name: str
@@ -40,7 +40,7 @@ class LMNOU(LMNModel):
         self.dn = self.distinguishedName
 
 @dataclass
-class LMNGPO(LMNModel):
+class LMNGPOModel(LMNModel):
     cn: str
     distinguishedName: str
     displayName: str

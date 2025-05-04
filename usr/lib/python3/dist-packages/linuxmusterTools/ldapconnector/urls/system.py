@@ -2,7 +2,7 @@ import linuxmusterTools.ldapconnector.models as models
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router, SCHOOL_MARKER
 
 
-@router.collection(r'/gpos', models.LMNGPO)
+@router.collection(r'/gpos', models.LMNGPOModel)
 def get_all_gpos():
     """
     Get all Group Policies Objects
@@ -15,7 +15,7 @@ def get_all_gpos():
 
     return ldap_filter
 
-@router.single(r'/gpos/(?P<name>[\w\-_: ]*)', models.LMNGPO)
+@router.single(r'/gpos/(?P<name>[\w\-_: ]*)', models.LMNGPOModel)
 def get_one_gpo(name):
     """
     Get one specific Group Policy Object after his displayName

@@ -2,7 +2,7 @@ import linuxmusterTools.ldapconnector.models as models
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router
 
 
-@router.collection(r'/search/(?P<query>.*)', models.LMNObject)
+@router.collection(r'/search/(?P<query>.*)', models.LMNObjectModel)
 def global_search(query=''):
     """
     Search all cn containing the query search
