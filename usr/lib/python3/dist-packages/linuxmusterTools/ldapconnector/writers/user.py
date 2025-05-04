@@ -1,10 +1,9 @@
 import logging
 from dataclasses import fields
-from types import new_class
 
 from ..ldap_writer import LdapWriter
 from ..urls.ldaprouter import router
-from .object import LMNObject
+from .schoolclass import LMNSchoolclass
 from linuxmusterTools.common import lprint, spinner
 from linuxmusterTools.common.checks import NameChecker
 from ..models import LMNUserModel
@@ -34,7 +33,6 @@ class LMNUser:
         self.cn = cn
         self.lw = LdapWriter()
         self.lr = router
-        self.ow = LMNObject()
         self.model = LMNUserModel
         self.data = {}
         self.new = False
@@ -186,14 +184,22 @@ class LMNStudent(LMNUser):
             raise Exception(f'{new_schoolclass} is not even a valid schoolclass!')
 
         old_schoolclass = self.data['sophomorixAdminClass']
+
+        if old_schoolclass == new_schoolclass:
+            return
+
         dst_ou = self.data['distinguishedName'].replace(f'OU={old_schoolclass}', f'OU={new_schoolclass}')
         dst_ou = dst_ou.replace(f'CN={self.cn},', '')
 
         self._move(dst_ou)
 
         # Only modify the attributes, does not actually move the user's files.
-        # remove membership in old schoolclass
-        # add membership in new schoolclass
+
+        old_schoolclass_group = LMNSchoolclass(old_schoolclass)
+        old_schoolclass_group.remove_member(self.cn)
+
+        new_schoolclass_group = LMNSchoolclass(new_schoolclass)
+        new_schoolclass_group.add_member(self.cn)
 
         self.setattr(data={
             'sophomorixAdminClass': new_schoolclass,
