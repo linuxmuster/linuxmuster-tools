@@ -141,7 +141,7 @@ class LdapConnector:
         conn.modify_s(dn, ldif)
         conn.unbind_s()
 
-    def _add(self, dn, ldif):
+    def _add(self, dn, ldif=[]):
         """
         Connect to ldap and insert an object with the given dn and ldif attributes.
 
