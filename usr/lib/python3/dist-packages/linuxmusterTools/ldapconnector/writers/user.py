@@ -48,10 +48,6 @@ class LMNUserWriter:
             self.data =  {field.name:field.type() for field in fields(self.model) if field.init}
             self.data['cn'] = self.cn
 
-        ## Adding all attributes as class attributes
-        for k,v in self.data.items():
-            setattr(self, k, v)
-
     def setattr(self, **kwargs):
         """
         Set some attributes of the object directly in Ldap,
@@ -96,7 +92,7 @@ class LMNUserWriter:
             if not name_checker.check_login_name(new_cn):
                 logging.warning(f"{new_cn} contains not allowed characters, please check it again.")
             else:
-                self.lw._rename(self.distinguishedName, new_cn)
+                self.lw._rename(self.data['distinguishedName'], new_cn)
                 self.cn = new_cn
                 self.load_data()
         else:
@@ -108,12 +104,12 @@ class LMNUserWriter:
         """
 
         if not self.new:
-            self.lw._del(self.distinguishedName)
+            self.lw._del(self.data['distinguishedName'])
             self.load_data() # Will load an empty User
         else:
             logging.warning('This object does not exist in Ldap, please create it first using the method .create()')
 
-    def move(self, dst_ou):
+    def _move(self, dst_ou):
         """
         Move the user to a new Organisational Unit.
         """
@@ -124,14 +120,14 @@ class LMNUserWriter:
         if not self.new:
             # Check OU ?
             try:
-                self.lw._move(self.distinguishedName, dst_ou)
+                self.lw._move(self.data['distinguishedName'], dst_ou)
                 self.load_data()
             except Exception as e:
                 logging.error(str(e))
         else:
             logging.warning('This object does not exist in Ldap, please create it first using the method .create()')
 
-    def create(self, dst_ou):
+    def _create(self, dst_ou):
         """
         For an user marked as new, create an entry in the specified OU.
         """
@@ -146,8 +142,9 @@ class LMNUserWriter:
 
             # Check OU ?
             try:
-                self.dn = f"CN={self.cn},{dst_ou}"
-                self.lw._add(self.dn, ldif=self.data)
+                self.data['distinguishedName'] = f"CN={self.cn},{dst_ou}"
+                self.data['objectClass'] = ['top', 'user', 'person', 'organizationalPerson']
+                self.lw._add(self, data=self.data)
                 self.new = False
                 self.load_data()
             except Exception as e:
