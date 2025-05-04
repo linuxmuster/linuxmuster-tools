@@ -5,7 +5,7 @@ from ..urls.ldaprouter import router
 
 logger = logging.getLogger(__name__)
 
-class LMNProjectWriter:
+class LMNProject:
 
     def __init__(self):
         self.lw = LdapWriter()

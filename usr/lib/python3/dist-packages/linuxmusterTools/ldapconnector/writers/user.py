@@ -3,10 +3,10 @@ from dataclasses import fields
 
 from ..ldap_writer import LdapWriter
 from ..urls.ldaprouter import router
-from .object import LMNObjectWriter
+from .object import LMNObject
 from linuxmusterTools.common import lprint, spinner
 from linuxmusterTools.common.checks import NameChecker
-from ..models import LMNUser
+from ..models import LMNUserModel
 
 
 logger = logging.getLogger(__name__)
@@ -15,15 +15,15 @@ name_checker = NameChecker()
 ## TODO:
 # - load data ✅
 # - setattr, delattr, getattr ✅
-# - rename entry (change cn)
-# - delete entry
-# - move (to another OU)
-# - create (self.new == False, needs OU, create new CN with ldif in it)
+# - rename entry (change cn) ✅
+# - delete entry ✅
+# - move (to another OU) ✅
+# - create (self.new == False, needs OU, create new CN with ldif in it) ✅
 # - check ?
 # - Student, Teacher, Staff, Parent, Admins classes
 
 
-class LMNUserWriter:
+class LMNUser:
 
     def __init__(self, cn):
 
@@ -33,7 +33,7 @@ class LMNUserWriter:
         self.cn = cn
         self.lw = LdapWriter()
         self.lr = router
-        self.ow = LMNObjectWriter()
+        self.ow = LMNObject()
         self.model = LMNUser
         self.data = {}
         self.new = False

@@ -3,20 +3,20 @@ from dataclasses import fields
 
 from ..ldap_writer import LdapWriter
 from ..urls.ldaprouter import router
-from .object import LMNObjectWriter
-from ..models import LMNRoom
+from .object import LMNObject
+from ..models import LMNRoomModel
 from linuxmusterTools.common import Validator
 from linuxmusterTools.lmnconfig import LDAP_CONTEXT
 
 
 logger = logging.getLogger(__name__)
 
-class LMNDeviceWriter:
+class LMNDevice:
 
     def __init__(self):
         self.lw = LdapWriter()
         self.lr = router
-        self.ow = LMNObjectWriter()
+        self.ow = LMNObject()
 
     def setattr(self, name, **kwargs):
         """
@@ -200,7 +200,7 @@ class LMNDeviceWriter:
         ## Create group
         ldif = []
         group_dn = f"CN={new_room},{ou_dn}"
-        valid_fields = {field.name:field.type() for field in fields(LMNRoom) if field.init}
+        valid_fields = {field.name:field.type() for field in fields(LMNRoomModel) if field.init}
 
         for attr,value in data.items():
             if attr in valid_fields:

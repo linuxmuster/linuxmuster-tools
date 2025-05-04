@@ -67,6 +67,6 @@ At this point, the following requests are available:
 ## Modify LDAP attribute
 
 ```Console
->>> from linuxmusterTools.ldapconnector import LMNLdapWriter as lw
+>>> from linuxmusterTools.ldapconnector import LdapWriter as lw
 >>> lw.set('kiar', 'user', {'mail': 'bla@bla.com'})
 ```

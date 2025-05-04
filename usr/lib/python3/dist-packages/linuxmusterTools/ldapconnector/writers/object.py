@@ -6,7 +6,7 @@ from ..urls.ldaprouter import router
 
 logger = logging.getLogger(__name__)
 
-class LMNObjectWriter:
+class LMNObject:
     """
     Search per dn, may not be the best solution.
     """
