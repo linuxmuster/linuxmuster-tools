@@ -142,8 +142,13 @@ class LMNUserWriter:
 
             # Check OU ?
             try:
-                self.data['distinguishedName'] = f"CN={self.cn},{dst_ou}"
                 self.data['objectClass'] = ['top', 'user', 'person', 'organizationalPerson']
+                self.data['distinguishedName'] = f"CN={self.cn},{dst_ou}"
+                self.data['sAMAccountName'] = self.cn
+                # userAccountControl:
+                # DONT_EXPIRE_PASSWORD (65536) + NORMAL_ACCOUNT (512)
+                # see https://learn.microsoft.com/fr-fr/troubleshoot/windows-server/active-directory/useraccountcontrol-manipulate-account-properties
+                self.data['userAccountControl'] = 66048
                 self.lw._add(self, data=self.data)
                 self.new = False
                 self.load_data()

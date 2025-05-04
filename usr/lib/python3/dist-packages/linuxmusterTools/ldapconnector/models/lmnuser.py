@@ -74,6 +74,7 @@ class LMNUser(LMNModel):
     sophomorixWebuiPermissionsCalculated: list
     thumbnailPhoto: str
     unixHomeDirectory: str
+    userAccountControl: int
     whenChanged: str
     dn:             str  = field(init=False)
     customFields:   dict  = field(init=False)
