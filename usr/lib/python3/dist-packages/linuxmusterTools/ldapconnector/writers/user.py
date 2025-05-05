@@ -110,8 +110,12 @@ class LMNUser:
 
     def _move(self, dst_ou):
         """
-        Move the user to a new Organisational Unit.
+        Move the user to a new Organisational Unit.This method just move an
+        existing ldap account to a new OU but do not handle the filesystem
+        to move the user's files: it's necessary to use separately
+        Samba/smbclient for this. Use this method very carefully!
         """
+
 
         # Maybe it is better and safer to implement this method only per role
         # and avoid movement across roles.
@@ -129,6 +133,9 @@ class LMNUser:
     def _create(self, dst_ou):
         """
         For an user marked as new, create an entry in the specified OU.
+        This method just create an account ldap but do not handle the filesystem
+        to create the appropriate directory tree for the user: it's necessary to
+        use separately Samba/smbclient for this. Use this method very carefully!
         """
 
 
@@ -161,6 +168,12 @@ class LMNUser:
                     logging.warning(str(e))
         else:
             logging.warning(f"This object already exists in Ldap, it's not possible to create it!")
+
+    def create(self):
+        raise NotImplementedError
+
+    def move(self):
+        raise NotImplementedError
 
     def check(self):
         """
@@ -208,6 +221,13 @@ class LMNStudent(LMNUser):
             'sophomorixIntrinsic2': self.data['sophomorixIntrinsic2'].replace(old_schoolclass, new_schoolclass)
         })
 
+    def create(self, school, new_schoolclass):
+        # Will come later, just need to provide specific data to students
+        self.data['sophomorixRole'] = 'student'
+        # dst_ou = BASE_OU + school + schoolclass
+        # self._create(dst_ou)
+        raise NotImplementedError
+
 
 class LMNTeacher(LMNUser):
 
@@ -216,6 +236,18 @@ class LMNTeacher(LMNUser):
         if self.data.get('sophomorixRole', None) != 'teacher':
             raise Exception(f"{cn} is not a teacher!")
 
+    def move(self):
+        # The only moves for a teacher should be in attic or back in teacher
+        # role
+        raise NotImplementedError
+
+    def create(self):
+        # Will come later, just need to provide specific data to teachers
+        self.data['sophomorixRole'] = 'teacher'
+        # dst_ou = BASE_OU + school + teachers
+        # self._create(dst_ou)
+        raise NotImplementedError
+
 class LMNParent(LMNUser):
 
     def __init__(self, cn):
@@ -223,12 +255,36 @@ class LMNParent(LMNUser):
         if self.data.get('sophomorixRole', None) != 'parent':
             raise Exception(f"{cn} is not a parent!")
 
+    def move(self):
+        # The only moves for a parent should be in attic or back in parent
+        # role
+        raise NotImplementedError
+
+    def create(self):
+        # Will come later, just need to provide specific data to parents
+        self.data['sophomorixRole'] = 'parent'
+        # dst_ou = BASE_OU + school + parents
+        # self._create(dst_ou)
+        raise NotImplementedError
+
 class LMNStaff(LMNUser):
 
     def __init__(self, cn):
         super().__init__(cn)
         if self.data.get('sophomorixRole', None) != 'staff':
             raise Exception(f"{cn} is not a staff member!")
+
+    def move(self):
+        # The only moves for a staff member should be in attic or back in staff
+        # role
+        raise NotImplementedError
+
+    def create(self):
+        # Will come later, just need to provide specific data to staff
+        self.data['sophomorixRole'] = 'staff'
+        # dst_ou = BASE_OU + school + staff
+        # self._create(dst_ou)
+        raise NotImplementedError
 
 class LMNSchoolAdmin(LMNUser):
 
