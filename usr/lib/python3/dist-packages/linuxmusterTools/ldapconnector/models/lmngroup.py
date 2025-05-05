@@ -9,6 +9,7 @@ class LMNGroupModel(LMNModel):
     description: str
     displayName: str
     distinguishedName: str
+    mail: list
     member: list
     memberOf: list
     name: str
@@ -30,6 +31,8 @@ class LMNGroupModel(LMNModel):
     sophomorixIntrinsicMulti3: list
     sophomorixIntrinsicMulti4: list
     sophomorixIntrinsicMulti5: list
+    sophomorixMailAlias: bool
+    sophomorixMailList: bool
     sophomorixMembers: list
     sophomorixRole: str
     sophomorixSchoolname: str
