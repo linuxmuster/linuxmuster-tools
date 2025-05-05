@@ -138,6 +138,7 @@ class LdapConnector:
 
 
         conn, _ = self._connect()
+        # Here the ldif is a list of 3-Tuples (MOD_*, attr, value)
         conn.modify_s(dn, ldif)
         conn.unbind_s()
 
@@ -153,6 +154,7 @@ class LdapConnector:
 
 
         conn, _ = self._connect()
+        # Here the ldif can only be a list of 2-Tuples (attr,value)
         conn.add_s(dn, ldif)
         conn.unbind_s()
 

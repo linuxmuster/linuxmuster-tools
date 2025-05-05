@@ -29,6 +29,7 @@ class LdapWriter:
         Create a list of tuples (attr, new_val) to be sent as add attributes to
         Ldap. lmnobject is one the objects whose classes are defined in the
         directory 'writers'.
+        Method add_s of python-ldap only accepts a list a 2-Tuples (attr,value).
         """
 
 
@@ -40,7 +41,7 @@ class LdapWriter:
         valid_fields = {field.name:field.type() for field in fields(lmnobject.model) if field.init}
 
         for attr, new_val in data.items():
-            if not new_val:
+            if not new_val and new_val != False:
                 continue
 
             if attr in valid_fields:
@@ -54,7 +55,12 @@ class LdapWriter:
 
                 else:
                     # Single-value
-                    ldif.append((attr, [f"{new_val}".encode()]))
+                    # Bug in attributeSyntax of sophomorixHidden
+                    # it should be 2.5.5.8 (bool) and not 2.5.5.12 (string)
+                    if isinstance(new_val, bool):
+                        ldif.append((attr, [str(new_val).upper().encode()]))
+                    else:
+                        ldif.append((attr, [f"{new_val}".encode()]))
 
             elif attr == 'unicodePwd':
                 ldif.append(('unicodePwd', f'"{new_val}"'.encode('utf-16-le')))
@@ -112,11 +118,16 @@ class LdapWriter:
                         continue
 
                     # Single-value
-                    elif lmnobject.data[attr]:
+                    elif lmnobject.data[attr] or lmnobject.data[attr] == False:
                         # Delete attribute first
                         ldif.append((ldap.MOD_DELETE, attr, None))
 
-                    ldif.append((ldap.MOD_ADD, attr, [f"{new_val}".encode()]))
+                    # Bug in attributeSyntax of sophomorixHidden
+                    # it should be 2.5.5.8 (bool) and not 2.5.5.12 (string)
+                    if isinstance(new_val, bool):
+                        ldif.append((ldap.MOD_ADD, attr, [str(new_val).upper().encode()]))
+                    else:
+                        ldif.append((ldap.MOD_ADD, attr, [f"{new_val}".encode()]))
 
             elif attr == 'unicodePwd':
                 ldif.append((ldap.MOD_REPLACE, attr, f'"{new_val}"'.encode('utf-16-le')))

@@ -164,6 +164,8 @@ class LdapReader:
         if field.type.__name__ == 'bool':
             # Something like [b'FALSE']
             if value is None or value == False:
+                # TODO: this may be wrong because it gives the illusion that
+                # this value is set to False in ldap
                 return False
             return value[0].capitalize() == b'True'
 
