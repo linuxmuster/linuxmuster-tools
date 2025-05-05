@@ -25,6 +25,13 @@ class LdapWriter:
         self.lr = LMNLdapReader
 
     def _addLDIF(self, lmnobject, data={}):
+        """
+        Create a list of tuples (attr, new_val) to be sent as add attributes to
+        Ldap. lmnobject is one the objects whose classes are defined in the
+        directory 'writers'.
+        """
+
+
         if not data:
             logger.warning("No data provided, doing nothing.")
             return
@@ -206,7 +213,7 @@ class LdapWriter:
         # TODO: still necessary ? ldif ?
         self.lc._add_ou(dn)
 
-    def _add_group(self, dn, ldif=[]):
+    def _add_group(self, lmnobject, data={}):
         """
         Create a group with the given dn.
 
@@ -215,8 +222,10 @@ class LdapWriter:
         """
 
 
-        # TODO: still necessary ? ldif with createLDIF ?
-        self.lc._add_group(dn, ldif)
+        ldif = []
+        if data:
+            ldif = self._addLDIF(lmnobject, data)
+        self.lc._add_group(lmnobject.data['distinguishedName'], ldif)
 
     def _del(self, dn):
         """
