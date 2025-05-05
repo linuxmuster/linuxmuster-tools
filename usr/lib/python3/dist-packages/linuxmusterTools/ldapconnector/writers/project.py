@@ -1,44 +1,22 @@
 import logging
 
-from ..ldap_writer import LdapWriter
-from ..urls.ldaprouter import router
+from linuxmusterTools.common import lprint, spinner
+from linuxmusterTools.common.checks import NameChecker
+from ..models import LMNProjectModel
+from .group import LMNGroupCommon
+
 
 logger = logging.getLogger(__name__)
+name_checker = NameChecker()
 
-class LMNProject:
+class LMNPrinter(LMNGroupCommon):
 
-    def __init__(self):
-        self.lw = LdapWriter()
-        self.lr = router
+    def __init__(self, cn):
+        super().__init__(cn)
+        self.model = LMNProjectModel
 
-    def setattr(self, name, **kwargs):
-        """
-        Middleware to check if the object exists.
+    def load_data(self):
+        self.data = self.lr.get(f'/projects/{self.cn}')
 
-        :param name: cn of the object
-        :type name: basestring
-        """
-
-        details = self.lr.get(f'/projects/{name}')
-
-        if not details:
-            logger.info(f"The project {name} was not found in ldap.")
-            raise Exception(f"The project {name} was not found in ldap.")
-
-        self.lw._setattr(details, **kwargs)
-
-    def delattr(self, name, **kwargs):
-        """
-        Middleware to check if the object exists.
-
-        :param name: cn of the object
-        :type name: basestring
-        """
-
-        details = self.lr.get(f'/projects/{name}')
-
-        if not details:
-            logger.info(f"The project {name} was not found in ldap.")
-            raise Exception(f"The project {name} was not found in ldap.")
-
-        self.lw._delattr(details, **kwargs)
+        if not self.data:
+            raise Exception(f"The project {self.cn} was not found in ldap.")
