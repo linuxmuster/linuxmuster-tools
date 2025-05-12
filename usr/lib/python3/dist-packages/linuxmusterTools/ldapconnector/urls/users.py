@@ -17,6 +17,7 @@ def get_all_users():
                                     (sophomorixRole=teacher)
                                     (sophomorixRole=student)
                                     (sophomorixRole=parent)
+                                    (sophomorixRole=staff)
                                 )
                             )"""
 
@@ -71,6 +72,7 @@ def get_user(username):
                                     (sophomorixRole=teacher)
                                     (sophomorixRole=student)
                                     (sophomorixRole=parent)
+                                    (sophomorixRole=staff)
                                 )
                             )"""
 
@@ -91,6 +93,7 @@ def get_results_search_user(query='', selection=[]):
                 (sophomorixRole=teacher)
                 (sophomorixRole=student)
                 (sophomorixRole=parent)
+                (sophomorixRole=staff)
             """,
         'admins': """
                 (sophomorixRole=globaladministrator)
