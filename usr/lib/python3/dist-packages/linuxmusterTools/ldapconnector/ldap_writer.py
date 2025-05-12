@@ -66,7 +66,7 @@ class LdapWriter:
                 ldif.append(('unicodePwd', f'"{new_val}"'.encode('utf-16-le')))
 
             else:
-                logger.warning(f"Attribute {attr} not found in {lmnobject.data['distinguishedName']}.")
+                logger.warning(f"Attribute {attr} not found in {lmnobject.model.__name__} to add in {lmnobject.data['distinguishedName']}.")
 
         return ldif
 

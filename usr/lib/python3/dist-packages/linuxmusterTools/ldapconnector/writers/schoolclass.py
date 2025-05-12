@@ -21,6 +21,7 @@ class LMNSchoolclassGroup(LMNGroupCommon):
         super().__init__(cn)
 
     def load_data(self):
+        self.model = LMNSchoolClassModel
         self.data = self.lr.get(f'/units/{self.cn}')
 
         if not self.data:
@@ -39,6 +40,8 @@ class LMNSchoolclassGroup(LMNGroupCommon):
                         self.cn
             )
 
+            school = self.schoolclass_data['sophomorixSchoolname']
+
             self.data = {
                 'description': self.cn,
                 'displayName': self.cn,
@@ -46,12 +49,16 @@ class LMNSchoolclassGroup(LMNGroupCommon):
                 'mail': [mail],
                 'name': self.cn,
                 'sAMAccountName': self.cn,
+                'sophomorixAddMailQuota': '---',
+                'sophomorixAddQuota': '---',
                 'sophomorixCreationDate': '',
                 'sophomorixHidden': False,
                 'sophomorixJoinable': False,
                 'sophomorixMailAlias': False,
                 'sophomorixMailList': False,
-                'sophomorixSchoolname': self.schoolclass_data['sophomorixSchoolname'],
+                'sophomorixMailQuota': '---:---:',
+                'sophomorixQuota': [f'{school}:---:---:', 'linuxmuster-global:---:---:'],
+                'sophomorixSchoolname': school,
                 'sophomorixStatus': '',
                 'sophomorixType': 'adminclass',
             }
