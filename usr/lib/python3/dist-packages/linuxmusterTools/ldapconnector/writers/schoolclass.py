@@ -65,6 +65,10 @@ class LMNSchoolclassGroup(LMNGroupCommon):
 
             self.lw._add_group(self, data=self.data)
 
+    def delete(self):
+
+        self.lw._del(self.data['distinguishedName'])
+
 class LMNSchoolclass(LMNGroupCommon):
 
     def __init__(self, cn):
