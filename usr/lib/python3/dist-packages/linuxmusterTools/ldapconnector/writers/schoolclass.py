@@ -69,6 +69,34 @@ class LMNSchoolclassGroup(LMNGroupCommon):
 
         self.lw._del(self.data['distinguishedName'])
 
+    def fill_members(self):
+        """
+        This method is only intended for subgroups like 7a-teachers, 7a-parents
+        and 7a-students, and will fill the membership through the memberships
+        stored in CN=7a,OU=7a.
+        """
+
+
+        schoolclass_members = self.schoolclass_data['member']
+
+        if self.cn.endswith('-students'):
+            for member in schoolclass_members:
+                if 'OU=Students' in member:
+                    cn = member.split(',')[0].split('=')[1]
+                    self.add_member(cn)
+        elif self.cn.endswith('-parents'):
+            # TODO
+            pass
+        elif self.cn.endswith('-teachers'):
+            for member in schoolclass_members:
+                if 'OU=Teachers' in member:
+                    cn = member.split(',')[0].split('=')[1]
+                    self.add_member(cn)
+        else:
+            return
+
+
+
 class LMNSchoolclass(LMNGroupCommon):
 
     def __init__(self, cn):
