@@ -57,11 +57,14 @@ class Spinner(object):
             self.spin_thread.join()
 
     def init_spin(self):
+        last_time = time.time()
+        next_val = next(self.spinner_cycle)
         while not self.stop_running.is_set():
-            next_val = next(self.spinner_cycle)
             sys.stdout.write(f"  {self.color}{next_val}{ENDC}  ")
             sys.stdout.flush()
-            time.sleep(0.07)
+            if time.time() - last_time > 0.07:
+                last_time = time.time()
+                next_val = next(self.spinner_cycle)
             sys.stdout.write('\r')
 
     def print(self, text):

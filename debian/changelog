@@ -1,3 +1,16 @@
+linuxmuster-tools7 (7.3.6) lmn73; urgency=medium
+
+  * [ldapreader] Add support for staff members
+  * [ldapreader] Allow space in schoolclass names
+  * [ldapreader] Add more attributes support in models
+  * [ldapwriter] Completely rewrite the Ldap writers for more flexibility
+  * [ldapwriter] Automatically create subgroups for schoolclasses
+    (7a-teachers, ...)
+  * [ldapwriter] Handle memberships of groups
+  * [lmnfile] Fieldnames for staff.csv
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Thu, 15 May 2025 21:16:22 +0200
+
 linuxmuster-tools7 (7.3.5) lmn73; urgency=medium
 
   * [ldapreader] Request for all GPOs 
