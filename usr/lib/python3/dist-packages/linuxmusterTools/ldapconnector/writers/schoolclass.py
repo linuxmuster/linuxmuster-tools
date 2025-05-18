@@ -18,11 +18,12 @@ class LMNSchoolclassGroup(LMNGroupCommon):
 
     def __init__(self, cn, schoolclass_data=''):
         self.schoolclass_data = schoolclass_data
-        super().__init__(cn)
+        self.school = self.schoolclass_data['sophomorixSchoolname']
+        super().__init__(cn, school=self.school)
 
     def load_data(self):
         self.model = LMNSchoolClassModel
-        self.data = self.lr.get(f'/units/{self.cn}')
+        self.data = self.lr.get(f'/units/{self.cn}', school=self.school)
 
         if not self.data:
             # This kind of group must always be provided in Ldap, so if it's not
@@ -40,8 +41,6 @@ class LMNSchoolclassGroup(LMNGroupCommon):
                         self.cn
             )
 
-            school = self.schoolclass_data['sophomorixSchoolname']
-
             self.data = {
                 'description': self.cn,
                 'displayName': self.cn,
@@ -57,8 +56,8 @@ class LMNSchoolclassGroup(LMNGroupCommon):
                 'sophomorixMailAlias': False,
                 'sophomorixMailList': False,
                 'sophomorixMailQuota': '---:---:',
-                'sophomorixQuota': [f'{school}:---:---:', 'linuxmuster-global:---:---:'],
-                'sophomorixSchoolname': school,
+                'sophomorixQuota': [f'{self.school}:---:---:', 'linuxmuster-global:---:---:'],
+                'sophomorixSchoolname': self.school,
                 'sophomorixStatus': '',
                 'sophomorixType': 'adminclass',
             }
@@ -99,15 +98,15 @@ class LMNSchoolclassGroup(LMNGroupCommon):
 
 class LMNSchoolclass(LMNGroupCommon):
 
-    def __init__(self, cn):
-        super().__init__(cn)
+    def __init__(self, cn, school='default-school'):
+        super().__init__(cn, school=school)
         self.model = LMNSchoolClassModel
         self.students_group = LMNSchoolclassGroup(f"{self.cn}-students", schoolclass_data=self.data)
         self.teachers_group = LMNSchoolclassGroup(f"{self.cn}-teachers", schoolclass_data=self.data)
         self.parents_group = LMNSchoolclassGroup(f"{self.cn}-parents", schoolclass_data=self.data)
 
     def load_data(self):
-        self.data = self.lr.get(f'/schoolclasses/{self.cn}')
+        self.data = self.lr.get(f'/schoolclasses/{self.cn}', school=self.school)
 
         if not self.data:
             raise Exception(f"The schoolclass {self.cn} was not found in ldap.")
