@@ -11,12 +11,12 @@ name_checker = NameChecker()
 
 class LMNProject(LMNGroupCommon):
 
-    def __init__(self, cn):
-        super().__init__(cn)
+    def __init__(self, cn, school='default-school'):
+        super().__init__(cn, school=school)
         self.model = LMNProjectModel
 
     def load_data(self):
-        self.data = self.lr.get(f'/projects/{self.cn}')
+        self.data = self.lr.get(f'/projects/{self.cn}', school=self.school)
 
         if not self.data:
             raise Exception(f"The project {self.cn} was not found in ldap.")
