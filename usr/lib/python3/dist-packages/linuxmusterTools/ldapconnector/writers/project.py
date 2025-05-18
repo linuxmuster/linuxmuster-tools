@@ -9,7 +9,7 @@ from .group import LMNGroupCommon
 logger = logging.getLogger(__name__)
 name_checker = NameChecker()
 
-class LMNPrinter(LMNGroupCommon):
+class LMNProject(LMNGroupCommon):
 
     def __init__(self, cn):
         super().__init__(cn)
