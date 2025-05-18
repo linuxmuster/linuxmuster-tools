@@ -1,3 +1,10 @@
+linuxmuster-tools7 (7.3.7) lmn73; urgency=medium
+
+  * [ldapwriter] New writer for management group.
+  * [ldapwriter] Support for multischool. 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sun, 18 May 2025 20:57:25 +0200
+
 linuxmuster-tools7 (7.3.6) lmn73; urgency=medium
 
   * [ldapreader] Add support for staff members
