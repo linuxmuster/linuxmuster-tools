@@ -10,11 +10,11 @@ name_checker = NameChecker()
 
 class LMNPrinter(LMNGroupCommon):
 
-    def __init__(self, cn):
-        super().__init__(cn)
+    def __init__(self, cn, school='default-school'):
+        super().__init__(cn, school=school)
 
     def load_data(self):
-        self.data = self.lr.get(f'/printers/{self.cn}')
+        self.data = self.lr.get(f'/printers/{self.cn}', schoool=self.school)
 
         if not self.data:
             raise Exception(f"The printer {self.cn} was not found in ldap.")
