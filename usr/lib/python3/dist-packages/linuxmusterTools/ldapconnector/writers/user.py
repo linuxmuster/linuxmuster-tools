@@ -25,7 +25,7 @@ name_checker = NameChecker()
 
 class LMNUser:
 
-    def __init__(self, cn):
+    def __init__(self, cn, school='default-school'):
 
         if not name_checker.check_login_name(cn):
             raise Exception(f"{cn} is not a valid CN")
@@ -36,10 +36,11 @@ class LMNUser:
         self.model = LMNUserModel
         self.data = {}
         self.new = False
+        self.school = school
         self.load_data()
 
     def load_data(self):
-        self.data = self.lr.get(f'/users/{self.cn}')
+        self.data = self.lr.get(f'/users/{self.cn}', school=self.school)
 
         if not self.data:
             logger.info(f"The user {self.cn} was not found in ldap.")
