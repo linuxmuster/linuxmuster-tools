@@ -16,7 +16,7 @@ class LMNGroupCommon:
     Schoolclasses, ManagementGroup, Sophomorix Group, etc ...).
     """
 
-    def __init__(self, cn):
+    def __init__(self, cn, school='default-school'):
 
         # TODO if new is enabled
         # if not name_checker.check_login_name(cn):
@@ -28,10 +28,11 @@ class LMNGroupCommon:
         self.lr = router
         self.model = LMNGroupModel
         self.data = {}
+        self.school = school
         self.load_data()
 
     def load_data(self):
-        self.data = self.lr.get(f'/units/{self.cn}')
+        self.data = self.lr.get(f'/units/{self.cn}', school=self.school)
 
         if not self.data:
             raise Exception(f"The group {self.cn} was not found in ldap.")
@@ -104,11 +105,11 @@ class LMNGroup(LMNGroupCommon):
     Class to handle the Sophomorix Groups (saved under the OU Projects)
     """
 
-    def __init__(self, cn):
-        super().__init__(cn)
+    def __init__(self, cn, school='default-school'):
+        super().__init__(cn, school=school)
 
     def load_data(self):
-        self.data = self.lr.get(f'/groups/{self.cn}')
+        self.data = self.lr.get(f'/groups/{self.cn}', school=self.school)
 
         if not self.data:
             raise Exception(f"The group {self.cn} was not found in ldap.")
