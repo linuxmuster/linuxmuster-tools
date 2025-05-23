@@ -16,10 +16,15 @@ class LMNSchoolclassGroup(LMNGroupCommon):
     """
 
 
-    def __init__(self, cn, schoolclass_data=''):
+    def __init__(self, cn, suffix='', schoolclass_data={}):
+        # Doing nothing without associated schoolclass
+        if not schoolclass_data:
+            return
+
         self.schoolclass_data = schoolclass_data
-        self.school = self.schoolclass_data['sophomorixSchoolname']
-        super().__init__(cn, school=self.school)
+        self.suffix = suffix
+        self.school = self.schoolclass_data.get('sophomorixSchoolname', 'default-school')
+        super().__init__(f"{cn}{suffix}", school=self.school)
 
     def load_data(self):
         self.model = LMNSchoolClassModel
@@ -59,7 +64,7 @@ class LMNSchoolclassGroup(LMNGroupCommon):
                 'sophomorixQuota': [f'{self.school}:---:---:', 'linuxmuster-global:---:---:'],
                 'sophomorixSchoolname': self.school,
                 'sophomorixStatus': '',
-                'sophomorixType': 'adminclass',
+                'sophomorixType': f"adminclass{self.suffix}",
             }
 
             self.lw._add_group(self, data=self.data)
@@ -101,9 +106,9 @@ class LMNSchoolclass(LMNGroupCommon):
     def __init__(self, cn, school='default-school'):
         super().__init__(cn, school=school)
         self.model = LMNSchoolClassModel
-        self.students_group = LMNSchoolclassGroup(f"{self.cn}-students", schoolclass_data=self.data)
-        self.teachers_group = LMNSchoolclassGroup(f"{self.cn}-teachers", schoolclass_data=self.data)
-        self.parents_group = LMNSchoolclassGroup(f"{self.cn}-parents", schoolclass_data=self.data)
+        self.students_group = LMNSchoolclassGroup(self.cn, suffix="-students", schoolclass_data=self.data)
+        self.teachers_group = LMNSchoolclassGroup(self.cn, suffix="-teachers", schoolclass_data=self.data)
+        self.parents_group = LMNSchoolclassGroup(self.cn, suffix="-parents", schoolclass_data=self.data)
 
     def load_data(self):
         self.data = self.lr.get(f'/schoolclasses/{self.cn}', school=self.school)
