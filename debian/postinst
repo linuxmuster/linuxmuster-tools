@@ -6,6 +6,8 @@
 
 set -e
 
+# Hide root warning for pip
+export PIP_ROOT_USER_ACTION=ignore
 export PIP_BREAK_SYSTEM_PACKAGES=1
 
 msg()
@@ -17,10 +19,34 @@ msg()
     echo
 }
 
+
+create_linuxmuster_venv()
+{
+    msg "Setting up virtual env in /opt"
+    /usr/bin/python3 -m venv /opt/linuxmuster --system-site-packages
+}
+
+migrate_to_venv()
+{
+    # Checking if the linuxmuster's venv  is already installed
+    if [ -f /opt/linuxmuster/bin/activate ] ; then
+      return
+    fi
+
+    create_linuxmuster_venv
+}
+
+
 case "$1" in
     install|configure)
         msg "Install Python requirements"
-        /usr/bin/python3 -m pip install -r /usr/lib/python3/dist-packages/linuxmusterTools/requirements.txt
+
+        migrate_to_venv
+        . /opt/linuxmuster/bin/activate
+        
+        PYTHON3=/opt/linuxmuster/bin/python3
+        
+        $PYTHON3 -m pip install -r /usr/lib/python3/dist-packages/linuxmusterTools/requirements.txt
 
         msg "Checking post-hooks directories"
         mkdir -p /etc/linuxmuster/tools/hooks/group-manager
