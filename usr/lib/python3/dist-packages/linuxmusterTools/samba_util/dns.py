@@ -100,8 +100,8 @@ class SambaToolDNS():
             elif host:
                 for type in types:
                     if ' '+type+':' in line:
-                        value = re.findall(': ([^(]*) \(', line)[0]
-                        details = re.findall('\(([^)]*)\)', line)
+                        value = re.findall(': ([^(]*) \\(', line)[0]
+                        details = re.findall('\\(([^)]*)\\)', line)
                         if details[-1]:
                             options = dict(o.strip().split("=") for o in details[-1].split(','))
                         else:
