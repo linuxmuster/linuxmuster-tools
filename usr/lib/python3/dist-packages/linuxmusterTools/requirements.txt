@@ -1,2 +1,3 @@
 python-ldap
 pyyaml
+smbprotocol==1.14.0
