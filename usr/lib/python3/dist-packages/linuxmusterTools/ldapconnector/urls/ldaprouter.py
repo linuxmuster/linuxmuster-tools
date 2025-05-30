@@ -98,8 +98,31 @@ class LMNLdapRouter:
     def print_urls(self):
         urls = [ url.pattern for url in self.urls.keys() ]
         urls.sort()
+
+        urls_dict = {}
+        pretty_max_len = 0
+        url_max_len = 0
+
         for url in urls:
-            print(url)
+            pretty_url = url[1:-1]
+            regex = {m.group(1):m.group(0) for m in re.finditer(r"\([^<]*<([^>]*)>[^\(]*\)",url)}
+
+            for group,match in regex.items():
+                pretty_url = pretty_url.replace(match,group.upper())
+
+            if len(pretty_url) > pretty_max_len:
+                pretty_max_len = len(pretty_url)
+
+            if len(url) > url_max_len:
+                url_max_len = len(url)
+
+            urls_dict[pretty_url] = url
+
+        print(f"{'URL':<{pretty_max_len + 2}}|  REGEX")
+        print('-' * (url_max_len + pretty_max_len + 5))
+
+        for pretty, url in urls_dict.items():
+            print(f"{pretty:<{pretty_max_len + 2}}| {url}")
 
     def ascsv(self, url, delimiter=";", csvfile=None, attributes=[], header=True, **kwargs):
         if not csvfile:
