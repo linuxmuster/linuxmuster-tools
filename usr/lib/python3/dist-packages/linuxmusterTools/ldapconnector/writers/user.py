@@ -363,6 +363,12 @@ class LMNParentsGroup(LMNGroupCommon):
 
             self.lw._add_group(self, data=self.data)
 
+        self.get_parents()
+
+    def get_parents(self):
+        self.parents_cn = self.data.get('member', [])
+        self.parents = [self.lr.get(f'/users/{cn}') for cn in self.parents_cn]
+
     #### ALL the next methods should be moved to student class, parent class or students-parents join
 
     # def add_parent_group(self, name, **kwargs):
