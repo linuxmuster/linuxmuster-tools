@@ -366,8 +366,19 @@ class LMNParentsGroup(LMNGroupCommon):
         self.get_parents()
 
     def get_parents(self):
-        self.parents_cn = self.data.get('member', [])
+
+        self.parents_cn = [dn.split(',')[0].split('=')[1]
+            for dn in self.data.get('member', [])
+        ]
         self.parents = [self.lr.get(f'/users/{cn}') for cn in self.parents_cn]
+
+    def add_parent(self, parent_cn):
+
+        # TODO: this allow all roles to be a parent, should this be restrited to
+        # users in parents OU ?
+
+        self.add_member(parent_cn)
+        self.get_parents()
 
     #### ALL the next methods should be moved to student class, parent class or students-parents join
 
