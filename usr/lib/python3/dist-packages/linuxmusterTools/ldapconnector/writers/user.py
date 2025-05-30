@@ -380,6 +380,11 @@ class LMNParentsGroup(LMNGroupCommon):
         self.add_member(parent_cn)
         self.get_parents()
 
+    def remove_parent(self, parent_cn):
+
+        self.remove_member(parent_cn)
+        self.get_parents()
+
     #### ALL the next methods should be moved to student class, parent class or students-parents join
 
     # def add_parent_group(self, name, **kwargs):
