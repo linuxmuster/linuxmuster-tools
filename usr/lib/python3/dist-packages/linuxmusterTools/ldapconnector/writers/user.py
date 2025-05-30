@@ -187,8 +187,27 @@ class LMNStudent(LMNUser):
 
     def __init__(self, cn):
         super().__init__(cn)
+
         if self.data.get('sophomorixRole', None) != 'student':
             raise Exception(f"{cn} is not a student!")
+
+        self.load_parents()
+
+    def load_parents(self):
+
+        self.parents_group = LMNParentsGroup(self.cn)
+        self.parents = self.parents_group.parents
+        self.parents_cn = self.parents_group.parents_cn
+
+    def add_parent(self, parent_cn):
+
+        self.parents_group.add_parent(parent_cn)
+        self.load_parents()
+
+    def remove_parent(self, parent_cn):
+
+        self.parents_group.remove_parent(parent_cn)
+        self.load_parents()
 
     def move(self, new_schoolclass):
 
