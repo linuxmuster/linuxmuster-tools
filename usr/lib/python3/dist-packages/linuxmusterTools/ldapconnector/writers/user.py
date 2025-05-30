@@ -109,6 +109,19 @@ class LMNUser:
         else:
             logging.warning('This object does not exist in Ldap, please create it first using the method .create()')
 
+    def get_children(self):
+        memberships = [m for m in self.data['memberOf'] if 'Student-Parents' in m]
+
+        self.children_cn = [
+            m.split(',')[0].split('=')[1].replace('-parents', '')
+            for m in memberships
+        ]
+
+        self.children = [
+            self.lr.get(f'/users/{cn}')
+            for cn in self.children_cn
+        ]
+
     def _move(self, dst_ou):
         """
         Move the user to a new Organisational Unit.This method just move an
