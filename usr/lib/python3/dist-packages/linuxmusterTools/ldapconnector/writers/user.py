@@ -7,7 +7,7 @@ from .schoolclass import LMNSchoolclass
 from linuxmusterTools.common import lprint, spinner
 from linuxmusterTools.common.checks import NameChecker
 from ..models import LMNUserModel
-
+from .group import LMNGroupCommon
 
 logger = logging.getLogger(__name__)
 name_checker = NameChecker()
@@ -300,6 +300,68 @@ class LMNGlobalAdmin(LMNUser):
         super().__init__(cn)
         if self.data.get('sophomorixRole', None) != 'globaladministrator':
             raise Exception(f"{cn} is not a globaladministrator!")
+
+
+
+class LMNParentsGroup(LMNGroupCommon):
+
+    def __init__(self, student_cn, school='default-school'):
+        """
+        cn represents the cn of the students. For example, if cn is frayka, this
+         class will handle the group
+         CN=frayka-parents,OU=Student-Parents,OU=Parents,OU=default-school,OU=SCHOOLS...
+        """
+
+
+        self.cn = f"{student_cn}-parents"
+        self.student_cn = student_cn
+        super().__init__(self.cn, school=school)
+
+    def load_data(self):
+        # Check if the given cn is from a student
+        student = self.lr.get(f'/users/{self.student_cn}')
+        if student['sophomorixRole'] != 'student':
+            raise Exception(f"The student {self.student_cn} was not found in ldap.")
+
+        # Check if the Student-Parents group exists
+        if not 'Student-Parents' in self.lr.getval('/ou/parents', 'ou', school=self.school):
+            domain = ','.join(student['dn'].split(',')[3:])
+            new_ou = f"OU=Student-Parents,OU=Parents,{domain}"
+            self.lw._add_ou(new_ou)
+
+        self.data = self.lr.get(f'/units/{self.cn}', school=self.school)
+
+        if not self.data:
+            # This kind of group must always be provided in Ldap, so if it's not
+            # existing, it must be automatically created.
+            logging.info(f"The group {self.cn}-parents was not found in ldap, creating it!")
+
+            # TODO: Check the following attributes:
+            domain = ','.join(student['dn'].split(',')[3:])
+            new_dn = f"CN={self.cn},OU=Student-Parents,OU=Parents,{domain}"
+
+            self.data = {
+                'description': self.cn,
+                'displayName': self.cn,
+                'distinguishedName': new_dn,
+                'mail': [],
+                'name': self.cn,
+                'sAMAccountName': self.cn,
+                'sophomorixAddMailQuota': '---',
+                'sophomorixAddQuota': '---',
+                'sophomorixCreationDate': '',
+                'sophomorixHidden': True,
+                'sophomorixJoinable': False,
+                'sophomorixMailAlias': False,
+                'sophomorixMailList': False,
+                'sophomorixMailQuota': '---:---:',
+                'sophomorixQuota': [f'{self.school}:---:---:', 'linuxmuster-global:---:---:'],
+                'sophomorixSchoolname': self.school,
+                'sophomorixStatus': '',
+                'sophomorixType': f"adminparents",
+            }
+
+            self.lw._add_group(self, data=self.data)
 
     #### ALL the next methods should be moved to student class, parent class or students-parents join
 
