@@ -44,3 +44,16 @@ def get_students_ou():
 
     return ldap_filter
 
+@router.collection(r'/ou/parents', models.LMNOUModel, subdn=f'OU=Parents,OU={SCHOOL_MARKER},OU=SCHOOLS,', level='single')
+def get_students_parents_ou():
+    """
+    Get all details from all OU in parents OU organizational unit.
+    Return a LMNOUModel data object.
+    """
+
+
+    ldap_filter = f"""(&
+                                (objectClass=organizationalUnit)
+                            )"""
+
+    return ldap_filter
