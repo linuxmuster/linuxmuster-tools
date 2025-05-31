@@ -8,6 +8,7 @@ from linuxmusterTools.common import lprint, spinner
 from linuxmusterTools.common.checks import NameChecker
 from ..models import LMNUserModel
 from .group import LMNGroupCommon
+from .schoolclass import LMNSchoolclass
 
 logger = logging.getLogger(__name__)
 name_checker = NameChecker()
@@ -351,13 +352,13 @@ class LMNParentsGroup(LMNGroupCommon):
 
     def load_data(self):
         # Check if the given cn is from a student
-        student = self.lr.get(f'/users/{self.student_cn}')
-        if student['sophomorixRole'] != 'student':
+        self.student = self.lr.get(f'/users/{self.student_cn}')
+        if self.student['sophomorixRole'] != 'student':
             raise Exception(f"The student {self.student_cn} was not found in ldap.")
 
         # Check if the Student-Parents group exists
         if not 'Student-Parents' in self.lr.getval('/ou/parents', 'ou', school=self.school):
-            domain = ','.join(student['dn'].split(',')[3:])
+            domain = ','.join(self.student['dn'].split(',')[3:])
             new_ou = f"OU=Student-Parents,OU=Parents,{domain}"
             self.lw._add_ou(new_ou)
 
@@ -369,7 +370,7 @@ class LMNParentsGroup(LMNGroupCommon):
             logging.info(f"The group {self.cn}-parents was not found in ldap, creating it!")
 
             # TODO: Check the following attributes:
-            domain = ','.join(student['dn'].split(',')[3:])
+            domain = ','.join(self.student['dn'].split(',')[3:])
             new_dn = f"CN={self.cn},OU=Student-Parents,OU=Parents,{domain}"
 
             self.data = {
@@ -406,10 +407,15 @@ class LMNParentsGroup(LMNGroupCommon):
 
     def add_parent(self, parent_cn):
 
-        # TODO: this allow all roles to be a parent, should this be restrited to
+        # TODO: this allow all roles to be a parent, should this be restricted to
         # users in parents OU ?
 
         self.add_member(parent_cn)
+
+        # Add parent to schoolclass group
+        schoolclass = LMNSchoolclass(self.student['sophomorixAdminClass'], school=self.school)
+        schoolclass.parents_group.add_member(parent_cn)
+
         self.get_parents()
 
     def remove_parent(self, parent_cn):
