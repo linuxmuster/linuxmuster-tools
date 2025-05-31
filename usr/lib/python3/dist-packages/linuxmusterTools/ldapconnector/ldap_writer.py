@@ -100,7 +100,7 @@ class LdapWriter:
 
                 if isinstance(valid_fields[attr], list):
                     # Multi-value
-                    if not add and lmnobject.data[attr]:
+                    if not add:
                         # Delete attribute first
                         ldif.append((ldap.MOD_DELETE, attr, None))
 
