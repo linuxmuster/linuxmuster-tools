@@ -82,6 +82,7 @@ class LMNGroupCommon:
                 logging.info(f"{user} is not a member of schoolclass {self.cn}")
                 return
             self.lw._setattr(self, data={'member': members})
+            self.load_data()
         except ValueError as e:
             logger.warning(f"Could not remove member {user_dn} from {self.cn}: {str(e)}")
 
@@ -96,6 +97,7 @@ class LMNGroupCommon:
             members = self.data['member']
             members.append(user_dn)
             self.lw._setattr(self, data={'member': members})
+            self.load_data()
         except Exception as e:
             logger.warning(f"Could not append member {user_dn} to {self.cn}: {str(e)}")
 
