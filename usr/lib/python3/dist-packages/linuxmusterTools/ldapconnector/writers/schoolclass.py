@@ -106,12 +106,14 @@ class LMNSchoolclass(LMNGroupCommon):
     def __init__(self, cn, school='default-school'):
         super().__init__(cn, school=school)
         self.model = LMNSchoolClassModel
-        self.students_group = LMNSchoolclassGroup(self.cn, suffix="-students", schoolclass_data=self.data)
-        self.teachers_group = LMNSchoolclassGroup(self.cn, suffix="-teachers", schoolclass_data=self.data)
-        self.parents_group = LMNSchoolclassGroup(self.cn, suffix="-parents", schoolclass_data=self.data)
 
     def load_data(self):
         self.data = self.lr.get(f'/schoolclasses/{self.cn}', school=self.school)
 
         if not self.data:
             raise Exception(f"The schoolclass {self.cn} was not found in ldap.")
+
+        self.students_group = LMNSchoolclassGroup(self.cn, suffix="-students", schoolclass_data=self.data)
+        self.teachers_group = LMNSchoolclassGroup(self.cn, suffix="-teachers", schoolclass_data=self.data)
+        self.parents_group = LMNSchoolclassGroup(self.cn, suffix="-parents", schoolclass_data=self.data)
+
