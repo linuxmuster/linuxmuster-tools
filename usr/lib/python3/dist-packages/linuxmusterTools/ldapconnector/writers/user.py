@@ -421,4 +421,9 @@ class LMNParentsGroup(LMNGroupCommon):
     def remove_parent(self, parent_cn):
 
         self.remove_member(parent_cn)
+
+        # Remove parent from schoolclass group
+        schoolclass = LMNSchoolclass(self.student['sophomorixAdminClass'], school=self.school)
+        schoolclass.parents_group.remove_member(parent_cn)
+
         self.get_parents()
