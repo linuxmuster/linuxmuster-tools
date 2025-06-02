@@ -23,6 +23,11 @@ class LMNSchoolclassGroup(LMNGroupCommon):
 
         self.schoolclass_data = schoolclass_data
         self.suffix = suffix
+
+        self.type = None
+        if suffix in ['-parents', '-students', '-teachers']:
+            self.type = suffix[1:]
+
         self.school = self.schoolclass_data.get('sophomorixSchoolname', 'default-school')
         super().__init__(f"{cn}{suffix}", school=self.school)
 
@@ -83,21 +88,27 @@ class LMNSchoolclassGroup(LMNGroupCommon):
 
         schoolclass_members = self.schoolclass_data['member']
 
-        if self.cn.endswith('-students'):
-            for member in schoolclass_members:
-                if 'OU=Students' in member:
-                    cn = member.split(',')[0].split('=')[1]
-                    self.add_member(cn)
-        elif self.cn.endswith('-parents'):
-            # TODO
-            pass
-        elif self.cn.endswith('-teachers'):
+        members = []
+
+        if self.type == 'students':
+            members = self.schoolclass_data['sophomorixMembers']
+
+        elif self.type == 'parents':
+            for student in self.schoolclass_data['sophomorixMembers']:
+                parents_dn = self.lr.getval(f'/units/{student}-parents', 'member')
+                if parents_dn:
+                    for dn in parents_dn:
+                        members.append(dn.split(',')[0].split('=')[1])
+
+        elif self.type == 'teachers':
             for member in schoolclass_members:
                 if 'OU=Teachers' in member:
                     cn = member.split(',')[0].split('=')[1]
-                    self.add_member(cn)
+                    members.append(cn)
         else:
             return
+
+        self.setattr(data={'members': members})
 
 
 
