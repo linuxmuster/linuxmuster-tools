@@ -82,11 +82,9 @@ class LMNSchoolclassGroup(LMNGroupCommon):
         """
         This method is only intended for subgroups like 7a-teachers, 7a-parents
         and 7a-students, and will fill the membership through the memberships
-        stored in CN=7a,OU=7a.
+        stored in CN=7a,OU=7a or OU=Student-Parents,OU=Parents.
         """
 
-
-        schoolclass_members = self.schoolclass_data['member']
 
         members = []
 
@@ -101,7 +99,7 @@ class LMNSchoolclassGroup(LMNGroupCommon):
                         members.append(dn.split(',')[0].split('=')[1])
 
         elif self.type == 'teachers':
-            for member in schoolclass_members:
+            for member in self.schoolclass_data['member']:
                 if 'OU=Teachers' in member:
                     cn = member.split(',')[0].split('=')[1]
                     members.append(cn)
@@ -128,3 +126,14 @@ class LMNSchoolclass(LMNGroupCommon):
         self.teachers_group = LMNSchoolclassGroup(self.cn, suffix="-teachers", schoolclass_data=self.data)
         self.parents_group = LMNSchoolclassGroup(self.cn, suffix="-parents", schoolclass_data=self.data)
 
+    def fill_group_members(self):
+        """
+        This method is only intended to populate subgroups like 7a-teachers,
+        7a-parents and 7a-students, and will fill the membership through the
+        memberships stored in CN=7a,OU=7a or OU=Student-Parents,OU=Parents.
+        """
+
+
+        self.students_group.fill_members()
+        self.teachers_group.fill_members()
+        self.parents_group.fill_members()
