@@ -430,3 +430,11 @@ class LMNParentsGroup(LMNGroupCommon):
         schoolclass.parents_group.remove_member(parent_cn)
 
         self.get_parents()
+
+    def delete(self):
+        """
+        Delete the group in case of a student moved to attic
+        """
+
+
+        self.lw._del(self.data['distinguishedName'])
