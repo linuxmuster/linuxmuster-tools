@@ -89,25 +89,24 @@ class LMNSchoolclassGroup(LMNGroupCommon):
         members = []
 
         if self.type == 'students':
-            members = self.schoolclass_data['sophomorixMembers']
+            for member_dn in self.schoolclass_data['member']:
+                if 'OU=Students' in member_dn:
+                    members.append(member_dn)
 
         elif self.type == 'parents':
             for student in self.schoolclass_data['sophomorixMembers']:
                 parents_dn = self.lr.getval(f'/units/{student}-parents', 'member')
                 if parents_dn:
-                    for dn in parents_dn:
-                        members.append(dn.split(',')[0].split('=')[1])
+                    members = parents_dn
 
         elif self.type == 'teachers':
-            for member in self.schoolclass_data['member']:
-                if 'OU=Teachers' in member:
-                    cn = member.split(',')[0].split('=')[1]
-                    members.append(cn)
+            for member_dn in self.schoolclass_data['member']:
+                if 'OU=Teachers' in member_dn:
+                    members.append(member_dn)
         else:
             return
 
-        self.setattr(data={'members': members})
-
+        self.setattr(data={'member': members})
 
 
 class LMNSchoolclass(LMNGroupCommon):
