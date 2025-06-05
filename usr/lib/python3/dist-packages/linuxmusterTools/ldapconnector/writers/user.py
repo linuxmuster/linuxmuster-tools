@@ -118,10 +118,13 @@ class LMNUser:
             for m in memberships
         ]
 
-        self.children = [
-            self.lr.get(f'/users/{cn}')
-            for cn in self.children_cn
-        ]
+        self.children = []
+        self.children_schoolclasses = []
+
+        for cn in self.children_cn:
+            children_data = self.lr.get(f'/users/{cn}')
+            self.children.append(children_data)
+            self.children_schoolclasses.append(children_data['sophomorixAdminClass'])
 
     def _move(self, dst_ou):
         """
