@@ -101,7 +101,7 @@ class LMNSchoolclassGroup(LMNGroupCommon):
 
         elif self.type == 'teachers':
             for member_dn in self.schoolclass_data['member']:
-                if 'OU=Teachers' in member_dn:
+                if 'OU=Teachers' in member_dn and 'OU=attic' not in member_dn:
                     members.append(member_dn)
         else:
             return
