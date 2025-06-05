@@ -105,7 +105,10 @@ class LMNUserModel(LMNModel):
     def extract_schoolclasses(self, membership):
         schoolclasses = []
         for dn in membership:
-            if 'OU=Students' in dn:
+            if 'OU=Students' in dn \
+                and '-teachers,' not in dn \
+                and '-parents,' not in dn \
+                and '-students,' not in dn:
                 schoolclass = self.common_name(dn)
                 if schoolclass:
                     schoolclasses.append(schoolclass)
