@@ -100,13 +100,16 @@ class LdapWriter:
 
                 if isinstance(valid_fields[attr], list):
                     # Multi-value
-                    if not add:
+                    if not add and lmnobject.data[attr]:
                         # Delete attribute first
                         ldif.append((ldap.MOD_DELETE, attr, None))
 
                     if isinstance(new_val, list):
-                        for val in new_val:
-                            ldif.append((ldap.MOD_ADD, attr, [f"{val}".encode()]))
+                        if len(new_val) == 0:
+                            ldif.append((ldap.MOD_ADD, attr, []))
+                        else:
+                            for val in new_val:
+                                ldif.append((ldap.MOD_ADD, attr, [f"{val}".encode()]))
                     else:
                         ldif.append((ldap.MOD_ADD, attr, [f"{new_val}".encode()]))
 
