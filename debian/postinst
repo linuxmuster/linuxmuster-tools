@@ -56,6 +56,17 @@ case "$1" in
         msg "Checking students group in LDAP"
         $PYTHON3 /usr/lib/python3/dist-packages/linuxmusterTools/install-scripts/create_students_groups.py
 
+        msg "Checking sophomorix hook scripts"
+        # TODO: Multischool !
+        # TODO: check replacement
+        cp -a /usr/lib/python3/dist-packages/linuxmusterTools/install-scripts/sophomorix-hooks/sophomorix-add.d/00-update-schoolclasses-groups.py /etc/linuxmuster/sophomorix/default-school/hooks/sophomorix-add.d
+        cp -a /usr/lib/python3/dist-packages/linuxmusterTools/install-scripts/sophomorix-hooks/sophomorix-update.d/00-update-schoolclasses-groups.py /etc/linuxmuster/sophomorix/default-school/hooks/sophomorix-update.d
+        cp -a /usr/lib/python3/dist-packages/linuxmusterTools/install-scripts/sophomorix-hooks/sophomorix-kill.d/00-update-schoolclasses-groups.py /etc/linuxmuster/sophomorix/default-school/hooks/sophomorix-kill.d
+
+        chmod +x /etc/linuxmuster/sophomorix/default-school/hooks/sophomorix-add.d/00-update-schoolclasses-groups.py
+        chmod +x /etc/linuxmuster/sophomorix/default-school/hooks/sophomorix-update.d/00-update-schoolclasses-groups.py
+        chmod +x /etc/linuxmuster/sophomorix/default-school/hooks/sophomorix-kill.d/00-update-schoolclasses-groups.py
+
     ;;
 
     *)
