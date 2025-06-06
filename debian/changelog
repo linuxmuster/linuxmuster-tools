@@ -1,3 +1,14 @@
+linuxmuster-tools7 (7.3.10) lmn73; urgency=medium
+
+  * Hook scripts for sophomorix-add, etc...
+  * [ldapwriter] Handle students groups like 7a-teachers, 7a-parents,
+    7a-students 
+  * [ldapwriter] Handle parents in student object
+  * [ldapwriter] Handle children in user object
+  * [ldapwriter] Fix writing of empty attributes
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Fri, 06 Jun 2025 09:13:08 +0200
+
 linuxmuster-tools7 (7.3.9) lmn73; urgency=medium
 
   * Update requirements. 
