@@ -353,17 +353,24 @@ class LMNParentsGroup(LMNGroupCommon):
         self.student_cn = student_cn
         super().__init__(self.cn, school=school)
 
-    def load_data(self):
-        # Check if the given cn is from a student
-        self.student = self.lr.get(f'/users/{self.student_cn}')
-        if self.student['sophomorixRole'] != 'student':
-            raise Exception(f"The student {self.student_cn} was not found in ldap.")
-
+    def _check_ou(self):
         # Check if the Student-Parents group exists
         if not 'Student-Parents' in self.lr.getval('/ou/parents', 'ou', school=self.school):
             domain = ','.join(self.student['dn'].split(',')[3:])
             new_ou = f"OU=Student-Parents,OU=Parents,{domain}"
             self.lw._add_ou(new_ou)
+
+    def load_data(self):
+        self._check_ou()
+
+        if not self.student_cn:
+            # Ignoring dummy checks like LMNParentsGroup('')
+            return
+
+        # Check if the given cn is from a student
+        self.student = self.lr.get(f'/users/{self.student_cn}')
+        if self.student.get('sophomorixRole', None) != 'student':
+            raise Exception(f"The student {self.student_cn} was not found in ldap.")
 
         self.data = self.lr.get(f'/units/{self.cn}', school=self.school)
 
