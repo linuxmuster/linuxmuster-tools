@@ -53,8 +53,10 @@ case "$1" in
         chown root:root /etc/linuxmuster/tools/hooks/group-manager -R
         chmod 600 /etc/linuxmuster/tools/hooks/group-manager -R
 
-        msg "Checking students group in LDAP"
-        $PYTHON3 /usr/lib/python3/dist-packages/linuxmusterTools/install-scripts/create_students_groups.py
+        if [ -f /etc/linuxmuster/webui/config.yml ] ; then
+            msg "Checking students group in LDAP"
+            $PYTHON3 /usr/lib/python3/dist-packages/linuxmusterTools/install-scripts/create_students_groups.py
+        fi
 
         msg "Checking sophomorix hook scripts"
         # TODO: Multischool !
