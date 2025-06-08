@@ -61,6 +61,12 @@ case "$1" in
         msg "Checking sophomorix hook scripts"
         # TODO: Multischool !
         # TODO: check replacement
+
+        mkdir -p /etc/linuxmuster/sophomorix/default-school/hooks/sophomorix-add.d
+        mkdir -p /etc/linuxmuster/sophomorix/default-school/hooks/sophomorix-udpdate.d
+        mkdir -p /etc/linuxmuster/sophomorix/default-school/hooks/sophomorix-kill.d
+
+
         cp -a /usr/lib/python3/dist-packages/linuxmusterTools/install-scripts/sophomorix-hooks/sophomorix-add.d/00-update-schoolclasses-groups.py /etc/linuxmuster/sophomorix/default-school/hooks/sophomorix-add.d
         cp -a /usr/lib/python3/dist-packages/linuxmusterTools/install-scripts/sophomorix-hooks/sophomorix-update.d/00-update-schoolclasses-groups.py /etc/linuxmuster/sophomorix/default-school/hooks/sophomorix-update.d
         cp -a /usr/lib/python3/dist-packages/linuxmusterTools/install-scripts/sophomorix-hooks/sophomorix-kill.d/00-update-schoolclasses-groups.py /etc/linuxmuster/sophomorix/default-school/hooks/sophomorix-kill.d
