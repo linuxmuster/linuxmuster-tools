@@ -63,7 +63,7 @@ case "$1" in
         # TODO: check replacement
 
         mkdir -p /etc/linuxmuster/sophomorix/default-school/hooks/sophomorix-add.d
-        mkdir -p /etc/linuxmuster/sophomorix/default-school/hooks/sophomorix-udpdate.d
+        mkdir -p /etc/linuxmuster/sophomorix/default-school/hooks/sophomorix-update.d
         mkdir -p /etc/linuxmuster/sophomorix/default-school/hooks/sophomorix-kill.d
 
 
