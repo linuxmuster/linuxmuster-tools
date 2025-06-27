@@ -8,7 +8,7 @@ from linuxmusterTools.samba_util import GroupManager
 
 parser = argparse.ArgumentParser(
                     prog='lmntools-managementgroup',
-                    description='Add and remove members from a ldap group')
+                    description='Add and remove members from a ldap management group, like internet or wifi')
 
 parser.add_argument('-g', '--group', help="The group to modify")
 parser.add_argument('-a', '--add-members', help="Comma separated list of users to add to GROUP")

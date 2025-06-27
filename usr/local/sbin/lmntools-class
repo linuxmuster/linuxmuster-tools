@@ -1,0 +1,57 @@
+#! /usr/bin/env python3
+
+import argparse
+import sys
+
+from linuxmusterTools.ldapconnector import LMNUser, LMNSchoolclass
+
+
+parser = argparse.ArgumentParser(
+                    prog='lmntools-class',
+                    description='Handle members of a ldap schoolclass group')
+
+parser.add_argument('-c', '--schoolclass', help="The schoolclass to handle")
+parser.add_argument('-t', '--sync-teachers', help="Update the teachers group of this schoolclass", action="store_false")
+parser.add_argument('-d', '--sync-students', help="Update the students group of this schoolclass", action="store_false")
+parser.add_argument('-p', '--sync-parents', help="Update the parents group of this schoolclass", action="store_false")
+parser.add_argument('-a', '--sync-all', help="Update the parents, teachers and students group of this schoolclass", action="store_false")
+parser.add_argument('-s', '--school', help="Schoolname, if different from default-school")
+
+args = parser.parse_args()
+
+if args.schoolclass is not None:
+
+    sync_teachers = True if args.sync_teachers or args.sync_all else False
+    sync_students = True if args.sync_students or args.sync_all else False
+    sync_parents = True if args.sync_parents or args.sync_all else False
+
+    if not (sync_parents or sync_teachers or sync_students):
+        parser.print_help()
+        sys.exit(0)
+
+    school = "default-school"
+    if args.school is not None:
+        school = args.school
+
+    schoolclass_group = LMNSchoolclass(args.schoolclass)
+
+    if sync_teachers is not None:
+        try:
+            schoolclass_group.teachers_group.fill_members()
+        except Exception as e:
+            sys.exit(e)
+
+    if sync_parents is not None:
+        try:
+            schoolclass_group.parents_group.fill_members()
+        except Exception as e:
+            sys.exit(e)
+
+    if sync_students is not None:
+        try:
+            schoolclass_group.students_group.fill_members()
+        except Exception as e:
+            sys.exit(e)
+
+else:
+    parser.print_help()
