@@ -10,7 +10,7 @@ parser = argparse.ArgumentParser(
                     prog='lmntools-class',
                     description='Handle members of a ldap schoolclass group')
 
-parser.add_argument('-c', '--schoolclass', help="The schoolclass to handle")
+parser.add_argument('-c', '--schoolclass', help="Comma separated list of schoolclasses to handle")
 parser.add_argument('-t', '--sync-teachers', help="Update the teachers group of this schoolclass", action="store_false")
 parser.add_argument('-d', '--sync-students', help="Update the students group of this schoolclass", action="store_false")
 parser.add_argument('-p', '--sync-parents', help="Update the parents group of this schoolclass", action="store_false")
@@ -33,25 +33,35 @@ if args.schoolclass is not None:
     if args.school is not None:
         school = args.school
 
-    schoolclass_group = LMNSchoolclass(args.schoolclass)
+    try:
+        schoolclasses = args.schoolclass.split(',')
 
-    if sync_teachers is not None:
-        try:
-            schoolclass_group.teachers_group.fill_members()
-        except Exception as e:
-            sys.exit(e)
+        for schoolclass in schoolclasses:
+            print(f"Checking schoolclass {schoolclass}")
+            schoolclass_group = LMNSchoolclass(schoolclass)
 
-    if sync_parents is not None:
-        try:
-            schoolclass_group.parents_group.fill_members()
-        except Exception as e:
-            sys.exit(e)
+            if sync_teachers is not None:
+                try:
+                    schoolclass_group.teachers_group.fill_members()
+                except Exception as e:
+                    sys.exit(e)
 
-    if sync_students is not None:
-        try:
-            schoolclass_group.students_group.fill_members()
-        except Exception as e:
-            sys.exit(e)
+            if sync_parents is not None:
+                try:
+                    schoolclass_group.parents_group.fill_members()
+                except Exception as e:
+                    sys.exit(e)
+
+            if sync_students is not None:
+                try:
+                    schoolclass_group.students_group.fill_members()
+                except Exception as e:
+                    sys.exit(e)
+
+    except Exception as e:
+        print(e)
+        parser.print_help()
+        sys.exit(1)
 
 else:
     parser.print_help()
