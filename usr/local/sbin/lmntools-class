@@ -4,7 +4,7 @@ import argparse
 import sys
 
 from linuxmusterTools.common import lprint
-from linuxmusterTools.ldapconnector import LMNUser, LMNSchoolclass
+from linuxmusterTools.ldapconnector import LMNUser, LMNSchoolclass, LMNLdapReader as lr
 
 
 parser = argparse.ArgumentParser(
@@ -15,28 +15,34 @@ parser.add_argument('-c', '--schoolclass', help="Comma separated list of schoolc
 parser.add_argument('-t', '--sync-teachers', help="Update the teachers group of this schoolclass", action="store_true")
 parser.add_argument('-d', '--sync-students', help="Update the students group of this schoolclass", action="store_true")
 parser.add_argument('-p', '--sync-parents', help="Update the parents group of this schoolclass", action="store_true")
-parser.add_argument('-a', '--sync-all', help="Update the parents, teachers and students group of this schoolclass", action="store_true")
+parser.add_argument('-g', '--sync-groups', help="Update the parents, teachers and students groups of this schoolclass", action="store_true")
+parser.add_argument('-a', '--all', help="Update the parents, teachers and students groups of all schoolclasses", action="store_true")
 parser.add_argument('-s', '--school', help="Schoolname, if different from default-school")
 
 args = parser.parse_args()
 
-if args.schoolclass is not None:
+if args.schoolclass is not None or args.all is not None:
 
-    sync_teachers = True if args.sync_teachers or args.sync_all else False
-    sync_students = True if args.sync_students or args.sync_all else False
-    sync_parents = True if args.sync_parents or args.sync_all else False
+    if args.all is not None:
+        sync_teachers, sync_students, sync_parents = True, True, True
+        schoolclasses = lr.getval('/schoolclasses','cn')
+        schoolclasses.remove('attic')
+    else:
+        schoolclasses = args.schoolclass.split(',')
 
-    if not (sync_parents or sync_teachers or sync_students):
-        parser.print_help()
-        sys.exit(0)
+        sync_teachers = True if args.sync_teachers or args.sync_groups else False
+        sync_students = True if args.sync_students or args.sync_groups else False
+        sync_parents = True if args.sync_parents or args.sync_groups else False
+
+        if not (sync_parents or sync_teachers or sync_students):
+            parser.print_help()
+            sys.exit(0)
 
     school = "default-school"
     if args.school is not None:
         school = args.school
 
     try:
-        schoolclasses = args.schoolclass.split(',')
-
         for schoolclass in schoolclasses:
             lprint.lmn(f"lmntools-class: Checking groups of schoolclass {schoolclass} in school {school}")
             schoolclass_group = LMNSchoolclass(schoolclass)
