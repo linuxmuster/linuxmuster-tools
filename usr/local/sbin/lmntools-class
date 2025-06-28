@@ -21,9 +21,9 @@ parser.add_argument('-s', '--school', help="Schoolname, if different from defaul
 
 args = parser.parse_args()
 
-if args.schoolclass is not None or args.all is not None:
+if args.schoolclass is not None or args.all:
 
-    if args.all is not None:
+    if args.all:
         sync_teachers, sync_students, sync_parents = True, True, True
         schoolclasses = lr.getval('/schoolclasses','cn')
         schoolclasses.remove('attic')
