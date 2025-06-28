@@ -15,26 +15,26 @@ ENDC = '\033[0m'
 
 class ColorShell:
 
-    def danger(self, result):
-        print(f'{DANGER}{result}{ENDC}')
+    def danger(self, result, end="\n"):
+        print(f'{DANGER}{result}{ENDC}', end=end)
 
-    def alert(self, result):
-        print(f'{ALERT}{result}{ENDC}')
+    def alert(self, result, end="\n"):
+        print(f'{ALERT}{result}{ENDC}', end=end)
 
-    def warning(self, result):
-        print(f'{WARNING}{result}{ENDC}')
+    def warning(self, result, end="\n"):
+        print(f'{WARNING}{result}{ENDC}', end=end)
 
-    def info(self, result):
-        print(f'{INFO}{result}{ENDC}')
+    def info(self, result, end="\n"):
+        print(f'{INFO}{result}{ENDC}', end=end)
 
-    def success(self, result):
-        print(f'{SUCCESS}{result}{ENDC}')
+    def success(self, result, end="\n"):
+        print(f'{SUCCESS}{result}{ENDC}', end=end)
 
-    def lmn(self, result):
-        print(f'{LINUXMUSTER}{result}{ENDC}')
+    def lmn(self, result, end="\n"):
+        print(f'{LINUXMUSTER}{result}{ENDC}', end=end)
 
-    def printsh(self, text, color):
-        print(f'{color}{text}{ENDC}')
+    def printsh(self, text, color, end="\n"):
+        print(f'{color}{text}{ENDC}', end=end)
 
 # Mostly copied from https://github.com/not-kennethreitz/blindspin
 class Spinner(object):
