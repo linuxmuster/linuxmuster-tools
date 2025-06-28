@@ -44,7 +44,7 @@ if args.schoolclass is not None or args.all:
 
     try:
         for schoolclass in schoolclasses:
-            lprint.lmn(f"lmntools-class: Checking groups of schoolclass {schoolclass} in school {school}")
+            lprint.lmn(f"lmntools-class: Checking groups of schoolclass {schoolclass} in {school}")
             schoolclass_group = LMNSchoolclass(schoolclass)
 
             if sync_teachers:
