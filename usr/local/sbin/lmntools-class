@@ -3,6 +3,7 @@
 import argparse
 import sys
 
+from linuxmusterTools.common import lprint
 from linuxmusterTools.ldapconnector import LMNUser, LMNSchoolclass
 
 
@@ -11,10 +12,10 @@ parser = argparse.ArgumentParser(
                     description='Handle members of a ldap schoolclass group')
 
 parser.add_argument('-c', '--schoolclass', help="Comma separated list of schoolclasses to handle")
-parser.add_argument('-t', '--sync-teachers', help="Update the teachers group of this schoolclass", action="store_false")
-parser.add_argument('-d', '--sync-students', help="Update the students group of this schoolclass", action="store_false")
-parser.add_argument('-p', '--sync-parents', help="Update the parents group of this schoolclass", action="store_false")
-parser.add_argument('-a', '--sync-all', help="Update the parents, teachers and students group of this schoolclass", action="store_false")
+parser.add_argument('-t', '--sync-teachers', help="Update the teachers group of this schoolclass", action="store_true")
+parser.add_argument('-d', '--sync-students', help="Update the students group of this schoolclass", action="store_true")
+parser.add_argument('-p', '--sync-parents', help="Update the parents group of this schoolclass", action="store_true")
+parser.add_argument('-a', '--sync-all', help="Update the parents, teachers and students group of this schoolclass", action="store_true")
 parser.add_argument('-s', '--school', help="Schoolname, if different from default-school")
 
 args = parser.parse_args()
@@ -37,30 +38,35 @@ if args.schoolclass is not None:
         schoolclasses = args.schoolclass.split(',')
 
         for schoolclass in schoolclasses:
-            print(f"Checking schoolclass {schoolclass}")
+            lprint.lmn(f"lmntools-class: Checking groups of schoolclass {schoolclass} in school {school}")
             schoolclass_group = LMNSchoolclass(schoolclass)
 
-            if sync_teachers is not None:
+            if sync_teachers:
                 try:
+                    lprint.lmn(f"\t--> teachers group", end="\r")
                     schoolclass_group.teachers_group.fill_members()
+                    lprint.lmn(f"\t--> teachers group ✅")
                 except Exception as e:
                     sys.exit(e)
 
-            if sync_parents is not None:
+            if sync_parents:
                 try:
+                    lprint.lmn(f"\t--> parents group", end="\r")
                     schoolclass_group.parents_group.fill_members()
+                    lprint.lmn(f"\t--> parents group  ✅")
                 except Exception as e:
                     sys.exit(e)
 
-            if sync_students is not None:
+            if sync_students:
                 try:
+                    lprint.lmn(f"\t--> students group", end="\r")
                     schoolclass_group.students_group.fill_members()
+                    lprint.lmn(f"\t--> students group ✅")
                 except Exception as e:
                     sys.exit(e)
 
     except Exception as e:
         print(e)
-        parser.print_help()
         sys.exit(1)
 
 else:
