@@ -38,9 +38,9 @@ if args.user is not None:
         if args.get_parents:
             if student.parents:
                 for parent in student.parents:
-                    lprint.info(f"{parent['cn']};{parent['displayName']}")
+                    print(f"{parent['cn']};{parent['displayName']}")
             else:
-                lprint.info('No parent found!')
+                print('No parent found!')
 
     except Exception as e:
         print(e)
