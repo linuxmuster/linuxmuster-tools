@@ -3,6 +3,7 @@
 import argparse
 import sys
 
+from linuxmusterTools.common import lprint
 from linuxmusterTools.ldapconnector import LMNStudent
 
 
@@ -11,6 +12,7 @@ parser = argparse.ArgumentParser(
                     description='Handle attributes of students')
 
 parser.add_argument('-u', '--user', help="Cn of the student to handle")
+parser.add_argument('--get-parents', help="Get the parents", action="store_true")
 parser.add_argument('--add-parents', help="Comma separated list of the cn of the parents to assign")
 parser.add_argument('--remove-parents', help="Comma separated list of the cn of the parents to remove")
 
@@ -18,7 +20,7 @@ args = parser.parse_args()
 
 if args.user is not None:
 
-    if not args.add_parents and not args.remove_parents:
+    if not args.add_parents and not args.remove_parents and not args.get_parents:
         parser.print_help()
         sys.exit(0)
 
@@ -32,6 +34,13 @@ if args.user is not None:
         if args.remove_parents:
             for parent in args.remove_parents.split(','):
                 student.remove_parent(parent)
+
+        if args.get_parents:
+            if student.parents:
+                for parent in student.parents:
+                    lprint.info(f"{parent['cn']};{parent['displayName']}")
+            else:
+                lprint.info('No parent found!')
 
     except Exception as e:
         print(e)
