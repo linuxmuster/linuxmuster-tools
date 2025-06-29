@@ -3,8 +3,7 @@
 import argparse
 import sys
 
-from linuxmusterTools.common import lprint
-from linuxmusterTools.ldapconnector import LMNStudent, LMNLdapReader as lr
+from linuxmusterTools.ldapconnector import LMNStudent
 
 
 parser = argparse.ArgumentParser(
