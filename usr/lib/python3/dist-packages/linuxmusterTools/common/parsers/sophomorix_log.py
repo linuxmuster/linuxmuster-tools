@@ -8,6 +8,30 @@ ADD_LOG_PATH = '/var/log/sophomorix/userlog/user-add.log'
 UPDATE_LOG_PATH = '/var/log/sophomorix/userlog/user-update.log'
 
 def parse_kill_log(all=False, epoch=None, today=False, lastweek=False):
+    """
+    Parse the kill log of sophomorix to return a dict with all informations.
+    Informations available in the log:
+    - timestamp
+    - utc datetime
+    - school
+    - user's cn
+    - user's lastname
+    - user's firstname
+    - sophomorixAdminclass
+    - sophomorixRole
+
+    :param all: return all entries
+    :type all: bool
+    :param epoch: search the given epoch/timestamp in the log
+    :type epoch: basestring
+    :param today: filter only today's results
+    :type today: bool
+    :param lastweek: filter only last week's results
+    :type lastweek: bool
+    :return: entries
+    :rtype: dict
+    """
+
 
     if (all and today) or (all and lastweek) or (today and lastweek):
         logging.error("Parameter all, today and lastweek are mutually exclusives! Please pick only one of them.")
@@ -67,6 +91,31 @@ def parse_kill_log(all=False, epoch=None, today=False, lastweek=False):
     return result
 
 def parse_add_log(all=False, epoch=None, today=False, lastweek=False):
+    """
+    Parse the add log of sophomorix to return a dict with all informations.
+    Informations available in the log:
+    - timestamp
+    - utc datetime
+    - school
+    - user's cn
+    - user's lastname
+    - user's firstname
+    - sophomorixAdminclass
+    - sophomorixRole
+    - sophomorixUnid
+
+    :param all: return all entries
+    :type all: bool
+    :param epoch: search the given epoch/timestamp in the log
+    :type epoch: basestring
+    :param today: filter only today's results
+    :type today: bool
+    :param lastweek: filter only last week's results
+    :type lastweek: bool
+    :return: entries
+    :rtype: dict
+    """
+
 
     if (all and today) or (all and lastweek) or (today and lastweek):
         logging.error("Parameter all, today and lastweek are mutually exclusives! Please pick only one of them.")
@@ -112,7 +161,7 @@ def parse_add_log(all=False, epoch=None, today=False, lastweek=False):
                 'lastname': entries[5],
                 'adminclass': entries[7],
                 'role': entries[8],
-                'first_password': entries[9],
+                'unid': entries[9] if entries[9] != '---' else None,
             })
 
     if epoch is not None:
@@ -126,6 +175,37 @@ def parse_add_log(all=False, epoch=None, today=False, lastweek=False):
 
 
 def parse_update_log(all=False, epoch=None, today=False, lastweek=False, list_changes=True ):
+    """
+    Parse the update log of sophomorix to return a dict with all informations.
+    Informations available in the log:
+    - first log line:
+        - timestamp
+        - utc datetime
+        - school
+        - user's cn
+        - group change (e.g. teachers->attic)
+        - role change (e.g. teacher->student)
+    - second log line:
+        - timestamp
+        - utc datetime
+        - school
+        - user's cn
+        - list of LDAP attributes changes (separator "=")
+
+    :param all: return all entries
+    :type all: bool
+    :param epoch: search the given epoch/timestamp in the log
+    :type epoch: basestring
+    :param today: filter only today's results
+    :type today: bool
+    :param lastweek: filter only last week's results
+    :type lastweek: bool
+    :param list_changes: list the LDAP attributes changed
+    :type list_changes: bool
+    :return: entries
+    :rtype: dict
+    """
+
 
     if (all and today) or (all and lastweek) or (today and lastweek):
         logging.error("Parameter all, today and lastweek are mutually exclusives! Please pick only one of them.")
