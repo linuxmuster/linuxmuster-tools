@@ -6,7 +6,7 @@
 
 
 import sys
-from linuxmusterTools.common import *
+from linuxmusterTools.common import lprint, parse_update_log
 from linuxmusterTools.ldapconnector import LMNUser, LMNSchoolclass, LMNStudent
 
 
@@ -22,13 +22,25 @@ if epoch is None:
 else:
     entries = parse_update_log(epoch=epoch)
 
-schoolclass_students_groups_to_update = set()
-schoolclass_parents_groups_to_update = set()
-schoolclass_teachers_groups_to_update = set()
+schoolclass_groups_to_update = {
+    'default-school': {
+        'students': set(),
+        'teachers': set(),
+        'parents': set()
+    }
+}
 
 for entry in entries:
     user = entry["user"]
     changes = entry["changes"]
+    school = entry["school"]
+
+    if school not in schoolclass_groups_to_update:
+        schoolclass_groups_to_update[school] = {
+            'students': set(),
+            'teachers': set(),
+            'parents': set()
+        }
 
     if 'group' in changes:
         old_group, new_group = changes['group'].split('->')
@@ -40,8 +52,8 @@ for entry in entries:
 
             if old_group != 'attic':
                 # Removing student / student's parents from old students / parents group
-                schoolclass_students_groups_to_update.add(old_group)
-                schoolclass_parents_groups_to_update.add(old_group)
+                schoolclass_groups_to_update[school]['students'].add(old_group)
+                schoolclass_groups_to_update[school]['parents'].add(old_group)
 
             if new_group == 'attic':
                 # Delete CN in Student-Parents
@@ -50,8 +62,8 @@ for entry in entries:
 
             else:
                 # Adding student / student's parents to new students / parents group
-                schoolclass_students_groups_to_update.add(new_group)
-                schoolclass_parents_groups_to_update.add(new_group)
+                schoolclass_groups_to_update[school]['students'].add(new_group)
+                schoolclass_groups_to_update[school]['parents'].add(new_group)
 
         elif old_group == 'teachers' and new_group == 'attic':
 
@@ -60,7 +72,7 @@ for entry in entries:
 
             teacher = LMNUser(user)
             for c in teacher.data['schoolclasses']:
-                schoolclass_teachers_groups_to_update.add(c)
+                schoolclass_groups_to_update[school]['teachers'].add(c)
 
         elif old_group == 'parents' and new_group == 'attic':
 
@@ -71,25 +83,25 @@ for entry in entries:
 
             # Remove parent from all parents groups in students
             for schoolclass in parent.children_schoolclasses:
-                schoolclass_parents_groups_to_update.add(schoolclass)
+                schoolclass_groups_to_update[school]['parents'].add(schoolclass)
 
             # Remove parent from Student-Parents' entries
             for student_cn in parent.children_cn:
                 student = LMNStudent(student_cn)
                 student.remove_parent(user)
 
+for school, groups in schoolclass_groups_to_update.items():
+    for schoolclass in groups['students']:
+        lprint.lmn(f"Updating students group of schoolclass {schoolclass} in {school}")
+        schoolclass_group = LMNSchoolclass(schoolclass, school=school)
+        schoolclass_group.students_group.fill_members()
 
-for schoolclass in schoolclass_students_groups_to_update:
-    lprint.info(f"Updating students group of schoolclass {schoolclass}")
-    schoolclass_group = LMNSchoolclass(schoolclass)
-    schoolclass_group.students_group.fill_members()
+    for schoolclass in groups['parents']:
+        lprint.lmn(f"Updating parents group of schoolclass {schoolclass} in {school}")
+        schoolclass_group = LMNSchoolclass(schoolclass, school=school)
+        schoolclass_group.parents_group.fill_members()
 
-for schoolclass in schoolclass_parents_groups_to_update:
-    lprint.info(f"Updating parents group of schoolclass {schoolclass}")
-    schoolclass_group = LMNSchoolclass(schoolclass)
-    schoolclass_group.parents_group.fill_members()
-
-for schoolclass in schoolclass_teachers_groups_to_update:
-    lprint.info(f"Updating teachers group of schoolclass {schoolclass}")
-    schoolclass_group = LMNSchoolclass(schoolclass)
-    schoolclass_group.teachers_group.fill_members()
+    for schoolclass in groups['teachers']:
+        lprint.lmn(f"Updating teachers group of schoolclass {schoolclass} in {school}")
+        schoolclass_group = LMNSchoolclass(schoolclass, school=school)
+        schoolclass_group.teachers_group.fill_members()
