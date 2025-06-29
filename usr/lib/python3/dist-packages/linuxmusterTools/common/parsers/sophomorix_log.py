@@ -3,22 +3,25 @@ import logging
 from datetime import datetime, timedelta
 
 
+KILL_LOG_PATH = '/var/log/sophomorix/userlog/user-kill.log'
+ADD_LOG_PATH = '/var/log/sophomorix/userlog/user-add.log'
+UPDATE_LOG_PATH = '/var/log/sophomorix/userlog/user-update.log'
+
 def parse_kill_log(all=False, epoch=None, today=False, lastweek=False):
 
     if (all and today) or (all and lastweek) or (today and lastweek):
         logging.error("Parameter all, today and lastweek are mutually exclusives! Please pick only one of them.")
         raise Exception("Parameter all, today and lastweek are mutually exclusives! Please pick only one of them.")
 
-    log_path = '/var/log/sophomorix/userlog/user-kill.log'
     now = datetime.now().timestamp()
     last_year = now - 86400*365
 
-    if not os.path.isfile(log_path):
-        raise Exception(f"File {log_path} does not exist.")
+    if not os.path.isfile(KILL_LOG_PATH):
+        raise Exception(f"File {KILL_LOG_PATH} does not exist.")
 
     result = {}
 
-    with open(log_path, 'r') as log:
+    with open(KILL_LOG_PATH, 'r') as log:
         for line in log:
             line = line.strip()
 
@@ -69,16 +72,15 @@ def parse_add_log(all=False, epoch=None, today=False, lastweek=False):
         logging.error("Parameter all, today and lastweek are mutually exclusives! Please pick only one of them.")
         raise Exception("Parameter all, today and lastweek are mutually exclusives! Please pick only one of them.")
 
-    log_path = '/var/log/sophomorix/userlog/user-add.log'
     now = datetime.now().timestamp()
     last_year = now - 86400*365
 
-    if not os.path.isfile(log_path):
-        raise Exception(f"File {log_path} does not exist.")
+    if not os.path.isfile(ADD_LOG_PATH):
+        raise Exception(f"File {ADD_LOG_PATH} does not exist.")
 
     result = {}
 
-    with open(log_path, 'r') as log:
+    with open(ADD_LOG_PATH, 'r') as log:
         for line in log:
             line = line.strip()
 
@@ -129,16 +131,15 @@ def parse_update_log(all=False, epoch=None, today=False, lastweek=False, list_ch
         logging.error("Parameter all, today and lastweek are mutually exclusives! Please pick only one of them.")
         raise Exception("Parameter all, today and lastweek are mutually exclusives! Please pick only one of them.")
 
-    log_path = '/var/log/sophomorix/userlog/user-update.log'
     now = datetime.now().timestamp()
     last_year = now - 86400*365
 
-    if not os.path.isfile(log_path):
-        raise Exception(f"File {log_path} does not exist.")
+    if not os.path.isfile(UPDATE_LOG_PATH):
+        raise Exception(f"File {UPDATE_LOG_PATH} does not exist.")
 
     result = {}
 
-    with open(log_path, 'rb') as log:
+    with open(UPDATE_LOG_PATH, 'rb') as log:
         for line in log:
             line = line.strip()
 
