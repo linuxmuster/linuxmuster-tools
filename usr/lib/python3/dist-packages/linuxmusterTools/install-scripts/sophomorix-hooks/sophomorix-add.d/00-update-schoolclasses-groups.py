@@ -21,20 +21,34 @@ if epoch is None:
 else:
     entries = parse_add_log(epoch=epoch)
 
-schoolclass_students_groups_to_update = set()
+schoolclass_groups_to_update = {
+    'default-school': {
+        'students': set(),
+        'teachers': set(),
+        'parents': set()
+    }
+}
 
 for entry in entries:
     user = entry["user"]
+    school = entry["school"]
+
+    if school not in schoolclass_groups_to_update:
+        schoolclass_groups_to_update[school] = {
+            'students': set(),
+            'teachers': set(),
+            'parents': set()
+        }
 
     if entry["role"] == 'student':
 
         # If a student is added to the class 7a, then the group 7a-students must
         # be updated
 
-        schoolclass_students_groups_to_update.add(entry["adminclass"])
+        schoolclass_groups_to_update[school]['students'].add(entry["adminclass"])
 
-
-for schoolclass in schoolclass_students_groups_to_update:
-    lprint.info(f"Updating students group of schoolclass {schoolclass}")
-    schoolclass_group = LMNSchoolclass(schoolclass)
-    schoolclass_group.students_group.fill_members()
+for school, groups in schoolclass_groups_to_update.items():
+    for schoolclass in groups['students']:
+        lprint.lmn(f"Updating students group of schoolclass {schoolclass} in {school}")
+        schoolclass_group = LMNSchoolclass(schoolclass, school=school)
+        schoolclass_group.students_group.fill_members()
