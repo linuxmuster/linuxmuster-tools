@@ -1,3 +1,11 @@
+linuxmuster-tools7 (7.3.14) lmn73; urgency=medium
+
+  * [sophomorix-hooks] Support for multischool
+  * Add script lmntools-class to check schoolclasses groups memberships 
+  * Add script lmntools-student to handle student's parents (get, add, remove)
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Mon, 30 Jun 2025 21:06:21 +0200
+
 linuxmuster-tools7 (7.3.13) lmn73; urgency=medium
 
   * Fix typo in postinst-script. 
