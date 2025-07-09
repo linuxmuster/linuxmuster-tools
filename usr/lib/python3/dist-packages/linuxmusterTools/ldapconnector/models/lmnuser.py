@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field, InitVar
 import re
 import ldap
+from ..urls import router as lr
 from .lmnsession import LMNSessionModel
 from .common import LMNModel
 
@@ -85,6 +86,7 @@ class LMNUserModel(LMNModel):
     intranet:       bool = field(init=False)
     isAdmin:        bool = field(init=False)
     lmnsessions:    list = field(init=False)
+    parents:        list = field(init=False)
     permissions:    list = field(init=False)
     printers:       list = field(init=False)
     printing:       bool = field(init=False)
@@ -204,6 +206,13 @@ class LMNUserModel(LMNModel):
                 'value': getattr(self, f"sophomorixCustomMulti{i}")
             }
 
+    def get_parents(self):
+        self.parents = []
+        if self.sophomorixRole == 'student':
+            self.parents = [dn.split(',')[0].split('=')[1]
+                for dn in lr.getval(f'/units/{self.cn}-parents', 'member', school=self.school)
+            ]
+
     def __post_init__(self, custom_fields_config={}):
         self.schoolclasses = self.extract_schoolclasses(self.memberOf)
         self.projects = self.extract_projects(self.memberOf)
@@ -214,6 +223,7 @@ class LMNUserModel(LMNModel):
         self.parse_permissions()
         self.parse_sessions()
         self.parse_exam()
+        self.get_parents()
 
         if not WEBUI_IMPORT:
             self.create_custom_fields_objects(custom_fields_config)
