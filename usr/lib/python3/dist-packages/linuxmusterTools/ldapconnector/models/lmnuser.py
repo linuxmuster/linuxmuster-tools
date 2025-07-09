@@ -209,8 +209,9 @@ class LMNUserModel(LMNModel):
     def get_parents(self):
         self.parents = []
         if self.sophomorixRole == 'student':
+            parents_group = lr.getval(f'/units/{self.cn}-parents', 'member', school=self.school) or []
             self.parents = [dn.split(',')[0].split('=')[1]
-                for dn in lr.getval(f'/units/{self.cn}-parents', 'member', school=self.school)
+                for dn in parents_group
             ]
 
     def __post_init__(self, custom_fields_config={}):
@@ -223,7 +224,7 @@ class LMNUserModel(LMNModel):
         self.parse_permissions()
         self.parse_sessions()
         self.parse_exam()
-        self.get_parents()
+        self.parents = []
 
         if not WEBUI_IMPORT:
             self.create_custom_fields_objects(custom_fields_config)
