@@ -3,8 +3,14 @@
 import argparse
 import sys
 
+from linuxmusterTools.common import lprint
 from linuxmusterTools.samba_util import GroupManager
 
+
+lprint.alert(
+    """This script is now deprecated and will be soon removed. 
+Please use `lmncli mgmtgroup --add-members user1,user2 --remove-members user3,user4 GROUP` instead."""
+)
 
 parser = argparse.ArgumentParser(
                     prog='lmntools-managementgroup',
