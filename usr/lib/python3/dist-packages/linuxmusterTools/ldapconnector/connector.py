@@ -48,7 +48,7 @@ class LdapConnector:
         #     l.sasl_interactive_bind_s("", sasl_auth)
 
         # On the server, accessing directly to bind user credentials
-        conn = ldap.initialize("ldap://localhost:389/")
+        conn = ldap.initialize("ldaps://localhost:636/")
         conn.set_option(ldap.OPT_REFERRALS, 0)
         conn.set_option(ldap.OPT_RESTART, ldap.OPT_ON)
         conn.protocol_version = ldap.VERSION3

@@ -238,7 +238,7 @@ class LMNUserModel(LMNModel):
         if not self.dn:
             return False
 
-        l = ldap.initialize("ldap://localhost:389/")
+        l = ldap.initialize("ldaps://localhost:636/")
         l.set_option(ldap.OPT_REFERRALS, 0)
         l.set_option(ldap.OPT_RESTART, ldap.OPT_ON)
         l.protocol_version = ldap.VERSION3
