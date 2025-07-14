@@ -58,6 +58,12 @@ case "$1" in
             $PYTHON3 /usr/lib/python3/dist-packages/linuxmusterTools/install-scripts/create_students_groups.py
         fi
 
+
+        # Removing deprecated scripts (lmntools v7.3.15)
+        rm -f /usr/local/sbin/lmntools-class
+        rm -f /usr/local/sbin/lmntools-student
+        #rm -f /usr/local/sbin/lmntools-managementgroup
+
         msg "Checking sophomorix hook scripts"
         # TODO: Multischool !
         # TODO: check replacement
