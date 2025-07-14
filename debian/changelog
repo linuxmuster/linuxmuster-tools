@@ -1,3 +1,11 @@
+linuxmuster-tools7 (7.3.15) lmn73; urgency=medium
+
+  * Move lmntools scripts to lmncli
+  * [ldapreader] Use secure connection
+  * [ldapreader] Get parents of student 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Mon, 14 Jul 2025 21:03:56 +0200
+
 linuxmuster-tools7 (7.3.14) lmn73; urgency=medium
 
   * [sophomorix-hooks] Support for multischool
