@@ -97,7 +97,29 @@ class LMNObjectModel(LMNModel):
     type: str = field(init=False)
 
     def get_type(self):
-        objtypes = ['Devices', 'Teachers', 'Projects', 'Students']
+
+        ## OU
+        if self.dn.startswith('OU='):
+            return 'Organizational Unit'
+
+
+
+        ## Schoolclasses
+        if self.sophomorixType == 'adminclass':
+            return 'ADGroup Schoolclass'
+        elif self.sophomorixType == 'adminclass-parents':
+            return 'ADGroup Schoolclass parents'
+        elif self.sophomorixType == 'adminclass-teachers':
+            return 'ADGroup Schoolclass teachers'
+        elif self.sophomorixType == 'adminclass-students':
+            return 'ADGroup Schoolclass students'
+
+
+        ## Staff
+        if self.dn.startswith(f'CN={self.cn},OU={self.cn},OU=Staff'):
+            return 'ADGroup Staff'
+
+        objtypes = ['Devices', 'Teachers', 'Projects', 'Students', 'Parents', 'Staff']
         for objtype in objtypes:
             if self.dn.startswith(f'CN={objtype.lower()},OU={objtype},'):
                 return f'ADGroup {objtype}'
