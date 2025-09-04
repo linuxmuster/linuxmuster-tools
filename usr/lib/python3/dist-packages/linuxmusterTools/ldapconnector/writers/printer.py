@@ -14,7 +14,7 @@ class LMNPrinter(LMNGroupCommon):
         super().__init__(cn, school=school)
 
     def load_data(self):
-        self.data = self.lr.get(f'/printers/{self.cn}', schoool=self.school)
+        self.data = self.lr.get(f'/printers/{self.cn}', school=self.school)
 
         if not self.data:
             raise Exception(f"The printer {self.cn} was not found in ldap.")
