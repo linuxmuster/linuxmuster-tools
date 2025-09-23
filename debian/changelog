@@ -1,3 +1,11 @@
+linuxmuster-tools7 (7.3.16) lmn73; urgency=medium
+
+  * [ldapreader] Extend types for objects response
+  * [ldapreader] Fix printers request
+  * [lmnfile] Allow access to api config 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Tue, 23 Sep 2025 17:38:01 +0200
+
 linuxmuster-tools7 (7.3.15) lmn73; urgency=medium
 
   * Move lmntools scripts to lmncli
