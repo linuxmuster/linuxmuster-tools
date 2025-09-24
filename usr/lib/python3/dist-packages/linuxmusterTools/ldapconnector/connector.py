@@ -51,6 +51,7 @@ class LdapConnector:
         conn = ldap.initialize("ldaps://localhost:636/")
         conn.set_option(ldap.OPT_REFERRALS, 0)
         conn.set_option(ldap.OPT_RESTART, ldap.OPT_ON)
+        conn.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_ALLOW)
         conn.protocol_version = ldap.VERSION3
 
         if not webui_import:
