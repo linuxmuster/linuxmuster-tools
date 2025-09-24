@@ -241,6 +241,7 @@ class LMNUserModel(LMNModel):
         l = ldap.initialize("ldaps://localhost:636/")
         l.set_option(ldap.OPT_REFERRALS, 0)
         l.set_option(ldap.OPT_RESTART, ldap.OPT_ON)
+        l.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_ALLOW)
         l.protocol_version = ldap.VERSION3
 
         try:
