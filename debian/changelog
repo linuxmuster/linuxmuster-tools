@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.3.17) lmn73; urgency=medium
+
+  * [ldapconnector] Allow self-signed certificates (@hermanntoast) 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Wed, 24 Sep 2025 11:49:50 +0200
+
 linuxmuster-tools7 (7.3.16) lmn73; urgency=medium
 
   * [ldapreader] Extend types for objects response
