@@ -41,3 +41,12 @@ def get_results_search_schoolclasses(query):
     """
 
     return f"""(&(objectClass=group)(sophomorixType=adminclass)(cn=*{query}*))"""
+
+@router.collection(r'/empty_schoolclasses', models.LMNSchoolClassModel)
+def get_results_search_empty_schoolclasses():
+    """
+    Get all details from empty schoolclasses.
+    Return a list of LMNSchoolClassModel data objects.
+    """
+
+    return f"""(&(objectClass=group)(sophomorixType=adminclass)(!(sophomorixMembers=*)))"""
