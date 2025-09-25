@@ -9,9 +9,7 @@ def get_all_devices():
     Return a a list of LMNDeviceModel data object.
     """
 
-    ldap_filter = f"""(&
-                                (objectClass=computer)
-                            )"""
+    ldap_filter = f"""(&(objectClass=computer))"""
 
     return ldap_filter
 
@@ -23,10 +21,7 @@ def get_device(name):
     Return a LMNDeviceModel data object.
     """
 
-    ldap_filter = f"""(&
-                                (cn={name})
-                                (objectClass=computer)
-                            )"""
+    ldap_filter = f"""(&(cn={name})(objectClass=computer))"""
 
     return ldap_filter
 
@@ -43,11 +38,7 @@ def get_results_search_device(query, selection=[]):
     if selection == 'all':
         selection = '*'
 
-    return f"""(&
-                                (cn=*{query}*)
-                                (objectClass=computer)
-                                (sophomorixRole={selection})
-                            )"""
+    return f"""(&(cn=*{query}*)(objectClass=computer)(sophomorixRole={selection}))"""
 
 @router.collection(r'/rooms', models.LMNRoomModel, subdn=f'OU=Devices,OU={SCHOOL_MARKER},OU=SCHOOLS,')
 def get_rooms():
@@ -56,9 +47,7 @@ def get_rooms():
     """
 
 
-    return f"""(&
-                                (objectClass=group)
-                            )"""
+    return f"""(&(objectClass=group)(sophomorixType=room))"""
 
 @router.single(r'/rooms/(?P<name>[\w\-\_]*)', models.LMNRoomModel, subdn=f'OU=Devices,OU={SCHOOL_MARKER},OU=SCHOOLS,')
 def get_room(name):
@@ -67,7 +56,4 @@ def get_room(name):
     """
 
 
-    return f"""(&
-                                (cn={name})
-                                (objectClass=group)
-                            )"""
+    return f"""(&(cn={name})(objectClass=group)(sophomorixType=room))"""
