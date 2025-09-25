@@ -9,9 +9,7 @@ def get_all_ou():
     Return a list of LMNOUModel data object.
     """
 
-    ldap_filter = f"""(&
-                                (objectClass=organizationalUnit)
-                            )"""
+    ldap_filter = f"""(&(objectClass=organizationalUnit))"""
 
     return ldap_filter
 
@@ -23,9 +21,7 @@ def get_devices_ou():
     """
 
 
-    ldap_filter = f"""(&
-                                (objectClass=organizationalUnit)
-                            )"""
+    ldap_filter = f"""(&(objectClass=organizationalUnit))"""
 
     return ldap_filter
 
@@ -38,9 +34,7 @@ def get_students_ou():
     """
 
 
-    ldap_filter = f"""(&
-                                (objectClass=organizationalUnit)
-                            )"""
+    ldap_filter = f"""(&(objectClass=organizationalUnit))"""
 
     return ldap_filter
 
@@ -52,8 +46,18 @@ def get_students_parents_ou():
     """
 
 
-    ldap_filter = f"""(&
-                                (objectClass=organizationalUnit)
-                            )"""
+    ldap_filter = f"""(&(objectClass=organizationalUnit))"""
+
+    return ldap_filter
+
+@router.collection(r'/ou/staff', models.LMNOUModel, subdn=f'OU=Staff,OU={SCHOOL_MARKER},OU=SCHOOLS,', level='single')
+def get_staff_ou():
+    """
+    Get all details from the staff organizational unit.
+    Return a LMNOUModel data object.
+    """
+
+
+    ldap_filter = f"""(&(objectClass=organizationalUnit))"""
 
     return ldap_filter
