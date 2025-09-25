@@ -3,10 +3,9 @@ from dataclasses import fields
 
 from ..ldap_writer import LdapWriter
 from ..urls.ldaprouter import router
-from .object import LMNObject
 from ..models import LMNDeviceModel
 from linuxmusterTools.common import Validator
-from linuxmusterTools.lmnconfig import LDAP_CONTEXT
+from linuxmusterTools.lmnconfig import LDAP_CONTEXT, SAMBA_REALM
 from linuxmusterTools.common.checks import NameChecker
 
 
@@ -38,7 +37,7 @@ class LMNDevice:
             self.data =  {field.name:field.type() for field in fields(self.model) if field.init}
             self.data['cn'] = self.cn
 
-    def setattr(self, name, **kwargs):
+    def setattr(self, **kwargs):
         """
         Set some attributes of the object directly in Ldap,
         only for an existing object.
@@ -72,48 +71,42 @@ class LMNDevice:
 
         return self.data.get(attr, None)
 
-    # def rename(self, name, new_name):
-    #     """
-    #     Rename a device inside a room.
-    #
-    #     :param new_name:
-    #     :type new_name:
-    #     :return:
-    #     :rtype:
-    #     """
-    #
-    #
-    #     if not Validator.check_host_name(new_name):
-    #         logger.error(f"{new_name} is not a valid hostname")
-    #         return
-    #
-    #     new_name = new_name.upper()
-    #     name = name.upper()
-    #
-    #     details = self.lr.get(f'/devices/{name}')
-    #
-    #     if not details:
-    #         logger.warning(f"Device {name} not found in ldap, doing nothing.")
-    #         return
-    #
-    #     # Check if new_name is already used
-    #     if self.lr.get(f'/devices/{new_name}'):
-    #         logger.warning(f"{new_name} is already used, please use another hostname.")
-    #         return
-    #
-    #     # Update attributes
-    #
-    #     data = {
-    #         "displayName": f"Computer {new_name}",
-    #         "dNSHostName": details["dNSHostName"].replace(name, new_name),
-    #         "sAMAccountName": details["sAMAccountName"].replace(name, new_name),
-    #         "servicePrincipalName": [spn.replace(name, new_name) for spn in details["servicePrincipalName"]],
-    #         "sophomorixDnsNodename": new_name.lower()
-    #     }
-    #
-    #     self.setattr(name, data=data)
-    #
-    #     self.lw._rename(details['dn'], new_name)
+    def rename(self, new_cn):
+        """
+        Rename a device inside a room.
+        """
+
+
+        if not name_checker.check_host_name(new_cn):
+            logger.error(f"{new_cn} is not a valid hostname")
+            return
+
+        new_cn = new_cn.upper()
+        cn = self.data['cn'].upper()
+
+        # Check if new_name is already used
+        if self.lr.get(f'/devices/{new_cn}'):
+            logger.warning(f"{new_cn} is already used, please use another hostname.")
+            return
+
+        # Update attributes
+
+        data = {
+            "displayName": f"Computer {new_cn}",
+            "dNSHostName": f"{new_cn}.{SAMBA_REALM}",
+            "sAMAccountName": f"{new_cn}$",
+            "servicePrincipalName": [
+                f'HOST/{new_cn}',
+                f'HOST/{new_cn}.{SAMBA_REALM}',
+                f'RestrictedKrbHost/{new_cn}',
+                f'RestrictedKrbHost/{new_cn}.{SAMBA_REALM}'
+            ],
+            "sophomorixDnsNodename": new_cn.lower(),
+        }
+
+        self.setattr(data=data)
+
+        self.lw._rename(self.data['dn'], new_cn)
     #
     # def move(self, name, new_room):
     #     """
