@@ -25,7 +25,7 @@ def get_devices_ou():
 
     return ldap_filter
 
-@router.collection(r'/ou/students', models.LMNOUModel, subdn=f'OU=Students,OU={SCHOOL_MARKER},OU=SCHOOLS,', level=single)
+@router.collection(r'/ou/students', models.LMNOUModel, subdn=f'OU=Students,OU={SCHOOL_MARKER},OU=SCHOOLS,', level='single')
 def get_students_ou():
     """
     Get all details from the students organizational unit.
