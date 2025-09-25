@@ -9,6 +9,7 @@ def get_all_ou():
     Return a list of LMNOUModel data object.
     """
 
+
     ldap_filter = f"""(&(objectClass=organizationalUnit))"""
 
     return ldap_filter
