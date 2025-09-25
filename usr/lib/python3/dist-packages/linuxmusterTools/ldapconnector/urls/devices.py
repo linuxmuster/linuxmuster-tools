@@ -57,3 +57,17 @@ def get_room(name):
 
 
     return f"""(&(cn={name})(objectClass=group)(sophomorixType=room))"""
+
+@router.collection(r'/empty_rooms', models.LMNRoomModel, subdn=f'OU=Devices,OU={SCHOOL_MARKER},OU=SCHOOLS,')
+def get_empty_rooms():
+    """
+    List empty rooms under the Devices tree.
+    """
+
+
+    # Get all devices groups under OU Devices which:
+    # - contains no computer
+    # - cn not starts with d_ (linbo group)
+    # - not a printer
+
+    return f"""(&(objectClass=group)(!(sophomorixRoomComputers=*))(!(cn=d_*))(!(sophomorixType=printer)))"""
