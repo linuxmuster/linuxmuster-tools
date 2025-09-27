@@ -47,7 +47,7 @@ def get_rooms():
     """
 
 
-    return f"""(&(objectClass=group)(sophomorixType=room))"""
+    return f"""(&(objectClass=group))"""
 
 @router.single(r'/rooms/(?P<name>[\w\-\_]*)', models.LMNRoomModel, subdn=f'OU=Devices,OU={SCHOOL_MARKER},OU=SCHOOLS,')
 def get_room(name):
@@ -56,7 +56,7 @@ def get_room(name):
     """
 
 
-    return f"""(&(cn={name})(objectClass=group)(sophomorixType=room))"""
+    return f"""(&(cn={name})(objectClass=group))"""
 
 @router.collection(r'/empty_rooms', models.LMNRoomModel, subdn=f'OU=Devices,OU={SCHOOL_MARKER},OU=SCHOOLS,')
 def get_empty_rooms():
