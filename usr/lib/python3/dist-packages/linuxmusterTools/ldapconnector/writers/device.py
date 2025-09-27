@@ -3,7 +3,7 @@ from dataclasses import fields
 
 from ..ldap_writer import LdapWriter
 from ..urls.ldaprouter import router
-from ..models import LMNDeviceModel
+from ..models import LMNDeviceModel, LMNRoomModel
 from linuxmusterTools.common import Validator
 from linuxmusterTools.lmnconfig import LDAP_CONTEXT, SAMBA_REALM
 from linuxmusterTools.common.checks import NameChecker
@@ -11,6 +11,67 @@ from linuxmusterTools.common.checks import NameChecker
 
 name_checker = NameChecker()
 logger = logging.getLogger(__name__)
+
+class LMNRoom:
+
+    def __init__(self, cn, school='default-school'):
+
+        if not name_checker.check_room_name(cn):
+            raise Exception(f"{cn} is not a valid CN")
+
+        self.cn = cn
+        self.lw = LdapWriter()
+        self.lr = router
+        self.model = LMNRoomModel
+        self.data = {}
+        self.new = False
+        self.school = school
+        self.load_data()
+
+    def load_data(self):
+        self.data = self.lr.get(f'/rooms/{self.cn}', school=self.school)
+
+        if not self.data:
+            logger.info(f"The room {self.cn} was not found in ldap.")
+            self.new = True
+            self.data =  {field.name:field.type() for field in fields(self.model) if field.init}
+            self.data['cn'] = self.cn
+
+    def setattr(self, **kwargs):
+        """
+        Set some attributes of the object directly in Ldap,
+        only for an existing object.
+        kwargs must contain a data dict with attributes/values to set.
+        """
+
+        if not self.new:
+            self.lw._setattr(self, **kwargs)
+            self.load_data()
+        else:
+            logging.warning('This object does not exist in Ldap, please create it first using the method .create()')
+
+
+    def delattr(self, **kwargs):
+        """
+        Delete some attributes of the object directly in Ldap,
+        only for an existing object.
+        kwargs must contain a data dict with attributes/values to set.
+        """
+
+        if not self.new:
+            self.lw._delattr(self, **kwargs)
+            self.load_data()
+        else:
+            logging.warning('This object does not exist in Ldap, please create it first using the method .create()')
+
+
+    def getattr(self, attr):
+        """
+        Get a specific attribute of the object.
+        """
+
+        return self.data.get(attr, None)
+
 
 class LMNDevice:
 
