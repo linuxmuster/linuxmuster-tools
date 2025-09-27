@@ -17,6 +17,7 @@ def check_empty_ou_rooms():
 
 
     rooms = lr.get('/ou/rooms')
+    devices_list = lr.get(f'/devices', attributes=['dn', 'name'])
 
     report = {
         'NO_CN':[],
@@ -30,8 +31,8 @@ def check_empty_ou_rooms():
 
             # Check if there are still devices in this OU
             orphan_devices = []
-            for device in lr.get(f'/devices', attributes=['dn', 'name']):
-                if r['dn'] in device['dn']:
+            for device in devices_list:
+                if r['dn'].upper() in device['dn'].upper():
                     orphan_devices.append(device['name'])
 
             if orphan_devices:
