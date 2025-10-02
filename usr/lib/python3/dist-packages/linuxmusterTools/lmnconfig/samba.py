@@ -1,6 +1,9 @@
 import logging
 import os
 from configparser import ConfigParser
+from configobj import ConfigObj
+from subprocess import check_output
+from io import StringIO
 
 
 logger = logging.getLogger(__name__)
@@ -47,3 +50,19 @@ try:
     LDAP_CONTEXT = f"OU=SCHOOLS,DC={SAMBA_WORKGROUP},DC={SAMBA_TLD}"
 except Exception as e:
     logger.error(f"Can not read realm and domain from smb.conf: {str(e)}. Is linuxmuster.net installed and configured ?")
+
+DFS = {}
+
+config = ConfigObj(StringIO(check_output(["/usr/bin/net", "conf", "list"], shell=False).decode()))
+
+SHARES_LIST = list(config.keys())
+
+for share_name, share_config in config.items():
+    # DFS activated ?
+    if share_config.get('msdfs root', 'no') == 'yes':
+        dfs_proxy = share_config.get('msdfs proxy', '')
+        if dfs_proxy != '':
+            # //sub.domain.lan/school to \\\\sub.domain.lan\\school
+            DFS[share_name] = {
+                'dfs_proxy': dfs_proxy.replace('/', '\\'),
+            }
