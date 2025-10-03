@@ -202,8 +202,8 @@ class LMNUser:
 
 class LMNStudent(LMNUser):
 
-    def __init__(self, cn):
-        super().__init__(cn)
+    def __init__(self, cn, school='default-school'):
+        super().__init__(cn, school=school)
 
         if self.data.get('sophomorixRole', None) != 'student':
             raise Exception(f"{cn} is not a student!")
@@ -306,8 +306,8 @@ class LMNStudent(LMNUser):
 
 class LMNTeacher(LMNUser):
 
-    def __init__(self, cn):
-        super().__init__(cn)
+    def __init__(self, cn, school='default-school'):
+        super().__init__(cn, school=school)
         if self.data.get('sophomorixRole', None) != 'teacher':
             raise Exception(f"{cn} is not a teacher!")
 
@@ -325,8 +325,8 @@ class LMNTeacher(LMNUser):
 
 class LMNParent(LMNUser):
 
-    def __init__(self, cn):
-        super().__init__(cn)
+    def __init__(self, cn, school='default-school'):
+        super().__init__(cn, school=school)
         if self.data.get('sophomorixRole', None) != 'parent':
             raise Exception(f"{cn} is not a parent!")
 
@@ -344,8 +344,8 @@ class LMNParent(LMNUser):
 
 class LMNStaff(LMNUser):
 
-    def __init__(self, cn):
-        super().__init__(cn)
+    def __init__(self, cn, school='default-school'):
+        super().__init__(cn, school=school)
         if self.data.get('sophomorixRole', None) != 'staff':
             raise Exception(f"{cn} is not a staff member!")
 
@@ -363,15 +363,15 @@ class LMNStaff(LMNUser):
 
 class LMNSchoolAdmin(LMNUser):
 
-    def __init__(self, cn):
-        super().__init__(cn)
+    def __init__(self, cn, school='default-school'):
+        super().__init__(cn, school=school)
         if self.data.get('sophomorixRole', None) != 'schooladministrator':
             raise Exception(f"{cn} is not a schooladministrator!")
 
 class LMNGlobalAdmin(LMNUser):
 
-    def __init__(self, cn):
-        super().__init__(cn)
+    def __init__(self, cn, school='default-school'):
+        super().__init__(cn, school=school)
         if self.data.get('sophomorixRole', None) != 'globaladministrator':
             raise Exception(f"{cn} is not a globaladministrator!")
 
