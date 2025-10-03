@@ -217,13 +217,51 @@ class LMNStudent(LMNUser):
         self.parents_cn = self.parents_group.parents_cn
 
     def add_parent(self, parent_cn):
+        """
+        Add one parent to a specific user.
+
+        :param parent_cn: cn of the parent
+        :type parent_cn: basestring
+        """
+
 
         self.parents_group.add_parent(parent_cn)
         self.load_parents()
 
     def remove_parent(self, parent_cn):
+        """
+        Remove one parent from a specific user.
+
+        :param parent_cn: cn of the parent
+        :type parent_cn: basestring
+        """
+
 
         self.parents_group.remove_parent(parent_cn)
+        self.load_parents()
+
+    def add_parents(self, parents_cn):
+        """
+        Add many parents to a specific user.
+
+        :param parents_cn: list of cn of the parents
+        :type parents_cn: list
+        """
+
+
+        self.parents_group.add_parents(parents_cn)
+        self.load_parents()
+
+    def remove_parents(self, parents_cn):
+        """
+        Remove parents from a specific user.
+
+        :param parent_cn: list of cn of the parent s
+        :type parent_cn: list
+        """
+
+
+        self.parents_group.remove_parents(parents_cn)
         self.load_parents()
 
     def move(self, new_schoolclass):
@@ -435,6 +473,46 @@ class LMNParentsGroup(LMNGroupCommon):
         # Remove parent from schoolclass group
         schoolclass = LMNSchoolclass(self.student['sophomorixAdminClass'], school=self.school)
         schoolclass.parents_group.remove_member(parent_cn)
+
+        self.get_parents()
+
+    def add_parents(self, parents_cn):
+        """
+        Add all given parents to a specific user.
+
+        :param parents_cn: list of parents cn
+        :type parents_cn: list
+        """
+
+
+        # TODO: this allow all roles to be a parent, should this be restricted to
+        # users in parents OU ?
+        # TODO: check if the given cn is not a student
+
+        schoolclass = LMNSchoolclass(self.student['sophomorixAdminClass'], school=self.school)
+        for parent_cn in parents_cn:
+            self.add_member(parent_cn)
+
+            # Add parent to schoolclass group
+            schoolclass.parents_group.add_member(parent_cn)
+
+        self.get_parents()
+
+    def remove_parents(self, parents_cn):
+        """
+        Remove all given parents from a specific user.
+
+        :param parents_cn: list of parents cn
+        :type parents_cn: list
+        """
+
+
+        schoolclass = LMNSchoolclass(self.student['sophomorixAdminClass'], school=self.school)
+        for parent_cn in parents_cn:
+            self.remove_member(parent_cn)
+
+            # Remove parent from schoolclass group
+            schoolclass.parents_group.remove_member(parent_cn)
 
         self.get_parents()
 
