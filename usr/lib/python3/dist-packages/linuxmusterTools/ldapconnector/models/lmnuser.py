@@ -78,7 +78,8 @@ class LMNUserModel(LMNModel):
     userAccountControl: int
     whenChanged: str
     dn:             str  = field(init=False)
-    customFields:   dict  = field(init=False)
+    children:       dict = field(init=False)
+    customFields:   dict = field(init=False)
     examMode:       bool = field(init=False)
     examTeacher:    str  = field(init=False)
     examBaseCn:     str  = field(init=False)
@@ -214,6 +215,15 @@ class LMNUserModel(LMNModel):
                 for dn in parents_group
             ]
 
+    def get_children(self):
+        self.children = []
+        if self.sophomorixRole != 'student':
+            memberships = [m for m in self.memberOf if 'Student-Parents' in m]
+            self.children = [
+                m.split(',')[0].split('=')[1].replace('-parents', '')
+                for m in memberships
+            ]
+
     def __post_init__(self, custom_fields_config={}):
         self.schoolclasses = self.extract_schoolclasses(self.memberOf)
         self.projects = self.extract_projects(self.memberOf)
@@ -224,7 +234,8 @@ class LMNUserModel(LMNModel):
         self.parse_permissions()
         self.parse_sessions()
         self.parse_exam()
-        self.parents = []
+        self.get_children()
+        self.get_parents()
 
         if not WEBUI_IMPORT:
             self.create_custom_fields_objects(custom_fields_config)
