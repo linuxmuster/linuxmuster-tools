@@ -358,7 +358,6 @@ class LMNTeachers:
     def __getitem__(self, teacher_cn):
         return self.teachers[teacher_cn]
 
-
 class LMNParent(LMNUser):
 
     def __init__(self, cn, school='default-school'):
@@ -377,6 +376,24 @@ class LMNParent(LMNUser):
         # dst_ou = BASE_OU + school + parents
         # self._create(dst_ou)
         raise NotImplementedError
+
+class LMNParents:
+
+    def __init__(self, school='default-school'):
+        self.lr = router
+        self.parents = {parent['cn']: LMNParent(parent['cn']) for parent in self.lr.get('/roles/parent')}
+
+    def __len__(self):
+        return len(self.parents)
+
+    def keys(self):
+        yield from self.parents.keys()
+
+    def items(self):
+        yield from self.parents.items()
+
+    def __getitem__(self, parent_cn):
+        return self.parents[parent_cn]
 
 class LMNStaff(LMNUser):
 
