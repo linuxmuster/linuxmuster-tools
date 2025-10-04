@@ -439,6 +439,24 @@ class LMNSchoolAdmin(LMNUser):
         if self.data.get('sophomorixRole', None) != 'schooladministrator':
             raise Exception(f"{cn} is not a schooladministrator!")
 
+class LMNSchoolAdmins:
+
+    def __init__(self, school='default-school'):
+        self.lr = router
+        self.schooladmins = {schooladmin['cn']: LMNSchoolAdmin(schooladmin['cn']) for schooladmin in self.lr.get('/roles/schooladministrator')}
+
+    def __len__(self):
+        return len(self.schooladmins)
+
+    def keys(self):
+        yield from self.schooladmins.keys()
+
+    def items(self):
+        yield from self.schooladmins.items()
+
+    def __getitem__(self, schooladmin_cn):
+        return self.schooladmins[schooladmin_cn]
+
 class LMNGlobalAdmin(LMNUser):
 
     def __init__(self, cn, school='default-school'):
