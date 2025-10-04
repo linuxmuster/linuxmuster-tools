@@ -200,6 +200,27 @@ class LMNUser:
 
         pass
 
+class LMNUsers:
+
+    def __init__(self, school='default-school'):
+        self.lr = router
+        self.users = {
+            user['cn']: LMNUser(user['cn'], school=user['school'])
+            for user in self.lr.get('/users')
+        }
+
+    def __len__(self):
+        return len(self.users)
+
+    def keys(self):
+        yield from self.users.keys()
+
+    def items(self):
+        yield from self.users.items()
+
+    def __getitem__(self, user_cn):
+        return self.users[user_cn]
+
 class LMNStudent(LMNUser):
 
     def __init__(self, cn, school='default-school'):
