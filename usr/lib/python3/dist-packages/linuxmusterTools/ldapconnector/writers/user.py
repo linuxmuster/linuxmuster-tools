@@ -464,7 +464,23 @@ class LMNGlobalAdmin(LMNUser):
         if self.data.get('sophomorixRole', None) != 'globaladministrator':
             raise Exception(f"{cn} is not a globaladministrator!")
 
+class LMNGlobalAdmins:
 
+    def __init__(self, school='default-school'):
+        self.lr = router
+        self.globaladmins = {globaladmin['cn']: LMNGlobalAdmin(globaladmin['cn']) for globaladmin in self.lr.get('/roles/globaladministrator')}
+
+    def __len__(self):
+        return len(self.globaladmins)
+
+    def keys(self):
+        yield from self.globaladmins.keys()
+
+    def items(self):
+        yield from self.globaladmins.items()
+
+    def __getitem__(self, globaladmin_cn):
+        return self.globaladmins[globaladmin_cn]
 
 class LMNParentsGroup(LMNGroupCommon):
 
