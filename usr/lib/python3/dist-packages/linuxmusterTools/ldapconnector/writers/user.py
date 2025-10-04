@@ -205,8 +205,9 @@ class LMNUsers:
     def __init__(self, school='default-school'):
         self.lr = router
         self.users = {
-            user['cn']: LMNUser(user['cn'], school=user['school'])
+            user['cn']: LMNUser(user['cn'], school=school)
             for user in self.lr.get('/users')
+            if user['school'] != 'global'
         }
 
     def __len__(self):
@@ -328,7 +329,10 @@ class LMNStudents:
 
     def __init__(self, school='default-school'):
         self.lr = router
-        self.students = {student['cn']: LMNStudent(student['cn']) for student in self.lr.get('/roles/student')}
+        self.students = {
+            student['cn']: LMNStudent(student['cn'], school=school)
+            for student in self.lr.get('/roles/student')
+        }
 
     def __len__(self):
         return len(self.students)
@@ -365,7 +369,10 @@ class LMNTeachers:
 
     def __init__(self, school='default-school'):
         self.lr = router
-        self.teachers = {teacher['cn']: LMNTeacher(teacher['cn']) for teacher in self.lr.get('/roles/teacher')}
+        self.teachers = {
+            teacher['cn']: LMNTeacher(teacher['cn'], school=school)
+            for teacher in self.lr.get('/roles/teacher')
+        }
 
     def __len__(self):
         return len(self.teachers)
@@ -402,7 +409,10 @@ class LMNParents:
 
     def __init__(self, school='default-school'):
         self.lr = router
-        self.parents = {parent['cn']: LMNParent(parent['cn']) for parent in self.lr.get('/roles/parent')}
+        self.parents = {
+            parent['cn']: LMNParent(parent['cn'], school=school)
+            for parent in self.lr.get('/roles/parent')
+        }
 
     def __len__(self):
         return len(self.parents)
@@ -439,7 +449,10 @@ class LMNStaffs:
 
     def __init__(self, school='default-school'):
         self.lr = router
-        self.staffs = {staff['cn']: LMNStaff(staff['cn']) for staff in self.lr.get('/roles/staff')}
+        self.staffs = {
+            staff['cn']: LMNStaff(staff['cn'], school=school)
+            for staff in self.lr.get('/roles/staff')
+        }
 
     def __len__(self):
         return len(self.staffs)
@@ -464,7 +477,10 @@ class LMNSchoolAdmins:
 
     def __init__(self, school='default-school'):
         self.lr = router
-        self.schooladmins = {schooladmin['cn']: LMNSchoolAdmin(schooladmin['cn']) for schooladmin in self.lr.get('/roles/schooladministrator')}
+        self.schooladmins = {
+            schooladmin['cn']: LMNSchoolAdmin(schooladmin['cn'], school=school)
+            for schooladmin in self.lr.get('/roles/schooladministrator')
+        }
 
     def __len__(self):
         return len(self.schooladmins)
@@ -489,7 +505,10 @@ class LMNGlobalAdmins:
 
     def __init__(self, school='default-school'):
         self.lr = router
-        self.globaladmins = {globaladmin['cn']: LMNGlobalAdmin(globaladmin['cn']) for globaladmin in self.lr.get('/roles/globaladministrator')}
+        self.globaladmins = {
+            globaladmin['cn']: LMNGlobalAdmin(globaladmin['cn'], school='global')
+            for globaladmin in self.lr.get('/roles/globaladministrator')
+        }
 
     def __len__(self):
         return len(self.globaladmins)
