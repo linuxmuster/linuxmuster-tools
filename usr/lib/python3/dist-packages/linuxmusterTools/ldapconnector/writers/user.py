@@ -397,6 +397,24 @@ class LMNStaff(LMNUser):
         # self._create(dst_ou)
         raise NotImplementedError
 
+class LMNStaffs:
+
+    def __init__(self, school='default-school'):
+        self.lr = router
+        self.staffs = {staff['cn']: LMNStaff(staff['cn']) for staff in self.lr.get('/roles/staff')}
+
+    def __len__(self):
+        return len(self.staffs)
+
+    def keys(self):
+        yield from self.staffs.keys()
+
+    def items(self):
+        yield from self.staffs.items()
+
+    def __getitem__(self, staff_cn):
+        return self.staffs[staff_cn]
+
 class LMNSchoolAdmin(LMNUser):
 
     def __init__(self, cn, school='default-school'):
