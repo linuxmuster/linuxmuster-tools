@@ -58,6 +58,8 @@ case "$1" in
             $PYTHON3 /usr/lib/python3/dist-packages/linuxmusterTools/install-scripts/create_students_groups.py
         fi
 
+        # Print directory
+        mkdir -p /var/lib/lmntools/print
 
         # Removing deprecated scripts (lmntools v7.3.15)
         rm -f /usr/local/sbin/lmntools-class
