@@ -1,3 +1,4 @@
+import csv
 from dataclasses import dataclass, field
 from ..urls import router as lr
 from .common import LMNModel
@@ -48,3 +49,11 @@ class LMNSchoolClassModel(LMNModel):
                 'firstPasswordStillSet': lmnuser.test_first_password(),
             }
         return response
+
+    def students_csv(self):
+        path = f"/var/lib/lmntools/print/{self.cn}_liste.csv"
+        with open(path, 'w') as f:
+            for idx,student in enumerate(self.sophomorixMembers):
+                lmnuser = lr.get(f'/users/{student}', dict=False)
+                f.write(f"{idx+1};{lmnuser.sn};{lmnuser.givenName}\n")
+        return path
