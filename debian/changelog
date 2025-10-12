@@ -1,3 +1,15 @@
+linuxmuster-tools7 (7.3.18) lmn73; urgency=medium
+
+  * [ldapreader] Get empty schoolclasses
+  * [ldapreader] Get students list as CSV
+  * [ldapreader] Get empty rooms
+  * [ldapreader] Improvements for OU requests and devices checks
+  * [ldapwriter] Writer for devices objects 
+  * [ldapwriter] Aliases for all teachers, all students, etc ...
+  * More examples
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sun, 12 Oct 2025 21:08:34 +0200
+
 linuxmuster-tools7 (7.3.17) lmn73; urgency=medium
 
   * [ldapconnector] Allow self-signed certificates (@hermanntoast) 
