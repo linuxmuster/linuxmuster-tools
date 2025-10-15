@@ -107,6 +107,10 @@ class LMNFile(metaclass=abc.ABCMeta):
             else:
                 self.fieldnames = fieldnames
 
+            # Check BOM for sophomorix-check
+            with open(self.file, 'rb') as f:
+                self.has_BOM = True if f.read(3).startswith(b'\xef\xbb\xbf') else False
+
     @classmethod
     def hasExtension(cls, ext):
         """
