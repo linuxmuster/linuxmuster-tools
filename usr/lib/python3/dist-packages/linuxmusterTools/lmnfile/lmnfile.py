@@ -267,6 +267,7 @@ class CSVLoader(LMNFile):
     extensions = ['.csv']
 
     def __enter__(self):
+        self.fix_bom()
         self.opened = open(self.file, 'r', encoding=self.encoding)
         if 'r' in self.mode or '+' in self.mode:
             # Removing leading and trailing spaces for all fields
@@ -292,6 +293,16 @@ class CSVLoader(LMNFile):
 
     def read(self):
         return list(self.data)
+
+    def fix_bom(self):
+        if self.has_BOM:
+            if self.encoding == 'utf-8':
+                with open(self.file, 'r', encoding='utf-8-sig') as f:
+                    content = f.read()
+                with open(self.file, 'w', encoding='utf-8') as f:
+                    f.write(content)
+            else:
+                logging.info(f"Can not fix BOM with encoding: {self.encoding}")
 
     def write(self, data):
         tmp = self.file + '_tmp'
