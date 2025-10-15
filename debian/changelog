@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.3.19) lmn73; urgency=medium
+
+  * [lmnfile] Autofix BOM in csv files 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Wed, 15 Oct 2025 22:37:47 +0200
+
 linuxmuster-tools7 (7.3.18) lmn73; urgency=medium
 
   * [ldapreader] Get empty schoolclasses
