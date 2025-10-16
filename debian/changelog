@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.3.20) lmn73; urgency=medium
+
+  * [ldapwriter] Fix creation of students subgroups 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Thu, 16 Oct 2025 18:39:02 +0200
+
 linuxmuster-tools7 (7.3.19) lmn73; urgency=medium
 
   * [lmnfile] Autofix BOM in csv files 
