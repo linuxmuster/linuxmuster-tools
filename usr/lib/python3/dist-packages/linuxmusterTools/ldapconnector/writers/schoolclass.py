@@ -56,6 +56,7 @@ class LMNSchoolclassGroup(LMNGroupCommon):
                 'displayName': self.cn,
                 'distinguishedName': dn,
                 'mail': [mail],
+                'member': [],
                 'name': self.cn,
                 'sAMAccountName': self.cn,
                 'sophomorixAddMailQuota': '---',
