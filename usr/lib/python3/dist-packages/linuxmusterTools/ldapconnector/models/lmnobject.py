@@ -106,13 +106,13 @@ class LMNObjectModel(LMNModel):
 
         ## Schoolclasses
         if self.sophomorixType == 'adminclass':
-            return 'ADGroup Schoolclass'
+            return 'schoolclass'
         elif self.sophomorixType == 'adminclass-parents':
-            return 'ADGroup Schoolclass parents'
+            return 'parents'
         elif self.sophomorixType == 'adminclass-teachers':
-            return 'ADGroup Schoolclass teachers'
+            return 'teachers'
         elif self.sophomorixType == 'adminclass-students':
-            return 'ADGroup Schoolclass students'
+            return 'students'
 
 
         ## Staff
@@ -122,10 +122,10 @@ class LMNObjectModel(LMNModel):
         objtypes = ['Devices', 'Teachers', 'Projects', 'Students', 'Parents', 'Staff']
         for objtype in objtypes:
             if self.dn.startswith(f'CN={objtype.lower()},OU={objtype},'):
-                return f'ADGroup {objtype}'
+                return f'{objtype.lower()}' if objtype != 'Staff' else 'staffmembers'
 
             if f'OU={objtype},' in self.dn:
-                return objtype.lower()[:-1]
+                return objtype.lower()[:-1] if objtype != 'Staff' else 'staff'
 
         return 'unknown'
 
