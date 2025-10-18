@@ -2,6 +2,7 @@ import subprocess
 import re
 from dataclasses import dataclass, field, InitVar
 from ..lmnfile import LMNFile
+from ..lmnconfig.server import SERVER_IP
 
 
 @dataclass
@@ -84,7 +85,8 @@ class SMBConnections:
             if match:
                 data = match.groupdict()
                 user = data['username'].split('\\')[1]
-                self.users[user] = SMBConnection(group='users', hostnames=self.hostnames, **data)
+                if SERVER_IP not in data['machine'] and SERVER_IP not in data['ip4']:
+                    self.users[user] = SMBConnection(group='users', hostnames=self.hostnames, **data)
 
     def get_machines(self):
         output = subprocess.getoutput('smbstatus -b').split('\n')
