@@ -1,6 +1,6 @@
 import subprocess
 import re
-from dataclasses import dataclass, field, InitVar
+from dataclasses import dataclass, field, InitVar, asdict
 from ..lmnfile import LMNFile
 from ..lmnconfig.server import SERVER_IP
 
@@ -23,6 +23,9 @@ class SMBConnection:
 
     def __post_init__(self, hostnames):
         self.hostname = hostnames.get(self.machine, 'No hostname found')
+
+    def asdict(self):
+        return asdict(self)
 
 users_regex = re.compile(
     r"(?P<pid>[0-9]+)\s+"
