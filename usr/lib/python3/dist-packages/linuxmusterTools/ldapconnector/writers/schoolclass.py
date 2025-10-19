@@ -4,6 +4,7 @@ from linuxmusterTools.common import lprint, spinner
 from linuxmusterTools.common.checks import NameChecker
 from ..models import LMNSchoolClassModel
 from .group import LMNGroupCommon
+from ..urls.ldaprouter import router
 
 
 logger = logging.getLogger(__name__)
@@ -166,3 +167,24 @@ class LMNSchoolclass(LMNGroupCommon):
         self.students_group.fill_members()
         self.teachers_group.fill_members()
         self.parents_group.fill_members()
+
+class LMNSchoolclasses:
+
+    def __init__(self, school='default-school'):
+        self.lr = router
+        self.schoolclasses = {
+            schoolclass['cn']: LMNSchoolclass(schoolclass['cn'], school=school)
+            for schoolclass in self.lr.get('/schoolclasses')
+        }
+
+    def __len__(self):
+        return len(self.schoolclasses)
+
+    def keys(self):
+        yield from self.schoolclasses.keys()
+
+    def items(self):
+        yield from self.schoolclasses.items()
+
+    def __getitem__(self, schoolclass_cn):
+        return self.schoolclasses[schoolclass_cn]
