@@ -108,6 +108,27 @@ class LMNGroupCommon:
         except Exception as e:
             logger.warning(f"Could not append member {user_dn} to {self.cn}: {str(e)}")
 
+    def add_members(self, userlist):
+        """
+        Shortcut to add all members from a given list
+
+        :param userlist: List of valid cn
+        """
+
+
+        for user in userlist:
+            self.add_member(user)
+
+    def remove_members(self, userlist):
+        """
+        Shortcut to remove all members from a given list
+
+        :param userlist: List of valid cn
+        """
+
+        for user in userlist:
+            self.remove_member(user)
+
 
 class LMNGroup(LMNGroupCommon):
     """
