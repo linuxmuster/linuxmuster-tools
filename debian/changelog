@@ -1,3 +1,15 @@
+linuxmuster-tools7 (7.3.21) lmn73; urgency=medium
+
+  * More examples of use of ldapwriter 
+  * Restarting API and Webui after each update
+  * [common] Fix spinner and add progress parameter
+  * [ldapwriter] Many shortcuts to manipulate multiple objects
+  * [ldapwriter] Update groups types
+  * [lmnconfig] Add server hostname and ip
+  * [samba_util] Ignore connections with local server ip in smbstatus
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sun, 19 Oct 2025 16:01:36 +0200
+
 linuxmuster-tools7 (7.3.20) lmn73; urgency=medium
 
   * [ldapwriter] Fix creation of students subgroups 
