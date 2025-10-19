@@ -3,7 +3,16 @@
 """
 Given a CSV containing all lastnames, firstnames and codes from all teachers, script to update 
 all "teacher codes" (Kürzel) in the attribute sophomorixCustom1 and subjects in sophomorixCustomMulti1.
+
+
+The CSV should looks like:
+FIRSTNAME;LASTNAME;CODE;SUBJECT1,SUBJECT2...;etc...
+Abel;Anatole;AA;M,G
+Abel;Bertha;AB;Ek,D,Eth
+Antolin;Christian;Ch,Bio
+...
 """
+
 
 import csv
 from linuxmusterTools.ldapconnector import LMNLdapReader as lr, UserWriter as uw
