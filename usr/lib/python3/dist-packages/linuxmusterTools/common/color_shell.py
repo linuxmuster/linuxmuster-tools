@@ -40,12 +40,14 @@ class ColorShell:
 class Spinner(object):
     spinner_cycle = itertools.cycle(u'⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏')
 
-    def __init__(self, color=WARNING):
+    def __init__(self, color=WARNING, progress=False):
         self.color = color
+        self.progress = progress
         self.stop_running = None
         self.spin_thread = None
         self.text = ""
         self.last_text = ""
+        self.update = False
 
     def start(self):
         if sys.stdout.isatty():
@@ -70,14 +72,19 @@ class Spinner(object):
         while not self.stop_running.is_set():
             sys.stdout.flush()
             sys.stdout.write(f"  {self.color}{next_val}{ENDC}  {self.text}")
-            if time.time() - last_time > 0.001:
+            if self.update and self.progress:
+                sys.stdout.write('\n')
+                self.update = False
+            if time.time() - last_time > 0:
                 last_time = time.time()
                 next_val = next(self.spinner_cycle)
+
             sys.stdout.write('\r')
 
     def print(self, text):
-        self.last_text = text
+        self.last_text = self.text
         self.text = text
+        self.update = True
 
     def __enter__(self):
         self.start()
