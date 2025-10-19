@@ -126,6 +126,22 @@ class LMNSchoolclass(LMNGroupCommon):
         self.teachers_group = LMNSchoolclassGroup(self.cn, suffix="-teachers", schoolclass_data=self.data)
         self.parents_group = LMNSchoolclassGroup(self.cn, suffix="-parents", schoolclass_data=self.data)
 
+    def add_member(self, user):
+        super().add_member(user)
+        self.fill_group_members()
+
+    def add_members(self, userlist):
+        super().add_members(userlist)
+        self.fill_group_members()
+
+    def remove_member(self, user):
+        super().remove_member(user)
+        self.fill_group_members()
+
+    def remove_members(self, userlist):
+        super().remove_members(userlist)
+        self.fill_group_members()
+
     def fill_group_members(self):
         """
         This method is only intended to populate subgroups like 7a-teachers,
