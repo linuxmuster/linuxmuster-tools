@@ -3,44 +3,61 @@ import sys
 import threading
 import time
 
-WARNING = '\033[93m'
-SUCCESS = '\033[92m'
-ALERT = '\033[38;5;208m'
-DANGER = '\033[91m'
-INFO = '\033[96m'
-LINUXMUSTER = '\033[1m\033[38;5;214m'
-ENDC = '\033[0m'
+SHELL_COLOR_WARNING = '\033[93m'
+SHELL_COLOR_SUCCESS = '\033[92m'
+SHELL_COLOR_ALERT = '\033[38;5;208m'
+SHELL_COLOR_DANGER = '\033[91m'
+SHELL_COLOR_INFO = '\033[96m'
+SHELL_COLOR_LINUXMUSTER = '\033[1m\033[38;5;214m'
+SHELL_COLOR_ENDC = '\033[0m'
 # For more definitions, see : https://misc.flogisoft.com/bash/tip_colors_and_formatting
 
 
 class ColorShell:
 
     def danger(self, result, end="\n"):
-        print(f'{DANGER}{result}{ENDC}', end=end)
+        print(f'{SHELL_COLOR_DANGER}{result}{SHELL_COLOR_ENDC}', end=end)
 
     def alert(self, result, end="\n"):
-        print(f'{ALERT}{result}{ENDC}', end=end)
+        print(f'{SHELL_COLOR_ALERT}{result}{SHELL_COLOR_ENDC}', end=end)
 
     def warning(self, result, end="\n"):
-        print(f'{WARNING}{result}{ENDC}', end=end)
+        print(f'{SHELL_COLOR_WARNING}{result}{SHELL_COLOR_ENDC}', end=end)
 
     def info(self, result, end="\n"):
-        print(f'{INFO}{result}{ENDC}', end=end)
+        print(f'{SHELL_COLOR_INFO}{result}{SHELL_COLOR_ENDC}', end=end)
 
     def success(self, result, end="\n"):
-        print(f'{SUCCESS}{result}{ENDC}', end=end)
+        print(f'{SHELL_COLOR_SUCCESS}{result}{SHELL_COLOR_ENDC}', end=end)
 
     def lmn(self, result, end="\n"):
-        print(f'{LINUXMUSTER}{result}{ENDC}', end=end)
+        print(f'{SHELL_COLOR_LINUXMUSTER}{result}{SHELL_COLOR_ENDC}', end=end)
 
     def printsh(self, text, color, end="\n"):
-        print(f'{color}{text}{ENDC}', end=end)
+        """
+        Method for not so common colors. But color should be a valid ANSI control sequence
+        """
+
+
+        print(f'{color}{text}{SHELL_COLOR_ENDC}', end=end)
 
 # Mostly copied from https://github.com/not-kennethreitz/blindspin
 class Spinner(object):
     spinner_cycle = itertools.cycle(u'⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏')
 
-    def __init__(self, color=WARNING, progress=False):
+    def __init__(self, color=SHELL_COLOR_WARNING, progress=False):
+        """
+        A basic CLI spinner to animate a long process.
+
+        :param color: A valid ANSI control sequence color for shell ouput, like  '\033[93m'.
+        See defined colors in this module.
+        :type color: basestring
+        :param progress: If true, try to display one line per text to print (does not always work).
+        If false, all lines are always replaced by the next line.
+        :type progress: bool
+        """
+
+
         self.color = color
         self.progress = progress
         self.stop_running = None
