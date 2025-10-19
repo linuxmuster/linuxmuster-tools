@@ -44,15 +44,23 @@ class Spinner(object):
         self.color = color
         self.stop_running = None
         self.spin_thread = None
+        self.text = ""
+        self.last_text = ""
 
     def start(self):
         if sys.stdout.isatty():
+            # Hide cursor
+            print('\033[?25l', end="")
+
             self.stop_running = threading.Event()
             self.spin_thread = threading.Thread(target=self.init_spin)
             self.spin_thread.start()
 
     def stop(self):
         if self.spin_thread:
+            # Restore cursor
+            print('\033[?25h', end="")
+
             self.stop_running.set()
             self.spin_thread.join()
 
@@ -60,16 +68,16 @@ class Spinner(object):
         last_time = time.time()
         next_val = next(self.spinner_cycle)
         while not self.stop_running.is_set():
-            sys.stdout.write(f"  {self.color}{next_val}{ENDC}  ")
             sys.stdout.flush()
-            if time.time() - last_time > 0.07:
+            sys.stdout.write(f"  {self.color}{next_val}{ENDC}  {self.text}")
+            if time.time() - last_time > 0.001:
                 last_time = time.time()
                 next_val = next(self.spinner_cycle)
             sys.stdout.write('\r')
 
     def print(self, text):
         self.last_text = text
-        print(text, end="\r")
+        self.text = text
 
     def __enter__(self):
         self.start()
