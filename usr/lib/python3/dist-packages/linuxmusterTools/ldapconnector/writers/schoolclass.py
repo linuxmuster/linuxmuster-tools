@@ -142,6 +142,19 @@ class LMNSchoolclass(LMNGroupCommon):
         super().remove_members(userlist)
         self.fill_group_members()
 
+    def remove_all_teachers(self):
+        try:
+            new_members = []
+            for member in self.data['member']:
+                if ",OU=Teachers," not in member:
+                    new_members.append(member)
+
+            self.lw._setattr(self, data={'member': new_members})
+            self.load_data()
+            self.teachers_group.fill_members()
+        except ValueError as e:
+            logger.warning(f"Could not remove all teachers from {self.cn}: {str(e)}")
+
     def fill_group_members(self):
         """
         This method is only intended to populate subgroups like 7a-teachers,
