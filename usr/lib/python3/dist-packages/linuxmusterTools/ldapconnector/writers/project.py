@@ -4,6 +4,7 @@ from linuxmusterTools.common import lprint, spinner
 from linuxmusterTools.common.checks import NameChecker
 from ..models import LMNProjectModel
 from .group import LMNGroupCommon
+from ..urls.ldaprouter import router
 
 
 logger = logging.getLogger(__name__)
@@ -20,3 +21,24 @@ class LMNProject(LMNGroupCommon):
 
         if not self.data:
             raise Exception(f"The project {self.cn} was not found in ldap.")
+
+class LMNProjects:
+
+    def __init__(self, school='default-school'):
+        self.lr = router
+        self.projects = {
+            project['cn']: LMNProject(project['cn'], school=school)
+            for project in self.lr.get('/projects', school=school)
+        }
+
+    def __len__(self):
+        return len(self.projects)
+
+    def keys(self):
+        yield from self.projects.keys()
+
+    def items(self):
+        yield from self.projects.items()
+
+    def __getitem__(self, project_cn):
+        return self.projects[project_cn]
