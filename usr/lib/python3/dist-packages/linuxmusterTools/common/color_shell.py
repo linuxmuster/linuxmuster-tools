@@ -3,6 +3,7 @@ import sys
 import threading
 import time
 
+
 SHELL_COLOR_WARNING = '\033[93m'
 SHELL_COLOR_SUCCESS = '\033[92m'
 SHELL_COLOR_ALERT = '\033[38;5;208m'

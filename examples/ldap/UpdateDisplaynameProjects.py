@@ -14,7 +14,7 @@ from linuxmusterTools.common import Spinner, SHELL_COLOR_INFO
 
 projects = LMNProjects()
 
-# The color paramater sets the color of the spinner.
+# The color parameter sets the color of the spinner.
 # It's possible to use the parameter progress too, to display all lines of the process.
 with Spinner(color=SHELL_COLOR_INFO) as s:
     total = len(projects)
