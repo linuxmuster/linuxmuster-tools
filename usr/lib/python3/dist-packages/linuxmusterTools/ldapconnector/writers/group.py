@@ -86,6 +86,13 @@ class LMNGroupCommon:
         except ValueError as e:
             logger.warning(f"Could not remove member {user_dn} from {self.cn}: {str(e)}")
 
+    def remove_all_members(self):
+        try:
+            self.lw._setattr(self, data={'member': []})
+            self.load_data()
+        except ValueError as e:
+            logger.warning(f"Could not remove all members from {self.cn}: {str(e)}")
+
     def add_member(self, user):
         user_dn = self.lr.getval(f'/users/{user}', 'dn')
 
