@@ -6,7 +6,7 @@ Use a fancy spinner to give some animation to the process.
 """
 
 from linuxmusterTools.ldapconnector import LMNProjects
-from linuxmusterTools.common import spinner
+from linuxmusterTools.common import Spinner, SHELL_COLOR_INFO
 
 
 # Get a list of all projects, but with write permissions in Ldap!
@@ -14,7 +14,9 @@ from linuxmusterTools.common import spinner
 
 projects = LMNProjects()
 
-with spinner as s:
+# The color paramater sets the color of the spinner.
+# It's possible to use the parameter progress too, to display all lines of the process.
+with Spinner(color=SHELL_COLOR_INFO) as s:
     total = len(projects)
     for idx, (cn, project) in enumerate(projects.items()):
         s.print(f"[{idx+1}/{total}] Updating display name of project {cn}")
