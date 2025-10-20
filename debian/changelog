@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.3.22) lmn73; urgency=medium
+
+  * [lmnconfig] Fix lmncli output 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Mon, 20 Oct 2025 21:08:39 +0200
+
 linuxmuster-tools7 (7.3.21) lmn73; urgency=medium
 
   * More examples of use of ldapwriter 
