@@ -93,7 +93,7 @@ class LMNFile(metaclass=abc.ABCMeta):
         self.mode  = mode
         self.encoding = self.detect_encoding()
         self.comments = []
-        self.check_allowed_path()
+        #self.check_allowed_path()
         self.delimiter = delimiter
 
         if self.file.endswith('.csv'):
@@ -101,7 +101,7 @@ class LMNFile(metaclass=abc.ABCMeta):
             for model in sorted(csv_fieldnames):
                 # dict must be sorted, because students is a prefix of extrastudents
                 if self.file.startswith('/etc/linuxmuster/') \
-                    and self.file.endswith(f'{model}.csv'):
+                    and self.file.endswith(f'{model}2.csv'):
                     self.fieldnames = csv_fieldnames[model]
                     break
             else:

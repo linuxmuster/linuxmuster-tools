@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.3.23) lmn73; urgency=medium
+
+  * [samba_util] Add room to SMBConnection 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Tue, 21 Oct 2025 14:40:14 +0200
+
 linuxmuster-tools7 (7.3.22) lmn73; urgency=medium
 
   * [lmnconfig] Fix lmncli output 
