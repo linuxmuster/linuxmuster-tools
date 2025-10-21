@@ -12,17 +12,14 @@ class SMBConnection:
     ip4: str
     ip6: str
     group: str
+    hostname: str
     machine: str
     pid: str
     protocol: str
+    room: str
     signing: str
     username: str
     version: str
-    hostnames: InitVar[dict]
-    hostname: str = field(init=False)
-
-    def __post_init__(self, hostnames):
-        self.hostname = hostnames.get(self.machine, 'No hostname found')
 
     def asdict(self):
         return asdict(self)
@@ -75,7 +72,10 @@ class SMBConnections:
         devices = {}
         with LMNFile(devices_path, 'r') as devices_csv:
             for device in devices_csv.read():
-                devices[device['ip']] = device['hostname']
+                devices[device['ip']] = {
+                    'hostname': device['hostname'],
+                    'room': device['room'],
+                }
         return devices
 
     def get_users(self):
@@ -88,8 +88,10 @@ class SMBConnections:
             if match:
                 data = match.groupdict()
                 user = data['username'].split('\\')[1]
+                data['hostname'] = self.hostnames.get(data['machine'], {'hostname': 'No hostname found'})['hostname']
+                data['room'] = self.hostnames.get(data['machine'], {'room': 'No room found'})['room']
                 if SERVER_IP not in data['machine'] and SERVER_IP not in data['ip4']:
-                    self.users[user] = SMBConnection(group='users', hostnames=self.hostnames, **data)
+                    self.users[user] = SMBConnection(group='users', **data)
 
     def get_machines(self):
         output = subprocess.getoutput('smbstatus -b').split('\n')
@@ -101,4 +103,6 @@ class SMBConnections:
             if match:
                 data = match.groupdict()
                 machine = data['username'].split('\\')[1]
-                self.machines[machine] = SMBConnection(hostnames=self.hostnames, **data)
+                data['hostname'] = self.hostnames.get(machine, {'hostname': 'No hostname found'})['hostname']
+                data['room'] = self.hostnames.get(machine, {'room': 'No room found'})['room']
+                self.machines[machine] = SMBConnection(**data)
