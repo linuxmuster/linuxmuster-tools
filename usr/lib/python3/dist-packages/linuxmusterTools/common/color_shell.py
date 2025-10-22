@@ -89,7 +89,7 @@ class Spinner(object):
         next_val = next(self.spinner_cycle)
         while not self.stop_running.is_set():
             sys.stdout.flush()
-            sys.stdout.write(f"  {self.color}{next_val}{ENDC}  {self.text}")
+            sys.stdout.write(f"  {self.color}{next_val}{SHELL_COLOR_ENDC}  {self.text}")
             if self.update and self.progress:
                 sys.stdout.write('\n')
                 self.update = False
@@ -110,5 +110,5 @@ class Spinner(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.stop()
-        sys.stdout.write(f"  {SUCCESS}{u'✓'}{ENDC}  {self.last_text}")
+        sys.stdout.write(f"  {SHELL_COLOR_SUCCESS}{u'✓'}{SHELL_COLOR_ENDC}  {self.last_text}")
         return False
