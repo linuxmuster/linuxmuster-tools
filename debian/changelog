@@ -1,3 +1,10 @@
+linuxmuster-tools7 (7.3.24) lmn73; urgency=medium
+
+  * [common] Fix color names
+  * [lmnfile] Fix paths 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Wed, 22 Oct 2025 10:42:17 +0200
+
 linuxmuster-tools7 (7.3.23) lmn73; urgency=medium
 
   * [samba_util] Add room to SMBConnection 
