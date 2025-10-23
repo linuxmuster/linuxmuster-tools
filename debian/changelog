@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.3.25) lmn73; urgency=medium
+
+  * Not restarting others services during installation 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Thu, 23 Oct 2025 14:34:38 +0200
+
 linuxmuster-tools7 (7.3.24) lmn73; urgency=medium
 
   * [common] Fix color names
