@@ -83,10 +83,12 @@ case "$1" in
         chmod +x /etc/linuxmuster/sophomorix/default-school/hooks/sophomorix-update.d/00-update-schoolclasses-groups.py
         chmod +x /etc/linuxmuster/sophomorix/default-school/hooks/sophomorix-kill.d/00-update-schoolclasses-groups.py
 
-        msg "Restarting services"
+        msg "You should restart manually linuxmuster-webui and linuxmuster-api"
+        #msg "Restarting services"
 
-        /bin/systemctl is-enabled linuxmuster-webui.service && /bin/systemctl restart linuxmuster-webui.service
-        /bin/systemctl is-enabled linuxmuster-api.service && /bin/systemctl restart linuxmuster-api.service
+        #/bin/systemctl daemon-reload
+        #/bin/systemctl is-enabled linuxmuster-webui.service && /bin/systemctl restart linuxmuster-webui.service
+        #/bin/systemctl is-enabled linuxmuster-api.service && /bin/systemctl restart linuxmuster-api.service
 
     ;;
 
