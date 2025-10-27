@@ -69,7 +69,7 @@ class SMBConnections:
             prefix = ''
 
         devices_path = f'/etc/linuxmuster/sophomorix/{self.school}/{prefix}devices.csv'
-        devices_path = f'/etc/linuxmuster/sophomorix/{self.school}/{prefix}devices2.csv'
+
         devices = {}
         with LMNFile(devices_path, 'r') as devices_csv:
             for device in devices_csv.read():
@@ -81,8 +81,6 @@ class SMBConnections:
 
     def get_users(self):
         output = subprocess.getoutput('smbstatus -b').split('\n')
-        with open('/root/smbstatus.txt', 'r') as f:
-            output = f.readlines()
         self.users = {}
 
         for line in output:
