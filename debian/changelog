@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.3.26) lmn73; urgency=medium
+
+  * Fix tmp data. 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Mon, 27 Oct 2025 21:57:44 +0100
+
 linuxmuster-tools7 (7.3.25) lmn73; urgency=medium
 
   * Not restarting others services during installation 
