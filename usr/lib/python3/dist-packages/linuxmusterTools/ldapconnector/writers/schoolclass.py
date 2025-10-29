@@ -108,7 +108,7 @@ class LMNSchoolclassGroup(LMNGroupCommon):
         else:
             return
 
-        self.setattr(data={'member': members})
+        self.setattr(data={'member': list(set(members))})
 
 
 class LMNSchoolclass(LMNGroupCommon):
