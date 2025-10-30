@@ -98,10 +98,9 @@ class LMNSchoolclassGroup(LMNGroupCommon):
         elif self.type == 'parents':
             for student in self.schoolclass_data['sophomorixMembers']:
                 parents_dn = self.lr.getval(f'/units/{student}-parents', 'member')
-                if parents_dn:
+                if parents_dn is not None:
                     for dn in parents_dn:
-                        if dn not in members:
-                            members.append(dn)
+                        members.append(dn)
 
 
         elif self.type == 'teachers':
