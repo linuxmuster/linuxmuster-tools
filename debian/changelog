@@ -1,3 +1,10 @@
+linuxmuster-tools7 (7.3.27) lmn73; urgency=medium
+
+  * [ldapwriter] Fix logic for accumulating parent DNs in fill_members
+    (@hermanntoast) 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sun, 02 Nov 2025 21:47:41 +0100
+
 linuxmuster-tools7 (7.3.26) lmn73; urgency=medium
 
   * Fix tmp data. 
