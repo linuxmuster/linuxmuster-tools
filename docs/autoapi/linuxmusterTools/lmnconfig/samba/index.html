@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.lmnconfig.samba &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.lmnconfig.samba &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/theme_overrides.css?v=472cca7c" />
@@ -15,14 +15,14 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/translations.js?v=8fd896e3"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="linuxmusterTools.lmnconfig.setup" href="../setup/index.html" />
+    <link rel="next" title="linuxmusterTools.lmnconfig.server" href="../server/index.html" />
     <link rel="prev" title="linuxmusterTools.lmnconfig" href="../index.html" /> 
 </head>
 
@@ -60,8 +60,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../samba_util/index.html">linuxmusterTools.samba_util</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#attributes">Attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#package-contents">Package Contents</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../create_students_groups/index.html">create_students_groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../00-update-schoolclasses-groups/index.html">00-update-schoolclasses-groups</a></li>
 </ul>
 </li>
 </ul>
@@ -99,10 +104,25 @@
 <h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.lmnconfig.samba.smbconf" title="linuxmusterTools.lmnconfig.samba.smbconf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smbconf</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.lmnconfig.samba.logger" title="linuxmusterTools.lmnconfig.samba.logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logger</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.lmnconfig.samba.LOG_LEVEL" title="linuxmusterTools.lmnconfig.samba.LOG_LEVEL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LOG_LEVEL</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.lmnconfig.samba.smbconf" title="linuxmusterTools.lmnconfig.samba.smbconf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smbconf</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.lmnconfig.samba.LOG_LEVEL" title="linuxmusterTools.lmnconfig.samba.LOG_LEVEL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LOG_LEVEL</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.lmnconfig.samba.DFS" title="linuxmusterTools.lmnconfig.samba.DFS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DFS</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.lmnconfig.samba.config" title="linuxmusterTools.lmnconfig.samba.config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">config</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.lmnconfig.samba.SHARES_LIST" title="linuxmusterTools.lmnconfig.samba.SHARES_LIST"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SHARES_LIST</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.lmnconfig.samba.dfs_proxy" title="linuxmusterTools.lmnconfig.samba.dfs_proxy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dfs_proxy</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -120,6 +140,11 @@
 </section>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.samba.logger">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.lmnconfig.samba.</span></span><span class="sig-name descname"><span class="pre">logger</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/lmnconfig/samba.html#logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.lmnconfig.samba.logger" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py data">
 <dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.samba.smbconf">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.lmnconfig.samba.</span></span><span class="sig-name descname"><span class="pre">smbconf</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/lmnconfig/samba.html#smbconf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.lmnconfig.samba.smbconf" title="Link to this definition"></a></dt>
@@ -145,6 +170,26 @@
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.lmnconfig.samba.</span></span><span class="sig-name descname"><span class="pre">LOG_LEVEL</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/lmnconfig/samba.html#LOG_LEVEL"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.lmnconfig.samba.LOG_LEVEL" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.samba.DFS">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.lmnconfig.samba.</span></span><span class="sig-name descname"><span class="pre">DFS</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/lmnconfig/samba.html#DFS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.lmnconfig.samba.DFS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.samba.config">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.lmnconfig.samba.</span></span><span class="sig-name descname"><span class="pre">config</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/lmnconfig/samba.html#config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.lmnconfig.samba.config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.samba.SHARES_LIST">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.lmnconfig.samba.</span></span><span class="sig-name descname"><span class="pre">SHARES_LIST</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="reference internal" href="../../../../_modules/linuxmusterTools/lmnconfig/samba.html#SHARES_LIST"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.lmnconfig.samba.SHARES_LIST" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.lmnconfig.samba.dfs_proxy">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.lmnconfig.samba.</span></span><span class="sig-name descname"><span class="pre">dfs_proxy</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/lmnconfig/samba.html#dfs_proxy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.lmnconfig.samba.dfs_proxy" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 </section>
 
@@ -153,7 +198,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../index.html" class="btn btn-neutral float-left" title="linuxmusterTools.lmnconfig" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../setup/index.html" class="btn btn-neutral float-right" title="linuxmusterTools.lmnconfig.setup" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../server/index.html" class="btn btn-neutral float-right" title="linuxmusterTools.lmnconfig.server" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

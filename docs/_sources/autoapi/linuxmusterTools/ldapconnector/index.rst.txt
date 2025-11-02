@@ -26,14 +26,11 @@ Attributes
 
    linuxmusterTools.ldapconnector.reader_router
    linuxmusterTools.ldapconnector.ldap_writer
-   linuxmusterTools.ldapconnector.DeviceWriter
-   linuxmusterTools.ldapconnector.MgmtGroupWriter
-   linuxmusterTools.ldapconnector.ObjectWriter
-   linuxmusterTools.ldapconnector.PrinterWriter
-   linuxmusterTools.ldapconnector.ProjectWriter
-   linuxmusterTools.ldapconnector.SchoolclassWriter
-   linuxmusterTools.ldapconnector.UserWriter
    linuxmusterTools.ldapconnector.router
+   linuxmusterTools.ldapconnector.lprint
+   linuxmusterTools.ldapconnector.spinner
+   linuxmusterTools.ldapconnector.logger
+   linuxmusterTools.ldapconnector.name_checker
    linuxmusterTools.ldapconnector.Validator
    linuxmusterTools.ldapconnector.LMNLdapReader
    linuxmusterTools.ldapconnector.LMNLdapWriter
@@ -45,14 +42,40 @@ Classes
 .. autoapisummary::
 
    linuxmusterTools.ldapconnector.LdapWriter
-   linuxmusterTools.ldapconnector.LMNUserWriter
-   linuxmusterTools.ldapconnector.LMNPrinterWriter
-   linuxmusterTools.ldapconnector.LMNMGMTGroupWriter
-   linuxmusterTools.ldapconnector.LMNProjectWriter
-   linuxmusterTools.ldapconnector.LMNObjectWriter
+   linuxmusterTools.ldapconnector.LMNSchoolclass
+   linuxmusterTools.ldapconnector.NameChecker
+   linuxmusterTools.ldapconnector.LMNUserModel
+   linuxmusterTools.ldapconnector.LMNGroupCommon
+   linuxmusterTools.ldapconnector.LMNUser
+   linuxmusterTools.ldapconnector.LMNUsers
+   linuxmusterTools.ldapconnector.LMNStudent
+   linuxmusterTools.ldapconnector.LMNStudents
+   linuxmusterTools.ldapconnector.LMNTeacher
+   linuxmusterTools.ldapconnector.LMNTeachers
+   linuxmusterTools.ldapconnector.LMNParent
+   linuxmusterTools.ldapconnector.LMNParents
+   linuxmusterTools.ldapconnector.LMNStaff
+   linuxmusterTools.ldapconnector.LMNStaffs
+   linuxmusterTools.ldapconnector.LMNSchoolAdmin
+   linuxmusterTools.ldapconnector.LMNSchoolAdmins
+   linuxmusterTools.ldapconnector.LMNGlobalAdmin
+   linuxmusterTools.ldapconnector.LMNGlobalAdmins
+   linuxmusterTools.ldapconnector.LMNParentsGroup
+   linuxmusterTools.ldapconnector.LMNPrinter
+   linuxmusterTools.ldapconnector.LMNMgmtGroup
+   linuxmusterTools.ldapconnector.LMNGroupModel
+   linuxmusterTools.ldapconnector.LMNGroup
+   linuxmusterTools.ldapconnector.LMNProjectModel
+   linuxmusterTools.ldapconnector.LMNProject
+   linuxmusterTools.ldapconnector.LMNProjects
+   linuxmusterTools.ldapconnector.LMNDeviceModel
+   linuxmusterTools.ldapconnector.LMNRoomModel
    linuxmusterTools.ldapconnector.LMNRoom
-   linuxmusterTools.ldapconnector.LMNDeviceWriter
-   linuxmusterTools.ldapconnector.LMNSchoolclassWriter
+   linuxmusterTools.ldapconnector.LMNDevice
+   linuxmusterTools.ldapconnector.LMNSchoolClassModel
+   linuxmusterTools.ldapconnector.LMNSchoolclassGroup
+   linuxmusterTools.ldapconnector.LMNSchoolclasses
+   linuxmusterTools.ldapconnector.LMNObject
 
 
 Package Contents
@@ -62,20 +85,6 @@ Package Contents
 
 .. py:data:: ldap_writer
 
-.. py:data:: DeviceWriter
-
-.. py:data:: MgmtGroupWriter
-
-.. py:data:: ObjectWriter
-
-.. py:data:: PrinterWriter
-
-.. py:data:: ProjectWriter
-
-.. py:data:: SchoolclassWriter
-
-.. py:data:: UserWriter
-
 .. py:class:: LdapWriter
 
    .. py:attribute:: lc
@@ -84,28 +93,39 @@ Package Contents
    .. py:attribute:: lr
 
 
-   .. py:method:: _setattr(obj_details, data=None, add=False)
+   .. py:method:: _addLDIF(lmnobject, data={})
+
+      Create a list of tuples (attr, new_val) to be sent as add attributes to
+      Ldap. lmnobject is one the objects whose classes are defined in the
+      directory 'writers'.
+      Method add_s of python-ldap only accepts a list a 2-Tuples (attr,value).
+
+
+
+   .. py:method:: _setattr(lmnobject, data=None, add=False)
 
       Set one or more attributes only for a ldap entry.
+      data is a dict of attributes/values to set.
+      If some attributes are lists, the boolean add permit to decide if the
+      new values must be added to the existing value list (add=True) or
+      if the list must be completely replaced (add=False, default behaviour).
 
-      :param obj_details: object to modify (project, ...)
-      :type obj_details: dict
+      :param lmnobject: object to modify (project, student ...)
+      :type lmnobject: something like User, Project, etc
       :param data: Dict of attributes:values to write
       :type data: dict
+      :param add: Replace a list values with the new values or add the
+      new values to the existing ones.
       :type add: bool
-      :param add: Define if the attribute should be added, even if the
-      attribute is already present
 
 
 
-   .. py:method:: _delattr(obj_details, data=None)
+   .. py:method:: _delattr(lmnobject, data=None)
 
       Delete one or more attributes only for a ldap entry.
 
-      :param name: cn
-      :type name: basestring
-      :param objecttype: user, device, etc ... see OBJECT_MAPPING above
-      :type objecttype: basestring
+      :param lmnobject: object to modify (project, student ...)
+      :type lmnobject: something like User, Project, etc
       :param data: Dict of attributes:values to delete.
       Value may be empty if the attribute is not ambiguous
       :type data: dict
@@ -114,23 +134,23 @@ Package Contents
 
    .. py:method:: _rename(old_dn, new_cn)
 
-      :param old_dn:
-      :type old_dn:
-      :param new_cn:
-      :type new_cn:
-      :return:
-      :rtype:
+      Update the CN of an entry, given by its dn.
 
 
 
    .. py:method:: _move(old_dn, new_ou)
 
-      :param old_dn:
-      :type old_dn:
-      :param new_dn:
-      :type new_dn:
-      :return:
-      :rtype:
+      Move an entry, given by its dn, to a new OU.
+
+
+
+   .. py:method:: _add(lmnobject, data={})
+
+      Create an entry with the given dn.
+      Should be mostly used for users or computers.
+
+      :param dn: dn of the object to add
+      :type dn: basestring
 
 
 
@@ -138,16 +158,16 @@ Package Contents
 
       Create an organisational unit with the given dn.
 
-      :param dn: dn of the object to modify
+      :param dn: dn of the object to add
       :type dn: basestring
 
 
 
-   .. py:method:: _add_group(dn, ldif=[])
+   .. py:method:: _add_group(lmnobject, data={})
 
       Create a group with the given dn.
 
-      :param dn: dn of the object to modify
+      :param dn: dn of the object to add
       :type dn: basestring
 
 
@@ -163,7 +183,470 @@ Package Contents
 
 .. py:data:: router
 
-.. py:class:: LMNUserWriter
+.. py:class:: LMNSchoolclass(cn, school='default-school')
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon`
+
+
+   Comme group class for all group types in the linuxmuster project (Projects,
+   Schoolclasses, ManagementGroup, Sophomorix Group, etc ...).
+
+
+   .. py:attribute:: model
+
+
+   .. py:method:: load_data()
+
+
+   .. py:method:: add_member(user)
+
+
+   .. py:method:: add_members(userlist)
+
+      Shortcut to add all members from a given list
+
+      :param userlist: List of valid cn
+
+
+
+   .. py:method:: remove_member(user)
+
+
+   .. py:method:: remove_members(userlist)
+
+      Shortcut to remove all members from a given list
+
+      :param userlist: List of valid cn
+
+
+
+   .. py:method:: remove_all_teachers()
+
+
+   .. py:method:: fill_group_members()
+
+      This method is only intended to populate subgroups like 7a-teachers,
+      7a-parents and 7a-students, and will fill the membership through the
+      memberships stored in CN=7a,OU=7a or OU=Student-Parents,OU=Parents.
+
+
+
+.. py:data:: lprint
+
+.. py:data:: spinner
+
+.. py:class:: NameChecker
+
+   .. py:method:: check(name_type, string)
+
+
+   .. py:method:: normalize_mac(mac)
+
+
+.. py:class:: LMNUserModel
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNModel`
+
+
+   Common parent class to gather common methods.
+
+
+   .. py:attribute:: cn
+      :type:  str
+
+
+   .. py:attribute:: custom_fields_config
+      :type:  dataclasses.InitVar[dict]
+
+
+   .. py:attribute:: displayName
+      :type:  str
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+   .. py:attribute:: givenName
+      :type:  str
+
+
+   .. py:attribute:: homeDirectory
+      :type:  str
+
+
+   .. py:attribute:: homeDrive
+      :type:  str
+
+
+   .. py:attribute:: mail
+      :type:  list
+
+
+   .. py:attribute:: memberOf
+      :type:  list
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:attribute:: preferredLanguage
+      :type:  str
+
+
+   .. py:attribute:: proxyAddresses
+      :type:  list
+
+
+   .. py:attribute:: sAMAccountName
+      :type:  str
+
+
+   .. py:attribute:: sAMAccountType
+      :type:  str
+
+
+   .. py:attribute:: sn
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAdminClass
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAdminFile
+      :type:  str
+
+
+   .. py:attribute:: sophomorixBirthdate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCloudQuotaCalculated
+      :type:  list
+
+
+   .. py:attribute:: sophomorixComment
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCreationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom1
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom2
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom3
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom4
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom5
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustomMulti1
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti2
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti3
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti4
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti5
+      :type:  list
+
+
+   .. py:attribute:: sophomorixDeactivationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixExamMode
+      :type:  list
+
+
+   .. py:attribute:: sophomorixExitAdminClass
+      :type:  str
+
+
+   .. py:attribute:: sophomorixFirstnameASCII
+      :type:  str
+
+
+   .. py:attribute:: sophomorixFirstnameInitial
+      :type:  str
+
+
+   .. py:attribute:: sophomorixFirstPassword
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic1
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic2
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic3
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic4
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic5
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti1
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti2
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti3
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti4
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti5
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMailQuotaCalculated
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMailQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixRole
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSchoolname
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSchoolPrefix
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSessions
+      :type:  list
+
+
+   .. py:attribute:: sophomorixStatus
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSurnameASCII
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSurnameInitial
+      :type:  str
+
+
+   .. py:attribute:: sophomorixTolerationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixUnid
+      :type:  str
+
+
+   .. py:attribute:: sophomorixUserToken
+      :type:  str
+
+
+   .. py:attribute:: sophomorixWebuiDashboard
+      :type:  list
+
+
+   .. py:attribute:: sophomorixWebuiPermissionsCalculated
+      :type:  list
+
+
+   .. py:attribute:: thumbnailPhoto
+      :type:  str
+
+
+   .. py:attribute:: unixHomeDirectory
+      :type:  str
+
+
+   .. py:attribute:: userAccountControl
+      :type:  int
+
+
+   .. py:attribute:: whenChanged
+      :type:  str
+
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:attribute:: children
+      :type:  dict
+
+
+   .. py:attribute:: customFields
+      :type:  dict
+
+
+   .. py:attribute:: examMode
+      :type:  bool
+
+
+   .. py:attribute:: examTeacher
+      :type:  str
+
+
+   .. py:attribute:: examBaseCn
+      :type:  str
+
+
+   .. py:attribute:: internet
+      :type:  bool
+
+
+   .. py:attribute:: intranet
+      :type:  bool
+
+
+   .. py:attribute:: isAdmin
+      :type:  bool
+
+
+   .. py:attribute:: lmnsessions
+      :type:  list
+
+
+   .. py:attribute:: parents
+      :type:  list
+
+
+   .. py:attribute:: permissions
+      :type:  list
+
+
+   .. py:attribute:: printers
+      :type:  list
+
+
+   .. py:attribute:: printing
+      :type:  bool
+
+
+   .. py:attribute:: projects
+      :type:  list
+
+
+   .. py:attribute:: schoolclasses
+      :type:  list
+
+
+   .. py:attribute:: school
+      :type:  str
+
+
+   .. py:attribute:: webfilter
+      :type:  bool
+
+
+   .. py:attribute:: wifi
+      :type:  bool
+
+
+   .. py:method:: _check_schoolclass_number(s)
+      :staticmethod:
+
+
+
+   .. py:method:: extract_schoolclasses(membership)
+
+
+   .. py:method:: extract_projects(membership)
+
+
+   .. py:method:: extract_printers(membership)
+
+
+   .. py:method:: extract_management()
+
+
+   .. py:method:: parse_permissions()
+
+
+   .. py:method:: parse_sessions()
+
+
+   .. py:method:: parse_exam()
+
+
+   .. py:method:: create_custom_fields_objects(custom_config={})
+
+
+   .. py:method:: get_parents()
+
+
+   .. py:method:: get_children()
+
+
+   .. py:method:: __post_init__(custom_fields_config={})
+
+
+   .. py:method:: test_password(password='')
+
+
+   .. py:method:: test_first_password()
+
+
+.. py:class:: LMNGroupCommon(cn, school='default-school')
+
+   Comme group class for all group types in the linuxmuster project (Projects,
+   Schoolclasses, ManagementGroup, Sophomorix Group, etc ...).
+
+
+   .. py:attribute:: cn
+
 
    .. py:attribute:: lw
 
@@ -171,105 +654,74 @@ Package Contents
    .. py:attribute:: lr
 
 
-   .. py:method:: setattr(name, **kwargs)
-
-      Middleware to check if the object exists.
-
-      :param name: cn of the object
-      :type name: basestring
+   .. py:attribute:: model
 
 
+   .. py:attribute:: data
 
-   .. py:method:: delattr(name, **kwargs)
 
-      Middleware to check if the object exists.
-
-      :param name: cn of the object
-      :type name: basestring
+   .. py:attribute:: school
+      :value: 'default-school'
 
 
 
-.. py:class:: LMNPrinterWriter
-
-   .. py:attribute:: lw
+   .. py:method:: load_data()
 
 
-   .. py:attribute:: lr
+   .. py:method:: setattr(**kwargs)
 
-
-   .. py:method:: setattr(name, **kwargs)
-
-      Middleware to check if the object exists.
-
-      :param name: cn of the object
-      :type name: basestring
+      Set some attributes of the object directly in Ldap,
+      only for an existing object.
+      kwargs must contain a data dict with attributes/values to set.
 
 
 
-   .. py:method:: delattr(name, **kwargs)
+   .. py:method:: delattr(**kwargs)
 
-      Middleware to check if the object exists.
-
-      :param name: cn of the object
-      :type name: basestring
-
-
-
-.. py:class:: LMNMGMTGroupWriter
-
-   .. py:attribute:: lw
-
-
-   .. py:attribute:: lr
-
-
-   .. py:method:: setattr(name, **kwargs)
-
-      Middleware to check if the object exists.
-
-      :param name: cn of the object
-      :type name: basestring
+      Delete some attributes of the object directly in Ldap,
+      only for an existing object.
+      kwargs must contain a data dict with attributes/values to set.
 
 
 
-   .. py:method:: delattr(name, **kwargs)
+   .. py:method:: getattr(attr)
 
-      Middleware to check if the object exists.
-
-      :param name: cn of the object
-      :type name: basestring
+      Get a specific attribute of the object.
 
 
 
-.. py:class:: LMNProjectWriter
-
-   .. py:attribute:: lw
+   .. py:method:: remove_member(user)
 
 
-   .. py:attribute:: lr
+   .. py:method:: remove_all_members()
 
 
-   .. py:method:: setattr(name, **kwargs)
-
-      Middleware to check if the object exists.
-
-      :param name: cn of the object
-      :type name: basestring
+   .. py:method:: add_member(user)
 
 
+   .. py:method:: add_members(userlist)
 
-   .. py:method:: delattr(name, **kwargs)
+      Shortcut to add all members from a given list
 
-      Middleware to check if the object exists.
-
-      :param name: cn of the object
-      :type name: basestring
+      :param userlist: List of valid cn
 
 
 
-.. py:class:: LMNObjectWriter
+   .. py:method:: remove_members(userlist)
 
-   Search per dn, may not be the best solution.
+      Shortcut to remove all members from a given list
+
+      :param userlist: List of valid cn
+
+
+
+.. py:data:: logger
+
+.. py:data:: name_checker
+
+.. py:class:: LMNUser(cn, school='default-school')
+
+   .. py:attribute:: cn
 
 
    .. py:attribute:: lw
@@ -278,33 +730,938 @@ Package Contents
    .. py:attribute:: lr
 
 
-   .. py:method:: setattr(dn, **kwargs)
-
-      Middleware to check if the object exists.
-
-      :param name: cn of the object
-      :type name: basestring
+   .. py:attribute:: model
 
 
+   .. py:attribute:: data
 
-   .. py:method:: delattr(dn, **kwargs)
 
-      Middleware to check if the object exists.
-
-      :param name: cn of the object
-      :type name: basestring
+   .. py:attribute:: new
+      :value: False
 
 
 
-   .. py:method:: remove_member(dn, member_dn)
+   .. py:attribute:: school
+      :value: 'default-school'
 
 
-   .. py:method:: add_member(dn, member_dn)
+
+   .. py:method:: load_data()
 
 
-.. py:class:: LMNRoom
+   .. py:method:: setattr(**kwargs)
 
-   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+      Set some attributes of the object directly in Ldap,
+      only for an existing object.
+      kwargs must contain a data dict with attributes/values to set.
+
+
+
+   .. py:method:: delattr(**kwargs)
+
+      Delete some attributes of the object directly in Ldap,
+      only for an existing object.
+      kwargs must contain a data dict with attributes/values to set.
+
+
+
+   .. py:method:: getattr(attr)
+
+      Get a specific attribute of the object.
+
+
+
+   .. py:method:: rename(new_cn)
+
+      Update the cn of an user.
+
+
+
+   .. py:method:: delete()
+
+      Delete the user's entry.
+
+
+
+   .. py:method:: get_children()
+
+
+   .. py:method:: _move(dst_ou)
+
+      Move the user to a new Organisational Unit.This method just move an
+      existing ldap account to a new OU but do not handle the filesystem
+      to move the user's files: it's necessary to use separately
+      Samba/smbclient for this. Use this method very carefully!
+
+
+
+   .. py:method:: _create(dst_ou)
+
+      For an user marked as new, create an entry in the specified OU.
+      This method just create an account ldap but do not handle the filesystem
+      to create the appropriate directory tree for the user: it's necessary to
+      use separately Samba/smbclient for this. Use this method very carefully!
+
+
+
+   .. py:method:: create()
+      :abstractmethod:
+
+
+
+   .. py:method:: move()
+      :abstractmethod:
+
+
+
+   .. py:method:: check()
+
+      Check the LDAP consistence of the user's entry.
+
+
+
+.. py:class:: LMNUsers(school='default-school')
+
+   .. py:attribute:: lr
+
+
+   .. py:attribute:: users
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: keys()
+
+
+   .. py:method:: items()
+
+
+   .. py:method:: __getitem__(user_cn)
+
+
+.. py:class:: LMNStudent(cn, school='default-school')
+
+   Bases: :py:obj:`LMNUser`
+
+
+   .. py:method:: load_parents()
+
+
+   .. py:method:: add_parent(parent_cn)
+
+      Add one parent to a specific user.
+
+      :param parent_cn: cn of the parent
+      :type parent_cn: basestring
+
+
+
+   .. py:method:: remove_parent(parent_cn)
+
+      Remove one parent from a specific user.
+
+      :param parent_cn: cn of the parent
+      :type parent_cn: basestring
+
+
+
+   .. py:method:: add_parents(parents_cn)
+
+      Add many parents to a specific user.
+
+      :param parents_cn: list of cn of the parents
+      :type parents_cn: list
+
+
+
+   .. py:method:: remove_parents(parents_cn)
+
+      Remove parents from a specific user.
+
+      :param parent_cn: list of cn of the parent s
+      :type parent_cn: list
+
+
+
+   .. py:method:: move(new_schoolclass)
+
+
+   .. py:method:: create(school, new_schoolclass)
+
+
+.. py:class:: LMNStudents(school='default-school')
+
+   .. py:attribute:: lr
+
+
+   .. py:attribute:: students
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: keys()
+
+
+   .. py:method:: items()
+
+
+   .. py:method:: __getitem__(student_cn)
+
+
+.. py:class:: LMNTeacher(cn, school='default-school')
+
+   Bases: :py:obj:`LMNUser`
+
+
+   .. py:method:: move()
+      :abstractmethod:
+
+
+
+   .. py:method:: create()
+
+
+.. py:class:: LMNTeachers(school='default-school')
+
+   .. py:attribute:: lr
+
+
+   .. py:attribute:: teachers
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: keys()
+
+
+   .. py:method:: items()
+
+
+   .. py:method:: __getitem__(teacher_cn)
+
+
+.. py:class:: LMNParent(cn, school='default-school')
+
+   Bases: :py:obj:`LMNUser`
+
+
+   .. py:method:: move()
+      :abstractmethod:
+
+
+
+   .. py:method:: create()
+
+
+.. py:class:: LMNParents(school='default-school')
+
+   .. py:attribute:: lr
+
+
+   .. py:attribute:: parents
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: keys()
+
+
+   .. py:method:: items()
+
+
+   .. py:method:: __getitem__(parent_cn)
+
+
+.. py:class:: LMNStaff(cn, school='default-school')
+
+   Bases: :py:obj:`LMNUser`
+
+
+   .. py:method:: move()
+      :abstractmethod:
+
+
+
+   .. py:method:: create()
+
+
+.. py:class:: LMNStaffs(school='default-school')
+
+   .. py:attribute:: lr
+
+
+   .. py:attribute:: staffs
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: keys()
+
+
+   .. py:method:: items()
+
+
+   .. py:method:: __getitem__(staff_cn)
+
+
+.. py:class:: LMNSchoolAdmin(cn, school='default-school')
+
+   Bases: :py:obj:`LMNUser`
+
+
+.. py:class:: LMNSchoolAdmins(school='default-school')
+
+   .. py:attribute:: lr
+
+
+   .. py:attribute:: schooladmins
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: keys()
+
+
+   .. py:method:: items()
+
+
+   .. py:method:: __getitem__(schooladmin_cn)
+
+
+.. py:class:: LMNGlobalAdmin(cn, school='default-school')
+
+   Bases: :py:obj:`LMNUser`
+
+
+.. py:class:: LMNGlobalAdmins(school='default-school')
+
+   .. py:attribute:: lr
+
+
+   .. py:attribute:: globaladmins
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: keys()
+
+
+   .. py:method:: items()
+
+
+   .. py:method:: __getitem__(globaladmin_cn)
+
+
+.. py:class:: LMNParentsGroup(student_cn, school='default-school')
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon`
+
+
+   Comme group class for all group types in the linuxmuster project (Projects,
+   Schoolclasses, ManagementGroup, Sophomorix Group, etc ...).
+
+
+   .. py:attribute:: cn
+      :value: 'Uninferable-parents'
+
+
+
+   .. py:attribute:: student_cn
+
+
+   .. py:method:: _check_ou()
+
+
+   .. py:method:: load_data()
+
+
+   .. py:method:: get_parents()
+
+
+   .. py:method:: add_parent(parent_cn)
+
+
+   .. py:method:: remove_parent(parent_cn)
+
+
+   .. py:method:: add_parents(parents_cn)
+
+      Add all given parents to a specific user.
+
+      :param parents_cn: list of parents cn
+      :type parents_cn: list
+
+
+
+   .. py:method:: remove_parents(parents_cn)
+
+      Remove all given parents from a specific user.
+
+      :param parents_cn: list of parents cn
+      :type parents_cn: list
+
+
+
+   .. py:method:: delete()
+
+      Delete the group in case of a student moved to attic
+
+
+
+.. py:class:: LMNPrinter(cn, school='default-school')
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon`
+
+
+   Comme group class for all group types in the linuxmuster project (Projects,
+   Schoolclasses, ManagementGroup, Sophomorix Group, etc ...).
+
+
+   .. py:method:: load_data()
+
+
+.. py:class:: LMNMgmtGroup(cn, school='default-school')
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon`
+
+
+   Class to handle the management groups
+
+
+   .. py:method:: load_data()
+
+
+.. py:class:: LMNGroupModel
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNModel`
+
+
+   Common parent class to gather common methods.
+
+
+   .. py:attribute:: cn
+      :type:  str
+
+
+   .. py:attribute:: description
+      :type:  str
+
+
+   .. py:attribute:: displayName
+      :type:  str
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+   .. py:attribute:: mail
+      :type:  list
+
+
+   .. py:attribute:: member
+      :type:  list
+
+
+   .. py:attribute:: memberOf
+      :type:  list
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:attribute:: proxyAddresses
+      :type:  list
+
+
+   .. py:attribute:: sAMAccountName
+      :type:  str
+
+
+   .. py:attribute:: sAMAccountType
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAdminClass
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCreationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixHidden
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixJoinable
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixIntrinsic1
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic2
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic3
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic4
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic5
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti1
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti2
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti3
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti4
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti5
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMailAlias
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailList
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMembers
+      :type:  list
+
+
+   .. py:attribute:: sophomorixRole
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSchoolname
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSchoolPrefix
+      :type:  str
+
+
+   .. py:attribute:: sophomorixStatus
+      :type:  str
+
+
+   .. py:attribute:: sophomorixType
+      :type:  str
+
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:attribute:: all_members
+      :type:  list
+
+
+   .. py:attribute:: membersCount
+      :type:  int
+
+
+   .. py:method:: __post_init__()
+
+
+   .. py:method:: get_all_members()
+
+      Set a members and admins list by recursively scanning all groups and their members which are members
+      or admins of this project.
+
+      This is not called as post init because of nested projects. So it's necessary to call this method
+      afterwards:
+
+      p = lr.get('/projects/p_test', dict=False)
+      p.get_all_members()
+
+
+
+.. py:class:: LMNGroup(cn, school='default-school')
+
+   Bases: :py:obj:`LMNGroupCommon`
+
+
+   Class to handle the Sophomorix Groups (saved under the OU Projects)
+
+
+   .. py:method:: load_data()
+
+
+.. py:class:: LMNProjectModel
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNModel`
+
+
+   Common parent class to gather common methods.
+
+
+   .. py:attribute:: cn
+      :type:  str
+
+
+   .. py:attribute:: description
+      :type:  str
+
+
+   .. py:attribute:: displayName
+      :type:  str
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+   .. py:attribute:: mail
+      :type:  list
+
+
+   .. py:attribute:: member
+      :type:  list
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:attribute:: proxyAddresses
+      :type:  list
+
+
+   .. py:attribute:: sAMAccountName
+      :type:  str
+
+
+   .. py:attribute:: sAMAccountType
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAddMailQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixAddQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixAdminGroups
+      :type:  list
+
+
+   .. py:attribute:: sophomorixAdmins
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCreationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixHidden
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixIntrinsic1
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic2
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic3
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic4
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic5
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti1
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti2
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti3
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti4
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti5
+      :type:  list
+
+
+   .. py:attribute:: sophomorixJoinable
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailAlias
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailList
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMaxMembers
+      :type:  int
+
+
+   .. py:attribute:: sophomorixMemberGroups
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMembers
+      :type:  list
+
+
+   .. py:attribute:: sophomorixQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixSchoolname
+      :type:  str
+
+
+   .. py:attribute:: sophomorixStatus
+      :type:  str
+
+
+   .. py:attribute:: sophomorixType
+      :type:  str
+
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:attribute:: all_members
+      :type:  list
+
+
+   .. py:attribute:: all_admins
+      :type:  list
+
+
+   .. py:attribute:: membersCount
+      :type:  int
+
+
+   .. py:attribute:: adminsCount
+      :type:  int
+
+
+   .. py:method:: __post_init__()
+
+
+   .. py:method:: get_all_members()
+
+      Set a members and admins list by recursively scanning all groups and their members which are members
+      or admins of this project.
+
+      This is not called as post init because of nested projects. So it's necessary to call this method
+      afterwards:
+
+      p = lr.get('/projects/p_test', dict=False)
+      p.get_all_members()
+
+
+
+.. py:class:: LMNProject(cn, school='default-school')
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon`
+
+
+   Comme group class for all group types in the linuxmuster project (Projects,
+   Schoolclasses, ManagementGroup, Sophomorix Group, etc ...).
+
+
+   .. py:attribute:: model
+
+
+   .. py:method:: load_data()
+
+
+.. py:class:: LMNProjects(school='default-school')
+
+   .. py:attribute:: lr
+
+
+   .. py:attribute:: projects
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: keys()
+
+
+   .. py:method:: items()
+
+
+   .. py:method:: __getitem__(project_cn)
+
+
+.. py:class:: LMNDeviceModel
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNModel`
+
+
+   Common parent class to gather common methods.
+
+
+   .. py:attribute:: cn
+      :type:  str
+
+
+   .. py:attribute:: displayName
+      :type:  str
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+   .. py:attribute:: dNSHostName
+      :type:  str
+
+
+   .. py:attribute:: memberOf
+      :type:  list
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:attribute:: proxyAddresses
+      :type:  list
+
+
+   .. py:attribute:: sAMAccountName
+      :type:  str
+
+
+   .. py:attribute:: sAMAccountType
+      :type:  str
+
+
+   .. py:attribute:: servicePrincipalName
+      :type:  list
+
+
+   .. py:attribute:: sophomorixAdminClass
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAdminFile
+      :type:  str
+
+
+   .. py:attribute:: sophomorixComment
+      :type:  str
+
+
+   .. py:attribute:: sophomorixComputerIP
+      :type:  str
+
+
+   .. py:attribute:: sophomorixComputerMAC
+      :type:  str
+
+
+   .. py:attribute:: sophomorixComputerRoom
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCreationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixDnsNodename
+      :type:  str
+
+
+   .. py:attribute:: sophomorixRole
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSchoolname
+      :type:  str
+
+
+   .. py:attribute:: sophomorixSchoolPrefix
+      :type:  str
+
+
+   .. py:attribute:: sophomorixStatus
+      :type:  str
+
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:method:: __post_init__()
+
+
+.. py:class:: LMNRoomModel
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNModel`
 
 
    ObjectClass group for a room.
@@ -419,7 +1776,10 @@ Package Contents
 
 .. py:data:: Validator
 
-.. py:class:: LMNDeviceWriter
+.. py:class:: LMNRoom(cn, school='default-school')
+
+   .. py:attribute:: cn
+
 
    .. py:attribute:: lw
 
@@ -427,72 +1787,297 @@ Package Contents
    .. py:attribute:: lr
 
 
-   .. py:attribute:: ow
+   .. py:attribute:: model
 
 
-   .. py:method:: setattr(name, **kwargs)
-
-      Middleware to check if the object exists.
-
-      :param name: cn of the object
-      :type name: basestring
+   .. py:attribute:: data
 
 
-
-   .. py:method:: delattr(name, **kwargs)
-
-      Middleware to check if the object exists.
-
-      :param name: cn of the object
-      :type name: basestring
+   .. py:attribute:: new
+      :value: False
 
 
 
-   .. py:method:: rename(name, new_name)
+   .. py:attribute:: school
+      :value: 'default-school'
+
+
+
+   .. py:method:: load_data()
+
+
+   .. py:method:: setattr(**kwargs)
+
+      Set some attributes of the object directly in Ldap,
+      only for an existing object.
+      kwargs must contain a data dict with attributes/values to set.
+
+
+
+   .. py:method:: delattr(**kwargs)
+
+      Delete some attributes of the object directly in Ldap,
+      only for an existing object.
+      kwargs must contain a data dict with attributes/values to set.
+
+
+
+   .. py:method:: getattr(attr)
+
+      Get a specific attribute of the object.
+
+
+
+.. py:class:: LMNDevice(cn, school='default-school')
+
+   .. py:attribute:: cn
+
+
+   .. py:attribute:: lw
+
+
+   .. py:attribute:: lr
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: data
+
+
+   .. py:attribute:: new
+      :value: False
+
+
+
+   .. py:attribute:: school
+      :value: 'default-school'
+
+
+
+   .. py:method:: load_data()
+
+
+   .. py:method:: setattr(**kwargs)
+
+      Set some attributes of the object directly in Ldap,
+      only for an existing object.
+      kwargs must contain a data dict with attributes/values to set.
+
+
+
+   .. py:method:: delattr(**kwargs)
+
+      Delete some attributes of the object directly in Ldap,
+      only for an existing object.
+      kwargs must contain a data dict with attributes/values to set.
+
+
+
+   .. py:method:: getattr(attr)
+
+      Get a specific attribute of the object.
+
+
+
+   .. py:method:: rename(new_cn)
 
       Rename a device inside a room.
 
-      :param new_name:
-      :type new_name:
-      :return:
-      :rtype:
+
+
+.. py:class:: LMNSchoolClassModel
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNModel`
+
+
+   Common parent class to gather common methods.
+
+
+   .. py:attribute:: cn
+      :type:  str
+
+
+   .. py:attribute:: description
+      :type:  str
+
+
+   .. py:attribute:: displayName
+      :type:  str
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+   .. py:attribute:: mail
+      :type:  list
+
+
+   .. py:attribute:: member
+      :type:  list
+
+
+   .. py:attribute:: memberOf
+      :type:  list
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:attribute:: sAMAccountName
+      :type:  str
+
+
+   .. py:attribute:: sAMAccountType
+      :type:  str
+
+
+   .. py:attribute:: sophomorixAddMailQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixAddQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixAdmins
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCreationDate
+      :type:  str
+
+
+   .. py:attribute:: sophomorixHidden
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixJoinable
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailAlias
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailList
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMaxMembers
+      :type:  int
+
+
+   .. py:attribute:: sophomorixMembers
+      :type:  list
+
+
+   .. py:attribute:: sophomorixQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixSchoolname
+      :type:  str
+
+
+   .. py:attribute:: sophomorixStatus
+      :type:  str
+
+
+   .. py:attribute:: sophomorixType
+      :type:  str
+
+
+   .. py:attribute:: membersCount
+      :type:  int
+
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:method:: __post_init__()
+
+
+   .. py:method:: get_first_passwords()
+
+
+   .. py:method:: students_csv()
+
+
+.. py:class:: LMNSchoolclassGroup(cn, suffix='', schoolclass_data={})
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon`
+
+
+   Class to handle subgroups of a schoolclass, like e.g. 7a-students, 7a-teachers
+   and 7a-parents for the schoolclass 7a.
+
+
+   .. py:attribute:: schoolclass_data
+
+
+   .. py:attribute:: suffix
+      :value: ''
 
 
 
-   .. py:method:: move(name, new_room)
-
-      Move a device to another room, e.g. to another OU
-
-      :param name: name of the device to move
-      :type name: basestring
-      :param new_room: New OU for the device
-      :type new_room: basestring
+   .. py:attribute:: type
+      :value: None
 
 
 
-   .. py:method:: delete_room(room, school='default-school')
-
-      Delete the OU and his group associated to a room, if this does not contain any device.
-
-      :param room: Name of the room to dele
-      :type room: basestring
-      :param school: Concerned school
-      :type school: basestring
+   .. py:attribute:: school
 
 
+   .. py:method:: load_data()
 
-   .. py:method:: create_room(new_room, school='default-school', data={})
 
-      Create a new room, e.g. another OU
+   .. py:method:: delete()
 
-      :param new_room: New OU to create
-      :type new_room: basestring
-      :param school: Concerned school
-      :type school: basestring
+
+   .. py:method:: fill_members()
+
+      This method is only intended for subgroups like 7a-teachers, 7a-parents
+      and 7a-students, and will fill the membership through the memberships
+      stored in CN=7a,OU=7a or OU=Student-Parents,OU=Parents.
 
 
 
-.. py:class:: LMNSchoolclassWriter
+.. py:class:: LMNSchoolclasses(school='default-school')
+
+   .. py:attribute:: lr
+
+
+   .. py:attribute:: schoolclasses
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: keys()
+
+
+   .. py:method:: items()
+
+
+   .. py:method:: __getitem__(schoolclass_cn)
+
+
+.. py:class:: LMNObject
+
+   Search per dn, may not be the best solution.
+
 
    .. py:attribute:: lw
 
@@ -500,7 +2085,7 @@ Package Contents
    .. py:attribute:: lr
 
 
-   .. py:method:: setattr(name, **kwargs)
+   .. py:method:: setattr(dn, **kwargs)
 
       Middleware to check if the object exists.
 
@@ -509,13 +2094,19 @@ Package Contents
 
 
 
-   .. py:method:: delattr(name, **kwargs)
+   .. py:method:: delattr(dn, **kwargs)
 
       Middleware to check if the object exists.
 
       :param name: cn of the object
       :type name: basestring
 
+
+
+   .. py:method:: remove_member(dn, member_dn)
+
+
+   .. py:method:: add_member(dn, member_dn)
 
 
 .. py:data:: LMNLdapReader

@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.connector &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.ldapconnector.connector &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/theme_overrides.css?v=472cca7c" />
@@ -15,7 +15,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/translations.js?v=8fd896e3"></script>
@@ -60,8 +60,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../samba_util/index.html">linuxmusterTools.samba_util</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#attributes">Attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#package-contents">Package Contents</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../create_students_groups/index.html">create_students_groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../00-update-schoolclasses-groups/index.html">00-update-schoolclasses-groups</a></li>
 </ul>
 </li>
 </ul>
@@ -102,6 +107,9 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.connector.webui_import" title="linuxmusterTools.ldapconnector.connector.webui_import"><code class="xref py py-obj docutils literal notranslate"><span class="pre">webui_import</span></code></a></p></td>
 <td><p></p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.connector.logger" title="linuxmusterTools.ldapconnector.connector.logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logger</span></code></a></p></td>
+<td><p></p></td>
+</tr>
 </tbody>
 </table>
 </section>
@@ -122,17 +130,22 @@
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.connector.</span></span><span class="sig-name descname"><span class="pre">webui_import</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/connector.html#webui_import"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.connector.webui_import" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.connector.logger">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.connector.</span></span><span class="sig-name descname"><span class="pre">logger</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/connector.html#logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.connector.logger" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.connector.LdapConnector">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.connector.</span></span><span class="sig-name descname"><span class="pre">LdapConnector</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/connector.html#LdapConnector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.connector.LdapConnector" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.connector.</span></span><span class="sig-name descname"><span class="pre">LdapConnector</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/connector.html#LdapConnector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.connector.LdapConnector" title="Link to this definition"></a></dt>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.connector.LdapConnector._connect">
-<span class="sig-name descname"><span class="pre">_connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">webui</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/connector.html#LdapConnector._connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.connector.LdapConnector._connect" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/connector.html#LdapConnector._connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.connector.LdapConnector._connect" title="Link to this definition"></a></dt>
 <dd><p>Choose the right credentials, depending if the this module is imported in linuxmuster-webui7 or used directly on
 the server, and the perform a connection to the ldap server.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>webui</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – True only if using the _get method from the webui (no changes possible from the webui)</p>
+<dd class="field-odd"><p><strong>webui</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – True only if using the _get method from the webui (no changes possible from the webui)</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>LDAP object with connection data</p>
@@ -151,15 +164,15 @@ the server, and the perform a connection to the ldap server.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ldap_filter</strong> (<em>basestring</em>) – Valid ldap filter</p></li>
-<li><p><strong>scope</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – subtree search or one level</p></li>
-<li><p><strong>searchdn</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – special searchdn</p></li>
+<li><p><strong>scope</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – subtree search or one level</p></li>
+<li><p><strong>searchdn</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – special searchdn</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Raw result of the request</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -172,7 +185,7 @@ the server, and the perform a connection to the ldap server.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dn</strong> (<em>basestring</em>) – dn of the object to modify</p></li>
-<li><p><strong>ldif</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – Valid ldif (list of tuples, one tuple per operation)</p></li>
+<li><p><strong>ldif</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Valid ldif (list of tuples, one tuple per operation)</p></li>
 </ul>
 </dd>
 </dl>
@@ -180,13 +193,13 @@ the server, and the perform a connection to the ldap server.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.connector.LdapConnector._add">
-<span class="sig-name descname"><span class="pre">_add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ldif</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/connector.html#LdapConnector._add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.connector.LdapConnector._add" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ldif</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/connector.html#LdapConnector._add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.connector.LdapConnector._add" title="Link to this definition"></a></dt>
 <dd><p>Connect to ldap and insert an object with the given dn and ldif attributes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dn</strong> (<em>basestring</em>) – dn of the object to modify</p></li>
-<li><p><strong>ldif</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – Valid ldif (list of tuples, one tuple per operation)</p></li>
+<li><p><strong>ldif</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Valid ldif (list of tuples, one tuple per operation)</p></li>
 </ul>
 </dd>
 </dl>

@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.common &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.common &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/translations.js?v=8fd896e3"></script>
@@ -60,8 +60,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../samba_util/index.html">linuxmusterTools.samba_util</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#attributes">Attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#package-contents">Package Contents</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../create_students_groups/index.html">create_students_groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../00-update-schoolclasses-groups/index.html">00-update-schoolclasses-groups</a></li>
 </ul>
 </li>
 </ul>
@@ -100,7 +105,9 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="attic/index.html">linuxmusterTools.common.attic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="checks/index.html">linuxmusterTools.common.checks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="color_shell/index.html">linuxmusterTools.common.color_shell</a></li>
 <li class="toctree-l1"><a class="reference internal" href="convert/index.html">linuxmusterTools.common.convert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parsers/index.html">linuxmusterTools.common.parsers</a></li>
 </ul>
 </div>
 </section>
@@ -108,13 +115,49 @@
 <h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.common.NAME_RULES" title="linuxmusterTools.common.NAME_RULES"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NAME_RULES</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.common.logger" title="linuxmusterTools.common.logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logger</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.common.ROLES" title="linuxmusterTools.common.ROLES"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ROLES</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.common.NAME_RULES" title="linuxmusterTools.common.NAME_RULES"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NAME_RULES</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.common.KILL_LOG_PATH" title="linuxmusterTools.common.KILL_LOG_PATH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">KILL_LOG_PATH</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.common.ADD_LOG_PATH" title="linuxmusterTools.common.ADD_LOG_PATH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ADD_LOG_PATH</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.common.UPDATE_LOG_PATH" title="linuxmusterTools.common.UPDATE_LOG_PATH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UPDATE_LOG_PATH</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.common.SHELL_COLOR_WARNING" title="linuxmusterTools.common.SHELL_COLOR_WARNING"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SHELL_COLOR_WARNING</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.common.SHELL_COLOR_SUCCESS" title="linuxmusterTools.common.SHELL_COLOR_SUCCESS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SHELL_COLOR_SUCCESS</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.common.SHELL_COLOR_ALERT" title="linuxmusterTools.common.SHELL_COLOR_ALERT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SHELL_COLOR_ALERT</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.common.SHELL_COLOR_DANGER" title="linuxmusterTools.common.SHELL_COLOR_DANGER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SHELL_COLOR_DANGER</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.common.SHELL_COLOR_INFO" title="linuxmusterTools.common.SHELL_COLOR_INFO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SHELL_COLOR_INFO</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.common.SHELL_COLOR_LINUXMUSTER" title="linuxmusterTools.common.SHELL_COLOR_LINUXMUSTER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SHELL_COLOR_LINUXMUSTER</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.common.SHELL_COLOR_ENDC" title="linuxmusterTools.common.SHELL_COLOR_ENDC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SHELL_COLOR_ENDC</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.common.Validator" title="linuxmusterTools.common.Validator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Validator</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.common.lprint" title="linuxmusterTools.common.lprint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lprint</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.common.spinner" title="linuxmusterTools.common.spinner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spinner</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.common.WEBUI_IMPORT" title="linuxmusterTools.common.WEBUI_IMPORT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WEBUI_IMPORT</span></code></a></p></td>
@@ -128,6 +171,12 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.common.NameChecker" title="linuxmusterTools.common.NameChecker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NameChecker</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.common.ColorShell" title="linuxmusterTools.common.ColorShell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ColorShell</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.common.Spinner" title="linuxmusterTools.common.Spinner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Spinner</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -145,6 +194,15 @@
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.common.set_check_method" title="linuxmusterTools.common.set_check_method"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_check_method</span></code></a>(cls, *args)</p></td>
 <td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.common.parse_kill_log" title="linuxmusterTools.common.parse_kill_log"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_kill_log</span></code></a>([all, epoch, today, lastweek])</p></td>
+<td><p>Parse the kill log of sophomorix to return a dict with all informations.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.common.parse_add_log" title="linuxmusterTools.common.parse_add_log"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_add_log</span></code></a>([all, epoch, today, lastweek])</p></td>
+<td><p>Parse the add log of sophomorix to return a dict with all informations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.common.parse_update_log" title="linuxmusterTools.common.parse_update_log"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_update_log</span></code></a>([all, epoch, today, lastweek, ...])</p></td>
+<td><p>Parse the update log of sophomorix to return a dict with all informations.</p></td>
 </tr>
 </tbody>
 </table>
@@ -174,13 +232,13 @@
 </dd></dl>
 
 <dl class="py data">
-<dt class="sig sig-object py" id="linuxmusterTools.common.NAME_RULES">
-<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">NAME_RULES</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/checks/names.html#NAME_RULES"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.NAME_RULES" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.common.logger">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">logger</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/checks/names.html#logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.logger" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py data">
-<dt class="sig sig-object py" id="linuxmusterTools.common.ROLES">
-<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">ROLES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['switch',</span> <span class="pre">'addc',</span> <span class="pre">'wlan',</span> <span class="pre">'staffcomputer',</span> <span class="pre">'mobile',</span> <span class="pre">'printer',</span> <span class="pre">'classroom-teachercomputer',...</span></em><a class="reference internal" href="../../../_modules/linuxmusterTools/common/checks/names.html#ROLES"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.ROLES" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.common.NAME_RULES">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">NAME_RULES</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/checks/names.html#NAME_RULES"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.NAME_RULES" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
@@ -190,15 +248,10 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.common.NameChecker">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">NameChecker</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/checks/names.html#NameChecker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.NameChecker" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">NameChecker</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/checks/names.html#NameChecker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.NameChecker" title="Link to this definition"></a></dt>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="linuxmusterTools.common.NameChecker.check">
 <span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/checks/names.html#NameChecker.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.NameChecker.check" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="linuxmusterTools.common.NameChecker.check_role">
-<span class="sig-name descname"><span class="pre">check_role</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">role</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/checks/names.html#NameChecker.check_role"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.NameChecker.check_role" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -209,8 +262,296 @@
 </dd></dl>
 
 <dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.common.KILL_LOG_PATH">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">KILL_LOG_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/var/log/sophomorix/userlog/user-kill.log'</span></em><a class="reference internal" href="../../../_modules/linuxmusterTools/common/parsers/sophomorix_log.html#KILL_LOG_PATH"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.KILL_LOG_PATH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.common.ADD_LOG_PATH">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">ADD_LOG_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/var/log/sophomorix/userlog/user-add.log'</span></em><a class="reference internal" href="../../../_modules/linuxmusterTools/common/parsers/sophomorix_log.html#ADD_LOG_PATH"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.ADD_LOG_PATH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.common.UPDATE_LOG_PATH">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">UPDATE_LOG_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/var/log/sophomorix/userlog/user-update.log'</span></em><a class="reference internal" href="../../../_modules/linuxmusterTools/common/parsers/sophomorix_log.html#UPDATE_LOG_PATH"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.UPDATE_LOG_PATH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.common.parse_kill_log">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">parse_kill_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">today</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lastweek</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/parsers/sophomorix_log.html#parse_kill_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.parse_kill_log" title="Link to this definition"></a></dt>
+<dd><p>Parse the kill log of sophomorix to return a dict with all informations.
+Informations available in the log:
+- timestamp
+- utc datetime
+- school
+- user’s cn
+- user’s lastname
+- user’s firstname
+- sophomorixAdminclass
+- sophomorixRole</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>all</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – return all entries</p></li>
+<li><p><strong>epoch</strong> (<em>basestring</em>) – search the given epoch/timestamp in the log</p></li>
+<li><p><strong>today</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – filter only today’s results</p></li>
+<li><p><strong>lastweek</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – filter only last week’s results</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>entries</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.common.parse_add_log">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">parse_add_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">today</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lastweek</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/parsers/sophomorix_log.html#parse_add_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.parse_add_log" title="Link to this definition"></a></dt>
+<dd><p>Parse the add log of sophomorix to return a dict with all informations.
+Informations available in the log:
+- timestamp
+- utc datetime
+- school
+- user’s cn
+- user’s lastname
+- user’s firstname
+- sophomorixAdminclass
+- sophomorixRole
+- sophomorixUnid</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>all</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – return all entries</p></li>
+<li><p><strong>epoch</strong> (<em>basestring</em>) – search the given epoch/timestamp in the log</p></li>
+<li><p><strong>today</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – filter only today’s results</p></li>
+<li><p><strong>lastweek</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – filter only last week’s results</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>entries</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.common.parse_update_log">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">parse_update_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">today</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lastweek</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list_changes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/parsers/sophomorix_log.html#parse_update_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.parse_update_log" title="Link to this definition"></a></dt>
+<dd><p>Parse the update log of sophomorix to return a dict with all informations.
+Informations available in the log:
+- first log line:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>timestamp</p></li>
+<li><p>utc datetime</p></li>
+<li><p>school</p></li>
+<li><p>user’s cn</p></li>
+<li><p>group change (e.g. teachers-&gt;attic)</p></li>
+<li><p>role change (e.g. teacher-&gt;student)</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>second log line:</dt><dd><ul>
+<li><p>timestamp</p></li>
+<li><p>utc datetime</p></li>
+<li><p>school</p></li>
+<li><p>user’s cn</p></li>
+<li><p>list of LDAP attributes changes (separator “=”)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>all</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – return all entries</p></li>
+<li><p><strong>epoch</strong> (<em>basestring</em>) – search the given epoch/timestamp in the log</p></li>
+<li><p><strong>today</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – filter only today’s results</p></li>
+<li><p><strong>lastweek</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – filter only last week’s results</p></li>
+<li><p><strong>list_changes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – list the LDAP attributes changed</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>entries</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.common.SHELL_COLOR_WARNING">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">SHELL_COLOR_WARNING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[93m'</span></em><a class="reference internal" href="../../../_modules/linuxmusterTools/common/color_shell.html#SHELL_COLOR_WARNING"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.SHELL_COLOR_WARNING" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.common.SHELL_COLOR_SUCCESS">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">SHELL_COLOR_SUCCESS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[92m'</span></em><a class="reference internal" href="../../../_modules/linuxmusterTools/common/color_shell.html#SHELL_COLOR_SUCCESS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.SHELL_COLOR_SUCCESS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.common.SHELL_COLOR_ALERT">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">SHELL_COLOR_ALERT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[38;5;208m'</span></em><a class="reference internal" href="../../../_modules/linuxmusterTools/common/color_shell.html#SHELL_COLOR_ALERT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.SHELL_COLOR_ALERT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.common.SHELL_COLOR_DANGER">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">SHELL_COLOR_DANGER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[91m'</span></em><a class="reference internal" href="../../../_modules/linuxmusterTools/common/color_shell.html#SHELL_COLOR_DANGER"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.SHELL_COLOR_DANGER" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.common.SHELL_COLOR_INFO">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">SHELL_COLOR_INFO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[96m'</span></em><a class="reference internal" href="../../../_modules/linuxmusterTools/common/color_shell.html#SHELL_COLOR_INFO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.SHELL_COLOR_INFO" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.common.SHELL_COLOR_LINUXMUSTER">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">SHELL_COLOR_LINUXMUSTER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[1m\x1b[38;5;214m'</span></em><a class="reference internal" href="../../../_modules/linuxmusterTools/common/color_shell.html#SHELL_COLOR_LINUXMUSTER"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.SHELL_COLOR_LINUXMUSTER" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.common.SHELL_COLOR_ENDC">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">SHELL_COLOR_ENDC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[0m'</span></em><a class="reference internal" href="../../../_modules/linuxmusterTools/common/color_shell.html#SHELL_COLOR_ENDC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.SHELL_COLOR_ENDC" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.common.ColorShell">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">ColorShell</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/color_shell.html#ColorShell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.ColorShell" title="Link to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.common.ColorShell.danger">
+<span class="sig-name descname"><span class="pre">danger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\n'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/color_shell.html#ColorShell.danger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.ColorShell.danger" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.common.ColorShell.alert">
+<span class="sig-name descname"><span class="pre">alert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\n'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/color_shell.html#ColorShell.alert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.ColorShell.alert" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.common.ColorShell.warning">
+<span class="sig-name descname"><span class="pre">warning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\n'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/color_shell.html#ColorShell.warning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.ColorShell.warning" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.common.ColorShell.info">
+<span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\n'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/color_shell.html#ColorShell.info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.ColorShell.info" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.common.ColorShell.success">
+<span class="sig-name descname"><span class="pre">success</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\n'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/color_shell.html#ColorShell.success"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.ColorShell.success" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.common.ColorShell.lmn">
+<span class="sig-name descname"><span class="pre">lmn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\n'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/color_shell.html#ColorShell.lmn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.ColorShell.lmn" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.common.ColorShell.printsh">
+<span class="sig-name descname"><span class="pre">printsh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\n'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/color_shell.html#ColorShell.printsh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.ColorShell.printsh" title="Link to this definition"></a></dt>
+<dd><p>Method for not so common colors. But color should be a valid ANSI control sequence</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.common.Spinner">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">Spinner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">SHELL_COLOR_WARNING</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/color_shell.html#Spinner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.Spinner" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.common.Spinner.spinner_cycle">
+<span class="sig-name descname"><span class="pre">spinner_cycle</span></span><a class="headerlink" href="#linuxmusterTools.common.Spinner.spinner_cycle" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.common.Spinner.color">
+<span class="sig-name descname"><span class="pre">color</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[93m'</span></em><a class="headerlink" href="#linuxmusterTools.common.Spinner.color" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.common.Spinner.progress">
+<span class="sig-name descname"><span class="pre">progress</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#linuxmusterTools.common.Spinner.progress" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.common.Spinner.stop_running">
+<span class="sig-name descname"><span class="pre">stop_running</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#linuxmusterTools.common.Spinner.stop_running" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.common.Spinner.spin_thread">
+<span class="sig-name descname"><span class="pre">spin_thread</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#linuxmusterTools.common.Spinner.spin_thread" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.common.Spinner.text">
+<span class="sig-name descname"><span class="pre">text</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#linuxmusterTools.common.Spinner.text" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.common.Spinner.last_text">
+<span class="sig-name descname"><span class="pre">last_text</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#linuxmusterTools.common.Spinner.last_text" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.common.Spinner.update">
+<span class="sig-name descname"><span class="pre">update</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#linuxmusterTools.common.Spinner.update" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.common.Spinner.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/color_shell.html#Spinner.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.Spinner.start" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.common.Spinner.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/color_shell.html#Spinner.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.Spinner.stop" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.common.Spinner.init_spin">
+<span class="sig-name descname"><span class="pre">init_spin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/color_shell.html#Spinner.init_spin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.Spinner.init_spin" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.common.Spinner.print">
+<span class="sig-name descname"><span class="pre">print</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/color_shell.html#Spinner.print"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.Spinner.print" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.common.Spinner.__enter__">
+<span class="sig-name descname"><span class="pre">__enter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/color_shell.html#Spinner.__enter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.Spinner.__enter__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.common.Spinner.__exit__">
+<span class="sig-name descname"><span class="pre">__exit__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_tb</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/common/color_shell.html#Spinner.__exit__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.Spinner.__exit__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
 <dt class="sig sig-object py" id="linuxmusterTools.common.Validator">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">Validator</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/common.html#Validator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.Validator" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.common.lprint">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">lprint</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/common.html#lprint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.lprint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.common.spinner">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.common.</span></span><span class="sig-name descname"><span class="pre">spinner</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/common.html#spinner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.common.spinner" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py data">

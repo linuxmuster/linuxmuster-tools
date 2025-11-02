@@ -5,8 +5,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.ldap_reader &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.ldapconnector.ldap_reader &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/translations.js?v=8fd896e3"></script>
@@ -62,6 +62,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../linuxmusterTools.html">linuxmusterTools</a></li>
           <li class="breadcrumb-item"><a href="../ldapconnector.html">linuxmusterTools.ldapconnector</a></li>
       <li class="breadcrumb-item active">linuxmusterTools.ldapconnector.ldap_reader</li>
       <li class="wy-breadcrumbs-aside">
@@ -73,20 +74,25 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.ldapconnector.ldap_reader</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">ldap</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">fields</span><span class="p">,</span> <span class="n">asdict</span>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">ldap</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">fields</span><span class="p">,</span> <span class="n">asdict</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.connector</span><span class="w"> </span><span class="kn">import</span> <span class="n">LdapConnector</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..lmnconfig</span><span class="w"> </span><span class="kn">import</span> <span class="n">CustomFieldsConfig</span>
+<span class="kn">from</span> <span class="nn">.connector</span> <span class="kn">import</span> <span class="n">LdapConnector</span>
+<span class="kn">from</span> <span class="nn">..lmnconfig</span> <span class="kn">import</span> <span class="n">CustomFieldsConfig</span>
+
+
+<div class="viewcode-block" id="logger">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/ldap_reader/index.html#linuxmusterTools.ldapconnector.ldap_reader.logger">[docs]</a>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LdapReader">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/urls/index.html#linuxmusterTools.ldapconnector.ldap_reader.LdapReader">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">LdapReader</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">LdapReader</span><span class="p">:</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <div class="viewcode-block" id="LdapReader.lc">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/ldap_reader/index.html#linuxmusterTools.ldapconnector.ldap_reader.LdapReader.lc">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">lc</span> <span class="o">=</span> <span class="n">LdapConnector</span><span class="p">()</span></div>
@@ -94,7 +100,7 @@
 
 <div class="viewcode-block" id="LdapReader._create_result_object">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/urls/index.html#linuxmusterTools.ldapconnector.ldap_reader.LdapReader._create_result_object">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_create_result_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">objectclass</span><span class="p">,</span> <span class="nb">dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">[],</span> <span class="n">dn_filter</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">custom_config</span><span class="o">=</span><span class="p">{}):</span>
+    <span class="k">def</span> <span class="nf">_create_result_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">objectclass</span><span class="p">,</span> <span class="nb">dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">[],</span> <span class="n">dn_filter</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">custom_config</span><span class="o">=</span><span class="p">{}):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Formatting one ldap result object into a dict or a LMN model object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -116,7 +122,7 @@
                         <span class="n">value</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">type</span><span class="p">())</span>
                         <span class="n">data</span><span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_value</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
                 <span class="k">if</span> <span class="nb">dict</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">objectclass</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;LMNUser&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">objectclass</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;LMNUserModel&#39;</span><span class="p">:</span>
                         <span class="n">model_dict</span> <span class="o">=</span> <span class="n">asdict</span><span class="p">(</span><span class="n">objectclass</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">,</span> <span class="n">custom_fields_config</span><span class="o">=</span><span class="n">custom_config</span><span class="p">))</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">model_dict</span> <span class="o">=</span> <span class="n">asdict</span><span class="p">(</span><span class="n">objectclass</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">))</span>
@@ -125,7 +131,7 @@
                         <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">model_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">attributes</span><span class="p">}</span>
                     <span class="k">return</span> <span class="n">model_dict</span>
 
-                <span class="k">if</span> <span class="n">objectclass</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;LMNUser&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">objectclass</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;LMNUserModel&#39;</span><span class="p">:</span>
                         <span class="k">return</span> <span class="n">objectclass</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">,</span> <span class="n">custom_fields_config</span><span class="o">=</span><span class="n">custom_config</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                         <span class="k">return</span> <span class="n">objectclass</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span>
@@ -134,18 +140,21 @@
             <span class="k">return</span> <span class="p">{}</span>
 
         <span class="c1"># Creating empty object with default values</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">:</span><span class="n">field</span><span class="o">.</span><span class="n">type</span><span class="p">()</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">(</span><span class="n">objectclass</span><span class="p">)</span> <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">init</span> <span class="p">}</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">:</span><span class="n">field</span><span class="o">.</span><span class="n">type</span><span class="p">()</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">(</span><span class="n">objectclass</span><span class="p">)</span> <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">init</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">objectclass</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;LMNUserModel&#39;</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;custom_fields_config&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="n">custom_config</span>
+
         <span class="k">return</span> <span class="n">objectclass</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LdapReader.get_single">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/urls/index.html#linuxmusterTools.ldapconnector.ldap_reader.LdapReader.get_single">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_single</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objectclass</span><span class="p">,</span> <span class="n">ldap_filter</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="n">ldap</span><span class="o">.</span><span class="n">SCOPE_SUBTREE</span><span class="p">,</span> <span class="n">subdn</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">[],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_single</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objectclass</span><span class="p">,</span> <span class="n">ldap_filter</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="n">ldap</span><span class="o">.</span><span class="n">SCOPE_SUBTREE</span><span class="p">,</span> <span class="n">subdn</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">[],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handle a single result from a ldap request (with required ldap filter)</span>
 <span class="sd">        and convert it in the given object class.</span>
 
-<span class="sd">        :param objectclass: dataclass like LMNUser</span>
+<span class="sd">        :param objectclass: dataclass like LMNUserModel</span>
 <span class="sd">        :type objectclass:</span>
 <span class="sd">        :param ldap_filter: A valid ldap filter</span>
 <span class="sd">        :type ldap_filter: basestring</span>
@@ -168,19 +177,19 @@
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="c1"># Only taking the first entry so warn the user</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Multiple entries found in LDAP, but only giving the first one as expected.&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Multiple entries found in LDAP, but only giving the first one as expected.&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_result_object</span><span class="p">(</span><span class="n">to_handle</span><span class="p">,</span> <span class="n">objectclass</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attributes</span><span class="p">,</span> <span class="n">custom_config</span><span class="o">=</span> <span class="n">custom_fields_config</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LdapReader.get_collection">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/urls/index.html#linuxmusterTools.ldapconnector.ldap_reader.LdapReader.get_collection">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objectclass</span><span class="p">,</span> <span class="n">ldap_filter</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="n">ldap</span><span class="o">.</span><span class="n">SCOPE_SUBTREE</span><span class="p">,</span> <span class="n">subdn</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">sortkey</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">[],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objectclass</span><span class="p">,</span> <span class="n">ldap_filter</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="n">ldap</span><span class="o">.</span><span class="n">SCOPE_SUBTREE</span><span class="p">,</span> <span class="n">subdn</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">sortkey</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">[],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handle multiples results from a ldap request (with required ldap filter)</span>
 <span class="sd">        and convert it in a list of given object class.</span>
 
-<span class="sd">        :param objectclass: dataclass like LMNUser</span>
+<span class="sd">        :param objectclass: dataclass like LMNUserModel</span>
 <span class="sd">        :type objectclass:</span>
 <span class="sd">        :param ldap_filter: A valid ldap filter</span>
 <span class="sd">        :type ldap_filter: basestring</span>
@@ -194,7 +203,7 @@
 <span class="sd">        :typee attributes: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">_check_schoolclass_number</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">_check_schoolclass_number</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                 <span class="k">return</span> <span class="n">s</span>
 
@@ -227,7 +236,7 @@
     <span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="LdapReader._filter_value">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/urls/index.html#linuxmusterTools.ldapconnector.ldap_reader.LdapReader._filter_value">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_filter_value</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_filter_value</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Middleware to decode values and convert it in an usable format (mostly</span>
 <span class="sd">        compatible with json). Parameter field is given in order to find out the</span>
@@ -250,6 +259,8 @@
         <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;bool&#39;</span><span class="p">:</span>
             <span class="c1"># Something like [b&#39;FALSE&#39;]</span>
             <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">value</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="c1"># TODO: this may be wrong because it gives the illusion that</span>
+                <span class="c1"># this value is set to False in ldap</span>
                 <span class="k">return</span> <span class="kc">False</span>
             <span class="k">return</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;True&#39;</span>
 

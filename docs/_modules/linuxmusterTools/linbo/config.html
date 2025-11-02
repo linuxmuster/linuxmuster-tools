@@ -5,8 +5,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.linbo.config &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.linbo.config &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/translations.js?v=8fd896e3"></script>
@@ -62,6 +62,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../linuxmusterTools.html">linuxmusterTools</a></li>
       <li class="breadcrumb-item active">linuxmusterTools.linbo.config</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -72,19 +73,19 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.linbo.config</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">locale</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span></span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">locale</span>
+<span class="kn">import</span> <span class="nn">time</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..devices</span><span class="w"> </span><span class="kn">import</span> <span class="n">Devices</span>
+<span class="kn">from</span> <span class="nn">..devices</span> <span class="kn">import</span> <span class="n">Devices</span>
 
 
 <span class="nd">@dataclass</span>
 <div class="viewcode-block" id="Partition">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.config.Partition">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Partition</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">Partition</span><span class="p">:</span>
 <div class="viewcode-block" id="Partition.Bootable">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/config/index.html#linuxmusterTools.linbo.config.Partition.Bootable">[docs]</a>
     <span class="n">Bootable</span><span class="p">:</span> <span class="nb">bool</span></div>
@@ -114,7 +115,7 @@
 <span class="nd">@dataclass</span>
 <div class="viewcode-block" id="OS">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.config.OS">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">OS</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">OS</span><span class="p">:</span>
 <div class="viewcode-block" id="OS.Append">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/config/index.html#linuxmusterTools.linbo.config.OS.Append">[docs]</a>
     <span class="n">Append</span><span class="p">:</span> <span class="nb">str</span></div>
@@ -184,7 +185,7 @@
 <span class="nd">@dataclass</span>
 <div class="viewcode-block" id="Linbo">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.config.Linbo">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Linbo</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">Linbo</span><span class="p">:</span>
 <div class="viewcode-block" id="Linbo.AutoFormat">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/config/index.html#linuxmusterTools.linbo.config.Linbo.AutoFormat">[docs]</a>
     <span class="n">AutoFormat</span><span class="p">:</span> <span class="nb">bool</span></div>
@@ -242,7 +243,7 @@
 <span class="nd">@dataclass</span>
 <div class="viewcode-block" id="LinboConfig">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.config.LinboConfig">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">LinboConfig</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">LinboConfig</span><span class="p">:</span>
 <div class="viewcode-block" id="LinboConfig.LINBO">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/config/index.html#linuxmusterTools.linbo.config.LinboConfig.LINBO">[docs]</a>
     <span class="n">LINBO</span><span class="p">:</span> <span class="n">Linbo</span></div>
@@ -259,7 +260,7 @@
 
 <div class="viewcode-block" id="LinboConfigManager">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.config.LinboConfigManager">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">LinboConfigManager</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">LinboConfigManager</span><span class="p">:</span>
     <span class="k">pass</span></div>
 
 
@@ -272,7 +273,7 @@
 
 <div class="viewcode-block" id="read_config">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.config.read_config">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">read_config</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">read_config</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the os config from linbo config file start.conf.&lt;group&gt;</span>
 
@@ -305,7 +306,7 @@
 
 <div class="viewcode-block" id="last_sync">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.config.last_sync">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">last_sync</span><span class="p">(</span><span class="n">workstation</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">last_sync</span><span class="p">(</span><span class="n">workstation</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the date of the last sync date for a workstation w.</span>
 
@@ -345,7 +346,7 @@
 
 <div class="viewcode-block" id="group_os">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.config.group_os">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">group_os</span><span class="p">(</span><span class="n">workstations</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">group_os</span><span class="p">(</span><span class="n">workstations</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get all os infos from linbo config file and inject it in workstations dict.</span>
 <span class="sd">    The workstations dict is set in the function list_workstations().</span>
@@ -389,7 +390,7 @@
 
 <div class="viewcode-block" id="list_workstations">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.config.list_workstations">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">list_workstations</span><span class="p">(</span><span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="p">[]):</span>
+<span class="k">def</span> <span class="nf">list_workstations</span><span class="p">(</span><span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="p">[]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate a dict with workstations and parameters out of devices file</span>
 
@@ -418,7 +419,7 @@
 
 <div class="viewcode-block" id="last_sync_all">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.config.last_sync_all">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">last_sync_all</span><span class="p">(</span><span class="n">workstations</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">last_sync_all</span><span class="p">(</span><span class="n">workstations</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Add last synchronisation informations into the workstations dict,</span>
 <span class="sd">    and status attribute to use as class for bootstrap.</span>

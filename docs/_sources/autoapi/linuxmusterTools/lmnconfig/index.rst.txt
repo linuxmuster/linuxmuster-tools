@@ -11,6 +11,7 @@ Submodules
    :maxdepth: 1
 
    /autoapi/linuxmusterTools/lmnconfig/samba/index
+   /autoapi/linuxmusterTools/lmnconfig/server/index
    /autoapi/linuxmusterTools/lmnconfig/setup/index
    /autoapi/linuxmusterTools/lmnconfig/sophomorix/index
    /autoapi/linuxmusterTools/lmnconfig/webui/index
@@ -22,8 +23,19 @@ Attributes
 .. autoapisummary::
 
    linuxmusterTools.lmnconfig.WEBUI_IMPORT
+   linuxmusterTools.lmnconfig.logger
+   linuxmusterTools.lmnconfig.logger
+   linuxmusterTools.lmnconfig.logger
    linuxmusterTools.lmnconfig.smbconf
    linuxmusterTools.lmnconfig.LOG_LEVEL
+   linuxmusterTools.lmnconfig.DFS
+   linuxmusterTools.lmnconfig.config
+   linuxmusterTools.lmnconfig.SHARES_LIST
+   linuxmusterTools.lmnconfig.dfs_proxy
+   linuxmusterTools.lmnconfig.logger
+   linuxmusterTools.lmnconfig.SERVER_HOSTNAME
+   linuxmusterTools.lmnconfig.server_ip
+   linuxmusterTools.lmnconfig.SERVER_IP
 
 
 Classes
@@ -34,7 +46,10 @@ Classes
    linuxmusterTools.lmnconfig.LMNFile
    linuxmusterTools.lmnconfig.CustomFieldsConfig
    linuxmusterTools.lmnconfig.LMNFile
-   linuxmusterTools.lmnconfig.SophomorixConfig
+   linuxmusterTools.lmnconfig.SchoolConfig
+   linuxmusterTools.lmnconfig.MultiOrderedDict
+   linuxmusterTools.lmnconfig.SophomorixIni
+   linuxmusterTools.lmnconfig.SophomorixConf
    linuxmusterTools.lmnconfig.LMNFile
    linuxmusterTools.lmnconfig.SetupConfig
 
@@ -142,6 +157,8 @@ Package Contents
    :value: True
 
 
+.. py:data:: logger
+
 .. py:class:: CustomFieldsConfig(school='default-school')
 
 .. py:class:: LMNFile(file, mode, delimiter=';', fieldnames=None)
@@ -232,7 +249,75 @@ Package Contents
 
 
 
-.. py:class:: SophomorixConfig(school='default-school')
+.. py:data:: logger
+
+.. py:class:: SchoolConfig(school='default-school')
+
+.. py:class:: MultiOrderedDict
+
+   Bases: :py:obj:`collections.OrderedDict`
+
+
+   dict() -> new empty dictionary
+   dict(mapping) -> new dictionary initialized from a mapping object's
+       (key, value) pairs
+   dict(iterable) -> new dictionary initialized as if via:
+       d = {}
+       for k, v in iterable:
+           d[k] = v
+   dict(**kwargs) -> new dictionary initialized with the name=value pairs
+       in the keyword argument list.  For example:  dict(one=1, two=2)
+
+
+   .. py:method:: __setitem__(key, value)
+
+      Set self[key] to value.
+
+
+
+.. py:class:: SophomorixIni
+
+   .. py:attribute:: path
+      :value: '/usr/share/sophomorix/devel/sophomorix.ini'
+
+
+
+   .. py:attribute:: data
+
+
+   .. py:attribute:: sections
+
+
+   .. py:attribute:: dict
+
+
+   .. py:attribute:: computerrole
+
+
+   .. py:attribute:: clientrole
+      :value: ['classroom-teachercomputer', 'classroom-studentcomputer', 'faculty-teachercomputer',...
+
+
+
+   .. py:attribute:: userrole
+
+
+   .. py:method:: sanitize(value)
+      :staticmethod:
+
+
+
+   .. py:method:: get(section, key)
+
+
+.. py:class:: SophomorixConf
+
+   .. py:attribute:: path
+      :value: '/etc/linuxmuster/sophomorix/sophomorix.conf'
+
+
+
+.. py:data:: logger
 
 .. py:data:: smbconf
 
@@ -248,6 +333,16 @@ Package Contents
 
 
 .. py:data:: LOG_LEVEL
+
+.. py:data:: DFS
+
+.. py:data:: config
+
+.. py:data:: SHARES_LIST
+   :value: []
+
+
+.. py:data:: dfs_proxy
 
 .. py:class:: LMNFile(file, mode, delimiter=';', fieldnames=None)
 
@@ -337,5 +432,13 @@ Package Contents
 
 
 
+.. py:data:: logger
+
 .. py:class:: SetupConfig(school='default-school')
+
+.. py:data:: SERVER_HOSTNAME
+
+.. py:data:: server_ip
+
+.. py:data:: SERVER_IP
 

@@ -20,8 +20,10 @@ Attributes
 .. autoapisummary::
 
    linuxmusterTools.lmnfile.csv_fieldnames
+   linuxmusterTools.lmnfile.logger
    linuxmusterTools.lmnfile.ALLOWED_PATHS
    linuxmusterTools.lmnfile.EMPTY_LINE_MARKER
+   linuxmusterTools.lmnfile.HEADER_MARKER
 
 
 Classes
@@ -50,12 +52,18 @@ Package Contents
 
 .. py:data:: csv_fieldnames
 
+.. py:data:: logger
+
 .. py:data:: ALLOWED_PATHS
-   :value: ['/etc/linuxmuster/webui/config.yml', '/etc/linuxmuster/sophomorix/', '/srv/linbo',...
+   :value: ['/etc/linuxmuster/api/config.yml', '/etc/linuxmuster/webui/config.yml',...
 
 
 .. py:data:: EMPTY_LINE_MARKER
    :value: '###EMPTY#LINE'
+
+
+.. py:data:: HEADER_MARKER
+   :value: '#HEADERS#'
 
 
 .. py:function:: convertBool(boolean)
@@ -206,6 +214,9 @@ Package Contents
 
 
    .. py:method:: read()
+
+
+   .. py:method:: fix_bom()
 
 
    .. py:method:: write(data)

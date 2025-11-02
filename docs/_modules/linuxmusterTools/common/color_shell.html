@@ -1,0 +1,310 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.common.color_shell &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ac320c09"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../linuxmusterTools.html">linuxmusterTools</a></li>
+          <li class="breadcrumb-item"><a href="../common.html">linuxmusterTools.common</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.common.color_shell</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for linuxmusterTools.common.color_shell</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+
+<div class="viewcode-block" id="SHELL_COLOR_WARNING">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.color_shell.SHELL_COLOR_WARNING">[docs]</a>
+<span class="n">SHELL_COLOR_WARNING</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[93m&#39;</span></div>
+
+<div class="viewcode-block" id="SHELL_COLOR_SUCCESS">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.color_shell.SHELL_COLOR_SUCCESS">[docs]</a>
+<span class="n">SHELL_COLOR_SUCCESS</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[92m&#39;</span></div>
+
+<div class="viewcode-block" id="SHELL_COLOR_ALERT">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.color_shell.SHELL_COLOR_ALERT">[docs]</a>
+<span class="n">SHELL_COLOR_ALERT</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[38;5;208m&#39;</span></div>
+
+<div class="viewcode-block" id="SHELL_COLOR_DANGER">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.color_shell.SHELL_COLOR_DANGER">[docs]</a>
+<span class="n">SHELL_COLOR_DANGER</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[91m&#39;</span></div>
+
+<div class="viewcode-block" id="SHELL_COLOR_INFO">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.color_shell.SHELL_COLOR_INFO">[docs]</a>
+<span class="n">SHELL_COLOR_INFO</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[96m&#39;</span></div>
+
+<div class="viewcode-block" id="SHELL_COLOR_LINUXMUSTER">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.color_shell.SHELL_COLOR_LINUXMUSTER">[docs]</a>
+<span class="n">SHELL_COLOR_LINUXMUSTER</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[1m</span><span class="se">\033</span><span class="s1">[38;5;214m&#39;</span></div>
+
+<div class="viewcode-block" id="SHELL_COLOR_ENDC">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.color_shell.SHELL_COLOR_ENDC">[docs]</a>
+<span class="n">SHELL_COLOR_ENDC</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[0m&#39;</span></div>
+
+<span class="c1"># For more definitions, see : https://misc.flogisoft.com/bash/tip_colors_and_formatting</span>
+
+
+<div class="viewcode-block" id="ColorShell">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.color_shell.ColorShell">[docs]</a>
+<span class="k">class</span> <span class="nc">ColorShell</span><span class="p">:</span>
+
+<div class="viewcode-block" id="ColorShell.danger">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.color_shell.ColorShell.danger">[docs]</a>
+    <span class="k">def</span> <span class="nf">danger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">SHELL_COLOR_DANGER</span><span class="si">}{</span><span class="n">result</span><span class="si">}{</span><span class="n">SHELL_COLOR_ENDC</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ColorShell.alert">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.color_shell.ColorShell.alert">[docs]</a>
+    <span class="k">def</span> <span class="nf">alert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">SHELL_COLOR_ALERT</span><span class="si">}{</span><span class="n">result</span><span class="si">}{</span><span class="n">SHELL_COLOR_ENDC</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ColorShell.warning">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.color_shell.ColorShell.warning">[docs]</a>
+    <span class="k">def</span> <span class="nf">warning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">SHELL_COLOR_WARNING</span><span class="si">}{</span><span class="n">result</span><span class="si">}{</span><span class="n">SHELL_COLOR_ENDC</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ColorShell.info">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.color_shell.ColorShell.info">[docs]</a>
+    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">SHELL_COLOR_INFO</span><span class="si">}{</span><span class="n">result</span><span class="si">}{</span><span class="n">SHELL_COLOR_ENDC</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ColorShell.success">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.color_shell.ColorShell.success">[docs]</a>
+    <span class="k">def</span> <span class="nf">success</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">SHELL_COLOR_SUCCESS</span><span class="si">}{</span><span class="n">result</span><span class="si">}{</span><span class="n">SHELL_COLOR_ENDC</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ColorShell.lmn">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.color_shell.ColorShell.lmn">[docs]</a>
+    <span class="k">def</span> <span class="nf">lmn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">SHELL_COLOR_LINUXMUSTER</span><span class="si">}{</span><span class="n">result</span><span class="si">}{</span><span class="n">SHELL_COLOR_ENDC</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ColorShell.printsh">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.color_shell.ColorShell.printsh">[docs]</a>
+    <span class="k">def</span> <span class="nf">printsh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method for not so common colors. But color should be a valid ANSI control sequence</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">color</span><span class="si">}{</span><span class="n">text</span><span class="si">}{</span><span class="n">SHELL_COLOR_ENDC</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">)</span></div>
+</div>
+
+
+<span class="c1"># Mostly copied from https://github.com/not-kennethreitz/blindspin</span>
+<div class="viewcode-block" id="Spinner">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.color_shell.Spinner">[docs]</a>
+<span class="k">class</span> <span class="nc">Spinner</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Spinner.spinner_cycle">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/color_shell/index.html#linuxmusterTools.common.color_shell.Spinner.spinner_cycle">[docs]</a>
+    <span class="n">spinner_cycle</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">cycle</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏&#39;</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">SHELL_COLOR_WARNING</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A basic CLI spinner to animate a long process.</span>
+
+<span class="sd">        :param color: A valid ANSI control sequence color for shell ouput, like  &#39;\033[93m&#39;.</span>
+<span class="sd">        See defined colors in this module.</span>
+<span class="sd">        :type color: basestring</span>
+<span class="sd">        :param progress: If true, try to display one line per text to print (does not always work).</span>
+<span class="sd">        If false, all lines are always replaced by the next line.</span>
+<span class="sd">        :type progress: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="Spinner.color">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/color_shell/index.html#linuxmusterTools.common.color_shell.Spinner.color">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">color</span></div>
+
+<div class="viewcode-block" id="Spinner.progress">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/color_shell/index.html#linuxmusterTools.common.color_shell.Spinner.progress">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">progress</span> <span class="o">=</span> <span class="n">progress</span></div>
+
+<div class="viewcode-block" id="Spinner.stop_running">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/color_shell/index.html#linuxmusterTools.common.color_shell.Spinner.stop_running">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_running</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Spinner.spin_thread">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/color_shell/index.html#linuxmusterTools.common.color_shell.Spinner.spin_thread">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spin_thread</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Spinner.text">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/color_shell/index.html#linuxmusterTools.common.color_shell.Spinner.text">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="Spinner.last_text">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/color_shell/index.html#linuxmusterTools.common.color_shell.Spinner.last_text">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="Spinner.update">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/color_shell/index.html#linuxmusterTools.common.color_shell.Spinner.update">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Spinner.start">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.color_shell.Spinner.start">[docs]</a>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">isatty</span><span class="p">():</span>
+            <span class="c1"># Hide cursor</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[?25l&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">stop_running</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spin_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">init_spin</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spin_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Spinner.stop">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.color_shell.Spinner.stop">[docs]</a>
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spin_thread</span><span class="p">:</span>
+            <span class="c1"># Restore cursor</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[?25h&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">stop_running</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spin_thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Spinner.init_spin">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.color_shell.Spinner.init_spin">[docs]</a>
+    <span class="k">def</span> <span class="nf">init_spin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">last_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">next_val</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spinner_cycle</span><span class="p">)</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">stop_running</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="si">}{</span><span class="n">next_val</span><span class="si">}{</span><span class="n">SHELL_COLOR_ENDC</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">update</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="p">:</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">last_time</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">last_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+                <span class="n">next_val</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spinner_cycle</span><span class="p">)</span>
+
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Spinner.print">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.color_shell.Spinner.print">[docs]</a>
+    <span class="k">def</span> <span class="nf">print</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="Spinner.__enter__">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.color_shell.Spinner.__enter__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="Spinner.__exit__">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.color_shell.Spinner.__exit__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">SHELL_COLOR_SUCCESS</span><span class="si">}{</span><span class="sa">u</span><span class="s1">&#39;✓&#39;</span><span class="si">}{</span><span class="n">SHELL_COLOR_ENDC</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">last_text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

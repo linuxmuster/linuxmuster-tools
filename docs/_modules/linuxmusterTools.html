@@ -1,0 +1,180 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=ac320c09"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=8fd896e3"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for linuxmusterTools</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+
+<div class="viewcode-block" id="logger">
+<a class="viewcode-back" href="../autoapi/linuxmusterTools/index.html#linuxmusterTools.logger">[docs]</a>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="logger_handler">
+<a class="viewcode-back" href="../autoapi/linuxmusterTools/index.html#linuxmusterTools.logger_handler">[docs]</a>
+<span class="n">logger_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()</span></div>
+
+<span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">logger_handler</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LMNToolsFormatter">
+<a class="viewcode-back" href="../autoapi/linuxmusterTools/index.html#linuxmusterTools.LMNToolsFormatter">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNToolsFormatter</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">):</span>
+<div class="viewcode-block" id="LMNToolsFormatter.grey">
+<a class="viewcode-back" href="../autoapi/linuxmusterTools/index.html#linuxmusterTools.LMNToolsFormatter.grey">[docs]</a>
+    <span class="n">grey</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\x1b</span><span class="s1">[38;5;245m&#39;</span></div>
+
+<div class="viewcode-block" id="LMNToolsFormatter.green">
+<a class="viewcode-back" href="../autoapi/linuxmusterTools/index.html#linuxmusterTools.LMNToolsFormatter.green">[docs]</a>
+    <span class="n">green</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\x1b</span><span class="s1">[38;5;82m&#39;</span></div>
+
+<div class="viewcode-block" id="LMNToolsFormatter.orange">
+<a class="viewcode-back" href="../autoapi/linuxmusterTools/index.html#linuxmusterTools.LMNToolsFormatter.orange">[docs]</a>
+    <span class="n">orange</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\x1b</span><span class="s1">[38;5;214m&#39;</span></div>
+
+<div class="viewcode-block" id="LMNToolsFormatter.red">
+<a class="viewcode-back" href="../autoapi/linuxmusterTools/index.html#linuxmusterTools.LMNToolsFormatter.red">[docs]</a>
+    <span class="n">red</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\x1b</span><span class="s1">[38;5;196m&#39;</span></div>
+
+<div class="viewcode-block" id="LMNToolsFormatter.bold_red">
+<a class="viewcode-back" href="../autoapi/linuxmusterTools/index.html#linuxmusterTools.LMNToolsFormatter.bold_red">[docs]</a>
+    <span class="n">bold_red</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\x1b</span><span class="s1">[31;1m&#39;</span></div>
+
+<div class="viewcode-block" id="LMNToolsFormatter.violet">
+<a class="viewcode-back" href="../autoapi/linuxmusterTools/index.html#linuxmusterTools.LMNToolsFormatter.violet">[docs]</a>
+    <span class="n">violet</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\x1b</span><span class="s1">[38;5;129m&#39;</span></div>
+
+<div class="viewcode-block" id="LMNToolsFormatter.reset">
+<a class="viewcode-back" href="../autoapi/linuxmusterTools/index.html#linuxmusterTools.LMNToolsFormatter.reset">[docs]</a>
+    <span class="n">reset</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\x1b</span><span class="s1">[0m&#39;</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+<div class="viewcode-block" id="LMNToolsFormatter.fmtprefix">
+<a class="viewcode-back" href="../autoapi/linuxmusterTools/index.html#linuxmusterTools.LMNToolsFormatter.fmtprefix">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fmtprefix</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> </span><span class="si">%(name)60s</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">violet</span> <span class="o">+</span> <span class="s2">&quot; </span><span class="si">%(filename)20s</span><span class="s2">:</span><span class="si">%(lineno)d</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset</span></div>
+
+<div class="viewcode-block" id="LMNToolsFormatter.fmt">
+<a class="viewcode-back" href="../autoapi/linuxmusterTools/index.html#linuxmusterTools.LMNToolsFormatter.fmt">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fmt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;%(levelname)8s - %(message)s&quot;</span></div>
+
+<div class="viewcode-block" id="LMNToolsFormatter.FORMATS">
+<a class="viewcode-back" href="../autoapi/linuxmusterTools/index.html#linuxmusterTools.LMNToolsFormatter.FORMATS">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">FORMATS</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fmtprefix</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">grey</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">fmt</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">,</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fmtprefix</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">green</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">fmt</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">,</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fmtprefix</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">orange</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">fmt</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">,</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fmtprefix</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">red</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">fmt</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">,</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fmtprefix</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">bold_red</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">fmt</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="LMNToolsFormatter.format">
+<a class="viewcode-back" href="../autoapi/linuxmusterTools/index.html#linuxmusterTools.LMNToolsFormatter.format">[docs]</a>
+    <span class="k">def</span> <span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="n">log_fmt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">FORMATS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">levelno</span><span class="p">)</span>
+        <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="n">log_fmt</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">formatter</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">record</span><span class="p">)</span></div>
+</div>
+
+
+<span class="n">logger_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">LMNToolsFormatter</span><span class="p">())</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

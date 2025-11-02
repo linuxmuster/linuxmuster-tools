@@ -9,6 +9,7 @@ Attributes
 
 .. autoapisummary::
 
+   linuxmusterTools.ldapconnector.urls.ldaprouter.logger
    linuxmusterTools.ldapconnector.urls.ldaprouter.SCHOOL_MARKER
    linuxmusterTools.ldapconnector.urls.ldaprouter.router
 
@@ -23,6 +24,8 @@ Classes
 
 Module Contents
 ---------------
+
+.. py:data:: logger
 
 .. py:data:: SCHOOL_MARKER
    :value: '##SCHOOL_MARKER##'
@@ -51,6 +54,9 @@ Module Contents
    .. py:method:: getvalues(url, attributes, dict=True, **kwargs)
 
 
+   .. py:method:: print_urls()
+
+
    .. py:method:: ascsv(url, delimiter=';', csvfile=None, attributes=[], header=True, **kwargs)
 
 
@@ -71,7 +77,7 @@ Module Contents
 
       :param pattern: URL pattern
       :type pattern: basestring
-      :param model: model obejct to return, can be e.g. LMNUser
+      :param model: model object to return, can be e.g. LMNUserModel
       :type model: dataclass object
 
 
@@ -82,7 +88,7 @@ Module Contents
 
       :param pattern: URL pattern
       :type pattern: basestring
-      :param model: model obejct to return, can be e.g. LMNUser
+      :param model: model object to return, can be e.g. LMNUserModel
       :type model: dataclass object
 
 

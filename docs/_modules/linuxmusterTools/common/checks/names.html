@@ -5,8 +5,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.common.checks.names &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.common.checks.names &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/theme_overrides.css?v=472cca7c" />
@@ -14,7 +14,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/translations.js?v=8fd896e3"></script>
@@ -62,6 +62,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../linuxmusterTools.html">linuxmusterTools</a></li>
           <li class="breadcrumb-item"><a href="../../common.html">linuxmusterTools.common</a></li>
       <li class="breadcrumb-item active">linuxmusterTools.common.checks.names</li>
       <li class="wy-breadcrumbs-aside">
@@ -73,9 +74,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.common.checks.names</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partialmethod</span>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partialmethod</span>
+
+
+<div class="viewcode-block" id="logger">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.checks.logger">[docs]</a>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NAME_RULES">
@@ -103,31 +109,9 @@
 <span class="p">}</span></div>
 
 
-<span class="c1"># Bad hardcoded list, should be read in ldap or from a config file</span>
-<div class="viewcode-block" id="ROLES">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.checks.ROLES">[docs]</a>
-<span class="n">ROLES</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">&#39;switch&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;addc&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;wlan&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;staffcomputer&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;mobile&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;printer&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;classroom-teachercomputer&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;server&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;iponly&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;faculty-teachercomputer&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;voip&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;byod&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;classroom-studentcomputer&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;thinclient&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;router&#39;</span>
-<span class="p">]</span></div>
-
-
 <div class="viewcode-block" id="set_check_method">
 <a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.checks.set_check_method">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">set_check_method</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">set_check_method</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">name_type</span> <span class="ow">in</span> <span class="n">NAME_RULES</span><span class="p">:</span>
         <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;check_</span><span class="si">{</span><span class="n">name_type</span><span class="si">}</span><span class="s2">_name&quot;</span><span class="p">,</span> <span class="n">partialmethod</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">check</span><span class="p">,</span> <span class="n">name_type</span><span class="p">))</span>
     <span class="k">return</span> <span class="bp">cls</span></div>
@@ -135,36 +119,35 @@
 
 <span class="nd">@set_check_method</span>
 <div class="viewcode-block" id="NameChecker">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.checks.NameChecker">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">NameChecker</span><span class="p">:</span>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.common.checks.NameChecker">[docs]</a>
+<span class="k">class</span> <span class="nc">NameChecker</span><span class="p">:</span>
 
 <div class="viewcode-block" id="NameChecker.check">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.checks.NameChecker.check">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name_type</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.common.checks.NameChecker.check">[docs]</a>
+    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name_type</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+        <span class="c1"># Wrong types and empty strings are not allowed.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">string</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
         <span class="n">pattern</span> <span class="o">=</span> <span class="n">NAME_RULES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name_type</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">pattern</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
 
-<div class="viewcode-block" id="NameChecker.check_role">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.checks.NameChecker.check_role">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">check_role</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">role</span> <span class="ow">in</span> <span class="n">ROLES</span></div>
-
-
 <div class="viewcode-block" id="NameChecker.normalize_mac">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.checks.NameChecker.normalize_mac">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">normalize_mac</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mac</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.common.checks.NameChecker.normalize_mac">[docs]</a>
+    <span class="k">def</span> <span class="nf">normalize_mac</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mac</span><span class="p">):</span>
         <span class="c1"># TODO: all upper ?</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_mac1</span><span class="p">(</span><span class="n">mac</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_mac1_name</span><span class="p">(</span><span class="n">mac</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">mac</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_mac2</span><span class="p">(</span><span class="n">mac</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_mac2_name</span><span class="p">(</span><span class="n">mac</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">mac</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_mac3</span><span class="p">(</span><span class="n">mac</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_mac3_name</span><span class="p">(</span><span class="n">mac</span><span class="p">):</span>
             <span class="k">return</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="n">mac</span><span class="p">))</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mac addresse </span><span class="si">{</span><span class="n">mac</span><span class="si">}</span><span class="s2"> does not correspond to any valid mac address.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># logger.warning(f&quot;Mac addresse {mac} does not correspond to any valid mac address.&quot;)</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
 </div>
 
 

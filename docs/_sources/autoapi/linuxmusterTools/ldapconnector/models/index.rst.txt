@@ -26,6 +26,7 @@ Attributes
 
 .. autoapisummary::
 
+   linuxmusterTools.ldapconnector.models.lr
    linuxmusterTools.ldapconnector.models.WEBUI_IMPORT
    linuxmusterTools.ldapconnector.models.lr
    linuxmusterTools.ldapconnector.models.lr
@@ -38,30 +39,31 @@ Classes
 
 .. autoapisummary::
 
-   linuxmusterTools.ldapconnector.models.LMNParent
-   linuxmusterTools.ldapconnector.models.LMNOU
-   linuxmusterTools.ldapconnector.models.LMNSession
-   linuxmusterTools.ldapconnector.models.LMNParent
-   linuxmusterTools.ldapconnector.models.LMNUser
-   linuxmusterTools.ldapconnector.models.LMNSession
-   linuxmusterTools.ldapconnector.models.LMNParent
-   linuxmusterTools.ldapconnector.models.LMNSchoolClass
-   linuxmusterTools.ldapconnector.models.LMNParent
-   linuxmusterTools.ldapconnector.models.LMNProject
-   linuxmusterTools.ldapconnector.models.LMNSchool
-   linuxmusterTools.ldapconnector.models.LMNParent
-   linuxmusterTools.ldapconnector.models.LMNDevice
-   linuxmusterTools.ldapconnector.models.LMNRoom
-   linuxmusterTools.ldapconnector.models.LMNParent
-   linuxmusterTools.ldapconnector.models.LMNGroup
-   linuxmusterTools.ldapconnector.models.LMNParent
-   linuxmusterTools.ldapconnector.models.LMNObject
+   linuxmusterTools.ldapconnector.models.LMNModel
+   linuxmusterTools.ldapconnector.models.LMNOUModel
+   linuxmusterTools.ldapconnector.models.LMNGPOModel
+   linuxmusterTools.ldapconnector.models.LMNSessionModel
+   linuxmusterTools.ldapconnector.models.LMNModel
+   linuxmusterTools.ldapconnector.models.LMNUserModel
+   linuxmusterTools.ldapconnector.models.LMNSessionModel
+   linuxmusterTools.ldapconnector.models.LMNModel
+   linuxmusterTools.ldapconnector.models.LMNSchoolClassModel
+   linuxmusterTools.ldapconnector.models.LMNModel
+   linuxmusterTools.ldapconnector.models.LMNProjectModel
+   linuxmusterTools.ldapconnector.models.LMNSchoolModel
+   linuxmusterTools.ldapconnector.models.LMNModel
+   linuxmusterTools.ldapconnector.models.LMNDeviceModel
+   linuxmusterTools.ldapconnector.models.LMNRoomModel
+   linuxmusterTools.ldapconnector.models.LMNModel
+   linuxmusterTools.ldapconnector.models.LMNGroupModel
+   linuxmusterTools.ldapconnector.models.LMNModel
+   linuxmusterTools.ldapconnector.models.LMNObjectModel
 
 
 Package Contents
 ----------------
 
-.. py:class:: LMNParent
+.. py:class:: LMNModel
 
    Common parent class to gather common methods.
 
@@ -80,9 +82,9 @@ Package Contents
    .. py:method:: common_name(dn)
 
 
-.. py:class:: LMNOU
+.. py:class:: LMNOUModel
 
-   Bases: :py:obj:`LMNParent`
+   Bases: :py:obj:`LMNModel`
 
 
    Common parent class to gather common methods.
@@ -115,7 +117,52 @@ Package Contents
    .. py:method:: __post_init__()
 
 
-.. py:class:: LMNSession
+.. py:class:: LMNGPOModel
+
+   Bases: :py:obj:`LMNModel`
+
+
+   Common parent class to gather common methods.
+
+
+   .. py:attribute:: cn
+      :type:  str
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+   .. py:attribute:: displayName
+      :type:  str
+
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:attribute:: gPCFileSysPath
+      :type:  str
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: objectCategory
+      :type:  list
+
+
+   .. py:attribute:: objectClass
+      :type:  list
+
+
+   .. py:method:: __post_init__()
+
+
+.. py:data:: lr
+
+.. py:class:: LMNSessionModel
 
    .. py:attribute:: sid
       :type:  str
@@ -139,7 +186,7 @@ Package Contents
    .. py:method:: __str__()
 
 
-.. py:class:: LMNParent
+.. py:class:: LMNModel
 
    Common parent class to gather common methods.
 
@@ -162,9 +209,9 @@ Package Contents
    :value: True
 
 
-.. py:class:: LMNUser
+.. py:class:: LMNUserModel
 
-   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNModel`
 
 
    Common parent class to gather common methods.
@@ -212,6 +259,10 @@ Package Contents
 
    .. py:attribute:: objectClass
       :type:  list
+
+
+   .. py:attribute:: preferredLanguage
+      :type:  str
 
 
    .. py:attribute:: proxyAddresses
@@ -318,11 +369,43 @@ Package Contents
       :type:  str
 
 
+   .. py:attribute:: sophomorixIntrinsic1
+      :type:  str
+
+
    .. py:attribute:: sophomorixIntrinsic2
-      :type:  list
+      :type:  str
 
 
    .. py:attribute:: sophomorixIntrinsic3
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic4
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic5
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti1
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti2
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti3
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti4
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti5
       :type:  list
 
 
@@ -394,12 +477,20 @@ Package Contents
       :type:  str
 
 
+   .. py:attribute:: userAccountControl
+      :type:  int
+
+
    .. py:attribute:: whenChanged
       :type:  str
 
 
    .. py:attribute:: dn
       :type:  str
+
+
+   .. py:attribute:: children
+      :type:  dict
 
 
    .. py:attribute:: customFields
@@ -431,6 +522,10 @@ Package Contents
 
 
    .. py:attribute:: lmnsessions
+      :type:  list
+
+
+   .. py:attribute:: parents
       :type:  list
 
 
@@ -495,6 +590,12 @@ Package Contents
    .. py:method:: create_custom_fields_objects(custom_config={})
 
 
+   .. py:method:: get_parents()
+
+
+   .. py:method:: get_children()
+
+
    .. py:method:: __post_init__(custom_fields_config={})
 
 
@@ -506,7 +607,7 @@ Package Contents
 
 .. py:data:: lr
 
-.. py:class:: LMNSession
+.. py:class:: LMNSessionModel
 
    .. py:attribute:: sid
       :type:  str
@@ -532,7 +633,7 @@ Package Contents
 
 .. py:data:: lr
 
-.. py:class:: LMNParent
+.. py:class:: LMNModel
 
    Common parent class to gather common methods.
 
@@ -551,9 +652,9 @@ Package Contents
    .. py:method:: common_name(dn)
 
 
-.. py:class:: LMNSchoolClass
+.. py:class:: LMNSchoolClassModel
 
-   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNModel`
 
 
    Common parent class to gather common methods.
@@ -677,9 +778,12 @@ Package Contents
    .. py:method:: get_first_passwords()
 
 
+   .. py:method:: students_csv()
+
+
 .. py:data:: lr
 
-.. py:class:: LMNParent
+.. py:class:: LMNModel
 
    Common parent class to gather common methods.
 
@@ -698,9 +802,9 @@ Package Contents
    .. py:method:: common_name(dn)
 
 
-.. py:class:: LMNProject
+.. py:class:: LMNProjectModel
 
-   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNModel`
 
 
    Common parent class to gather common methods.
@@ -774,7 +878,43 @@ Package Contents
       :type:  bool
 
 
+   .. py:attribute:: sophomorixIntrinsic1
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic2
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic3
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic4
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic5
+      :type:  str
+
+
    .. py:attribute:: sophomorixIntrinsicMulti1
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti2
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti3
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti4
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti5
       :type:  list
 
 
@@ -858,7 +998,7 @@ Package Contents
 
 
 
-.. py:class:: LMNSchool
+.. py:class:: LMNSchoolModel
 
    .. py:attribute:: objectClass
       :type:  list
@@ -876,7 +1016,7 @@ Package Contents
       :type:  str
 
 
-.. py:class:: LMNParent
+.. py:class:: LMNModel
 
    Common parent class to gather common methods.
 
@@ -895,9 +1035,9 @@ Package Contents
    .. py:method:: common_name(dn)
 
 
-.. py:class:: LMNDevice
+.. py:class:: LMNDeviceModel
 
-   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNModel`
 
 
    Common parent class to gather common methods.
@@ -1002,9 +1142,9 @@ Package Contents
    .. py:method:: __post_init__()
 
 
-.. py:class:: LMNRoom
+.. py:class:: LMNRoomModel
 
-   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNModel`
 
 
    ObjectClass group for a room.
@@ -1119,7 +1259,7 @@ Package Contents
 
 .. py:data:: lr
 
-.. py:class:: LMNParent
+.. py:class:: LMNModel
 
    Common parent class to gather common methods.
 
@@ -1138,9 +1278,9 @@ Package Contents
    .. py:method:: common_name(dn)
 
 
-.. py:class:: LMNGroup
+.. py:class:: LMNGroupModel
 
-   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNModel`
 
 
    Common parent class to gather common methods.
@@ -1160,6 +1300,10 @@ Package Contents
 
    .. py:attribute:: distinguishedName
       :type:  str
+
+
+   .. py:attribute:: mail
+      :type:  list
 
 
    .. py:attribute:: member
@@ -1202,11 +1346,55 @@ Package Contents
       :type:  bool
 
 
+   .. py:attribute:: sophomorixJoinable
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixIntrinsic1
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic2
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic3
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic4
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic5
+      :type:  str
+
+
    .. py:attribute:: sophomorixIntrinsicMulti1
       :type:  list
 
 
-   .. py:attribute:: sophomorixJoinable
+   .. py:attribute:: sophomorixIntrinsicMulti2
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti3
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti4
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti5
+      :type:  list
+
+
+   .. py:attribute:: sophomorixMailAlias
+      :type:  bool
+
+
+   .. py:attribute:: sophomorixMailList
       :type:  bool
 
 
@@ -1262,7 +1450,7 @@ Package Contents
 
 
 
-.. py:class:: LMNParent
+.. py:class:: LMNModel
 
    Common parent class to gather common methods.
 
@@ -1281,9 +1469,9 @@ Package Contents
    .. py:method:: common_name(dn)
 
 
-.. py:class:: LMNObject
+.. py:class:: LMNObjectModel
 
-   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNModel`
 
 
    Common linuxmuster.net object with all attributes for global search queries.
@@ -1477,15 +1665,43 @@ Package Contents
       :type:  bool
 
 
+   .. py:attribute:: sophomorixIntrinsic1
+      :type:  str
+
+
    .. py:attribute:: sophomorixIntrinsic2
-      :type:  list
+      :type:  str
 
 
    .. py:attribute:: sophomorixIntrinsic3
-      :type:  list
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic4
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic5
+      :type:  str
 
 
    .. py:attribute:: sophomorixIntrinsicMulti1
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti2
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti3
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti4
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti5
       :type:  list
 
 

@@ -4,18 +4,48 @@ linuxmusterTools.ldapconnector.writers.user
 .. py:module:: linuxmusterTools.ldapconnector.writers.user
 
 
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.writers.user.logger
+   linuxmusterTools.ldapconnector.writers.user.name_checker
+
+
 Classes
 -------
 
 .. autoapisummary::
 
-   linuxmusterTools.ldapconnector.writers.user.LMNUserWriter
+   linuxmusterTools.ldapconnector.writers.user.LMNUser
+   linuxmusterTools.ldapconnector.writers.user.LMNUsers
+   linuxmusterTools.ldapconnector.writers.user.LMNStudent
+   linuxmusterTools.ldapconnector.writers.user.LMNStudents
+   linuxmusterTools.ldapconnector.writers.user.LMNTeacher
+   linuxmusterTools.ldapconnector.writers.user.LMNTeachers
+   linuxmusterTools.ldapconnector.writers.user.LMNParent
+   linuxmusterTools.ldapconnector.writers.user.LMNParents
+   linuxmusterTools.ldapconnector.writers.user.LMNStaff
+   linuxmusterTools.ldapconnector.writers.user.LMNStaffs
+   linuxmusterTools.ldapconnector.writers.user.LMNSchoolAdmin
+   linuxmusterTools.ldapconnector.writers.user.LMNSchoolAdmins
+   linuxmusterTools.ldapconnector.writers.user.LMNGlobalAdmin
+   linuxmusterTools.ldapconnector.writers.user.LMNGlobalAdmins
+   linuxmusterTools.ldapconnector.writers.user.LMNParentsGroup
 
 
 Module Contents
 ---------------
 
-.. py:class:: LMNUserWriter
+.. py:data:: logger
+
+.. py:data:: name_checker
+
+.. py:class:: LMNUser(cn, school='default-school')
+
+   .. py:attribute:: cn
+
 
    .. py:attribute:: lw
 
@@ -23,21 +53,388 @@ Module Contents
    .. py:attribute:: lr
 
 
-   .. py:method:: setattr(name, **kwargs)
-
-      Middleware to check if the object exists.
-
-      :param name: cn of the object
-      :type name: basestring
+   .. py:attribute:: model
 
 
+   .. py:attribute:: data
 
-   .. py:method:: delattr(name, **kwargs)
 
-      Middleware to check if the object exists.
+   .. py:attribute:: new
+      :value: False
 
-      :param name: cn of the object
-      :type name: basestring
+
+
+   .. py:attribute:: school
+      :value: 'default-school'
+
+
+
+   .. py:method:: load_data()
+
+
+   .. py:method:: setattr(**kwargs)
+
+      Set some attributes of the object directly in Ldap,
+      only for an existing object.
+      kwargs must contain a data dict with attributes/values to set.
+
+
+
+   .. py:method:: delattr(**kwargs)
+
+      Delete some attributes of the object directly in Ldap,
+      only for an existing object.
+      kwargs must contain a data dict with attributes/values to set.
+
+
+
+   .. py:method:: getattr(attr)
+
+      Get a specific attribute of the object.
+
+
+
+   .. py:method:: rename(new_cn)
+
+      Update the cn of an user.
+
+
+
+   .. py:method:: delete()
+
+      Delete the user's entry.
+
+
+
+   .. py:method:: get_children()
+
+
+   .. py:method:: _move(dst_ou)
+
+      Move the user to a new Organisational Unit.This method just move an
+      existing ldap account to a new OU but do not handle the filesystem
+      to move the user's files: it's necessary to use separately
+      Samba/smbclient for this. Use this method very carefully!
+
+
+
+   .. py:method:: _create(dst_ou)
+
+      For an user marked as new, create an entry in the specified OU.
+      This method just create an account ldap but do not handle the filesystem
+      to create the appropriate directory tree for the user: it's necessary to
+      use separately Samba/smbclient for this. Use this method very carefully!
+
+
+
+   .. py:method:: create()
+      :abstractmethod:
+
+
+
+   .. py:method:: move()
+      :abstractmethod:
+
+
+
+   .. py:method:: check()
+
+      Check the LDAP consistence of the user's entry.
+
+
+
+.. py:class:: LMNUsers(school='default-school')
+
+   .. py:attribute:: lr
+
+
+   .. py:attribute:: users
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: keys()
+
+
+   .. py:method:: items()
+
+
+   .. py:method:: __getitem__(user_cn)
+
+
+.. py:class:: LMNStudent(cn, school='default-school')
+
+   Bases: :py:obj:`LMNUser`
+
+
+   .. py:method:: load_parents()
+
+
+   .. py:method:: add_parent(parent_cn)
+
+      Add one parent to a specific user.
+
+      :param parent_cn: cn of the parent
+      :type parent_cn: basestring
+
+
+
+   .. py:method:: remove_parent(parent_cn)
+
+      Remove one parent from a specific user.
+
+      :param parent_cn: cn of the parent
+      :type parent_cn: basestring
+
+
+
+   .. py:method:: add_parents(parents_cn)
+
+      Add many parents to a specific user.
+
+      :param parents_cn: list of cn of the parents
+      :type parents_cn: list
+
+
+
+   .. py:method:: remove_parents(parents_cn)
+
+      Remove parents from a specific user.
+
+      :param parent_cn: list of cn of the parent s
+      :type parent_cn: list
+
+
+
+   .. py:method:: move(new_schoolclass)
+
+
+   .. py:method:: create(school, new_schoolclass)
+
+
+.. py:class:: LMNStudents(school='default-school')
+
+   .. py:attribute:: lr
+
+
+   .. py:attribute:: students
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: keys()
+
+
+   .. py:method:: items()
+
+
+   .. py:method:: __getitem__(student_cn)
+
+
+.. py:class:: LMNTeacher(cn, school='default-school')
+
+   Bases: :py:obj:`LMNUser`
+
+
+   .. py:method:: move()
+      :abstractmethod:
+
+
+
+   .. py:method:: create()
+
+
+.. py:class:: LMNTeachers(school='default-school')
+
+   .. py:attribute:: lr
+
+
+   .. py:attribute:: teachers
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: keys()
+
+
+   .. py:method:: items()
+
+
+   .. py:method:: __getitem__(teacher_cn)
+
+
+.. py:class:: LMNParent(cn, school='default-school')
+
+   Bases: :py:obj:`LMNUser`
+
+
+   .. py:method:: move()
+      :abstractmethod:
+
+
+
+   .. py:method:: create()
+
+
+.. py:class:: LMNParents(school='default-school')
+
+   .. py:attribute:: lr
+
+
+   .. py:attribute:: parents
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: keys()
+
+
+   .. py:method:: items()
+
+
+   .. py:method:: __getitem__(parent_cn)
+
+
+.. py:class:: LMNStaff(cn, school='default-school')
+
+   Bases: :py:obj:`LMNUser`
+
+
+   .. py:method:: move()
+      :abstractmethod:
+
+
+
+   .. py:method:: create()
+
+
+.. py:class:: LMNStaffs(school='default-school')
+
+   .. py:attribute:: lr
+
+
+   .. py:attribute:: staffs
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: keys()
+
+
+   .. py:method:: items()
+
+
+   .. py:method:: __getitem__(staff_cn)
+
+
+.. py:class:: LMNSchoolAdmin(cn, school='default-school')
+
+   Bases: :py:obj:`LMNUser`
+
+
+.. py:class:: LMNSchoolAdmins(school='default-school')
+
+   .. py:attribute:: lr
+
+
+   .. py:attribute:: schooladmins
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: keys()
+
+
+   .. py:method:: items()
+
+
+   .. py:method:: __getitem__(schooladmin_cn)
+
+
+.. py:class:: LMNGlobalAdmin(cn, school='default-school')
+
+   Bases: :py:obj:`LMNUser`
+
+
+.. py:class:: LMNGlobalAdmins(school='default-school')
+
+   .. py:attribute:: lr
+
+
+   .. py:attribute:: globaladmins
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: keys()
+
+
+   .. py:method:: items()
+
+
+   .. py:method:: __getitem__(globaladmin_cn)
+
+
+.. py:class:: LMNParentsGroup(student_cn, school='default-school')
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon`
+
+
+   Comme group class for all group types in the linuxmuster project (Projects,
+   Schoolclasses, ManagementGroup, Sophomorix Group, etc ...).
+
+
+   .. py:attribute:: cn
+      :value: 'Uninferable-parents'
+
+
+
+   .. py:attribute:: student_cn
+
+
+   .. py:method:: _check_ou()
+
+
+   .. py:method:: load_data()
+
+
+   .. py:method:: get_parents()
+
+
+   .. py:method:: add_parent(parent_cn)
+
+
+   .. py:method:: remove_parent(parent_cn)
+
+
+   .. py:method:: add_parents(parents_cn)
+
+      Add all given parents to a specific user.
+
+      :param parents_cn: list of parents cn
+      :type parents_cn: list
+
+
+
+   .. py:method:: remove_parents(parents_cn)
+
+      Remove all given parents from a specific user.
+
+      :param parents_cn: list of parents cn
+      :type parents_cn: list
+
+
+
+   .. py:method:: delete()
+
+      Delete the group in case of a student moved to attic
 
 
 

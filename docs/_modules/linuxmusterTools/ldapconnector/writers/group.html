@@ -5,8 +5,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.writers.group &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.ldapconnector.writers.group &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/theme_overrides.css?v=472cca7c" />
@@ -14,7 +14,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/translations.js?v=8fd896e3"></script>
@@ -62,8 +62,8 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../linuxmusterTools.html">linuxmusterTools</a></li>
           <li class="breadcrumb-item"><a href="../../ldapconnector.html">linuxmusterTools.ldapconnector</a></li>
-          <li class="breadcrumb-item"><a href="../writers.html">linuxmusterTools.ldapconnector.writers</a></li>
       <li class="breadcrumb-item active">linuxmusterTools.ldapconnector.writers.group</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -74,61 +74,209 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.ldapconnector.writers.group</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..ldap_writer</span><span class="w"> </span><span class="kn">import</span> <span class="n">LdapWriter</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..urls.ldaprouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">router</span>
+<span class="kn">from</span> <span class="nn">..ldap_writer</span> <span class="kn">import</span> <span class="n">LdapWriter</span>
+<span class="kn">from</span> <span class="nn">..urls.ldaprouter</span> <span class="kn">import</span> <span class="n">router</span>
+<span class="kn">from</span> <span class="nn">linuxmusterTools.common</span> <span class="kn">import</span> <span class="n">lprint</span><span class="p">,</span> <span class="n">spinner</span>
+<span class="kn">from</span> <span class="nn">linuxmusterTools.common.checks</span> <span class="kn">import</span> <span class="n">NameChecker</span>
+<span class="kn">from</span> <span class="nn">..models</span> <span class="kn">import</span> <span class="n">LMNGroupModel</span>
 
-<div class="viewcode-block" id="LMNGroupWriter">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/group/index.html#linuxmusterTools.ldapconnector.writers.group.LMNGroupWriter">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">LMNGroupWriter</span><span class="p">:</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<div class="viewcode-block" id="LMNGroupWriter.lw">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/group/index.html#linuxmusterTools.ldapconnector.writers.group.LMNGroupWriter.lw">[docs]</a>
+<div class="viewcode-block" id="logger">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/group/index.html#linuxmusterTools.ldapconnector.logger">[docs]</a>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="name_checker">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/group/index.html#linuxmusterTools.ldapconnector.name_checker">[docs]</a>
+<span class="n">name_checker</span> <span class="o">=</span> <span class="n">NameChecker</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNGroupCommon">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNGroupCommon">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNGroupCommon</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Comme group class for all group types in the linuxmuster project (Projects,</span>
+<span class="sd">    Schoolclasses, ManagementGroup, Sophomorix Group, etc ...).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cn</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+
+        <span class="c1"># TODO if new is enabled</span>
+        <span class="c1"># if not name_checker.check_login_name(cn):</span>
+        <span class="c1">#     raise Exception(f&quot;{cn} is not a valid CN&quot;)</span>
+        <span class="c1"># Missing methods _create and _move</span>
+
+<div class="viewcode-block" id="LMNGroupCommon.cn">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/group/index.html#linuxmusterTools.ldapconnector.LMNGroupCommon.cn">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cn</span> <span class="o">=</span> <span class="n">cn</span></div>
+
+<div class="viewcode-block" id="LMNGroupCommon.lw">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/group/index.html#linuxmusterTools.ldapconnector.LMNGroupCommon.lw">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">lw</span> <span class="o">=</span> <span class="n">LdapWriter</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="LMNGroupWriter.lr">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/group/index.html#linuxmusterTools.ldapconnector.writers.group.LMNGroupWriter.lr">[docs]</a>
+<div class="viewcode-block" id="LMNGroupCommon.lr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/group/index.html#linuxmusterTools.ldapconnector.LMNGroupCommon.lr">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">router</span></div>
 
+<div class="viewcode-block" id="LMNGroupCommon.model">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/group/index.html#linuxmusterTools.ldapconnector.LMNGroupCommon.model">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">LMNGroupModel</span></div>
 
-<div class="viewcode-block" id="LMNGroupWriter.setattr">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/group/index.html#linuxmusterTools.ldapconnector.writers.group.LMNGroupWriter.setattr">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="LMNGroupCommon.data">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/group/index.html#linuxmusterTools.ldapconnector.LMNGroupCommon.data">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+<div class="viewcode-block" id="LMNGroupCommon.school">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/group/index.html#linuxmusterTools.ldapconnector.LMNGroupCommon.school">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">school</span> <span class="o">=</span> <span class="n">school</span></div>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+
+<div class="viewcode-block" id="LMNGroupCommon.load_data">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNGroupCommon.load_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/units/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The group </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNGroupCommon.setattr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNGroupCommon.setattr">[docs]</a>
+    <span class="k">def</span> <span class="nf">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Middleware to check if the object exists.</span>
-
-<span class="sd">        :param name: cn of the object</span>
-<span class="sd">        :type name: basestring</span>
+<span class="sd">        Set some attributes of the object directly in Ldap,</span>
+<span class="sd">        only for an existing object.</span>
+<span class="sd">        kwargs must contain a data dict with attributes/values to set.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">details</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/groups/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">details</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The group </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The group </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_setattr</span><span class="p">(</span><span class="n">details</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="LMNGroupWriter.delattr">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/group/index.html#linuxmusterTools.ldapconnector.writers.group.LMNGroupWriter.delattr">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="LMNGroupCommon.delattr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNGroupCommon.delattr">[docs]</a>
+    <span class="k">def</span> <span class="nf">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Middleware to check if the object exists.</span>
-
-<span class="sd">        :param name: cn of the object</span>
-<span class="sd">        :type name: basestring</span>
+<span class="sd">        Delete some attributes of the object directly in Ldap,</span>
+<span class="sd">        only for an existing object.</span>
+<span class="sd">        kwargs must contain a data dict with attributes/values to set.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">details</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/groups/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">details</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The group </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The group </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span></div>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_delattr</span><span class="p">(</span><span class="n">details</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LMNGroupCommon.getattr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNGroupCommon.getattr">[docs]</a>
+    <span class="k">def</span> <span class="nf">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a specific attribute of the object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNGroupCommon.remove_member">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNGroupCommon.remove_member">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="n">user_dn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/users/</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;dn&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">user_dn</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The user </span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The object </span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">members</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;member&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">user_dn</span> <span class="ow">in</span> <span class="n">members</span><span class="p">:</span>
+                <span class="n">members</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">user_dn</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2"> is not a member of schoolclass </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;member&#39;</span><span class="p">:</span> <span class="n">members</span><span class="p">})</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not remove member </span><span class="si">{</span><span class="n">user_dn</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNGroupCommon.remove_all_members">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNGroupCommon.remove_all_members">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_all_members</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;member&#39;</span><span class="p">:</span> <span class="p">[]})</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not remove all members from </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNGroupCommon.add_member">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNGroupCommon.add_member">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="n">user_dn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/users/</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;dn&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">user_dn</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The user </span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The user </span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">members</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;member&#39;</span><span class="p">]</span>
+            <span class="n">members</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user_dn</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;member&#39;</span><span class="p">:</span> <span class="n">members</span><span class="p">})</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not append member </span><span class="si">{</span><span class="n">user_dn</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNGroupCommon.add_members">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNGroupCommon.add_members">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">userlist</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Shortcut to add all members from a given list</span>
+
+<span class="sd">        :param userlist: List of valid cn</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">userlist</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_member</span><span class="p">(</span><span class="n">user</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNGroupCommon.remove_members">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNGroupCommon.remove_members">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">userlist</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Shortcut to remove all members from a given list</span>
+
+<span class="sd">        :param userlist: List of valid cn</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">userlist</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove_member</span><span class="p">(</span><span class="n">user</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="LMNGroup">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNGroup">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNGroup</span><span class="p">(</span><span class="n">LMNGroupCommon</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to handle the Sophomorix Groups (saved under the OU Projects)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cn</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cn</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LMNGroup.load_data">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNGroup.load_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/groups/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The group </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

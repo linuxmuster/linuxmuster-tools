@@ -22,14 +22,18 @@ Attributes
 
 .. autoapisummary::
 
+   linuxmusterTools.samba_util.logger
    linuxmusterTools.samba_util.smbconf
    linuxmusterTools.samba_util.LOG_LEVEL
-   linuxmusterTools.samba_util.lr
-   linuxmusterTools.samba_util.lp
-   linuxmusterTools.samba_util.SAMDB_PATH
    linuxmusterTools.samba_util.DFS
    linuxmusterTools.samba_util.config
+   linuxmusterTools.samba_util.SHARES_LIST
    linuxmusterTools.samba_util.dfs_proxy
+   linuxmusterTools.samba_util.lr
+   linuxmusterTools.samba_util.logger
+   linuxmusterTools.samba_util.lp
+   linuxmusterTools.samba_util.SAMDB_PATH
+   linuxmusterTools.samba_util.logger
 
 
 Classes
@@ -59,6 +63,8 @@ Functions
 Package Contents
 ----------------
 
+.. py:data:: logger
+
 .. py:data:: smbconf
 
 .. py:function:: parse_log_level(level)
@@ -73,6 +79,16 @@ Package Contents
 
 
 .. py:data:: LOG_LEVEL
+
+.. py:data:: DFS
+
+.. py:data:: config
+
+.. py:data:: SHARES_LIST
+   :value: []
+
+
+.. py:data:: dfs_proxy
 
 .. py:class:: DriveManager(policy_path)
 
@@ -115,6 +131,8 @@ Package Contents
 
 
 .. py:data:: lr
+
+.. py:data:: logger
 
 .. py:data:: lp
 
@@ -240,6 +258,8 @@ Package Contents
 
    .. py:method:: set_password(username, password)
 
+
+.. py:data:: logger
 
 .. py:class:: Drive
 
@@ -480,10 +500,4 @@ Package Contents
       :rtype: string
 
 
-
-.. py:data:: DFS
-
-.. py:data:: config
-
-.. py:data:: dfs_proxy
 

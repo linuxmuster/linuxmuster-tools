@@ -12,7 +12,9 @@ Submodules
 
    /autoapi/linuxmusterTools/common/attic/index
    /autoapi/linuxmusterTools/common/checks/index
+   /autoapi/linuxmusterTools/common/color_shell/index
    /autoapi/linuxmusterTools/common/convert/index
+   /autoapi/linuxmusterTools/common/parsers/index
 
 
 Attributes
@@ -20,9 +22,21 @@ Attributes
 
 .. autoapisummary::
 
+   linuxmusterTools.common.logger
    linuxmusterTools.common.NAME_RULES
-   linuxmusterTools.common.ROLES
+   linuxmusterTools.common.KILL_LOG_PATH
+   linuxmusterTools.common.ADD_LOG_PATH
+   linuxmusterTools.common.UPDATE_LOG_PATH
+   linuxmusterTools.common.SHELL_COLOR_WARNING
+   linuxmusterTools.common.SHELL_COLOR_SUCCESS
+   linuxmusterTools.common.SHELL_COLOR_ALERT
+   linuxmusterTools.common.SHELL_COLOR_DANGER
+   linuxmusterTools.common.SHELL_COLOR_INFO
+   linuxmusterTools.common.SHELL_COLOR_LINUXMUSTER
+   linuxmusterTools.common.SHELL_COLOR_ENDC
    linuxmusterTools.common.Validator
+   linuxmusterTools.common.lprint
+   linuxmusterTools.common.spinner
    linuxmusterTools.common.WEBUI_IMPORT
 
 
@@ -32,6 +46,8 @@ Classes
 .. autoapisummary::
 
    linuxmusterTools.common.NameChecker
+   linuxmusterTools.common.ColorShell
+   linuxmusterTools.common.Spinner
 
 
 Functions
@@ -42,6 +58,9 @@ Functions
    linuxmusterTools.common.format_size
    linuxmusterTools.common.convert_sophomorix_time
    linuxmusterTools.common.set_check_method
+   linuxmusterTools.common.parse_kill_log
+   linuxmusterTools.common.parse_add_log
+   linuxmusterTools.common.parse_update_log
 
 
 Package Contents
@@ -59,11 +78,9 @@ Package Contents
    :rtype:
 
 
+.. py:data:: logger
+
 .. py:data:: NAME_RULES
-
-.. py:data:: ROLES
-   :value: ['switch', 'addc', 'wlan', 'staffcomputer', 'mobile', 'printer', 'classroom-teachercomputer',...
-
 
 .. py:function:: set_check_method(cls, *args)
 
@@ -72,13 +89,224 @@ Package Contents
    .. py:method:: check(name_type, string)
 
 
-   .. py:method:: check_role(role)
-
-
    .. py:method:: normalize_mac(mac)
 
 
+.. py:data:: KILL_LOG_PATH
+   :value: '/var/log/sophomorix/userlog/user-kill.log'
+
+
+.. py:data:: ADD_LOG_PATH
+   :value: '/var/log/sophomorix/userlog/user-add.log'
+
+
+.. py:data:: UPDATE_LOG_PATH
+   :value: '/var/log/sophomorix/userlog/user-update.log'
+
+
+.. py:function:: parse_kill_log(all=False, epoch=None, today=False, lastweek=False)
+
+   Parse the kill log of sophomorix to return a dict with all informations.
+   Informations available in the log:
+   - timestamp
+   - utc datetime
+   - school
+   - user's cn
+   - user's lastname
+   - user's firstname
+   - sophomorixAdminclass
+   - sophomorixRole
+
+   :param all: return all entries
+   :type all: bool
+   :param epoch: search the given epoch/timestamp in the log
+   :type epoch: basestring
+   :param today: filter only today's results
+   :type today: bool
+   :param lastweek: filter only last week's results
+   :type lastweek: bool
+   :return: entries
+   :rtype: dict
+
+
+.. py:function:: parse_add_log(all=False, epoch=None, today=False, lastweek=False)
+
+   Parse the add log of sophomorix to return a dict with all informations.
+   Informations available in the log:
+   - timestamp
+   - utc datetime
+   - school
+   - user's cn
+   - user's lastname
+   - user's firstname
+   - sophomorixAdminclass
+   - sophomorixRole
+   - sophomorixUnid
+
+   :param all: return all entries
+   :type all: bool
+   :param epoch: search the given epoch/timestamp in the log
+   :type epoch: basestring
+   :param today: filter only today's results
+   :type today: bool
+   :param lastweek: filter only last week's results
+   :type lastweek: bool
+   :return: entries
+   :rtype: dict
+
+
+.. py:function:: parse_update_log(all=False, epoch=None, today=False, lastweek=False, list_changes=True)
+
+   Parse the update log of sophomorix to return a dict with all informations.
+   Informations available in the log:
+   - first log line:
+       - timestamp
+       - utc datetime
+       - school
+       - user's cn
+       - group change (e.g. teachers->attic)
+       - role change (e.g. teacher->student)
+   - second log line:
+       - timestamp
+       - utc datetime
+       - school
+       - user's cn
+       - list of LDAP attributes changes (separator "=")
+
+   :param all: return all entries
+   :type all: bool
+   :param epoch: search the given epoch/timestamp in the log
+   :type epoch: basestring
+   :param today: filter only today's results
+   :type today: bool
+   :param lastweek: filter only last week's results
+   :type lastweek: bool
+   :param list_changes: list the LDAP attributes changed
+   :type list_changes: bool
+   :return: entries
+   :rtype: dict
+
+
+.. py:data:: SHELL_COLOR_WARNING
+   :value: '\x1b[93m'
+
+
+.. py:data:: SHELL_COLOR_SUCCESS
+   :value: '\x1b[92m'
+
+
+.. py:data:: SHELL_COLOR_ALERT
+   :value: '\x1b[38;5;208m'
+
+
+.. py:data:: SHELL_COLOR_DANGER
+   :value: '\x1b[91m'
+
+
+.. py:data:: SHELL_COLOR_INFO
+   :value: '\x1b[96m'
+
+
+.. py:data:: SHELL_COLOR_LINUXMUSTER
+   :value: '\x1b[1m\x1b[38;5;214m'
+
+
+.. py:data:: SHELL_COLOR_ENDC
+   :value: '\x1b[0m'
+
+
+.. py:class:: ColorShell
+
+   .. py:method:: danger(result, end='\n')
+
+
+   .. py:method:: alert(result, end='\n')
+
+
+   .. py:method:: warning(result, end='\n')
+
+
+   .. py:method:: info(result, end='\n')
+
+
+   .. py:method:: success(result, end='\n')
+
+
+   .. py:method:: lmn(result, end='\n')
+
+
+   .. py:method:: printsh(text, color, end='\n')
+
+      Method for not so common colors. But color should be a valid ANSI control sequence
+
+
+
+.. py:class:: Spinner(color=SHELL_COLOR_WARNING, progress=False)
+
+   Bases: :py:obj:`object`
+
+
+   .. py:attribute:: spinner_cycle
+
+
+   .. py:attribute:: color
+      :value: '\x1b[93m'
+
+
+
+   .. py:attribute:: progress
+      :value: False
+
+
+
+   .. py:attribute:: stop_running
+      :value: None
+
+
+
+   .. py:attribute:: spin_thread
+      :value: None
+
+
+
+   .. py:attribute:: text
+      :value: ''
+
+
+
+   .. py:attribute:: last_text
+      :value: ''
+
+
+
+   .. py:attribute:: update
+      :value: False
+
+
+
+   .. py:method:: start()
+
+
+   .. py:method:: stop()
+
+
+   .. py:method:: init_spin()
+
+
+   .. py:method:: print(text)
+
+
+   .. py:method:: __enter__()
+
+
+   .. py:method:: __exit__(exc_type, exc_val, exc_tb)
+
+
 .. py:data:: Validator
+
+.. py:data:: lprint
+
+.. py:data:: spinner
 
 .. py:data:: WEBUI_IMPORT
    :value: True

@@ -4,18 +4,39 @@ linuxmusterTools.ldapconnector.writers.group
 .. py:module:: linuxmusterTools.ldapconnector.writers.group
 
 
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.writers.group.logger
+   linuxmusterTools.ldapconnector.writers.group.name_checker
+
+
 Classes
 -------
 
 .. autoapisummary::
 
-   linuxmusterTools.ldapconnector.writers.group.LMNGroupWriter
+   linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon
+   linuxmusterTools.ldapconnector.writers.group.LMNGroup
 
 
 Module Contents
 ---------------
 
-.. py:class:: LMNGroupWriter
+.. py:data:: logger
+
+.. py:data:: name_checker
+
+.. py:class:: LMNGroupCommon(cn, school='default-school')
+
+   Comme group class for all group types in the linuxmuster project (Projects,
+   Schoolclasses, ManagementGroup, Sophomorix Group, etc ...).
+
+
+   .. py:attribute:: cn
+
 
    .. py:attribute:: lw
 
@@ -23,21 +44,75 @@ Module Contents
    .. py:attribute:: lr
 
 
-   .. py:method:: setattr(name, **kwargs)
-
-      Middleware to check if the object exists.
-
-      :param name: cn of the object
-      :type name: basestring
+   .. py:attribute:: model
 
 
+   .. py:attribute:: data
 
-   .. py:method:: delattr(name, **kwargs)
 
-      Middleware to check if the object exists.
+   .. py:attribute:: school
+      :value: 'default-school'
 
-      :param name: cn of the object
-      :type name: basestring
 
+
+   .. py:method:: load_data()
+
+
+   .. py:method:: setattr(**kwargs)
+
+      Set some attributes of the object directly in Ldap,
+      only for an existing object.
+      kwargs must contain a data dict with attributes/values to set.
+
+
+
+   .. py:method:: delattr(**kwargs)
+
+      Delete some attributes of the object directly in Ldap,
+      only for an existing object.
+      kwargs must contain a data dict with attributes/values to set.
+
+
+
+   .. py:method:: getattr(attr)
+
+      Get a specific attribute of the object.
+
+
+
+   .. py:method:: remove_member(user)
+
+
+   .. py:method:: remove_all_members()
+
+
+   .. py:method:: add_member(user)
+
+
+   .. py:method:: add_members(userlist)
+
+      Shortcut to add all members from a given list
+
+      :param userlist: List of valid cn
+
+
+
+   .. py:method:: remove_members(userlist)
+
+      Shortcut to remove all members from a given list
+
+      :param userlist: List of valid cn
+
+
+
+.. py:class:: LMNGroup(cn, school='default-school')
+
+   Bases: :py:obj:`LMNGroupCommon`
+
+
+   Class to handle the Sophomorix Groups (saved under the OU Projects)
+
+
+   .. py:method:: load_data()
 
 

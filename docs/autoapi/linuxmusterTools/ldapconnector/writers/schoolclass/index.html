@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.writers.schoolclass &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.ldapconnector.writers.schoolclass &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/theme_overrides.css?v=472cca7c" />
@@ -15,7 +15,7 @@
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../../_static/translations.js?v=8fd896e3"></script>
@@ -60,8 +60,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../samba_util/index.html">linuxmusterTools.samba_util</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#attributes">Attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#package-contents">Package Contents</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../create_students_groups/index.html">create_students_groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../00-update-schoolclasses-groups/index.html">00-update-schoolclasses-groups</a></li>
 </ul>
 </li>
 </ul>
@@ -96,11 +101,30 @@
              
   <section id="module-linuxmusterTools.ldapconnector.writers.schoolclass">
 <span id="linuxmustertools-ldapconnector-writers-schoolclass"></span><h1>linuxmusterTools.ldapconnector.writers.schoolclass<a class="headerlink" href="#module-linuxmusterTools.ldapconnector.writers.schoolclass" title="Link to this heading"></a></h1>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.schoolclass.logger" title="linuxmusterTools.ldapconnector.writers.schoolclass.logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logger</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.schoolclass.name_checker" title="linuxmusterTools.ldapconnector.writers.schoolclass.name_checker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_checker</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassWriter" title="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNSchoolclassWriter</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassGroup" title="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassGroup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNSchoolclassGroup</span></code></a></p></td>
+<td><p>Class to handle subgroups of a schoolclass, like e.g. 7a-students, 7a-teachers</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclass" title="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclass"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNSchoolclass</span></code></a></p></td>
+<td><p>Comme group class for all group types in the linuxmuster project (Projects,</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclasses" title="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclasses"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNSchoolclasses</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -108,40 +132,157 @@
 </section>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.logger">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.schoolclass.</span></span><span class="sig-name descname"><span class="pre">logger</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.logger" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.name_checker">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.schoolclass.</span></span><span class="sig-name descname"><span class="pre">name_checker</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#name_checker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.name_checker" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py class">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassWriter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.schoolclass.</span></span><span class="sig-name descname"><span class="pre">LMNSchoolclassWriter</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclassWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassWriter" title="Link to this definition"></a></dt>
-<dd><dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassWriter.lw">
-<span class="sig-name descname"><span class="pre">lw</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclassWriter.lw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassWriter.lw" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassGroup">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.schoolclass.</span></span><span class="sig-name descname"><span class="pre">LMNSchoolclassGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schoolclass_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclassGroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassGroup" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../group/index.html#linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon" title="linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon</span></code></a></p>
+<p>Class to handle subgroups of a schoolclass, like e.g. 7a-students, 7a-teachers
+and 7a-parents for the schoolclass 7a.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassGroup.schoolclass_data">
+<span class="sig-name descname"><span class="pre">schoolclass_data</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclassGroup.schoolclass_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassGroup.schoolclass_data" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassWriter.lr">
-<span class="sig-name descname"><span class="pre">lr</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclassWriter.lr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassWriter.lr" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassGroup.suffix">
+<span class="sig-name descname"><span class="pre">suffix</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclassGroup.suffix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassGroup.suffix" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassGroup.type">
+<span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclassGroup.type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassGroup.type" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassGroup.school">
+<span class="sig-name descname"><span class="pre">school</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclassGroup.school"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassGroup.school" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassWriter.setattr">
-<span class="sig-name descname"><span class="pre">setattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclassWriter.setattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassWriter.setattr" title="Link to this definition"></a></dt>
-<dd><p>Middleware to check if the object exists.</p>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassGroup.load_data">
+<span class="sig-name descname"><span class="pre">load_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclassGroup.load_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassGroup.load_data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassGroup.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclassGroup.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassGroup.delete" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassGroup.fill_members">
+<span class="sig-name descname"><span class="pre">fill_members</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclassGroup.fill_members"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassGroup.fill_members" title="Link to this definition"></a></dt>
+<dd><p>This method is only intended for subgroups like 7a-teachers, 7a-parents
+and 7a-students, and will fill the membership through the memberships
+stored in CN=7a,OU=7a or OU=Student-Parents,OU=Parents.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclass">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.schoolclass.</span></span><span class="sig-name descname"><span class="pre">LMNSchoolclass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclass" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../group/index.html#linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon" title="linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon</span></code></a></p>
+<p>Comme group class for all group types in the linuxmuster project (Projects,
+Schoolclasses, ManagementGroup, Sophomorix Group, etc …).</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclass.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclass.model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclass.model" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclass.load_data">
+<span class="sig-name descname"><span class="pre">load_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclass.load_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclass.load_data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclass.add_member">
+<span class="sig-name descname"><span class="pre">add_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclass.add_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclass.add_member" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclass.add_members">
+<span class="sig-name descname"><span class="pre">add_members</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">userlist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclass.add_members"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclass.add_members" title="Link to this definition"></a></dt>
+<dd><p>Shortcut to add all members from a given list</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>basestring</em>) – cn of the object</p>
+<dd class="field-odd"><p><strong>userlist</strong> – List of valid cn</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassWriter.delattr">
-<span class="sig-name descname"><span class="pre">delattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclassWriter.delattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassWriter.delattr" title="Link to this definition"></a></dt>
-<dd><p>Middleware to check if the object exists.</p>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclass.remove_member">
+<span class="sig-name descname"><span class="pre">remove_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclass.remove_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclass.remove_member" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclass.remove_members">
+<span class="sig-name descname"><span class="pre">remove_members</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">userlist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclass.remove_members"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclass.remove_members" title="Link to this definition"></a></dt>
+<dd><p>Shortcut to remove all members from a given list</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>basestring</em>) – cn of the object</p>
+<dd class="field-odd"><p><strong>userlist</strong> – List of valid cn</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclass.remove_all_teachers">
+<span class="sig-name descname"><span class="pre">remove_all_teachers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclass.remove_all_teachers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclass.remove_all_teachers" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclass.fill_group_members">
+<span class="sig-name descname"><span class="pre">fill_group_members</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclass.fill_group_members"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclass.fill_group_members" title="Link to this definition"></a></dt>
+<dd><p>This method is only intended to populate subgroups like 7a-teachers,
+7a-parents and 7a-students, and will fill the membership through the
+memberships stored in CN=7a,OU=7a or OU=Student-Parents,OU=Parents.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclasses">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.schoolclass.</span></span><span class="sig-name descname"><span class="pre">LMNSchoolclasses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclasses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclasses" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclasses.lr">
+<span class="sig-name descname"><span class="pre">lr</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclasses.lr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclasses.lr" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclasses.schoolclasses">
+<span class="sig-name descname"><span class="pre">schoolclasses</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclasses.schoolclasses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclasses.schoolclasses" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclasses.__len__">
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclasses.__len__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclasses.__len__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclasses.keys">
+<span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclasses.keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclasses.keys" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclasses.items">
+<span class="sig-name descname"><span class="pre">items</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclasses.items"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclasses.items" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclasses.__getitem__">
+<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schoolclass_cn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/schoolclass.html#LMNSchoolclasses.__getitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclasses.__getitem__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 

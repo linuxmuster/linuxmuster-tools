@@ -4,18 +4,28 @@ linuxmusterTools.ldapconnector.writers.object
 .. py:module:: linuxmusterTools.ldapconnector.writers.object
 
 
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.writers.object.logger
+
+
 Classes
 -------
 
 .. autoapisummary::
 
-   linuxmusterTools.ldapconnector.writers.object.LMNObjectWriter
+   linuxmusterTools.ldapconnector.writers.object.LMNObject
 
 
 Module Contents
 ---------------
 
-.. py:class:: LMNObjectWriter
+.. py:data:: logger
+
+.. py:class:: LMNObject
 
    Search per dn, may not be the best solution.
 

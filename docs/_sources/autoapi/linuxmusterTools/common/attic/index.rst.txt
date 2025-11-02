@@ -4,6 +4,14 @@ linuxmusterTools.common.attic
 .. py:module:: linuxmusterTools.common.attic
 
 
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.common.attic.logger
+
+
 Functions
 ---------
 
@@ -16,6 +24,8 @@ Functions
 
 Module Contents
 ---------------
+
+.. py:data:: logger
 
 .. py:function:: get_killdate(user, school='default-school')
 

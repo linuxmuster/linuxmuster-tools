@@ -4,40 +4,39 @@ linuxmusterTools.ldapconnector.writers.printer
 .. py:module:: linuxmusterTools.ldapconnector.writers.printer
 
 
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.writers.printer.logger
+   linuxmusterTools.ldapconnector.writers.printer.name_checker
+
+
 Classes
 -------
 
 .. autoapisummary::
 
-   linuxmusterTools.ldapconnector.writers.printer.LMNPrinterWriter
+   linuxmusterTools.ldapconnector.writers.printer.LMNPrinter
 
 
 Module Contents
 ---------------
 
-.. py:class:: LMNPrinterWriter
+.. py:data:: logger
 
-   .. py:attribute:: lw
+.. py:data:: name_checker
 
+.. py:class:: LMNPrinter(cn, school='default-school')
 
-   .. py:attribute:: lr
-
-
-   .. py:method:: setattr(name, **kwargs)
-
-      Middleware to check if the object exists.
-
-      :param name: cn of the object
-      :type name: basestring
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon`
 
 
+   Comme group class for all group types in the linuxmuster project (Projects,
+   Schoolclasses, ManagementGroup, Sophomorix Group, etc ...).
 
-   .. py:method:: delattr(name, **kwargs)
 
-      Middleware to check if the object exists.
-
-      :param name: cn of the object
-      :type name: basestring
-
+   .. py:method:: load_data()
 
 

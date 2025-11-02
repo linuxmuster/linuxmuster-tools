@@ -19,12 +19,12 @@ Module Contents
 .. py:function:: get_all_schools()
 
    Get all schools.
-   Return a LMNSchool data object
+   Return a LMNSchoolModel data object
 
 
 .. py:function:: get_specific_school(school)
 
    Get a specific school.
-   Return a LMNSchool data object
+   Return a LMNSchoolModel data object
 
 

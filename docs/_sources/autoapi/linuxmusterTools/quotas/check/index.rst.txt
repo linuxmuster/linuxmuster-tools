@@ -4,6 +4,14 @@ linuxmusterTools.quotas.check
 .. py:module:: linuxmusterTools.quotas.check
 
 
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.quotas.check.logger
+
+
 Functions
 ---------
 
@@ -21,6 +29,8 @@ Functions
 
 Module Contents
 ---------------
+
+.. py:data:: logger
 
 .. py:function:: timestamp2date(t)
 

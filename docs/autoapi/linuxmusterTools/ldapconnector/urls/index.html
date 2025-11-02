@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.urls &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.ldapconnector.urls &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/theme_overrides.css?v=472cca7c" />
@@ -15,7 +15,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/translations.js?v=8fd896e3"></script>
@@ -60,8 +60,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../samba_util/index.html">linuxmusterTools.samba_util</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#attributes">Attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#package-contents">Package Contents</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../create_students_groups/index.html">create_students_groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../00-update-schoolclasses-groups/index.html">00-update-schoolclasses-groups</a></li>
 </ul>
 </li>
 </ul>
@@ -110,6 +115,7 @@
 <li class="toctree-l1"><a class="reference internal" href="schoolclasses/index.html">linuxmusterTools.ldapconnector.urls.schoolclasses</a></li>
 <li class="toctree-l1"><a class="reference internal" href="schools/index.html">linuxmusterTools.ldapconnector.urls.schools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="search/index.html">linuxmusterTools.ldapconnector.urls.search</a></li>
+<li class="toctree-l1"><a class="reference internal" href="system/index.html">linuxmusterTools.ldapconnector.urls.system</a></li>
 <li class="toctree-l1"><a class="reference internal" href="users/index.html">linuxmusterTools.ldapconnector.urls.users</a></li>
 </ul>
 </div>
@@ -118,55 +124,64 @@
 <h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#id14" title="linuxmusterTools.ldapconnector.urls.SCHOOL_MARKER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCHOOL_MARKER</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.logger" title="linuxmusterTools.ldapconnector.urls.logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logger</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#id13" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#id16" title="linuxmusterTools.ldapconnector.urls.SCHOOL_MARKER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCHOOL_MARKER</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#id13" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id15" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#id13" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#id15" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#id13" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id15" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#id13" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#id15" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#id13" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id15" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#id13" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#id15" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#id14" title="linuxmusterTools.ldapconnector.urls.SCHOOL_MARKER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCHOOL_MARKER</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id15" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#id13" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#id16" title="linuxmusterTools.ldapconnector.urls.SCHOOL_MARKER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCHOOL_MARKER</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#id14" title="linuxmusterTools.ldapconnector.urls.SCHOOL_MARKER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCHOOL_MARKER</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id15" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#id13" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#id16" title="linuxmusterTools.ldapconnector.urls.SCHOOL_MARKER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCHOOL_MARKER</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#id13" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id15" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#id14" title="linuxmusterTools.ldapconnector.urls.SCHOOL_MARKER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCHOOL_MARKER</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#id15" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#id13" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id16" title="linuxmusterTools.ldapconnector.urls.SCHOOL_MARKER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCHOOL_MARKER</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#id13" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#id15" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#id14" title="linuxmusterTools.ldapconnector.urls.SCHOOL_MARKER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCHOOL_MARKER</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id15" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id16" title="linuxmusterTools.ldapconnector.urls.SCHOOL_MARKER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCHOOL_MARKER</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id15" title="linuxmusterTools.ldapconnector.urls.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id16" title="linuxmusterTools.ldapconnector.urls.SCHOOL_MARKER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCHOOL_MARKER</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -219,32 +234,38 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_results_search_schoolclasses" title="linuxmusterTools.ldapconnector.urls.get_results_search_schoolclasses"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_results_search_schoolclasses</span></code></a>(query)</p></td>
 <td><p>Get all details from a search about schoolclasses.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_project" title="linuxmusterTools.ldapconnector.urls.get_project"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_project</span></code></a>(project)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_results_search_empty_schoolclasses" title="linuxmusterTools.ldapconnector.urls.get_results_search_empty_schoolclasses"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_results_search_empty_schoolclasses</span></code></a>()</p></td>
+<td><p>Get all details from empty schoolclasses.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_project" title="linuxmusterTools.ldapconnector.urls.get_project"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_project</span></code></a>(project)</p></td>
 <td><p>Get all details from a specific project.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_all_projects" title="linuxmusterTools.ldapconnector.urls.get_all_projects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_projects</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_all_projects" title="linuxmusterTools.ldapconnector.urls.get_all_projects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_projects</span></code></a>()</p></td>
 <td><p>Get all projects details.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_all_schools" title="linuxmusterTools.ldapconnector.urls.get_all_schools"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_schools</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_all_schools" title="linuxmusterTools.ldapconnector.urls.get_all_schools"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_schools</span></code></a>()</p></td>
 <td><p>Get all schools.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_specific_school" title="linuxmusterTools.ldapconnector.urls.get_specific_school"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_specific_school</span></code></a>(school)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_specific_school" title="linuxmusterTools.ldapconnector.urls.get_specific_school"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_specific_school</span></code></a>(school)</p></td>
 <td><p>Get a specific school.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_all_devices" title="linuxmusterTools.ldapconnector.urls.get_all_devices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_devices</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_all_devices" title="linuxmusterTools.ldapconnector.urls.get_all_devices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_devices</span></code></a>()</p></td>
 <td><p>Get all devices.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_device" title="linuxmusterTools.ldapconnector.urls.get_device"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_device</span></code></a>(name)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_device" title="linuxmusterTools.ldapconnector.urls.get_device"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_device</span></code></a>(name)</p></td>
 <td><p>Get all details from a specific device.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_results_search_device" title="linuxmusterTools.ldapconnector.urls.get_results_search_device"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_results_search_device</span></code></a>(query[, selection])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_results_search_device" title="linuxmusterTools.ldapconnector.urls.get_results_search_device"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_results_search_device</span></code></a>(query[, selection])</p></td>
 <td><p>Get all details from a search on a specific device scheme and having a specific role</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_rooms" title="linuxmusterTools.ldapconnector.urls.get_rooms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_rooms</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_rooms" title="linuxmusterTools.ldapconnector.urls.get_rooms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_rooms</span></code></a>()</p></td>
 <td><p>Get all rooms under the Devices tree.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_room" title="linuxmusterTools.ldapconnector.urls.get_room"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_room</span></code></a>(name)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_room" title="linuxmusterTools.ldapconnector.urls.get_room"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_room</span></code></a>(name)</p></td>
 <td><p>Get a specific room under the Devices tree.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_empty_rooms" title="linuxmusterTools.ldapconnector.urls.get_empty_rooms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_empty_rooms</span></code></a>()</p></td>
+<td><p>List empty rooms under the Devices tree.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_all_units" title="linuxmusterTools.ldapconnector.urls.get_all_units"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_units</span></code></a>()</p></td>
 <td><p>Get all units. The terminology &quot;unit&quot; was chosen in order to differenciate with a &quot;group&quot; from</p></td>
@@ -262,7 +283,7 @@
 <td><p>Get a specific printer.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.global_search" title="linuxmusterTools.ldapconnector.urls.global_search"><code class="xref py py-obj docutils literal notranslate"><span class="pre">global_search</span></code></a>([query])</p></td>
-<td><p>Search all cn containing the query search</p></td>
+<td><p>Search all cn containing the query search.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_all_management_groups" title="linuxmusterTools.ldapconnector.urls.get_all_management_groups"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_management_groups</span></code></a>()</p></td>
 <td><p>Get all management groups.</p></td>
@@ -271,7 +292,7 @@
 <td><p>Get a management group specified by its name.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_from_dn" title="linuxmusterTools.ldapconnector.urls.get_from_dn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_from_dn</span></code></a>(dn)</p></td>
-<td><p>Search for a specific dn and retrieve a common LMNObject from it.</p></td>
+<td><p>Search for a specific dn and retrieve a common LMNObjectModel from it.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_all_ou" title="linuxmusterTools.ldapconnector.urls.get_all_ou"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_ou</span></code></a>()</p></td>
 <td><p>Get all organizational units.</p></td>
@@ -282,6 +303,18 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_students_ou" title="linuxmusterTools.ldapconnector.urls.get_students_ou"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_students_ou</span></code></a>()</p></td>
 <td><p>Get all details from the students organizational unit.</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_students_parents_ou" title="linuxmusterTools.ldapconnector.urls.get_students_parents_ou"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_students_parents_ou</span></code></a>()</p></td>
+<td><p>Get all details from all OU in parents OU organizational unit.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_staff_ou" title="linuxmusterTools.ldapconnector.urls.get_staff_ou"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_staff_ou</span></code></a>()</p></td>
+<td><p>Get all details from the staff organizational unit.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_all_gpos" title="linuxmusterTools.ldapconnector.urls.get_all_gpos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_gpos</span></code></a>()</p></td>
+<td><p>Get all Group Policies Objects</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.get_one_gpo" title="linuxmusterTools.ldapconnector.urls.get_one_gpo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_one_gpo</span></code></a>(name)</p></td>
+<td><p>Get one specific Group Policy Object after his displayName</p></td>
+</tr>
 </tbody>
 </table>
 </section>
@@ -289,7 +322,7 @@
 <h2>Package Contents<a class="headerlink" href="#package-contents" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.LdapReader">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">LdapReader</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_reader.html#LdapReader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.LdapReader" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">LdapReader</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_reader.html#LdapReader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.LdapReader" title="Link to this definition"></a></dt>
 <dd><dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.LdapReader.lc">
 <span class="sig-name descname"><span class="pre">lc</span></span><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.LdapReader.lc" title="Link to this definition"></a></dt>
@@ -309,9 +342,9 @@ and convert it in the given object class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>objectclass</strong> – dataclass like LMNUser</p></li>
+<li><p><strong>objectclass</strong> – dataclass like LMNUserModel</p></li>
 <li><p><strong>ldap_filter</strong> (<em>basestring</em>) – A valid ldap filter</p></li>
-<li><p><strong>dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – if True, returns a dict, else an object</p></li>
+<li><p><strong>dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – if True, returns a dict, else an object</p></li>
 <li><p><strong>school</strong> – school to search</p></li>
 <li><p><strong>attributes</strong> – list of attributes to return</p></li>
 </ul>
@@ -333,9 +366,9 @@ and convert it in a list of given object class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>objectclass</strong> – dataclass like LMNUser</p></li>
+<li><p><strong>objectclass</strong> – dataclass like LMNUserModel</p></li>
 <li><p><strong>ldap_filter</strong> (<em>basestring</em>) – A valid ldap filter</p></li>
-<li><p><strong>dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – if True, returns a list of dict, else a list of objects</p></li>
+<li><p><strong>dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – if True, returns a list of dict, else a list of objects</p></li>
 <li><p><strong>sortkey</strong> (<em>basestring</em>) – if given, sorts the list with the given attribute</p></li>
 <li><p><strong>school</strong> – school to search</p></li>
 <li><p><strong>attributes</strong> – list of attributes to return</p></li>
@@ -352,7 +385,7 @@ and convert it in a list of given object class.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.LdapReader._filter_value">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_filter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_reader.html#LdapReader._filter_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.LdapReader._filter_value" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_filter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/ldap_reader.html#LdapReader._filter_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.LdapReader._filter_value" title="Link to this definition"></a></dt>
 <dd><p>Middleware to decode values and convert it in an usable format (mostly
 compatible with json). Parameter field is given in order to find out the
 type of object.</p>
@@ -361,13 +394,18 @@ type of object.</p>
 </dd></dl>
 
 <dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.logger">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">logger</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/ldaprouter.html#logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.logger" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.SCHOOL_MARKER">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">SCHOOL_MARKER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'##SCHOOL_MARKER##'</span></em><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/ldaprouter.html#SCHOOL_MARKER"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.SCHOOL_MARKER" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.LMNLdapRouter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">LMNLdapRouter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/ldaprouter.html#LMNLdapRouter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.LMNLdapRouter" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">LMNLdapRouter</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/ldaprouter.html#LMNLdapRouter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.LMNLdapRouter" title="Link to this definition"></a></dt>
 <dd><dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.LMNLdapRouter.lr">
 <span class="sig-name descname"><span class="pre">lr</span></span><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.LMNLdapRouter.lr" title="Link to this definition"></a></dt>
@@ -400,6 +438,11 @@ type of object.</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.LMNLdapRouter.print_urls">
+<span class="sig-name descname"><span class="pre">print_urls</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/ldaprouter.html#LMNLdapRouter.print_urls"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.LMNLdapRouter.print_urls" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.LMNLdapRouter.ascsv">
 <span class="sig-name descname"><span class="pre">ascsv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">';'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csvfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/ldaprouter.html#LMNLdapRouter.ascsv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.LMNLdapRouter.ascsv" title="Link to this definition"></a></dt>
 <dd></dd></dl>
@@ -426,7 +469,7 @@ type of object.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pattern</strong> (<em>basestring</em>) – URL pattern</p></li>
-<li><p><strong>model</strong> (<em>dataclass object</em>) – model obejct to return, can be e.g. LMNUser</p></li>
+<li><p><strong>model</strong> (<em>dataclass object</em>) – model object to return, can be e.g. LMNUserModel</p></li>
 </ul>
 </dd>
 </dl>
@@ -440,7 +483,7 @@ type of object.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pattern</strong> (<em>basestring</em>) – URL pattern</p></li>
-<li><p><strong>model</strong> (<em>dataclass object</em>) – model obejct to return, can be e.g. LMNUser</p></li>
+<li><p><strong>model</strong> (<em>dataclass object</em>) – model object to return, can be e.g. LMNUserModel</p></li>
 </ul>
 </dd>
 </dl>
@@ -462,28 +505,28 @@ type of object.</p>
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_all_users">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_all_users</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/users.html#get_all_users"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_all_users" title="Link to this definition"></a></dt>
 <dd><p>Get all details from all users.
-Return a list of LMNUser data object.</p>
+Return a list of LMNUserModel data object.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_exam_users">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_exam_users</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/users.html#get_exam_users"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_exam_users" title="Link to this definition"></a></dt>
 <dd><p>Get all details from all users in exam mode.
-Return a LMNUser data object.</p>
+Return a LMNUserModel data object.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_exam_user">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_exam_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/users.html#get_exam_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_exam_user" title="Link to this definition"></a></dt>
 <dd><p>Get all details from a specific user in exam mode.
-Return a LMNUser data object.</p>
+Return a LMNUserModel data object.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_user">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/users.html#get_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_user" title="Link to this definition"></a></dt>
 <dd><p>Get all details from a specific user.
-Return a LMNUser data object.</p>
+Return a LMNUserModel data object.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -491,7 +534,7 @@ Return a LMNUser data object.</p>
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_results_search_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/users.html#get_results_search_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_results_search_user" title="Link to this definition"></a></dt>
 <dd><p>Get all details from a search on a specific user login scheme and a
 selection of roles.
-Return a list of LMNUser data object.</p>
+Return a list of LMNUserModel data object.</p>
 </dd></dl>
 
 <dl class="py data">
@@ -503,7 +546,7 @@ Return a list of LMNUser data object.</p>
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_all_from_role">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_all_from_role</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">role</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'teacher'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/roles.html#get_all_from_role"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_all_from_role" title="Link to this definition"></a></dt>
 <dd><p>Get all user from a same role.
-Return a list of LMNUser data objects.</p>
+Return a list of LMNUserModel data objects.</p>
 </dd></dl>
 
 <dl class="py data">
@@ -515,28 +558,35 @@ Return a list of LMNUser data objects.</p>
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_schoolclass">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_schoolclass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schoolclass</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/schoolclasses.html#get_schoolclass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_schoolclass" title="Link to this definition"></a></dt>
 <dd><p>Get all details from a specific schoolclass.
-Return a LMNSchoolClass data object</p>
+Return a LMNSchoolClassModel data object</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_all_students_from_schoolclass">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_all_students_from_schoolclass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schoolclass</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/schoolclasses.html#get_all_students_from_schoolclass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_all_students_from_schoolclass" title="Link to this definition"></a></dt>
 <dd><p>Get all students details from a specific schoolclass.
-Return a list of LMNUser data objects.</p>
+Return a list of LMNUserModel data objects.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_all_schoolclasses">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_all_schoolclasses</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/schoolclasses.html#get_all_schoolclasses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_all_schoolclasses" title="Link to this definition"></a></dt>
 <dd><p>Get all schoolclasses details.
-Return a list of LMNSchoolClass data objects.</p>
+Return a list of LMNSchoolClassModel data objects.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_results_search_schoolclasses">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_results_search_schoolclasses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/schoolclasses.html#get_results_search_schoolclasses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_results_search_schoolclasses" title="Link to this definition"></a></dt>
 <dd><p>Get all details from a search about schoolclasses.
-Return a list of LMNSchoolClass data objects.</p>
+Return a list of LMNSchoolClassModel data objects.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_results_search_empty_schoolclasses">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_results_search_empty_schoolclasses</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/schoolclasses.html#get_results_search_empty_schoolclasses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_results_search_empty_schoolclasses" title="Link to this definition"></a></dt>
+<dd><p>Get all details from empty schoolclasses.
+Return a list of LMNSchoolClassModel data objects.</p>
 </dd></dl>
 
 <dl class="py data">
@@ -548,14 +598,14 @@ Return a list of LMNSchoolClass data objects.</p>
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_project">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/projects.html#get_project"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_project" title="Link to this definition"></a></dt>
 <dd><p>Get all details from a specific project.
-Return a LMNProject data object</p>
+Return a LMNProjectModel data object</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_all_projects">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_all_projects</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/projects.html#get_all_projects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_all_projects" title="Link to this definition"></a></dt>
 <dd><p>Get all projects details.
-Return a list of LMNProject data objects.</p>
+Return a list of LMNProjectModel data objects.</p>
 </dd></dl>
 
 <dl class="py data">
@@ -567,14 +617,14 @@ Return a list of LMNProject data objects.</p>
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_all_schools">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_all_schools</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/schools.html#get_all_schools"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_all_schools" title="Link to this definition"></a></dt>
 <dd><p>Get all schools.
-Return a LMNSchool data object</p>
+Return a LMNSchoolModel data object</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_specific_school">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_specific_school</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/schools.html#get_specific_school"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_specific_school" title="Link to this definition"></a></dt>
 <dd><p>Get a specific school.
-Return a LMNSchool data object</p>
+Return a LMNSchoolModel data object</p>
 </dd></dl>
 
 <dl class="py data">
@@ -591,14 +641,14 @@ Return a LMNSchool data object</p>
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_all_devices">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_all_devices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/devices.html#get_all_devices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_all_devices" title="Link to this definition"></a></dt>
 <dd><p>Get all devices.
-Return a a list of LMNDevice data object.</p>
+Return a a list of LMNDeviceModel data object.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_device">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_device</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/devices.html#get_device"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_device" title="Link to this definition"></a></dt>
 <dd><p>Get all details from a specific device.
-Return a LMNDevice data object.</p>
+Return a LMNDeviceModel data object.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -606,7 +656,7 @@ Return a LMNDevice data object.</p>
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_results_search_device</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/devices.html#get_results_search_device"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_results_search_device" title="Link to this definition"></a></dt>
 <dd><p>Get all details from a search on a specific device scheme and having a specific role
 (something like ‘printer’, ‘server’, …).
-Return a list of LMNDevice data object.</p>
+Return a list of LMNDeviceModel data object.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -619,6 +669,12 @@ Return a list of LMNDevice data object.</p>
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_room">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/devices.html#get_room"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_room" title="Link to this definition"></a></dt>
 <dd><p>Get a specific room under the Devices tree.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_empty_rooms">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_empty_rooms</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/devices.html#get_empty_rooms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_empty_rooms" title="Link to this definition"></a></dt>
+<dd><p>List empty rooms under the Devices tree.</p>
 </dd></dl>
 
 <dl class="py data">
@@ -636,35 +692,35 @@ Return a list of LMNDevice data object.</p>
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_all_units</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/groups.html#get_all_units"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_all_units" title="Link to this definition"></a></dt>
 <dd><p>Get all units. The terminology “unit” was chosen in order to differenciate with a “group” from
 sophomorix-group. A unit can be a schoolclass, a project, a group, etc …
-Return a list of LMNGroup data objects.</p>
+Return a list of LMNGroupModel data objects.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_group">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/groups.html#get_group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_group" title="Link to this definition"></a></dt>
 <dd><p>Get a group (meaning units with sophomorixType sophomorix-group) specified by its name.
-Return a LMNGroup data object.</p>
+Return a LMNGroupModel data object.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_all_groups">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_all_groups</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/groups.html#get_all_groups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_all_groups" title="Link to this definition"></a></dt>
 <dd><p>Get all groups (meaning units with sophomorixType sophomorix-group).
-Return a list of LMNGroup data objects.</p>
+Return a list of LMNGroupModel data objects.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_all_printers">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_all_printers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/groups.html#get_all_printers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_all_printers" title="Link to this definition"></a></dt>
 <dd><p>Get all printer groups.
-Return a list of LMNGroup data objects.</p>
+Return a list of LMNGroupModel data objects.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_printer">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_printer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/groups.html#get_printer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_printer" title="Link to this definition"></a></dt>
 <dd><p>Get a specific printer.
-Return a LMNGroup data object.</p>
+Return a LMNGroupModel data object.</p>
 </dd></dl>
 
 <dl class="py data">
@@ -675,7 +731,7 @@ Return a LMNGroup data object.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.global_search">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">global_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/search.html#global_search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.global_search" title="Link to this definition"></a></dt>
-<dd><p>Search all cn containing the query search</p>
+<dd><p>Search all cn containing the query search.</p>
 </dd></dl>
 
 <dl class="py data">
@@ -692,14 +748,14 @@ Return a LMNGroup data object.</p>
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_all_management_groups">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_all_management_groups</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/managementgroups.html#get_all_management_groups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_all_management_groups" title="Link to this definition"></a></dt>
 <dd><p>Get all management groups.
-Return a list of LMNGroup data objects.</p>
+Return a list of LMNGroupModel data objects.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_management_group">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_management_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/managementgroups.html#get_management_group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_management_group" title="Link to this definition"></a></dt>
 <dd><p>Get a management group specified by its name.
-Return a LMNGroup data object.</p>
+Return a LMNGroupModel data object.</p>
 </dd></dl>
 
 <dl class="py data">
@@ -710,7 +766,7 @@ Return a LMNGroup data object.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_from_dn">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_from_dn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/objects.html#get_from_dn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_from_dn" title="Link to this definition"></a></dt>
-<dd><p>Search for a specific dn and retrieve a common LMNObject from it.</p>
+<dd><p>Search for a specific dn and retrieve a common LMNObjectModel from it.</p>
 </dd></dl>
 
 <dl class="py data">
@@ -727,22 +783,60 @@ Return a LMNGroup data object.</p>
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_all_ou">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_all_ou</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/ou.html#get_all_ou"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_all_ou" title="Link to this definition"></a></dt>
 <dd><p>Get all organizational units.
-Return a a list of LMNOU data object.</p>
+Return a list of LMNOUModel data object.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_devices_ou">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_devices_ou</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/ou.html#get_devices_ou"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_devices_ou" title="Link to this definition"></a></dt>
 <dd><p>Get all details from the Devices organizational unit.
-Return a LMNOU data object.</p>
+Return a LMNOUModel data object.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_students_ou">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_students_ou</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/ou.html#get_students_ou"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_students_ou" title="Link to this definition"></a></dt>
 <dd><p>Get all details from the students organizational unit.
-Return a LMNOU data object.
+Return a LMNOUModel data object.
 Quit the same as a schoolclasses request.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_students_parents_ou">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_students_parents_ou</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/ou.html#get_students_parents_ou"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_students_parents_ou" title="Link to this definition"></a></dt>
+<dd><p>Get all details from all OU in parents OU organizational unit.
+Return a LMNOUModel data object.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_staff_ou">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_staff_ou</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/ou.html#get_staff_ou"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_staff_ou" title="Link to this definition"></a></dt>
+<dd><p>Get all details from the staff organizational unit.
+Return a LMNOUModel data object.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="id15">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">router</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/ldaprouter.html#router"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id15" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="id16">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">SCHOOL_MARKER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'##SCHOOL_MARKER##'</span></em><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/ldaprouter.html#SCHOOL_MARKER"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id16" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_all_gpos">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_all_gpos</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/system.html#get_all_gpos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_all_gpos" title="Link to this definition"></a></dt>
+<dd><p>Get all Group Policies Objects
+Return a list of LMNGPOModel data object.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.get_one_gpo">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.</span></span><span class="sig-name descname"><span class="pre">get_one_gpo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/ldapconnector/urls/system.html#get_one_gpo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.get_one_gpo" title="Link to this definition"></a></dt>
+<dd><p>Get one specific Group Policy Object after his displayName
+Return a LMNGPOModel data object.</p>
 </dd></dl>
 
 </section>

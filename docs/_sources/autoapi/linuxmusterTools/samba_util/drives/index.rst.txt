@@ -4,6 +4,14 @@ linuxmusterTools.samba_util.drives
 .. py:module:: linuxmusterTools.samba_util.drives
 
 
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.samba_util.drives.logger
+
+
 Classes
 -------
 
@@ -15,6 +23,8 @@ Classes
 
 Module Contents
 ---------------
+
+.. py:data:: logger
 
 .. py:class:: Drive
 

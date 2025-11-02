@@ -1,0 +1,19 @@
+create_students_groups
+======================
+
+.. py:module:: create_students_groups
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   create_students_groups.l
+
+
+Module Contents
+---------------
+
+.. py:data:: l
+

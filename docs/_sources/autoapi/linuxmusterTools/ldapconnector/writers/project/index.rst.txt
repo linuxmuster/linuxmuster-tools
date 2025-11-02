@@ -4,40 +4,63 @@ linuxmusterTools.ldapconnector.writers.project
 .. py:module:: linuxmusterTools.ldapconnector.writers.project
 
 
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.writers.project.logger
+   linuxmusterTools.ldapconnector.writers.project.name_checker
+
+
 Classes
 -------
 
 .. autoapisummary::
 
-   linuxmusterTools.ldapconnector.writers.project.LMNProjectWriter
+   linuxmusterTools.ldapconnector.writers.project.LMNProject
+   linuxmusterTools.ldapconnector.writers.project.LMNProjects
 
 
 Module Contents
 ---------------
 
-.. py:class:: LMNProjectWriter
+.. py:data:: logger
 
-   .. py:attribute:: lw
+.. py:data:: name_checker
 
+.. py:class:: LMNProject(cn, school='default-school')
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon`
+
+
+   Comme group class for all group types in the linuxmuster project (Projects,
+   Schoolclasses, ManagementGroup, Sophomorix Group, etc ...).
+
+
+   .. py:attribute:: model
+
+
+   .. py:method:: load_data()
+
+
+.. py:class:: LMNProjects(school='default-school')
 
    .. py:attribute:: lr
 
 
-   .. py:method:: setattr(name, **kwargs)
-
-      Middleware to check if the object exists.
-
-      :param name: cn of the object
-      :type name: basestring
+   .. py:attribute:: projects
 
 
+   .. py:method:: __len__()
 
-   .. py:method:: delattr(name, **kwargs)
 
-      Middleware to check if the object exists.
+   .. py:method:: keys()
 
-      :param name: cn of the object
-      :type name: basestring
 
+   .. py:method:: items()
+
+
+   .. py:method:: __getitem__(project_cn)
 
 

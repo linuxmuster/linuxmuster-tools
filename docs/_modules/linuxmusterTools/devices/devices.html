@@ -5,8 +5,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.devices.devices &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.devices.devices &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/translations.js?v=8fd896e3"></script>
@@ -62,6 +62,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../linuxmusterTools.html">linuxmusterTools</a></li>
       <li class="breadcrumb-item active">linuxmusterTools.devices.devices</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -72,25 +73,32 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.devices.devices</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">..lmnfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">LMNFile</span>
+<span></span><span class="kn">from</span> <span class="nn">..lmnfile</span> <span class="kn">import</span> <span class="n">LMNFile</span>
+<span class="kn">from</span> <span class="nn">..common.checks</span> <span class="kn">import</span> <span class="n">NameChecker</span>
+<span class="kn">from</span> <span class="nn">..lmnconfig</span> <span class="kn">import</span> <span class="n">SophomorixIni</span>
 
+<div class="viewcode-block" id="sophomorix_ini">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/index.html#linuxmusterTools.devices.devices.sophomorix_ini">[docs]</a>
+<span class="n">sophomorix_ini</span> <span class="o">=</span> <span class="n">SophomorixIni</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="CLIENT_ROLES">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/index.html#linuxmusterTools.devices.devices.CLIENT_ROLES">[docs]</a>
-<span class="n">CLIENT_ROLES</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">&#39;classroom-teachercomputer&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;classroom-studentcomputer&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;faculty-teachercomputer&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;staffcomputer&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;thinclient&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;iponly&#39;</span><span class="p">,</span>
-<span class="p">]</span></div>
+<span class="n">CLIENT_ROLES</span> <span class="o">=</span> <span class="n">sophomorix_ini</span><span class="o">.</span><span class="n">clientrole</span></div>
+
+<div class="viewcode-block" id="COMPUTER_ROLES">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/index.html#linuxmusterTools.devices.devices.COMPUTER_ROLES">[docs]</a>
+<span class="n">COMPUTER_ROLES</span> <span class="o">=</span> <span class="n">sophomorix_ini</span><span class="o">.</span><span class="n">computerrole</span></div>
+
+
+<div class="viewcode-block" id="name_checker">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/index.html#linuxmusterTools.devices.devices.name_checker">[docs]</a>
+<span class="n">name_checker</span> <span class="o">=</span> <span class="n">NameChecker</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Devices">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.devices.devices.Devices">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Devices</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Devices</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
 <div class="viewcode-block" id="Devices.school">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/devices/index.html#linuxmusterTools.devices.devices.Devices.school">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">school</span> <span class="o">=</span> <span class="n">school</span></div>
@@ -99,7 +107,7 @@
 
 <div class="viewcode-block" id="Devices.switch">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.devices.devices.Devices.switch">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">switch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">switch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">school</span> <span class="o">=</span> <span class="n">school</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">school</span> <span class="o">!=</span> <span class="s1">&#39;default-school&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="si">}</span><span class="s1">.&#39;</span>
@@ -112,7 +120,7 @@
 
 <div class="viewcode-block" id="Devices.load">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.devices.devices.Devices.load">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">devices</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">with</span> <span class="n">LMNFile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">devices_csv</span><span class="p">:</span>
@@ -127,7 +135,7 @@
 
 <div class="viewcode-block" id="Devices.filter">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.devices.devices.Devices.filter">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="p">[],</span> <span class="n">groups</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="p">[],</span> <span class="n">groups</span><span class="o">=</span><span class="p">[]):</span>
         <span class="k">if</span> <span class="n">roles</span> <span class="ow">and</span> <span class="n">groups</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">device</span> <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">devices</span> <span class="k">if</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;sophomorixRole&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">roles</span> <span class="ow">and</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">]</span>
         <span class="k">elif</span> <span class="n">roles</span><span class="p">:</span>
@@ -139,7 +147,7 @@
 
 <div class="viewcode-block" id="Devices.get_hostname">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.devices.devices.Devices.get_hostname">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_hostname</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="p">[],</span> <span class="n">groups</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="k">def</span> <span class="nf">get_hostname</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="p">[],</span> <span class="n">groups</span><span class="o">=</span><span class="p">[]):</span>
         <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">roles</span><span class="p">,</span> <span class="n">groups</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">hostname</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">device</span>
@@ -148,15 +156,82 @@
 
 <div class="viewcode-block" id="Devices.get_client">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.devices.devices.Devices.get_client">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_client</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="k">def</span> <span class="nf">get_client</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="p">[]):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_hostname</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="n">CLIENT_ROLES</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Devices.get_clients">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.devices.devices.Devices.get_clients">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_clients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="k">def</span> <span class="nf">get_clients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="p">[]):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">roles</span><span class="o">=</span><span class="n">CLIENT_ROLES</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Devices.check_conf">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.devices.devices.Devices.check_conf">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_conf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># TODO check</span>
+        <span class="c1"># MS SOFTWARE KEYS ?</span>
+        <span class="c1"># COMPUTER_ACCOUNT/HOST_GROUP/HOST_GROUP_TYPE flags ?</span>
+
+        <span class="n">report</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Check values</span>
+        <span class="n">ip_rev</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">mac_rev</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">devices</span><span class="p">:</span>
+            <span class="n">ip</span> <span class="o">=</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;ip&#39;</span><span class="p">]</span>
+            <span class="n">mac</span> <span class="o">=</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;mac&#39;</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">ip_rev</span><span class="p">:</span>
+                <span class="n">ip_rev</span><span class="p">[</span><span class="n">ip</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ip_rev</span><span class="p">[</span><span class="n">ip</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">]]</span>
+
+            <span class="k">if</span> <span class="n">mac</span> <span class="ow">in</span> <span class="n">mac_rev</span><span class="p">:</span>
+                <span class="n">mac_rev</span><span class="p">[</span><span class="n">mac</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mac_rev</span><span class="p">[</span><span class="n">mac</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">]]</span>
+
+            <span class="c1"># Check values</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">check_ip_name</span><span class="p">(</span><span class="n">ip</span><span class="p">):</span>
+                <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2"> is not a valid ip address&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">normalize_mac</span><span class="p">(</span><span class="n">mac</span><span class="p">):</span>
+                <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mac</span><span class="si">}</span><span class="s2"> is not a valid mac address&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">check_group_name</span><span class="p">(</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]):</span>
+                <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> is not a valid Linbo group&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">check_room_name</span><span class="p">(</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;room&#39;</span><span class="p">]):</span>
+                <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;room&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> is not a valid room name&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">check_host_name</span><span class="p">(</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">]):</span>
+                <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> is not a valid hostname&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;pxeFlag&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="s1">&#39;4&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;6&#39;</span><span class="p">,</span> <span class="s1">&#39;7&#39;</span><span class="p">,</span> <span class="s1">&#39;8&#39;</span><span class="p">,</span> <span class="s1">&#39;9&#39;</span><span class="p">]:</span>
+                <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;pxeFlag&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> is not a valid pxe flag&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;sophomorixRole&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">COMPUTER_ROLES</span><span class="p">:</span>
+                <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;sophomorixRole&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> is not a valid computer role&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Check uniqueness</span>
+        <span class="k">for</span> <span class="n">ip</span><span class="p">,</span> <span class="n">hosts</span> <span class="ow">in</span> <span class="n">ip_rev</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">hosts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">hosts</span><span class="p">)</span><span class="si">}</span><span class="s2"> have the same ip </span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">mac</span><span class="p">,</span> <span class="n">hosts</span> <span class="ow">in</span> <span class="n">mac_rev</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">hosts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">hosts</span><span class="p">)</span><span class="si">}</span><span class="s2"> have the same mac </span><span class="si">{</span><span class="n">mac</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">report</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">report</span>
+
+        <span class="k">return</span> <span class="kc">False</span></div>
 </div>
+
+
+
+
 
 </pre></div>
 

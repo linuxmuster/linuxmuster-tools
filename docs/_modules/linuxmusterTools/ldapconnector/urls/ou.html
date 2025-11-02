@@ -5,8 +5,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.urls.ou &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.ldapconnector.urls.ou &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/theme_overrides.css?v=472cca7c" />
@@ -14,7 +14,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/translations.js?v=8fd896e3"></script>
@@ -62,6 +62,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../linuxmusterTools.html">linuxmusterTools</a></li>
           <li class="breadcrumb-item"><a href="../../ldapconnector.html">linuxmusterTools.ldapconnector</a></li>
       <li class="breadcrumb-item active">linuxmusterTools.ldapconnector.urls.ou</li>
       <li class="wy-breadcrumbs-aside">
@@ -73,60 +74,84 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.ldapconnector.urls.ou</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">linuxmusterTools.ldapconnector.models</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">models</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.ldapconnector.urls.ldaprouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">router</span><span class="p">,</span> <span class="n">SCHOOL_MARKER</span>
+<span></span><span class="kn">import</span> <span class="nn">linuxmusterTools.ldapconnector.models</span> <span class="k">as</span> <span class="nn">models</span>
+<span class="kn">from</span> <span class="nn">linuxmusterTools.ldapconnector.urls.ldaprouter</span> <span class="kn">import</span> <span class="n">router</span><span class="p">,</span> <span class="n">SCHOOL_MARKER</span>
 
 
-<span class="nd">@router</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/ou&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNOU</span><span class="p">)</span>
+<span class="nd">@router</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/ou&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNOUModel</span><span class="p">)</span>
 <div class="viewcode-block" id="get_all_ou">
 <a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ou/index.html#linuxmusterTools.ldapconnector.urls.get_all_ou">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_all_ou</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">get_all_ou</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get all organizational units.</span>
-<span class="sd">    Return a a list of LMNOU data object.</span>
+<span class="sd">    Return a list of LMNOUModel data object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">ldap_filter</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;(&amp;</span>
-<span class="s2">                                (objectClass=organizationalUnit)</span>
-<span class="s2">                            )&quot;&quot;&quot;</span>
+
+    <span class="n">ldap_filter</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;(&amp;(objectClass=organizationalUnit))&quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="n">ldap_filter</span></div>
 
 
-<span class="nd">@router</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/ou/rooms&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNOU</span><span class="p">,</span> <span class="n">subdn</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;OU=Devices,OU=</span><span class="si">{</span><span class="n">SCHOOL_MARKER</span><span class="si">}</span><span class="s1">,OU=SCHOOLS,&#39;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s1">&#39;single&#39;</span><span class="p">)</span>
+<span class="nd">@router</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/ou/rooms&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNOUModel</span><span class="p">,</span> <span class="n">subdn</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;OU=Devices,OU=</span><span class="si">{</span><span class="n">SCHOOL_MARKER</span><span class="si">}</span><span class="s1">,OU=SCHOOLS,&#39;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s1">&#39;single&#39;</span><span class="p">)</span>
 <div class="viewcode-block" id="get_devices_ou">
 <a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ou/index.html#linuxmusterTools.ldapconnector.urls.get_devices_ou">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_devices_ou</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">get_devices_ou</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get all details from the Devices organizational unit.</span>
-<span class="sd">    Return a LMNOU data object.</span>
+<span class="sd">    Return a LMNOUModel data object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 
-    <span class="n">ldap_filter</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;(&amp;</span>
-<span class="s2">                                (objectClass=organizationalUnit)</span>
-<span class="s2">                            )&quot;&quot;&quot;</span>
+    <span class="n">ldap_filter</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;(&amp;(objectClass=organizationalUnit))&quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="n">ldap_filter</span></div>
 
 
-<span class="nd">@router</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/ou/students&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNOU</span><span class="p">,</span> <span class="n">subdn</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;OU=Students,OU=</span><span class="si">{</span><span class="n">SCHOOL_MARKER</span><span class="si">}</span><span class="s1">,OU=SCHOOLS,&#39;</span><span class="p">)</span>
+<span class="nd">@router</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/ou/students&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNOUModel</span><span class="p">,</span> <span class="n">subdn</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;OU=Students,OU=</span><span class="si">{</span><span class="n">SCHOOL_MARKER</span><span class="si">}</span><span class="s1">,OU=SCHOOLS,&#39;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s1">&#39;single&#39;</span><span class="p">)</span>
 <div class="viewcode-block" id="get_students_ou">
 <a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ou/index.html#linuxmusterTools.ldapconnector.urls.get_students_ou">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_students_ou</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">get_students_ou</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get all details from the students organizational unit.</span>
-<span class="sd">    Return a LMNOU data object.</span>
+<span class="sd">    Return a LMNOUModel data object.</span>
 <span class="sd">    Quit the same as a schoolclasses request.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 
-    <span class="n">ldap_filter</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;(&amp;</span>
-<span class="s2">                                (objectClass=organizationalUnit)</span>
-<span class="s2">                            )&quot;&quot;&quot;</span>
+    <span class="n">ldap_filter</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;(&amp;(objectClass=organizationalUnit))&quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="n">ldap_filter</span></div>
 
+
+<span class="nd">@router</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/ou/parents&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNOUModel</span><span class="p">,</span> <span class="n">subdn</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;OU=Parents,OU=</span><span class="si">{</span><span class="n">SCHOOL_MARKER</span><span class="si">}</span><span class="s1">,OU=SCHOOLS,&#39;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s1">&#39;single&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="get_students_parents_ou">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ou/index.html#linuxmusterTools.ldapconnector.urls.get_students_parents_ou">[docs]</a>
+<span class="k">def</span> <span class="nf">get_students_parents_ou</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get all details from all OU in parents OU organizational unit.</span>
+<span class="sd">    Return a LMNOUModel data object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="n">ldap_filter</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;(&amp;(objectClass=organizationalUnit))&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">ldap_filter</span></div>
+
+
+<span class="nd">@router</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/ou/staff&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNOUModel</span><span class="p">,</span> <span class="n">subdn</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;OU=Staff,OU=</span><span class="si">{</span><span class="n">SCHOOL_MARKER</span><span class="si">}</span><span class="s1">,OU=SCHOOLS,&#39;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s1">&#39;single&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="get_staff_ou">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ou/index.html#linuxmusterTools.ldapconnector.urls.get_staff_ou">[docs]</a>
+<span class="k">def</span> <span class="nf">get_staff_ou</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get all details from the staff organizational unit.</span>
+<span class="sd">    Return a LMNOUModel data object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="n">ldap_filter</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;(&amp;(objectClass=organizationalUnit))&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">ldap_filter</span></div>
 
 </pre></div>
 

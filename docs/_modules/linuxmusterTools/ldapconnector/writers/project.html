@@ -5,8 +5,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.writers.project &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.ldapconnector.writers.project &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/theme_overrides.css?v=472cca7c" />
@@ -14,7 +14,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/translations.js?v=8fd896e3"></script>
@@ -62,8 +62,8 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../linuxmusterTools.html">linuxmusterTools</a></li>
           <li class="breadcrumb-item"><a href="../../ldapconnector.html">linuxmusterTools.ldapconnector</a></li>
-          <li class="breadcrumb-item"><a href="../writers.html">linuxmusterTools.ldapconnector.writers</a></li>
       <li class="breadcrumb-item active">linuxmusterTools.ldapconnector.writers.project</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -74,61 +74,84 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.ldapconnector.writers.project</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..ldap_writer</span><span class="w"> </span><span class="kn">import</span> <span class="n">LdapWriter</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..urls.ldaprouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">router</span>
+<span class="kn">from</span> <span class="nn">linuxmusterTools.common</span> <span class="kn">import</span> <span class="n">lprint</span><span class="p">,</span> <span class="n">spinner</span>
+<span class="kn">from</span> <span class="nn">linuxmusterTools.common.checks</span> <span class="kn">import</span> <span class="n">NameChecker</span>
+<span class="kn">from</span> <span class="nn">..models</span> <span class="kn">import</span> <span class="n">LMNProjectModel</span>
+<span class="kn">from</span> <span class="nn">.group</span> <span class="kn">import</span> <span class="n">LMNGroupCommon</span>
+<span class="kn">from</span> <span class="nn">..urls.ldaprouter</span> <span class="kn">import</span> <span class="n">router</span>
 
-<div class="viewcode-block" id="LMNProjectWriter">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/project/index.html#linuxmusterTools.ldapconnector.LMNProjectWriter">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">LMNProjectWriter</span><span class="p">:</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<div class="viewcode-block" id="LMNProjectWriter.lw">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/project/index.html#linuxmusterTools.ldapconnector.LMNProjectWriter.lw">[docs]</a>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lw</span> <span class="o">=</span> <span class="n">LdapWriter</span><span class="p">()</span></div>
+<div class="viewcode-block" id="logger">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/project/index.html#linuxmusterTools.ldapconnector.logger">[docs]</a>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LMNProjectWriter.lr">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/project/index.html#linuxmusterTools.ldapconnector.LMNProjectWriter.lr">[docs]</a>
+<div class="viewcode-block" id="name_checker">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/project/index.html#linuxmusterTools.ldapconnector.name_checker">[docs]</a>
+<span class="n">name_checker</span> <span class="o">=</span> <span class="n">NameChecker</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNProject">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/project/index.html#linuxmusterTools.ldapconnector.LMNProject">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNProject</span><span class="p">(</span><span class="n">LMNGroupCommon</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cn</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cn</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">)</span>
+<div class="viewcode-block" id="LMNProject.model">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/project/index.html#linuxmusterTools.ldapconnector.LMNProject.model">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">LMNProjectModel</span></div>
+
+
+<div class="viewcode-block" id="LMNProject.load_data">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/project/index.html#linuxmusterTools.ldapconnector.LMNProject.load_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/projects/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The project </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="LMNProjects">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/project/index.html#linuxmusterTools.ldapconnector.LMNProjects">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNProjects</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="LMNProjects.lr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/project/index.html#linuxmusterTools.ldapconnector.LMNProjects.lr">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">router</span></div>
 
-
-<div class="viewcode-block" id="LMNProjectWriter.setattr">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/project/index.html#linuxmusterTools.ldapconnector.LMNProjectWriter.setattr">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Middleware to check if the object exists.</span>
-
-<span class="sd">        :param name: cn of the object</span>
-<span class="sd">        :type name: basestring</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">details</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/projects/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">details</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The project </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The project </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_setattr</span><span class="p">(</span><span class="n">details</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+<div class="viewcode-block" id="LMNProjects.projects">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/project/index.html#linuxmusterTools.ldapconnector.LMNProjects.projects">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projects</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">project</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">]:</span> <span class="n">LMNProject</span><span class="p">(</span><span class="n">project</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">],</span> <span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">project</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/projects&#39;</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">)</span>
+        <span class="p">}</span></div>
 
 
-<div class="viewcode-block" id="LMNProjectWriter.delattr">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/project/index.html#linuxmusterTools.ldapconnector.LMNProjectWriter.delattr">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Middleware to check if the object exists.</span>
+<div class="viewcode-block" id="LMNProjects.__len__">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/project/index.html#linuxmusterTools.ldapconnector.LMNProjects.__len__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projects</span><span class="p">)</span></div>
 
-<span class="sd">        :param name: cn of the object</span>
-<span class="sd">        :type name: basestring</span>
-<span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">details</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/projects/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="LMNProjects.keys">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/project/index.html#linuxmusterTools.ldapconnector.LMNProjects.keys">[docs]</a>
+    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">projects</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">details</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The project </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The project </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_delattr</span><span class="p">(</span><span class="n">details</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+<div class="viewcode-block" id="LMNProjects.items">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/project/index.html#linuxmusterTools.ldapconnector.LMNProjects.items">[docs]</a>
+    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">projects</span><span class="o">.</span><span class="n">items</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNProjects.__getitem__">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/project/index.html#linuxmusterTools.ldapconnector.LMNProjects.__getitem__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_cn</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">projects</span><span class="p">[</span><span class="n">project_cn</span><span class="p">]</span></div>
 </div>
 
 </pre></div>

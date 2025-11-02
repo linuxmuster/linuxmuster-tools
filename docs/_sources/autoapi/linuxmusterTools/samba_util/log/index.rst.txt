@@ -9,6 +9,7 @@ Attributes
 
 .. autoapisummary::
 
+   linuxmusterTools.samba_util.log.logger
    linuxmusterTools.samba_util.log.SAMBA_LOG
    linuxmusterTools.samba_util.log.SAMBA_LOG_OLD
 
@@ -26,6 +27,8 @@ Functions
 
 Module Contents
 ---------------
+
+.. py:data:: logger
 
 .. py:data:: SAMBA_LOG
    :value: '/var/log/samba/log.samba'

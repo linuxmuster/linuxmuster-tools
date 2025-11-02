@@ -9,15 +9,15 @@ Classes
 
 .. autoapisummary::
 
-   linuxmusterTools.ldapconnector.models.lmnschoolclass.LMNSchoolClass
+   linuxmusterTools.ldapconnector.models.lmnschoolclass.LMNSchoolClassModel
 
 
 Module Contents
 ---------------
 
-.. py:class:: LMNSchoolClass
+.. py:class:: LMNSchoolClassModel
 
-   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNModel`
 
 
    Common parent class to gather common methods.
@@ -139,5 +139,8 @@ Module Contents
 
 
    .. py:method:: get_first_passwords()
+
+
+   .. py:method:: students_csv()
 
 

@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.samba_util &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.samba_util &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/translations.js?v=8fd896e3"></script>
@@ -60,8 +60,13 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="#">linuxmusterTools.samba_util</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#attributes">Attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#package-contents">Package Contents</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../create_students_groups/index.html">create_students_groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../00-update-schoolclasses-groups/index.html">00-update-schoolclasses-groups</a></li>
 </ul>
 </li>
 </ul>
@@ -110,19 +115,13 @@
 <h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.samba_util.smbconf" title="linuxmusterTools.samba_util.smbconf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smbconf</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id1" title="linuxmusterTools.samba_util.logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logger</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.samba_util.LOG_LEVEL" title="linuxmusterTools.samba_util.LOG_LEVEL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LOG_LEVEL</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.samba_util.smbconf" title="linuxmusterTools.samba_util.smbconf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smbconf</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.samba_util.lr" title="linuxmusterTools.samba_util.lr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lr</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.samba_util.lp" title="linuxmusterTools.samba_util.lp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lp</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.samba_util.SAMDB_PATH" title="linuxmusterTools.samba_util.SAMDB_PATH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAMDB_PATH</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.samba_util.LOG_LEVEL" title="linuxmusterTools.samba_util.LOG_LEVEL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LOG_LEVEL</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.samba_util.DFS" title="linuxmusterTools.samba_util.DFS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DFS</span></code></a></p></td>
@@ -131,7 +130,25 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.samba_util.config" title="linuxmusterTools.samba_util.config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">config</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.samba_util.dfs_proxy" title="linuxmusterTools.samba_util.dfs_proxy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dfs_proxy</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.samba_util.SHARES_LIST" title="linuxmusterTools.samba_util.SHARES_LIST"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SHARES_LIST</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.samba_util.dfs_proxy" title="linuxmusterTools.samba_util.dfs_proxy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dfs_proxy</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.samba_util.lr" title="linuxmusterTools.samba_util.lr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lr</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id1" title="linuxmusterTools.samba_util.logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logger</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.samba_util.lp" title="linuxmusterTools.samba_util.lp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lp</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.samba_util.SAMDB_PATH" title="linuxmusterTools.samba_util.SAMDB_PATH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAMDB_PATH</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id1" title="linuxmusterTools.samba_util.logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logger</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -141,7 +158,7 @@
 <h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#id0" title="linuxmusterTools.samba_util.DriveManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DriveManager</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id2" title="linuxmusterTools.samba_util.DriveManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DriveManager</span></code></a></p></td>
 <td><p>Object to store data from Drives.xml</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.samba_util.GPO" title="linuxmusterTools.samba_util.GPO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GPO</span></code></a></p></td>
@@ -159,7 +176,7 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.samba_util.Drive" title="linuxmusterTools.samba_util.Drive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Drive</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#id0" title="linuxmusterTools.samba_util.DriveManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DriveManager</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id2" title="linuxmusterTools.samba_util.DriveManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DriveManager</span></code></a></p></td>
 <td><p>Object to store data from Drives.xml</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.samba_util.LMNFile" title="linuxmusterTools.samba_util.LMNFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNFile</span></code></a></p></td>
@@ -183,6 +200,11 @@
 </section>
 <section id="package-contents">
 <h2>Package Contents<a class="headerlink" href="#package-contents" title="Link to this heading"></a></h2>
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.samba_util.logger">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">logger</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/drives.html#logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.logger" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py data">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.smbconf">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">smbconf</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnconfig/samba.html#smbconf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.smbconf" title="Link to this definition"></a></dt>
@@ -208,9 +230,29 @@
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">LOG_LEVEL</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnconfig/samba.html#LOG_LEVEL"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.LOG_LEVEL" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.samba_util.DFS">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">DFS</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnconfig/samba.html#DFS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.DFS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.samba_util.config">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">config</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnconfig/samba.html#config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.samba_util.SHARES_LIST">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">SHARES_LIST</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnconfig/samba.html#SHARES_LIST"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.SHARES_LIST" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.samba_util.dfs_proxy">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">dfs_proxy</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnconfig/samba.html#dfs_proxy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.dfs_proxy" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.DriveManager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">DriveManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">policy_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/drives.html#DriveManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.DriveManager" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">DriveManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">policy_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/drives.html#DriveManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.DriveManager" title="Link to this definition"></a></dt>
 <dd><p>Object to store data from Drives.xml</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.DriveManager.usedLetters">
@@ -226,12 +268,12 @@ properties.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.DriveManager._parseProperties">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_parseProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drive</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/drives.html#DriveManager._parseProperties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.DriveManager._parseProperties" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_parseProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drive</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/drives.html#DriveManager._parseProperties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.DriveManager._parseProperties" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.DriveManager._parseFilters">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_parseFilters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drive</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/drives.html#DriveManager._parseFilters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.DriveManager._parseFilters" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_parseFilters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drive</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/drives.html#DriveManager._parseFilters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.DriveManager._parseFilters" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -241,7 +283,7 @@ properties.</p>
 the configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – All drives configuration and properties</p>
+<dd class="field-odd"><p><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – All drives configuration and properties</p>
 </dd>
 </dl>
 </dd></dl>
@@ -259,6 +301,11 @@ the configuration.</p>
 <dd></dd></dl>
 
 <dl class="py data">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">logger</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/drives.html#logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.lp">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">lp</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/samba_tool.html#lp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.lp" title="Link to this definition"></a></dt>
 <dd></dd></dl>
@@ -270,10 +317,10 @@ the configuration.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.GPO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">GPO</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/samba_tool.html#GPO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.GPO" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">GPO</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/samba_tool.html#GPO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.GPO" title="Link to this definition"></a></dt>
 <dd><dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.GPO.dn">
-<span class="sig-name descname"><span class="pre">dn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.GPO.dn" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">dn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.GPO.dn" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -283,29 +330,29 @@ the configuration.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.GPO.gpo">
-<span class="sig-name descname"><span class="pre">gpo</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.GPO.gpo" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">gpo</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.GPO.gpo" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.GPO.name">
-<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.GPO.name" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.GPO.name" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.GPO.path">
-<span class="sig-name descname"><span class="pre">path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.GPO.path" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.GPO.path" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.GPO.unix_path">
-<span class="sig-name descname"><span class="pre">unix_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.GPO.unix_path" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">unix_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.GPO.unix_path" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.GPOManager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">GPOManager</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/samba_tool.html#GPOManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.GPOManager" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">GPOManager</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/samba_tool.html#GPOManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.GPOManager" title="Link to this definition"></a></dt>
 <dd><p>Sample object to manage all GPOs informations.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.GPOManager.gpos">
@@ -316,7 +363,7 @@ the configuration.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.GroupManager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">GroupManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/samba_tool.html#GroupManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.GroupManager" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">GroupManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/samba_tool.html#GroupManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.GroupManager" title="Link to this definition"></a></dt>
 <dd><p>Samble class to manage samba groups via samba-tool.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.GroupManager.POST_HOOK_DIR">
@@ -342,7 +389,7 @@ the configuration.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>action</strong> (<em>basestring</em>) – actually ‘remove’ or ‘add’</p></li>
 <li><p><strong>group</strong> (<em>basestring</em>) – group name</p></li>
-<li><p><strong>members</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – members list, will be given coma separated as argument</p></li>
+<li><p><strong>members</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – members list, will be given coma separated as argument</p></li>
 </ul>
 </dd>
 </dl>
@@ -362,7 +409,7 @@ does not exist.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>group</strong> (<em>basestring</em>) – group name</p></li>
-<li><p><strong>members</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – members list</p></li>
+<li><p><strong>members</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – members list</p></li>
 </ul>
 </dd>
 </dl>
@@ -377,7 +424,7 @@ does not exist.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>group</strong> (<em>basestring</em>) – group name</p></li>
-<li><p><strong>members</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – members list</p></li>
+<li><p><strong>members</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – members list</p></li>
 </ul>
 </dd>
 </dl>
@@ -387,7 +434,7 @@ does not exist.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.UserManager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">UserManager</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/samba_tool.html#UserManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.UserManager" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">UserManager</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/samba_tool.html#UserManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.UserManager" title="Link to this definition"></a></dt>
 <dd><p>Sample class to manage samba users via samba-tool.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.UserManager.POST_HOOK_DIR">
@@ -413,42 +460,47 @@ does not exist.</p>
 
 </dd></dl>
 
+<dl class="py data">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">logger</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/drives.html#logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.Drive">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">Drive</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/drives.html#Drive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.Drive" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">Drive</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/drives.html#Drive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.Drive" title="Link to this definition"></a></dt>
 <dd><dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.Drive.disabled">
-<span class="sig-name descname"><span class="pre">disabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.Drive.disabled" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">disabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.Drive.disabled" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.Drive.filters">
-<span class="sig-name descname"><span class="pre">filters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><span class="pre">dict</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.Drive.filters" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">filters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.Drive.filters" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.Drive.label">
-<span class="sig-name descname"><span class="pre">label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.Drive.label" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.Drive.label" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.Drive.letter">
-<span class="sig-name descname"><span class="pre">letter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.Drive.letter" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">letter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.Drive.letter" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.Drive.properties">
-<span class="sig-name descname"><span class="pre">properties</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><span class="pre">dict</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.Drive.properties" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">properties</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.Drive.properties" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.Drive.userLetter">
-<span class="sig-name descname"><span class="pre">userLetter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.Drive.userLetter" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">userLetter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.Drive.userLetter" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.Drive.id">
-<span class="sig-name descname"><span class="pre">id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.Drive.id" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#linuxmusterTools.samba_util.Drive.id" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -459,53 +511,53 @@ does not exist.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="id0">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">DriveManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">policy_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/drives.html#DriveManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id2">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">DriveManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">policy_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/drives.html#DriveManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
 <dd><p>Object to store data from Drives.xml</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">usedLetters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">usedLetters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#id3" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id2">
-<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/drives.html#DriveManager.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/drives.html#DriveManager.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Link to this definition"></a></dt>
 <dd><p>Parse the Drives.xml in the policy directory in order to get all shares
 properties.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id3">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_parseProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drive</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/drives.html#DriveManager._parseProperties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="id4">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_parseFilters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drive</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/drives.html#DriveManager._parseFilters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="id5">
-<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/drives.html#DriveManager.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id5" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_parseProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drive</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/drives.html#DriveManager._parseProperties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id5" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id6">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_parseFilters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drive</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/drives.html#DriveManager._parseFilters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id6" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/drives.html#DriveManager.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id7" title="Link to this definition"></a></dt>
 <dd><p>Save all configuration and properties from the drives and then reload
 the configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – All drives configuration and properties</p>
+<dd class="field-odd"><p><strong>content</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – All drives configuration and properties</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id6">
-<span class="sig-name descname"><span class="pre">aslist</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/drives.html#DriveManager.aslist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id6" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">aslist</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/drives.html#DriveManager.aslist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id8" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.LMNFile">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">LMNFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">';'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldnames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.LMNFile" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">LMNFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">';'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldnames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.LMNFile" title="Link to this definition"></a></dt>
 <dd><p>Meta class to handle all type of config file used in linuxmuster’s project,
 e.g. ini, csv, linbo config files.</p>
 <dl class="py attribute">
@@ -545,7 +597,7 @@ e.g. ini, csv, linbo config files.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.LMNFile.hasExtension">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hasExtension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ext</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.hasExtension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.LMNFile.hasExtension" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hasExtension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ext</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.hasExtension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.LMNFile.hasExtension" title="Link to this definition"></a></dt>
 <dd><p>Determine if file should be handled here.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -555,19 +607,19 @@ e.g. ini, csv, linbo config files.</p>
 <dd class="field-even"><p>File handled or not</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.LMNFile.__enter__">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__enter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.__enter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.LMNFile.__enter__" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__enter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.__enter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.LMNFile.__enter__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.LMNFile.__exit__">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__exit__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_tb</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.__exit__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.LMNFile.__exit__" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__exit__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_tb</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/linuxmusterTools/lmnfile/lmnfile.html#LMNFile.__exit__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.LMNFile.__exit__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -591,7 +643,7 @@ Backup files names scheme is <cite>.&lt;name&gt;.bak.&lt;timestamp&gt;</cite></p
 <dd class="field-odd"><p>File path in allowed paths.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -614,7 +666,7 @@ Backup files names scheme is <cite>.&lt;name&gt;.bak.&lt;timestamp&gt;</cite></p
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.SambaToolDNS">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">SambaToolDNS</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/dns.html#SambaToolDNS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.SambaToolDNS" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">SambaToolDNS</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util/dns.html#SambaToolDNS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.SambaToolDNS" title="Link to this definition"></a></dt>
 <dd><p>Object to manage current samba dns entries on the system.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="linuxmusterTools.samba_util.SambaToolDNS._get_zone">
@@ -637,14 +689,14 @@ because the list of DNS entries would be too long.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>action</strong> (<em>string</em>) – query, add, delete or update</p></li>
-<li><p><strong>options</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) – Tuple of necessary options for the query</p></li>
+<li><p><strong>options</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a>) – Tuple of necessary options for the query</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List of lines as strings</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -658,7 +710,7 @@ because the list of DNS entries would be too long.</p>
 <dd class="field-odd"><p>Separate dns values from root and subdomains</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -669,7 +721,7 @@ because the list of DNS entries would be too long.</p>
 <dd><p>Add subdomain entry to dns.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>sub</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Subdomain details</p>
+<dd class="field-odd"><p><strong>sub</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – Subdomain details</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Result of samba-tool</p>
@@ -687,8 +739,8 @@ because the list of DNS entries would be too long.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>old</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – Old subdomain details</p></li>
-<li><p><strong>new</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – New subdomain details</p></li>
+<li><p><strong>old</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – Old subdomain details</p></li>
+<li><p><strong>new</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – New subdomain details</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -722,21 +774,6 @@ because the list of DNS entries would be too long.</p>
 </dd></dl>
 
 </dd></dl>
-
-<dl class="py data">
-<dt class="sig sig-object py" id="linuxmusterTools.samba_util.DFS">
-<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">DFS</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util.html#DFS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.DFS" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py data">
-<dt class="sig sig-object py" id="linuxmusterTools.samba_util.config">
-<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">config</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util.html#config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.config" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py data">
-<dt class="sig sig-object py" id="linuxmusterTools.samba_util.dfs_proxy">
-<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.samba_util.</span></span><span class="sig-name descname"><span class="pre">dfs_proxy</span></span><a class="reference internal" href="../../../_modules/linuxmusterTools/samba_util.html#dfs_proxy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.samba_util.dfs_proxy" title="Link to this definition"></a></dt>
-<dd></dd></dl>
 
 </section>
 </section>

@@ -1,0 +1,124 @@
+linuxmusterTools.common.parsers.sophomorix_log
+==============================================
+
+.. py:module:: linuxmusterTools.common.parsers.sophomorix_log
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.common.parsers.sophomorix_log.KILL_LOG_PATH
+   linuxmusterTools.common.parsers.sophomorix_log.ADD_LOG_PATH
+   linuxmusterTools.common.parsers.sophomorix_log.UPDATE_LOG_PATH
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   linuxmusterTools.common.parsers.sophomorix_log.parse_kill_log
+   linuxmusterTools.common.parsers.sophomorix_log.parse_add_log
+   linuxmusterTools.common.parsers.sophomorix_log.parse_update_log
+
+
+Module Contents
+---------------
+
+.. py:data:: KILL_LOG_PATH
+   :value: '/var/log/sophomorix/userlog/user-kill.log'
+
+
+.. py:data:: ADD_LOG_PATH
+   :value: '/var/log/sophomorix/userlog/user-add.log'
+
+
+.. py:data:: UPDATE_LOG_PATH
+   :value: '/var/log/sophomorix/userlog/user-update.log'
+
+
+.. py:function:: parse_kill_log(all=False, epoch=None, today=False, lastweek=False)
+
+   Parse the kill log of sophomorix to return a dict with all informations.
+   Informations available in the log:
+   - timestamp
+   - utc datetime
+   - school
+   - user's cn
+   - user's lastname
+   - user's firstname
+   - sophomorixAdminclass
+   - sophomorixRole
+
+   :param all: return all entries
+   :type all: bool
+   :param epoch: search the given epoch/timestamp in the log
+   :type epoch: basestring
+   :param today: filter only today's results
+   :type today: bool
+   :param lastweek: filter only last week's results
+   :type lastweek: bool
+   :return: entries
+   :rtype: dict
+
+
+.. py:function:: parse_add_log(all=False, epoch=None, today=False, lastweek=False)
+
+   Parse the add log of sophomorix to return a dict with all informations.
+   Informations available in the log:
+   - timestamp
+   - utc datetime
+   - school
+   - user's cn
+   - user's lastname
+   - user's firstname
+   - sophomorixAdminclass
+   - sophomorixRole
+   - sophomorixUnid
+
+   :param all: return all entries
+   :type all: bool
+   :param epoch: search the given epoch/timestamp in the log
+   :type epoch: basestring
+   :param today: filter only today's results
+   :type today: bool
+   :param lastweek: filter only last week's results
+   :type lastweek: bool
+   :return: entries
+   :rtype: dict
+
+
+.. py:function:: parse_update_log(all=False, epoch=None, today=False, lastweek=False, list_changes=True)
+
+   Parse the update log of sophomorix to return a dict with all informations.
+   Informations available in the log:
+   - first log line:
+       - timestamp
+       - utc datetime
+       - school
+       - user's cn
+       - group change (e.g. teachers->attic)
+       - role change (e.g. teacher->student)
+   - second log line:
+       - timestamp
+       - utc datetime
+       - school
+       - user's cn
+       - list of LDAP attributes changes (separator "=")
+
+   :param all: return all entries
+   :type all: bool
+   :param epoch: search the given epoch/timestamp in the log
+   :type epoch: basestring
+   :param today: filter only today's results
+   :type today: bool
+   :param lastweek: filter only last week's results
+   :type lastweek: bool
+   :param list_changes: list the LDAP attributes changed
+   :type list_changes: bool
+   :return: entries
+   :rtype: dict
+
+

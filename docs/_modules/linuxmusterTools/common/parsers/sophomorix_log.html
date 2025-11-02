@@ -1,0 +1,399 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.common.parsers.sophomorix_log &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=ac320c09"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../linuxmusterTools.html">linuxmusterTools</a></li>
+          <li class="breadcrumb-item"><a href="../../common.html">linuxmusterTools.common</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.common.parsers.sophomorix_log</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for linuxmusterTools.common.parsers.sophomorix_log</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+
+
+<div class="viewcode-block" id="KILL_LOG_PATH">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/common/parsers/sophomorix_log/index.html#linuxmusterTools.common.KILL_LOG_PATH">[docs]</a>
+<span class="n">KILL_LOG_PATH</span> <span class="o">=</span> <span class="s1">&#39;/var/log/sophomorix/userlog/user-kill.log&#39;</span></div>
+
+<div class="viewcode-block" id="ADD_LOG_PATH">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/common/parsers/sophomorix_log/index.html#linuxmusterTools.common.ADD_LOG_PATH">[docs]</a>
+<span class="n">ADD_LOG_PATH</span> <span class="o">=</span> <span class="s1">&#39;/var/log/sophomorix/userlog/user-add.log&#39;</span></div>
+
+<div class="viewcode-block" id="UPDATE_LOG_PATH">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/common/parsers/sophomorix_log/index.html#linuxmusterTools.common.UPDATE_LOG_PATH">[docs]</a>
+<span class="n">UPDATE_LOG_PATH</span> <span class="o">=</span> <span class="s1">&#39;/var/log/sophomorix/userlog/user-update.log&#39;</span></div>
+
+
+<div class="viewcode-block" id="parse_kill_log">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/common/parsers/sophomorix_log/index.html#linuxmusterTools.common.parse_kill_log">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_kill_log</span><span class="p">(</span><span class="nb">all</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">epoch</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">today</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">lastweek</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse the kill log of sophomorix to return a dict with all informations.</span>
+<span class="sd">    Informations available in the log:</span>
+<span class="sd">    - timestamp</span>
+<span class="sd">    - utc datetime</span>
+<span class="sd">    - school</span>
+<span class="sd">    - user&#39;s cn</span>
+<span class="sd">    - user&#39;s lastname</span>
+<span class="sd">    - user&#39;s firstname</span>
+<span class="sd">    - sophomorixAdminclass</span>
+<span class="sd">    - sophomorixRole</span>
+
+<span class="sd">    :param all: return all entries</span>
+<span class="sd">    :type all: bool</span>
+<span class="sd">    :param epoch: search the given epoch/timestamp in the log</span>
+<span class="sd">    :type epoch: basestring</span>
+<span class="sd">    :param today: filter only today&#39;s results</span>
+<span class="sd">    :type today: bool</span>
+<span class="sd">    :param lastweek: filter only last week&#39;s results</span>
+<span class="sd">    :type lastweek: bool</span>
+<span class="sd">    :return: entries</span>
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">if</span> <span class="p">(</span><span class="nb">all</span> <span class="ow">and</span> <span class="n">today</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">all</span> <span class="ow">and</span> <span class="n">lastweek</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">today</span> <span class="ow">and</span> <span class="n">lastweek</span><span class="p">):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Parameter all, today and lastweek are mutually exclusives! Please pick only one of them.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Parameter all, today and lastweek are mutually exclusives! Please pick only one of them.&quot;</span><span class="p">)</span>
+
+    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span>
+    <span class="n">last_year</span> <span class="o">=</span> <span class="n">now</span> <span class="o">-</span> <span class="mi">86400</span><span class="o">*</span><span class="mi">365</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">KILL_LOG_PATH</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File </span><span class="si">{</span><span class="n">KILL_LOG_PATH</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">KILL_LOG_PATH</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">log</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">log</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span> <span class="ow">or</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="n">entries</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;::&#39;</span><span class="p">)</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">entries</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+            <span class="c1"># Only get the entries of last year per default</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span> <span class="ow">and</span> <span class="n">timestamp</span> <span class="o">&lt;</span> <span class="n">last_year</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># If flag today is set, only the changes of the current day</span>
+            <span class="k">if</span> <span class="n">today</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">==</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">():</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># If flag lastweek is set, only the changes of the last week</span>
+            <span class="k">if</span> <span class="n">lastweek</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=-</span><span class="mi">7</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">timestamp</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">timestamp</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="n">result</span><span class="p">[</span><span class="n">timestamp</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s1">&#39;school&#39;</span><span class="p">:</span> <span class="n">entries</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">entries</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+                <span class="s1">&#39;firstname&#39;</span><span class="p">:</span> <span class="n">entries</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span>
+                <span class="s1">&#39;lastname&#39;</span><span class="p">:</span> <span class="n">entries</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span>
+                <span class="s1">&#39;adminclass&#39;</span><span class="p">:</span> <span class="n">entries</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span>
+                <span class="s1">&#39;role&#39;</span><span class="p">:</span> <span class="n">entries</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span>
+                <span class="s1">&#39;first_password&#39;</span><span class="p">:</span> <span class="n">entries</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span>
+                <span class="s1">&#39;home_deleted&#39;</span><span class="p">:</span> <span class="s1">&#39;TRUE&#39;</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span>
+            <span class="p">})</span>
+
+    <span class="k">if</span> <span class="n">epoch</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">epoch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">epoch</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Given epoch (</span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">) should be an integer!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="p">[])</span>
+
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="parse_add_log">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/common/parsers/sophomorix_log/index.html#linuxmusterTools.common.parse_add_log">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_add_log</span><span class="p">(</span><span class="nb">all</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">epoch</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">today</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">lastweek</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse the add log of sophomorix to return a dict with all informations.</span>
+<span class="sd">    Informations available in the log:</span>
+<span class="sd">    - timestamp</span>
+<span class="sd">    - utc datetime</span>
+<span class="sd">    - school</span>
+<span class="sd">    - user&#39;s cn</span>
+<span class="sd">    - user&#39;s lastname</span>
+<span class="sd">    - user&#39;s firstname</span>
+<span class="sd">    - sophomorixAdminclass</span>
+<span class="sd">    - sophomorixRole</span>
+<span class="sd">    - sophomorixUnid</span>
+
+<span class="sd">    :param all: return all entries</span>
+<span class="sd">    :type all: bool</span>
+<span class="sd">    :param epoch: search the given epoch/timestamp in the log</span>
+<span class="sd">    :type epoch: basestring</span>
+<span class="sd">    :param today: filter only today&#39;s results</span>
+<span class="sd">    :type today: bool</span>
+<span class="sd">    :param lastweek: filter only last week&#39;s results</span>
+<span class="sd">    :type lastweek: bool</span>
+<span class="sd">    :return: entries</span>
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">if</span> <span class="p">(</span><span class="nb">all</span> <span class="ow">and</span> <span class="n">today</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">all</span> <span class="ow">and</span> <span class="n">lastweek</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">today</span> <span class="ow">and</span> <span class="n">lastweek</span><span class="p">):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Parameter all, today and lastweek are mutually exclusives! Please pick only one of them.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Parameter all, today and lastweek are mutually exclusives! Please pick only one of them.&quot;</span><span class="p">)</span>
+
+    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span>
+    <span class="n">last_year</span> <span class="o">=</span> <span class="n">now</span> <span class="o">-</span> <span class="mi">86400</span><span class="o">*</span><span class="mi">365</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">ADD_LOG_PATH</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File </span><span class="si">{</span><span class="n">ADD_LOG_PATH</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ADD_LOG_PATH</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">log</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">log</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span> <span class="ow">or</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="n">entries</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;::&#39;</span><span class="p">)</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">entries</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+            <span class="c1"># Only get the entries of last year per default</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span> <span class="ow">and</span> <span class="n">timestamp</span> <span class="o">&lt;</span> <span class="n">last_year</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># If flag today is set, only the changes of the current day</span>
+            <span class="k">if</span> <span class="n">today</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">==</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">():</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># If flag lastweek is set, only the changes of the last week</span>
+            <span class="k">if</span> <span class="n">lastweek</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=-</span><span class="mi">7</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">timestamp</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">timestamp</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="n">result</span><span class="p">[</span><span class="n">timestamp</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s1">&#39;school&#39;</span><span class="p">:</span> <span class="n">entries</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">entries</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+                <span class="s1">&#39;firstname&#39;</span><span class="p">:</span> <span class="n">entries</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span>
+                <span class="s1">&#39;lastname&#39;</span><span class="p">:</span> <span class="n">entries</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span>
+                <span class="s1">&#39;adminclass&#39;</span><span class="p">:</span> <span class="n">entries</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span>
+                <span class="s1">&#39;role&#39;</span><span class="p">:</span> <span class="n">entries</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span>
+                <span class="s1">&#39;unid&#39;</span><span class="p">:</span> <span class="n">entries</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="k">if</span> <span class="n">entries</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;---&#39;</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="p">})</span>
+
+    <span class="k">if</span> <span class="n">epoch</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">epoch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">epoch</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Given epoch (</span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">) should be an integer!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="p">[])</span>
+
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+
+<div class="viewcode-block" id="parse_update_log">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/common/parsers/sophomorix_log/index.html#linuxmusterTools.common.parse_update_log">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_update_log</span><span class="p">(</span><span class="nb">all</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">epoch</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">today</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">lastweek</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">list_changes</span><span class="o">=</span><span class="kc">True</span> <span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse the update log of sophomorix to return a dict with all informations.</span>
+<span class="sd">    Informations available in the log:</span>
+<span class="sd">    - first log line:</span>
+<span class="sd">        - timestamp</span>
+<span class="sd">        - utc datetime</span>
+<span class="sd">        - school</span>
+<span class="sd">        - user&#39;s cn</span>
+<span class="sd">        - group change (e.g. teachers-&gt;attic)</span>
+<span class="sd">        - role change (e.g. teacher-&gt;student)</span>
+<span class="sd">    - second log line:</span>
+<span class="sd">        - timestamp</span>
+<span class="sd">        - utc datetime</span>
+<span class="sd">        - school</span>
+<span class="sd">        - user&#39;s cn</span>
+<span class="sd">        - list of LDAP attributes changes (separator &quot;=&quot;)</span>
+
+<span class="sd">    :param all: return all entries</span>
+<span class="sd">    :type all: bool</span>
+<span class="sd">    :param epoch: search the given epoch/timestamp in the log</span>
+<span class="sd">    :type epoch: basestring</span>
+<span class="sd">    :param today: filter only today&#39;s results</span>
+<span class="sd">    :type today: bool</span>
+<span class="sd">    :param lastweek: filter only last week&#39;s results</span>
+<span class="sd">    :type lastweek: bool</span>
+<span class="sd">    :param list_changes: list the LDAP attributes changed</span>
+<span class="sd">    :type list_changes: bool</span>
+<span class="sd">    :return: entries</span>
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">if</span> <span class="p">(</span><span class="nb">all</span> <span class="ow">and</span> <span class="n">today</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">all</span> <span class="ow">and</span> <span class="n">lastweek</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">today</span> <span class="ow">and</span> <span class="n">lastweek</span><span class="p">):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Parameter all, today and lastweek are mutually exclusives! Please pick only one of them.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Parameter all, today and lastweek are mutually exclusives! Please pick only one of them.&quot;</span><span class="p">)</span>
+
+    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span>
+    <span class="n">last_year</span> <span class="o">=</span> <span class="n">now</span> <span class="o">-</span> <span class="mi">86400</span><span class="o">*</span><span class="mi">365</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">UPDATE_LOG_PATH</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File </span><span class="si">{</span><span class="n">UPDATE_LOG_PATH</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">UPDATE_LOG_PATH</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">log</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">log</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span> <span class="ow">or</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;#&#39;</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="n">entries</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;::&#39;</span><span class="p">)</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">entries</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+            <span class="c1"># Only get the entries of last year per default</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span> <span class="ow">and</span> <span class="n">timestamp</span> <span class="o">&lt;</span> <span class="n">last_year</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># If flag today is set, only the changes of the current day</span>
+            <span class="k">if</span> <span class="n">today</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">==</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">():</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># If flag lastweek is set, only the changes of the last week</span>
+            <span class="k">if</span> <span class="n">lastweek</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=-</span><span class="mi">7</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">timestamp</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">timestamp</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="n">changes</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="n">list_changes</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">change</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;,&#39;</span><span class="p">):</span>
+                    <span class="n">change</span> <span class="o">=</span> <span class="n">change</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="sa">b</span><span class="s1">&#39;GROUP:&#39;</span> <span class="ow">in</span> <span class="n">change</span> <span class="ow">or</span> <span class="sa">b</span><span class="s1">&#39;ROLE:&#39;</span> <span class="ow">in</span> <span class="n">change</span><span class="p">:</span>
+                        <span class="n">key</span><span class="p">,</span> <span class="n">move</span> <span class="o">=</span> <span class="n">change</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+                        <span class="n">changes</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="o">=</span> <span class="n">move</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="sa">b</span><span class="s1">&#39;=&#39;</span> <span class="ow">in</span> <span class="n">change</span><span class="p">:</span>
+                            <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">change</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="sa">b</span><span class="s1">&#39;unicodePwd&#39;</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+                                <span class="n">changes</span><span class="p">[</span><span class="s1">&#39;unicodePwd&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;CHANGED-VALUE HIDDEN&quot;</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">changes</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">decode</span><span class="p">()]</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+
+            <span class="n">result</span><span class="p">[</span><span class="n">timestamp</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s1">&#39;school&#39;</span><span class="p">:</span> <span class="n">entries</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(),</span>
+                <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">entries</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(),</span>
+                <span class="s1">&#39;changes&#39;</span><span class="p">:</span> <span class="n">changes</span><span class="p">,</span>
+            <span class="p">})</span>
+
+    <span class="k">if</span> <span class="n">epoch</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">epoch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">epoch</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Given epoch (</span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">) should be an integer!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="p">[])</span>
+
+    <span class="k">return</span> <span class="n">result</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -9,14 +9,15 @@ Classes
 
 .. autoapisummary::
 
-   linuxmusterTools.ldapconnector.models.common.LMNParent
-   linuxmusterTools.ldapconnector.models.common.LMNOU
+   linuxmusterTools.ldapconnector.models.common.LMNModel
+   linuxmusterTools.ldapconnector.models.common.LMNOUModel
+   linuxmusterTools.ldapconnector.models.common.LMNGPOModel
 
 
 Module Contents
 ---------------
 
-.. py:class:: LMNParent
+.. py:class:: LMNModel
 
    Common parent class to gather common methods.
 
@@ -35,9 +36,9 @@ Module Contents
    .. py:method:: common_name(dn)
 
 
-.. py:class:: LMNOU
+.. py:class:: LMNOUModel
 
-   Bases: :py:obj:`LMNParent`
+   Bases: :py:obj:`LMNModel`
 
 
    Common parent class to gather common methods.
@@ -65,6 +66,49 @@ Module Contents
 
    .. py:attribute:: ou
       :type:  str
+
+
+   .. py:method:: __post_init__()
+
+
+.. py:class:: LMNGPOModel
+
+   Bases: :py:obj:`LMNModel`
+
+
+   Common parent class to gather common methods.
+
+
+   .. py:attribute:: cn
+      :type:  str
+
+
+   .. py:attribute:: distinguishedName
+      :type:  str
+
+
+   .. py:attribute:: displayName
+      :type:  str
+
+
+   .. py:attribute:: dn
+      :type:  str
+
+
+   .. py:attribute:: gPCFileSysPath
+      :type:  str
+
+
+   .. py:attribute:: name
+      :type:  str
+
+
+   .. py:attribute:: objectCategory
+      :type:  list
+
+
+   .. py:attribute:: objectClass
+      :type:  list
 
 
    .. py:method:: __post_init__()

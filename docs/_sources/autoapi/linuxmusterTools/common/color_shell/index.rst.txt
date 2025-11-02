@@ -1,0 +1,147 @@
+linuxmusterTools.common.color_shell
+===================================
+
+.. py:module:: linuxmusterTools.common.color_shell
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.common.color_shell.SHELL_COLOR_WARNING
+   linuxmusterTools.common.color_shell.SHELL_COLOR_SUCCESS
+   linuxmusterTools.common.color_shell.SHELL_COLOR_ALERT
+   linuxmusterTools.common.color_shell.SHELL_COLOR_DANGER
+   linuxmusterTools.common.color_shell.SHELL_COLOR_INFO
+   linuxmusterTools.common.color_shell.SHELL_COLOR_LINUXMUSTER
+   linuxmusterTools.common.color_shell.SHELL_COLOR_ENDC
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   linuxmusterTools.common.color_shell.ColorShell
+   linuxmusterTools.common.color_shell.Spinner
+
+
+Module Contents
+---------------
+
+.. py:data:: SHELL_COLOR_WARNING
+   :value: '\x1b[93m'
+
+
+.. py:data:: SHELL_COLOR_SUCCESS
+   :value: '\x1b[92m'
+
+
+.. py:data:: SHELL_COLOR_ALERT
+   :value: '\x1b[38;5;208m'
+
+
+.. py:data:: SHELL_COLOR_DANGER
+   :value: '\x1b[91m'
+
+
+.. py:data:: SHELL_COLOR_INFO
+   :value: '\x1b[96m'
+
+
+.. py:data:: SHELL_COLOR_LINUXMUSTER
+   :value: '\x1b[1m\x1b[38;5;214m'
+
+
+.. py:data:: SHELL_COLOR_ENDC
+   :value: '\x1b[0m'
+
+
+.. py:class:: ColorShell
+
+   .. py:method:: danger(result, end='\n')
+
+
+   .. py:method:: alert(result, end='\n')
+
+
+   .. py:method:: warning(result, end='\n')
+
+
+   .. py:method:: info(result, end='\n')
+
+
+   .. py:method:: success(result, end='\n')
+
+
+   .. py:method:: lmn(result, end='\n')
+
+
+   .. py:method:: printsh(text, color, end='\n')
+
+      Method for not so common colors. But color should be a valid ANSI control sequence
+
+
+
+.. py:class:: Spinner(color=SHELL_COLOR_WARNING, progress=False)
+
+   Bases: :py:obj:`object`
+
+
+   .. py:attribute:: spinner_cycle
+
+
+   .. py:attribute:: color
+      :value: '\x1b[93m'
+
+
+
+   .. py:attribute:: progress
+      :value: False
+
+
+
+   .. py:attribute:: stop_running
+      :value: None
+
+
+
+   .. py:attribute:: spin_thread
+      :value: None
+
+
+
+   .. py:attribute:: text
+      :value: ''
+
+
+
+   .. py:attribute:: last_text
+      :value: ''
+
+
+
+   .. py:attribute:: update
+      :value: False
+
+
+
+   .. py:method:: start()
+
+
+   .. py:method:: stop()
+
+
+   .. py:method:: init_spin()
+
+
+   .. py:method:: print(text)
+
+
+   .. py:method:: __enter__()
+
+
+   .. py:method:: __exit__(exc_type, exc_val, exc_tb)
+
+

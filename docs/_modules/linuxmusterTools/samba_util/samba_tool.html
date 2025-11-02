@@ -5,8 +5,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.samba_util.samba_tool &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.samba_util.samba_tool &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/translations.js?v=8fd896e3"></script>
@@ -62,7 +62,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-          <li class="breadcrumb-item"><a href="../samba_util.html">linuxmusterTools.samba_util</a></li>
+          <li class="breadcrumb-item"><a href="../../linuxmusterTools.html">linuxmusterTools</a></li>
       <li class="breadcrumb-item active">linuxmusterTools.samba_util.samba_tool</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -73,22 +73,28 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.samba_util.samba_tool</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">string</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">asdict</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.drives</span><span class="w"> </span><span class="kn">import</span> <span class="n">DriveManager</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..ldapconnector</span><span class="w"> </span><span class="kn">import</span> <span class="n">LMNLdapReader</span> <span class="k">as</span> <span class="n">lr</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">string</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">asdict</span>
+<span class="kn">from</span> <span class="nn">.drives</span> <span class="kn">import</span> <span class="n">DriveManager</span>
+<span class="kn">from</span> <span class="nn">..ldapconnector</span> <span class="kn">import</span> <span class="n">LMNLdapReader</span> <span class="k">as</span> <span class="n">lr</span>
+
+
+<div class="viewcode-block" id="logger">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/samba_tool/index.html#linuxmusterTools.samba_util.logger">[docs]</a>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
+
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">samba.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">system_session</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">samba.credentials</span><span class="w"> </span><span class="kn">import</span> <span class="n">Credentials</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">samba.param</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoadParm</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">samba.samdb</span><span class="w"> </span><span class="kn">import</span> <span class="n">SamDB</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">samba.netcmd.gpo</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_gpo_info</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">ldb</span><span class="w"> </span><span class="kn">import</span> <span class="n">LdbError</span>
+    <span class="kn">from</span> <span class="nn">samba.auth</span> <span class="kn">import</span> <span class="n">system_session</span>
+    <span class="kn">from</span> <span class="nn">samba.credentials</span> <span class="kn">import</span> <span class="n">Credentials</span>
+    <span class="kn">from</span> <span class="nn">samba.param</span> <span class="kn">import</span> <span class="n">LoadParm</span>
+    <span class="kn">from</span> <span class="nn">samba.samdb</span> <span class="kn">import</span> <span class="n">SamDB</span>
+    <span class="kn">from</span> <span class="nn">samba.netcmd.gpo</span> <span class="kn">import</span> <span class="n">get_gpo_info</span>
+    <span class="kn">from</span> <span class="nn">ldb</span> <span class="kn">import</span> <span class="n">LdbError</span>
 
 <div class="viewcode-block" id="lp">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/samba_tool/index.html#linuxmusterTools.samba_util.lp">[docs]</a>
@@ -97,7 +103,7 @@
     <span class="n">creds</span> <span class="o">=</span> <span class="n">Credentials</span><span class="p">()</span>
     <span class="n">creds</span><span class="o">.</span><span class="n">guess</span><span class="p">(</span><span class="n">lp</span><span class="p">)</span>
 <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Samba doesn&#39;t seem to be installed, this module can not be used: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Samba doesn&#39;t seem to be installed, this module can not be used: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SAMDB_PATH">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/samba_tool/index.html#linuxmusterTools.samba_util.SAMDB_PATH">[docs]</a>
@@ -107,7 +113,7 @@
 <span class="nd">@dataclass</span>
 <div class="viewcode-block" id="GPO">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/samba_tool/index.html#linuxmusterTools.samba_util.GPO">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">GPO</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">GPO</span><span class="p">:</span>
 <div class="viewcode-block" id="GPO.dn">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/samba_tool/index.html#linuxmusterTools.samba_util.GPO.dn">[docs]</a>
     <span class="n">dn</span><span class="p">:</span> <span class="nb">str</span></div>
@@ -136,12 +142,12 @@
 
 <div class="viewcode-block" id="GPOManager">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/samba_tool/index.html#linuxmusterTools.samba_util.GPOManager">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">GPOManager</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">GPOManager</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sample object to manage all GPOs informations.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="n">gpos_infos</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -150,9 +156,9 @@
                 <span class="n">samdb</span> <span class="o">=</span> <span class="n">SamDB</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">SAMDB_PATH</span><span class="p">,</span> <span class="n">session_info</span><span class="o">=</span><span class="n">system_session</span><span class="p">(),</span><span class="n">credentials</span><span class="o">=</span><span class="n">creds</span><span class="p">,</span> <span class="n">lp</span><span class="o">=</span><span class="n">lp</span><span class="p">)</span>
                 <span class="n">gpos_infos</span> <span class="o">=</span> <span class="n">get_gpo_info</span><span class="p">(</span><span class="n">samdb</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not load </span><span class="si">{</span><span class="n">SAMDB_PATH</span><span class="si">}</span><span class="s1">, is linuxmuster installed ?&#39;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not load </span><span class="si">{</span><span class="n">SAMDB_PATH</span><span class="si">}</span><span class="s1">, is linuxmuster installed ?&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">SAMDB_PATH</span><span class="si">}</span><span class="s1"> not found, is linuxmuster installed ?&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">SAMDB_PATH</span><span class="si">}</span><span class="s1"> not found, is linuxmuster installed ?&#39;</span><span class="p">)</span>
         
 <div class="viewcode-block" id="GPOManager.gpos">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/samba_tool/index.html#linuxmusterTools.samba_util.GPOManager.gpos">[docs]</a>
@@ -164,18 +170,21 @@
             <span class="n">name</span> <span class="o">=</span> <span class="n">gpo</span><span class="p">[</span><span class="s1">&#39;displayName&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
             <span class="n">path</span> <span class="o">=</span> <span class="n">gpo</span><span class="p">[</span><span class="s1">&#39;gPCFileSysPath&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
             <span class="n">unix_path</span> <span class="o">=</span> <span class="s2">&quot;/var/lib/samba/&quot;</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">:])</span>
-            <span class="n">drivemgr</span> <span class="o">=</span> <span class="n">DriveManager</span><span class="p">(</span><span class="n">unix_path</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">gpos</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">GPO</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">gpo</span><span class="o">.</span><span class="n">dn</span><span class="p">),</span> <span class="n">drivemgr</span><span class="p">,</span> <span class="n">gpo_id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">unix_path</span><span class="p">)</span></div>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">drivemgr</span> <span class="o">=</span> <span class="n">DriveManager</span><span class="p">(</span><span class="n">unix_path</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gpos</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">GPO</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">gpo</span><span class="o">.</span><span class="n">dn</span><span class="p">),</span> <span class="n">drivemgr</span><span class="p">,</span> <span class="n">gpo_id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">unix_path</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="GroupManager">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/samba_tool/index.html#linuxmusterTools.samba_util.GroupManager">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">GroupManager</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">GroupManager</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Samble class to manage samba groups via samba-tool.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
 <div class="viewcode-block" id="GroupManager.POST_HOOK_DIR">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/samba_tool/index.html#linuxmusterTools.samba_util.GroupManager.POST_HOOK_DIR">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">POST_HOOK_DIR</span> <span class="o">=</span> <span class="s1">&#39;/etc/linuxmuster/tools/hooks/group-manager&#39;</span></div>
@@ -193,13 +202,13 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">samdb</span> <span class="o">=</span> <span class="n">SamDB</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">SAMDB_PATH</span><span class="p">,</span> <span class="n">session_info</span><span class="o">=</span><span class="n">system_session</span><span class="p">(),</span><span class="n">credentials</span><span class="o">=</span><span class="n">creds</span><span class="p">,</span> <span class="n">lp</span><span class="o">=</span><span class="n">lp</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not load </span><span class="si">{</span><span class="n">SAMDB_PATH</span><span class="si">}</span><span class="s1">, is linuxmuster installed ?&#39;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not load </span><span class="si">{</span><span class="n">SAMDB_PATH</span><span class="si">}</span><span class="s1">, is linuxmuster installed ?&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">SAMDB_PATH</span><span class="si">}</span><span class="s1"> not found, is linuxmuster installed ?&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">SAMDB_PATH</span><span class="si">}</span><span class="s1"> not found, is linuxmuster installed ?&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="GroupManager._run_post_hook">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/samba_tool/index.html#linuxmusterTools.samba_util.GroupManager._run_post_hook">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_run_post_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">members</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_run_post_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">members</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs alls the scripts located in self.POST_HOOK_DIR in alphanum order, passing 3 arguments:</span>
 
@@ -218,7 +227,7 @@
 
 <div class="viewcode-block" id="GroupManager.list">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/samba_tool/index.html#linuxmusterTools.samba_util.GroupManager.list">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">raw_groups</span> <span class="o">=</span> <span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/groups&#39;</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">,</span> <span class="s1">&#39;sophomorixType&#39;</span><span class="p">],</span> <span class="n">school</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="p">)</span>
         <span class="n">groups</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -232,7 +241,7 @@
 
 <div class="viewcode-block" id="GroupManager.remove_members">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/samba_tool/index.html#linuxmusterTools.samba_util.GroupManager.remove_members">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">remove_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">members</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">remove_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">members</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove members from a group. samdb throw an Exception if the group or the user</span>
 <span class="sd">        does not exist.</span>
@@ -249,7 +258,7 @@
 
 <div class="viewcode-block" id="GroupManager.add_members">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/samba_tool/index.html#linuxmusterTools.samba_util.GroupManager.add_members">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">members</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">add_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">members</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add members to a group. samdb throw an Exception if the group or the user</span>
 <span class="sd">        does not exist.</span>
@@ -274,12 +283,12 @@
 
 <div class="viewcode-block" id="UserManager">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/samba_tool/index.html#linuxmusterTools.samba_util.UserManager">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">UserManager</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">UserManager</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sample class to manage samba users via samba-tool.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <div class="viewcode-block" id="UserManager.POST_HOOK_DIR">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/samba_tool/index.html#linuxmusterTools.samba_util.UserManager.POST_HOOK_DIR">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">POST_HOOK_DIR</span> <span class="o">=</span> <span class="s1">&#39;/etc/linuxmuster/tools/hooks/user-manager&#39;</span></div>
@@ -289,13 +298,13 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">samdb</span> <span class="o">=</span> <span class="n">SamDB</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">SAMDB_PATH</span><span class="p">,</span> <span class="n">session_info</span><span class="o">=</span><span class="n">system_session</span><span class="p">(),</span><span class="n">credentials</span><span class="o">=</span><span class="n">creds</span><span class="p">,</span> <span class="n">lp</span><span class="o">=</span><span class="n">lp</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not load </span><span class="si">{</span><span class="n">SAMDB_PATH</span><span class="si">}</span><span class="s1">, is linuxmuster installed ?&#39;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not load </span><span class="si">{</span><span class="n">SAMDB_PATH</span><span class="si">}</span><span class="s1">, is linuxmuster installed ?&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">SAMDB_PATH</span><span class="si">}</span><span class="s1"> not found, is linuxmuster installed ?&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">SAMDB_PATH</span><span class="si">}</span><span class="s1"> not found, is linuxmuster installed ?&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="UserManager._check_password_strength">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/samba_tool/index.html#linuxmusterTools.samba_util.UserManager._check_password_strength">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_check_password_strength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_check_password_strength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Passwords must contain at least one lowercase, one uppercase, one special char or number, and at least 7 chars.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -306,7 +315,7 @@
 
 <div class="viewcode-block" id="UserManager._generate_password">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/samba_tool/index.html#linuxmusterTools.samba_util.UserManager._generate_password">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_password</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_generate_password</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Passwords must contain at least one lowercase, one uppercase, one special char or number, and at least 7 chars.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -322,11 +331,11 @@
 
 <div class="viewcode-block" id="UserManager.set_password">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/samba_tool/index.html#linuxmusterTools.samba_util.UserManager.set_password">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_password</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">set_password</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">samdb</span><span class="o">.</span><span class="n">setpassword</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;samaccountname=</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">LdbError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
 </div>
 

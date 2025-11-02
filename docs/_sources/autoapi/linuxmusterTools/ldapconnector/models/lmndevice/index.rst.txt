@@ -9,16 +9,16 @@ Classes
 
 .. autoapisummary::
 
-   linuxmusterTools.ldapconnector.models.lmndevice.LMNDevice
-   linuxmusterTools.ldapconnector.models.lmndevice.LMNRoom
+   linuxmusterTools.ldapconnector.models.lmndevice.LMNDeviceModel
+   linuxmusterTools.ldapconnector.models.lmndevice.LMNRoomModel
 
 
 Module Contents
 ---------------
 
-.. py:class:: LMNDevice
+.. py:class:: LMNDeviceModel
 
-   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNModel`
 
 
    Common parent class to gather common methods.
@@ -123,9 +123,9 @@ Module Contents
    .. py:method:: __post_init__()
 
 
-.. py:class:: LMNRoom
+.. py:class:: LMNRoomModel
 
-   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNModel`
 
 
    ObjectClass group for a room.

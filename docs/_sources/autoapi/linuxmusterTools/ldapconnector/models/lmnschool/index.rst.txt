@@ -9,13 +9,13 @@ Classes
 
 .. autoapisummary::
 
-   linuxmusterTools.ldapconnector.models.lmnschool.LMNSchool
+   linuxmusterTools.ldapconnector.models.lmnschool.LMNSchoolModel
 
 
 Module Contents
 ---------------
 
-.. py:class:: LMNSchool
+.. py:class:: LMNSchoolModel
 
    .. py:attribute:: objectClass
       :type:  list

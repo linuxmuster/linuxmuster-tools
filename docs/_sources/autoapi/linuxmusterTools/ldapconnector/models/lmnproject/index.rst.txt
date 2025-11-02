@@ -9,15 +9,15 @@ Classes
 
 .. autoapisummary::
 
-   linuxmusterTools.ldapconnector.models.lmnproject.LMNProject
+   linuxmusterTools.ldapconnector.models.lmnproject.LMNProjectModel
 
 
 Module Contents
 ---------------
 
-.. py:class:: LMNProject
+.. py:class:: LMNProjectModel
 
-   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNModel`
 
 
    Common parent class to gather common methods.
@@ -91,7 +91,43 @@ Module Contents
       :type:  bool
 
 
+   .. py:attribute:: sophomorixIntrinsic1
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic2
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic3
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic4
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic5
+      :type:  str
+
+
    .. py:attribute:: sophomorixIntrinsicMulti1
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti2
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti3
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti4
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti5
       :type:  list
 
 

@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.writers.object &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.ldapconnector.writers.object &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/theme_overrides.css?v=472cca7c" />
@@ -15,7 +15,7 @@
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../../_static/translations.js?v=8fd896e3"></script>
@@ -60,8 +60,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../samba_util/index.html">linuxmusterTools.samba_util</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#attributes">Attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#package-contents">Package Contents</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../create_students_groups/index.html">create_students_groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../00-update-schoolclasses-groups/index.html">00-update-schoolclasses-groups</a></li>
 </ul>
 </li>
 </ul>
@@ -96,11 +101,21 @@
              
   <section id="module-linuxmusterTools.ldapconnector.writers.object">
 <span id="linuxmustertools-ldapconnector-writers-object"></span><h1>linuxmusterTools.ldapconnector.writers.object<a class="headerlink" href="#module-linuxmusterTools.ldapconnector.writers.object" title="Link to this heading"></a></h1>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.object.logger" title="linuxmusterTools.ldapconnector.writers.object.logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logger</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.object.LMNObjectWriter" title="linuxmusterTools.ldapconnector.writers.object.LMNObjectWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNObjectWriter</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.object.LMNObject" title="linuxmusterTools.ldapconnector.writers.object.LMNObject"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNObject</span></code></a></p></td>
 <td><p>Search per dn, may not be the best solution.</p></td>
 </tr>
 </tbody>
@@ -108,23 +123,28 @@
 </section>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.object.logger">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.object.</span></span><span class="sig-name descname"><span class="pre">logger</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.object.logger" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py class">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.object.LMNObjectWriter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.object.</span></span><span class="sig-name descname"><span class="pre">LMNObjectWriter</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObjectWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.object.LMNObjectWriter" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.object.LMNObject">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.object.</span></span><span class="sig-name descname"><span class="pre">LMNObject</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.object.LMNObject" title="Link to this definition"></a></dt>
 <dd><p>Search per dn, may not be the best solution.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.object.LMNObjectWriter.lw">
-<span class="sig-name descname"><span class="pre">lw</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObjectWriter.lw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.object.LMNObjectWriter.lw" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.object.LMNObject.lw">
+<span class="sig-name descname"><span class="pre">lw</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObject.lw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.object.LMNObject.lw" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.object.LMNObjectWriter.lr">
-<span class="sig-name descname"><span class="pre">lr</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObjectWriter.lr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.object.LMNObjectWriter.lr" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.object.LMNObject.lr">
+<span class="sig-name descname"><span class="pre">lr</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObject.lr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.object.LMNObject.lr" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.object.LMNObjectWriter.setattr">
-<span class="sig-name descname"><span class="pre">setattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObjectWriter.setattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.object.LMNObjectWriter.setattr" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.object.LMNObject.setattr">
+<span class="sig-name descname"><span class="pre">setattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObject.setattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.object.LMNObject.setattr" title="Link to this definition"></a></dt>
 <dd><p>Middleware to check if the object exists.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -134,8 +154,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.object.LMNObjectWriter.delattr">
-<span class="sig-name descname"><span class="pre">delattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObjectWriter.delattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.object.LMNObjectWriter.delattr" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.object.LMNObject.delattr">
+<span class="sig-name descname"><span class="pre">delattr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObject.delattr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.object.LMNObject.delattr" title="Link to this definition"></a></dt>
 <dd><p>Middleware to check if the object exists.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -145,13 +165,13 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.object.LMNObjectWriter.remove_member">
-<span class="sig-name descname"><span class="pre">remove_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member_dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObjectWriter.remove_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.object.LMNObjectWriter.remove_member" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.object.LMNObject.remove_member">
+<span class="sig-name descname"><span class="pre">remove_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member_dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObject.remove_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.object.LMNObject.remove_member" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.object.LMNObjectWriter.add_member">
-<span class="sig-name descname"><span class="pre">add_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member_dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObjectWriter.add_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.object.LMNObjectWriter.add_member" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.object.LMNObject.add_member">
+<span class="sig-name descname"><span class="pre">add_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member_dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/object.html#LMNObject.add_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.object.LMNObject.add_member" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

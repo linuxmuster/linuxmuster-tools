@@ -18,6 +18,6 @@ Module Contents
 .. py:function:: get_all_from_role(role='teacher')
 
    Get all user from a same role.
-   Return a list of LMNUser data objects.
+   Return a list of LMNUserModel data objects.
 
 

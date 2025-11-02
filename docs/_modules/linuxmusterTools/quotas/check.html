@@ -5,8 +5,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.quotas.check &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.quotas.check &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/translations.js?v=8fd896e3"></script>
@@ -62,6 +62,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../linuxmusterTools.html">linuxmusterTools</a></li>
       <li class="breadcrumb-item active">linuxmusterTools.quotas.check</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -72,29 +73,34 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.quotas.check</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pwd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">smbclient</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">smbprotocol.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">SMBAuthenticationError</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pwd</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">smbclient</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">smbprotocol.exceptions</span> <span class="kn">import</span> <span class="n">SMBAuthenticationError</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..samba_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">SAMBA_WORKGROUP</span><span class="p">,</span> <span class="n">SAMBA_DOMAIN</span><span class="p">,</span> <span class="n">SAMBA_NETBIOS</span><span class="p">,</span> <span class="n">DFS</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..ldapconnector</span><span class="w"> </span><span class="kn">import</span> <span class="n">LMNLdapReader</span> <span class="k">as</span> <span class="n">lr</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..common</span><span class="w"> </span><span class="kn">import</span> <span class="n">format_size</span>
+<span class="kn">from</span> <span class="nn">..samba_util</span> <span class="kn">import</span> <span class="n">SAMBA_WORKGROUP</span><span class="p">,</span> <span class="n">SAMBA_DOMAIN</span><span class="p">,</span> <span class="n">SAMBA_NETBIOS</span><span class="p">,</span> <span class="n">DFS</span><span class="p">,</span> <span class="n">SHARES_LIST</span>
+<span class="kn">from</span> <span class="nn">..ldapconnector</span> <span class="kn">import</span> <span class="n">LMNLdapReader</span> <span class="k">as</span> <span class="n">lr</span>
+<span class="kn">from</span> <span class="nn">..common</span> <span class="kn">import</span> <span class="n">format_size</span>
+
+
+<div class="viewcode-block" id="logger">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/quotas/index.html#linuxmusterTools.quotas.check.logger">[docs]</a>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="timestamp2date">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/quotas/index.html#linuxmusterTools.quotas.check.timestamp2date">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">timestamp2date</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">timestamp2date</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%S&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="_get_recursive_dir_properties">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/quotas/index.html#linuxmusterTools.quotas.check._get_recursive_dir_properties">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">_get_recursive_dir_properties</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_get_recursive_dir_properties</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get properties of folder, and call itself recursively for subfolders.</span>
 
@@ -134,7 +140,7 @@
 
 <div class="viewcode-block" id="_sum_dir_size">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/quotas/index.html#linuxmusterTools.quotas.check._sum_dir_size">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">_sum_dir_size</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_sum_dir_size</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;contents&#39;</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;file&quot;</span><span class="p">:</span>
             <span class="n">d</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span>
@@ -145,7 +151,7 @@
 
 <div class="viewcode-block" id="samba_root_tree">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/quotas/index.html#linuxmusterTools.quotas.check.samba_root_tree">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">samba_root_tree</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">samba_root_tree</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Recursively list files and folder of a school root share, with size and last-modified properties.</span>
 <span class="sd">    This function can only be called with a valid kerberos ticket.</span>
@@ -170,7 +176,7 @@
 
 <div class="viewcode-block" id="_samba_dir_size">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/quotas/index.html#linuxmusterTools.quotas.check._samba_dir_size">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">_samba_dir_size</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_samba_dir_size</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="p">:</span>
         <span class="c1"># Scanning from root share</span>
         <span class="n">school</span> <span class="o">=</span> <span class="n">lr</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/users/</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;sophomorixSchoolname&#39;</span><span class="p">)</span>
@@ -187,7 +193,7 @@
 
 <div class="viewcode-block" id="samba_dir_size">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/quotas/index.html#linuxmusterTools.quotas.check.samba_dir_size">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">samba_dir_size</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">samba_dir_size</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">size</span> <span class="o">=</span> <span class="n">_samba_dir_size</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">raw</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">size</span>
@@ -197,7 +203,7 @@
 
 <div class="viewcode-block" id="list_user_files">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/quotas/index.html#linuxmusterTools.quotas.check.list_user_files">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">list_user_files</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">list_user_files</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
     <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/srv/samba&#39;</span>
     <span class="n">user</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">SAMBA_WORKGROUP</span><span class="si">}</span><span class="se">\\</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s1">&#39;</span>
 
@@ -228,18 +234,29 @@
 
 <div class="viewcode-block" id="get_user_quotas">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/quotas/index.html#linuxmusterTools.quotas.check.get_user_quotas">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_user_quotas</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
-    <span class="c1"># TODO: find a better way to get shares list</span>
-    <span class="n">sophomorixQuota</span> <span class="o">=</span> <span class="n">lr</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/users/</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;sophomorixQuota&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">sophomorixQuota</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">get_user_quotas</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
+    <span class="n">attributes</span> <span class="o">=</span>  <span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/users/</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                             <span class="n">attributes</span><span class="o">=</span><span class="p">[</span>
+                                 <span class="s1">&#39;sophomorixCloudQuotaCalculated&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;sophomorixMailQuotaCalculated&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;sophomorixSchoolname&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;sophomorixRole&#39;</span>
+                             <span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">attributes</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;User </span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s1"> not found in ldap&#39;</span><span class="p">)</span>
 
-    <span class="n">quotas</span> <span class="o">=</span> <span class="p">{</span><span class="n">share</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">share</span> <span class="ow">in</span> <span class="n">sophomorixQuota</span><span class="p">}</span>
+    <span class="k">if</span> <span class="s1">&#39;administrator&#39;</span> <span class="ow">in</span> <span class="n">attributes</span><span class="p">[</span><span class="s1">&#39;sophomorixRole&#39;</span><span class="p">]:</span>
+        <span class="n">quotas</span> <span class="o">=</span> <span class="p">{</span><span class="n">share</span><span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">share</span> <span class="ow">in</span> <span class="n">SHARES_LIST</span><span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">quotas</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">attributes</span><span class="p">[</span><span class="s1">&#39;sophomorixSchoolname&#39;</span><span class="p">]:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;linuxmuster-global&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">}</span>
 
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/etc/linuxmuster/.secret/administrator&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">adm_pw</span><span class="p">:</span>
         <span class="n">pw</span> <span class="o">=</span> <span class="n">adm_pw</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_format_quota</span><span class="p">(</span><span class="n">quota</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_format_quota</span><span class="p">(</span><span class="n">quota</span><span class="p">):</span>
         <span class="k">if</span> <span class="s2">&quot;NO LIMIT&quot;</span> <span class="ow">in</span> <span class="n">quota</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">quota</span>
         <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">quota</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">/</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
@@ -264,7 +281,7 @@
 <span class="s2">    - Returncode: </span><span class="si">{</span><span class="n">smbc_output</span><span class="o">.</span><span class="n">returncode</span><span class="si">}</span>
 <span class="s2">    - Error: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;&quot;&quot;</span>
 
-            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
             <span class="n">quotas</span><span class="p">[</span><span class="n">share</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ERROR&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;output&#39;</span><span class="p">:</span><span class="n">out</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">:</span><span class="n">err</span><span class="p">,</span> <span class="s1">&#39;code&#39;</span><span class="p">:</span><span class="n">smbc_output</span><span class="o">.</span><span class="n">returncode</span><span class="p">}}</span>
 
         <span class="k">else</span><span class="p">:</span>
@@ -276,6 +293,8 @@
             <span class="p">}</span>
 
     <span class="n">pw</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">quotas</span><span class="p">[</span><span class="s1">&#39;cloud&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">attributes</span><span class="p">[</span><span class="s1">&#39;sophomorixCloudQuotaCalculated&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">quotas</span><span class="p">[</span><span class="s1">&#39;mail&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">attributes</span><span class="p">[</span><span class="s1">&#39;sophomorixMailQuotaCalculated&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="n">quotas</span></div>
 

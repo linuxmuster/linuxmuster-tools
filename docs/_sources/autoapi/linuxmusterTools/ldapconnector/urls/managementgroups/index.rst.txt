@@ -19,12 +19,12 @@ Module Contents
 .. py:function:: get_all_management_groups()
 
    Get all management groups.
-   Return a list of LMNGroup data objects.
+   Return a list of LMNGroupModel data objects.
 
 
 .. py:function:: get_management_group(name='')
 
    Get a management group specified by its name.
-   Return a LMNGroup data object.
+   Return a LMNGroupModel data object.
 
 

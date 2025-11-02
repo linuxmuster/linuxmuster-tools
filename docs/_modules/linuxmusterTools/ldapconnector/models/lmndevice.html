@@ -5,8 +5,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.models.lmndevice &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.ldapconnector.models.lmndevice &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/theme_overrides.css?v=472cca7c" />
@@ -14,7 +14,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/translations.js?v=8fd896e3"></script>
@@ -62,6 +62,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../linuxmusterTools.html">linuxmusterTools</a></li>
           <li class="breadcrumb-item"><a href="../../ldapconnector.html">linuxmusterTools.ldapconnector</a></li>
       <li class="breadcrumb-item active">linuxmusterTools.ldapconnector.models.lmndevice</li>
       <li class="wy-breadcrumbs-aside">
@@ -73,234 +74,234 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.ldapconnector.models.lmndevice</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">LMNParent</span>
+<span></span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">LMNModel</span>
 
 
 <span class="nd">@dataclass</span>
-<div class="viewcode-block" id="LMNDevice">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">LMNDevice</span><span class="p">(</span><span class="n">LMNParent</span><span class="p">):</span>
-<div class="viewcode-block" id="LMNDevice.cn">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.cn">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNDeviceModel</span><span class="p">(</span><span class="n">LMNModel</span><span class="p">):</span>
+<div class="viewcode-block" id="LMNDeviceModel.cn">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.cn">[docs]</a>
     <span class="n">cn</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNDevice.displayName">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.displayName">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel.displayName">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.displayName">[docs]</a>
     <span class="n">displayName</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNDevice.distinguishedName">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.distinguishedName">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel.distinguishedName">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.distinguishedName">[docs]</a>
     <span class="n">distinguishedName</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNDevice.dNSHostName">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.dNSHostName">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel.dNSHostName">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.dNSHostName">[docs]</a>
     <span class="n">dNSHostName</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNDevice.memberOf">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.memberOf">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel.memberOf">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.memberOf">[docs]</a>
     <span class="n">memberOf</span><span class="p">:</span> <span class="nb">list</span></div>
 
-<div class="viewcode-block" id="LMNDevice.name">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.name">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel.name">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.name">[docs]</a>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNDevice.objectClass">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.objectClass">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel.objectClass">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.objectClass">[docs]</a>
     <span class="n">objectClass</span><span class="p">:</span> <span class="nb">list</span></div>
 
-<div class="viewcode-block" id="LMNDevice.proxyAddresses">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.proxyAddresses">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel.proxyAddresses">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.proxyAddresses">[docs]</a>
     <span class="n">proxyAddresses</span><span class="p">:</span> <span class="nb">list</span></div>
 
-<div class="viewcode-block" id="LMNDevice.sAMAccountName">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.sAMAccountName">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel.sAMAccountName">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.sAMAccountName">[docs]</a>
     <span class="n">sAMAccountName</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNDevice.sAMAccountType">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.sAMAccountType">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel.sAMAccountType">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.sAMAccountType">[docs]</a>
     <span class="n">sAMAccountType</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNDevice.servicePrincipalName">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.servicePrincipalName">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel.servicePrincipalName">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.servicePrincipalName">[docs]</a>
     <span class="n">servicePrincipalName</span><span class="p">:</span> <span class="nb">list</span></div>
 
-<div class="viewcode-block" id="LMNDevice.sophomorixAdminClass">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.sophomorixAdminClass">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel.sophomorixAdminClass">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.sophomorixAdminClass">[docs]</a>
     <span class="n">sophomorixAdminClass</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNDevice.sophomorixAdminFile">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.sophomorixAdminFile">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel.sophomorixAdminFile">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.sophomorixAdminFile">[docs]</a>
     <span class="n">sophomorixAdminFile</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNDevice.sophomorixComment">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.sophomorixComment">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel.sophomorixComment">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.sophomorixComment">[docs]</a>
     <span class="n">sophomorixComment</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNDevice.sophomorixComputerIP">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.sophomorixComputerIP">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel.sophomorixComputerIP">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.sophomorixComputerIP">[docs]</a>
     <span class="n">sophomorixComputerIP</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNDevice.sophomorixComputerMAC">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.sophomorixComputerMAC">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel.sophomorixComputerMAC">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.sophomorixComputerMAC">[docs]</a>
     <span class="n">sophomorixComputerMAC</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNDevice.sophomorixComputerRoom">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.sophomorixComputerRoom">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel.sophomorixComputerRoom">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.sophomorixComputerRoom">[docs]</a>
     <span class="n">sophomorixComputerRoom</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNDevice.sophomorixCreationDate">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.sophomorixCreationDate">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel.sophomorixCreationDate">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.sophomorixCreationDate">[docs]</a>
     <span class="n">sophomorixCreationDate</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNDevice.sophomorixDnsNodename">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.sophomorixDnsNodename">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel.sophomorixDnsNodename">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.sophomorixDnsNodename">[docs]</a>
     <span class="n">sophomorixDnsNodename</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNDevice.sophomorixRole">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.sophomorixRole">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel.sophomorixRole">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.sophomorixRole">[docs]</a>
     <span class="n">sophomorixRole</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNDevice.sophomorixSchoolname">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.sophomorixSchoolname">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel.sophomorixSchoolname">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.sophomorixSchoolname">[docs]</a>
     <span class="n">sophomorixSchoolname</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNDevice.sophomorixSchoolPrefix">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.sophomorixSchoolPrefix">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel.sophomorixSchoolPrefix">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.sophomorixSchoolPrefix">[docs]</a>
     <span class="n">sophomorixSchoolPrefix</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNDevice.sophomorixStatus">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.sophomorixStatus">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel.sophomorixStatus">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.sophomorixStatus">[docs]</a>
     <span class="n">sophomorixStatus</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNDevice.dn">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.dn">[docs]</a>
+<div class="viewcode-block" id="LMNDeviceModel.dn">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.dn">[docs]</a>
     <span class="n">dn</span><span class="p">:</span>   <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="LMNDevice.__post_init__">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNDevice.__post_init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LMNDeviceModel.__post_init__">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNDeviceModel.__post_init__">[docs]</a>
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distinguishedName</span></div>
 </div>
 
 
 <span class="nd">@dataclass</span>
-<div class="viewcode-block" id="LMNRoom">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNRoom">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">LMNRoom</span><span class="p">(</span><span class="n">LMNParent</span><span class="p">):</span>
+<div class="viewcode-block" id="LMNRoomModel">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNRoomModel">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNRoomModel</span><span class="p">(</span><span class="n">LMNModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ObjectClass group for a room.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="LMNRoom.cn">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.cn">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.cn">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.cn">[docs]</a>
     <span class="n">cn</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNRoom.description">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.description">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.description">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.description">[docs]</a>
     <span class="n">description</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNRoom.distinguishedName">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.distinguishedName">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.distinguishedName">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.distinguishedName">[docs]</a>
     <span class="n">distinguishedName</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNRoom.mail">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.mail">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.mail">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.mail">[docs]</a>
     <span class="n">mail</span><span class="p">:</span> <span class="nb">list</span></div>
 
-<div class="viewcode-block" id="LMNRoom.member">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.member">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.member">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.member">[docs]</a>
     <span class="n">member</span><span class="p">:</span> <span class="nb">list</span></div>
 
-<div class="viewcode-block" id="LMNRoom.name">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.name">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.name">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.name">[docs]</a>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNRoom.objectClass">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.objectClass">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.objectClass">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.objectClass">[docs]</a>
     <span class="n">objectClass</span><span class="p">:</span> <span class="nb">list</span></div>
 
-<div class="viewcode-block" id="LMNRoom.sAMAccountName">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.sAMAccountName">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.sAMAccountName">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.sAMAccountName">[docs]</a>
     <span class="n">sAMAccountName</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNRoom.sAMAccountType">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.sAMAccountType">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.sAMAccountType">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.sAMAccountType">[docs]</a>
     <span class="n">sAMAccountType</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNRoom.sophomorixAddMailQuota">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.sophomorixAddMailQuota">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.sophomorixAddMailQuota">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.sophomorixAddMailQuota">[docs]</a>
     <span class="n">sophomorixAddMailQuota</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNRoom.sophomorixAddQuota">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.sophomorixAddQuota">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.sophomorixAddQuota">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.sophomorixAddQuota">[docs]</a>
     <span class="n">sophomorixAddQuota</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNRoom.sophomorixCreationDate">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.sophomorixCreationDate">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.sophomorixCreationDate">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.sophomorixCreationDate">[docs]</a>
     <span class="n">sophomorixCreationDate</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNRoom.sophomorixHidden">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.sophomorixHidden">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.sophomorixHidden">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.sophomorixHidden">[docs]</a>
     <span class="n">sophomorixHidden</span><span class="p">:</span> <span class="nb">bool</span></div>
 
-<div class="viewcode-block" id="LMNRoom.sophomorixJoinable">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.sophomorixJoinable">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.sophomorixJoinable">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.sophomorixJoinable">[docs]</a>
     <span class="n">sophomorixJoinable</span><span class="p">:</span> <span class="nb">bool</span></div>
 
-<div class="viewcode-block" id="LMNRoom.sophomorixMailAlias">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.sophomorixMailAlias">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.sophomorixMailAlias">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.sophomorixMailAlias">[docs]</a>
     <span class="n">sophomorixMailAlias</span><span class="p">:</span> <span class="nb">bool</span></div>
 
-<div class="viewcode-block" id="LMNRoom.sophomorixMailList">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.sophomorixMailList">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.sophomorixMailList">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.sophomorixMailList">[docs]</a>
     <span class="n">sophomorixMailList</span><span class="p">:</span> <span class="nb">bool</span></div>
 
-<div class="viewcode-block" id="LMNRoom.sophomorixMailQuota">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.sophomorixMailQuota">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.sophomorixMailQuota">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.sophomorixMailQuota">[docs]</a>
     <span class="n">sophomorixMailQuota</span><span class="p">:</span> <span class="nb">list</span></div>
 
-<div class="viewcode-block" id="LMNRoom.sophomorixMaxMembers">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.sophomorixMaxMembers">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.sophomorixMaxMembers">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.sophomorixMaxMembers">[docs]</a>
     <span class="n">sophomorixMaxMembers</span><span class="p">:</span> <span class="nb">int</span></div>
 
-<div class="viewcode-block" id="LMNRoom.sophomorixQuota">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.sophomorixQuota">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.sophomorixQuota">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.sophomorixQuota">[docs]</a>
     <span class="n">sophomorixQuota</span><span class="p">:</span> <span class="nb">list</span></div>
 
-<div class="viewcode-block" id="LMNRoom.sophomorixRoomComputers">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.sophomorixRoomComputers">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.sophomorixRoomComputers">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.sophomorixRoomComputers">[docs]</a>
     <span class="n">sophomorixRoomComputers</span><span class="p">:</span> <span class="nb">list</span></div>
 
-<div class="viewcode-block" id="LMNRoom.sophomorixRoomIPs">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.sophomorixRoomIPs">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.sophomorixRoomIPs">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.sophomorixRoomIPs">[docs]</a>
     <span class="n">sophomorixRoomIPs</span><span class="p">:</span> <span class="nb">list</span></div>
 
-<div class="viewcode-block" id="LMNRoom.sophomorixRoomMACs">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.sophomorixRoomMACs">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.sophomorixRoomMACs">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.sophomorixRoomMACs">[docs]</a>
     <span class="n">sophomorixRoomMACs</span><span class="p">:</span> <span class="nb">list</span></div>
 
-<div class="viewcode-block" id="LMNRoom.sophomorixSchoolname">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.sophomorixSchoolname">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.sophomorixSchoolname">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.sophomorixSchoolname">[docs]</a>
     <span class="n">sophomorixSchoolname</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNRoom.sophomorixStatus">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.sophomorixStatus">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.sophomorixStatus">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.sophomorixStatus">[docs]</a>
     <span class="n">sophomorixStatus</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNRoom.sophomorixType">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.sophomorixType">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.sophomorixType">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.sophomorixType">[docs]</a>
     <span class="n">sophomorixType</span><span class="p">:</span> <span class="nb">str</span></div>
 
-<div class="viewcode-block" id="LMNRoom.dn">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoom.dn">[docs]</a>
+<div class="viewcode-block" id="LMNRoomModel.dn">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmndevice/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.dn">[docs]</a>
     <span class="n">dn</span><span class="p">:</span>   <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="LMNRoom.__post_init__">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNRoom.__post_init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LMNRoomModel.__post_init__">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNRoomModel.__post_init__">[docs]</a>
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distinguishedName</span></div>
 </div>
 

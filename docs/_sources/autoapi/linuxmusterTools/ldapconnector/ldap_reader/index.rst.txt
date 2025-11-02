@@ -4,6 +4,14 @@ linuxmusterTools.ldapconnector.ldap_reader
 .. py:module:: linuxmusterTools.ldapconnector.ldap_reader
 
 
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.ldap_reader.logger
+
+
 Classes
 -------
 
@@ -14,6 +22,8 @@ Classes
 
 Module Contents
 ---------------
+
+.. py:data:: logger
 
 .. py:class:: LdapReader
 
@@ -31,7 +41,7 @@ Module Contents
       Handle a single result from a ldap request (with required ldap filter)
       and convert it in the given object class.
 
-      :param objectclass: dataclass like LMNUser
+      :param objectclass: dataclass like LMNUserModel
       :type objectclass:
       :param ldap_filter: A valid ldap filter
       :type ldap_filter: basestring
@@ -49,7 +59,7 @@ Module Contents
       Handle multiples results from a ldap request (with required ldap filter)
       and convert it in a list of given object class.
 
-      :param objectclass: dataclass like LMNUser
+      :param objectclass: dataclass like LMNUserModel
       :type objectclass:
       :param ldap_filter: A valid ldap filter
       :type ldap_filter: basestring

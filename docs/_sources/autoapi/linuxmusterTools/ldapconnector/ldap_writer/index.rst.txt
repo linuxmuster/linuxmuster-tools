@@ -9,6 +9,7 @@ Attributes
 
 .. autoapisummary::
 
+   linuxmusterTools.ldapconnector.ldap_writer.logger
    linuxmusterTools.ldapconnector.ldap_writer.OBJECT_MAPPING
    linuxmusterTools.ldapconnector.ldap_writer.ldap_writer
 
@@ -24,6 +25,8 @@ Classes
 Module Contents
 ---------------
 
+.. py:data:: logger
+
 .. py:data:: OBJECT_MAPPING
 
 .. py:class:: LdapWriter
@@ -34,28 +37,39 @@ Module Contents
    .. py:attribute:: lr
 
 
-   .. py:method:: _setattr(obj_details, data=None, add=False)
+   .. py:method:: _addLDIF(lmnobject, data={})
+
+      Create a list of tuples (attr, new_val) to be sent as add attributes to
+      Ldap. lmnobject is one the objects whose classes are defined in the
+      directory 'writers'.
+      Method add_s of python-ldap only accepts a list a 2-Tuples (attr,value).
+
+
+
+   .. py:method:: _setattr(lmnobject, data=None, add=False)
 
       Set one or more attributes only for a ldap entry.
+      data is a dict of attributes/values to set.
+      If some attributes are lists, the boolean add permit to decide if the
+      new values must be added to the existing value list (add=True) or
+      if the list must be completely replaced (add=False, default behaviour).
 
-      :param obj_details: object to modify (project, ...)
-      :type obj_details: dict
+      :param lmnobject: object to modify (project, student ...)
+      :type lmnobject: something like User, Project, etc
       :param data: Dict of attributes:values to write
       :type data: dict
+      :param add: Replace a list values with the new values or add the
+      new values to the existing ones.
       :type add: bool
-      :param add: Define if the attribute should be added, even if the
-      attribute is already present
 
 
 
-   .. py:method:: _delattr(obj_details, data=None)
+   .. py:method:: _delattr(lmnobject, data=None)
 
       Delete one or more attributes only for a ldap entry.
 
-      :param name: cn
-      :type name: basestring
-      :param objecttype: user, device, etc ... see OBJECT_MAPPING above
-      :type objecttype: basestring
+      :param lmnobject: object to modify (project, student ...)
+      :type lmnobject: something like User, Project, etc
       :param data: Dict of attributes:values to delete.
       Value may be empty if the attribute is not ambiguous
       :type data: dict
@@ -64,23 +78,23 @@ Module Contents
 
    .. py:method:: _rename(old_dn, new_cn)
 
-      :param old_dn:
-      :type old_dn:
-      :param new_cn:
-      :type new_cn:
-      :return:
-      :rtype:
+      Update the CN of an entry, given by its dn.
 
 
 
    .. py:method:: _move(old_dn, new_ou)
 
-      :param old_dn:
-      :type old_dn:
-      :param new_dn:
-      :type new_dn:
-      :return:
-      :rtype:
+      Move an entry, given by its dn, to a new OU.
+
+
+
+   .. py:method:: _add(lmnobject, data={})
+
+      Create an entry with the given dn.
+      Should be mostly used for users or computers.
+
+      :param dn: dn of the object to add
+      :type dn: basestring
 
 
 
@@ -88,16 +102,16 @@ Module Contents
 
       Create an organisational unit with the given dn.
 
-      :param dn: dn of the object to modify
+      :param dn: dn of the object to add
       :type dn: basestring
 
 
 
-   .. py:method:: _add_group(dn, ldif=[])
+   .. py:method:: _add_group(lmnobject, data={})
 
       Create a group with the given dn.
 
-      :param dn: dn of the object to modify
+      :param dn: dn of the object to add
       :type dn: basestring
 
 

@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.models.lmngroup &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.ldapconnector.models.lmngroup &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/theme_overrides.css?v=472cca7c" />
@@ -15,7 +15,7 @@
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../../_static/translations.js?v=8fd896e3"></script>
@@ -60,8 +60,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../samba_util/index.html">linuxmusterTools.samba_util</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#attributes">Attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#package-contents">Package Contents</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../create_students_groups/index.html">create_students_groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../00-update-schoolclasses-groups/index.html">00-update-schoolclasses-groups</a></li>
 </ul>
 </li>
 </ul>
@@ -100,7 +105,7 @@
 <h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup" title="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNGroup</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel" title="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNGroupModel</span></code></a></p></td>
 <td><p>Common parent class to gather common methods.</p></td>
 </tr>
 </tbody>
@@ -109,143 +114,203 @@
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.models.lmngroup.</span></span><span class="sig-name descname"><span class="pre">LMNGroup</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../common/index.html#linuxmusterTools.ldapconnector.models.common.LMNParent" title="linuxmusterTools.ldapconnector.models.common.LMNParent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linuxmusterTools.ldapconnector.models.common.LMNParent</span></code></a></p>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.models.lmngroup.</span></span><span class="sig-name descname"><span class="pre">LMNGroupModel</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../common/index.html#linuxmusterTools.ldapconnector.models.common.LMNModel" title="linuxmusterTools.ldapconnector.models.common.LMNModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linuxmusterTools.ldapconnector.models.common.LMNModel</span></code></a></p>
 <p>Common parent class to gather common methods.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.cn">
-<span class="sig-name descname"><span class="pre">cn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.cn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.cn" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.cn">
+<span class="sig-name descname"><span class="pre">cn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.cn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.cn" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.description">
-<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.description" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.description" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.displayName">
-<span class="sig-name descname"><span class="pre">displayName</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.displayName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.displayName" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.displayName">
+<span class="sig-name descname"><span class="pre">displayName</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.displayName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.displayName" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.distinguishedName">
-<span class="sig-name descname"><span class="pre">distinguishedName</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.distinguishedName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.distinguishedName" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.distinguishedName">
+<span class="sig-name descname"><span class="pre">distinguishedName</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.distinguishedName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.distinguishedName" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.member">
-<span class="sig-name descname"><span class="pre">member</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.member" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.mail">
+<span class="sig-name descname"><span class="pre">mail</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.mail"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.mail" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.memberOf">
-<span class="sig-name descname"><span class="pre">memberOf</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.memberOf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.memberOf" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.member">
+<span class="sig-name descname"><span class="pre">member</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.member" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.name">
-<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.name" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.memberOf">
+<span class="sig-name descname"><span class="pre">memberOf</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.memberOf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.memberOf" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.objectClass">
-<span class="sig-name descname"><span class="pre">objectClass</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.objectClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.objectClass" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.name" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.proxyAddresses">
-<span class="sig-name descname"><span class="pre">proxyAddresses</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.proxyAddresses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.proxyAddresses" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.objectClass">
+<span class="sig-name descname"><span class="pre">objectClass</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.objectClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.objectClass" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sAMAccountName">
-<span class="sig-name descname"><span class="pre">sAMAccountName</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.sAMAccountName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sAMAccountName" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.proxyAddresses">
+<span class="sig-name descname"><span class="pre">proxyAddresses</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.proxyAddresses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.proxyAddresses" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sAMAccountType">
-<span class="sig-name descname"><span class="pre">sAMAccountType</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.sAMAccountType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sAMAccountType" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sAMAccountName">
+<span class="sig-name descname"><span class="pre">sAMAccountName</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sAMAccountName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sAMAccountName" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sophomorixAdminClass">
-<span class="sig-name descname"><span class="pre">sophomorixAdminClass</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.sophomorixAdminClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sophomorixAdminClass" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sAMAccountType">
+<span class="sig-name descname"><span class="pre">sAMAccountType</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sAMAccountType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sAMAccountType" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sophomorixCreationDate">
-<span class="sig-name descname"><span class="pre">sophomorixCreationDate</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.sophomorixCreationDate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sophomorixCreationDate" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixAdminClass">
+<span class="sig-name descname"><span class="pre">sophomorixAdminClass</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sophomorixAdminClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixAdminClass" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sophomorixHidden">
-<span class="sig-name descname"><span class="pre">sophomorixHidden</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.sophomorixHidden"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sophomorixHidden" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixCreationDate">
+<span class="sig-name descname"><span class="pre">sophomorixCreationDate</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sophomorixCreationDate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixCreationDate" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sophomorixIntrinsicMulti1">
-<span class="sig-name descname"><span class="pre">sophomorixIntrinsicMulti1</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.sophomorixIntrinsicMulti1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sophomorixIntrinsicMulti1" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixHidden">
+<span class="sig-name descname"><span class="pre">sophomorixHidden</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sophomorixHidden"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixHidden" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sophomorixJoinable">
-<span class="sig-name descname"><span class="pre">sophomorixJoinable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.sophomorixJoinable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sophomorixJoinable" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixJoinable">
+<span class="sig-name descname"><span class="pre">sophomorixJoinable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sophomorixJoinable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixJoinable" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sophomorixMembers">
-<span class="sig-name descname"><span class="pre">sophomorixMembers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.sophomorixMembers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sophomorixMembers" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixIntrinsic1">
+<span class="sig-name descname"><span class="pre">sophomorixIntrinsic1</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sophomorixIntrinsic1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixIntrinsic1" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sophomorixRole">
-<span class="sig-name descname"><span class="pre">sophomorixRole</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.sophomorixRole"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sophomorixRole" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixIntrinsic2">
+<span class="sig-name descname"><span class="pre">sophomorixIntrinsic2</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sophomorixIntrinsic2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixIntrinsic2" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sophomorixSchoolname">
-<span class="sig-name descname"><span class="pre">sophomorixSchoolname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.sophomorixSchoolname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sophomorixSchoolname" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixIntrinsic3">
+<span class="sig-name descname"><span class="pre">sophomorixIntrinsic3</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sophomorixIntrinsic3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixIntrinsic3" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sophomorixSchoolPrefix">
-<span class="sig-name descname"><span class="pre">sophomorixSchoolPrefix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.sophomorixSchoolPrefix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sophomorixSchoolPrefix" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixIntrinsic4">
+<span class="sig-name descname"><span class="pre">sophomorixIntrinsic4</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sophomorixIntrinsic4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixIntrinsic4" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sophomorixStatus">
-<span class="sig-name descname"><span class="pre">sophomorixStatus</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.sophomorixStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sophomorixStatus" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixIntrinsic5">
+<span class="sig-name descname"><span class="pre">sophomorixIntrinsic5</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sophomorixIntrinsic5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixIntrinsic5" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sophomorixType">
-<span class="sig-name descname"><span class="pre">sophomorixType</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.sophomorixType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.sophomorixType" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixIntrinsicMulti1">
+<span class="sig-name descname"><span class="pre">sophomorixIntrinsicMulti1</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sophomorixIntrinsicMulti1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixIntrinsicMulti1" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.dn">
-<span class="sig-name descname"><span class="pre">dn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.dn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.dn" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixIntrinsicMulti2">
+<span class="sig-name descname"><span class="pre">sophomorixIntrinsicMulti2</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sophomorixIntrinsicMulti2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixIntrinsicMulti2" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.all_members">
-<span class="sig-name descname"><span class="pre">all_members</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.all_members"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.all_members" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixIntrinsicMulti3">
+<span class="sig-name descname"><span class="pre">sophomorixIntrinsicMulti3</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sophomorixIntrinsicMulti3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixIntrinsicMulti3" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.membersCount">
-<span class="sig-name descname"><span class="pre">membersCount</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.membersCount"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.membersCount" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixIntrinsicMulti4">
+<span class="sig-name descname"><span class="pre">sophomorixIntrinsicMulti4</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sophomorixIntrinsicMulti4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixIntrinsicMulti4" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixIntrinsicMulti5">
+<span class="sig-name descname"><span class="pre">sophomorixIntrinsicMulti5</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sophomorixIntrinsicMulti5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixIntrinsicMulti5" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixMailAlias">
+<span class="sig-name descname"><span class="pre">sophomorixMailAlias</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sophomorixMailAlias"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixMailAlias" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixMailList">
+<span class="sig-name descname"><span class="pre">sophomorixMailList</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sophomorixMailList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixMailList" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixMembers">
+<span class="sig-name descname"><span class="pre">sophomorixMembers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sophomorixMembers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixMembers" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixRole">
+<span class="sig-name descname"><span class="pre">sophomorixRole</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sophomorixRole"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixRole" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixSchoolname">
+<span class="sig-name descname"><span class="pre">sophomorixSchoolname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sophomorixSchoolname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixSchoolname" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixSchoolPrefix">
+<span class="sig-name descname"><span class="pre">sophomorixSchoolPrefix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sophomorixSchoolPrefix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixSchoolPrefix" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixStatus">
+<span class="sig-name descname"><span class="pre">sophomorixStatus</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sophomorixStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixStatus" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixType">
+<span class="sig-name descname"><span class="pre">sophomorixType</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.sophomorixType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.sophomorixType" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.dn">
+<span class="sig-name descname"><span class="pre">dn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.dn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.dn" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.all_members">
+<span class="sig-name descname"><span class="pre">all_members</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.all_members"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.all_members" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.membersCount">
+<span class="sig-name descname"><span class="pre">membersCount</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.membersCount"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.membersCount" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.__post_init__">
-<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.__post_init__" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.__post_init__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.get_all_members">
-<span class="sig-name descname"><span class="pre">get_all_members</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroup.get_all_members"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroup.get_all_members" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.get_all_members">
+<span class="sig-name descname"><span class="pre">get_all_members</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmngroup.html#LMNGroupModel.get_all_members"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel.get_all_members" title="Link to this definition"></a></dt>
 <dd><p>Set a members and admins list by recursively scanning all groups and their members which are members
 or admins of this project.</p>
 <p>This is not called as post init because of nested projects. So it’s necessary to call this method

@@ -18,8 +18,8 @@ Attributes
 
 .. autoapisummary::
 
+   linuxmusterTools.common.checks.logger
    linuxmusterTools.common.checks.NAME_RULES
-   linuxmusterTools.common.checks.ROLES
 
 
 Classes
@@ -41,20 +41,15 @@ Functions
 Package Contents
 ----------------
 
+.. py:data:: logger
+
 .. py:data:: NAME_RULES
-
-.. py:data:: ROLES
-   :value: ['switch', 'addc', 'wlan', 'staffcomputer', 'mobile', 'printer', 'classroom-teachercomputer',...
-
 
 .. py:function:: set_check_method(cls, *args)
 
 .. py:class:: NameChecker
 
    .. py:method:: check(name_type, string)
-
-
-   .. py:method:: check_role(role)
 
 
    .. py:method:: normalize_mac(mac)

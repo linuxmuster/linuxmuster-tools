@@ -17,6 +17,6 @@ Module Contents
 
 .. py:function:: global_search(query='')
 
-   Search all cn containing the query search
+   Search all cn containing the query search.
 
 

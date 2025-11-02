@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.urls.ldaprouter &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.ldapconnector.urls.ldaprouter &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/theme_overrides.css?v=472cca7c" />
@@ -15,7 +15,7 @@
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../../_static/translations.js?v=8fd896e3"></script>
@@ -60,8 +60,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../samba_util/index.html">linuxmusterTools.samba_util</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#attributes">Attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#package-contents">Package Contents</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../create_students_groups/index.html">create_students_groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../00-update-schoolclasses-groups/index.html">00-update-schoolclasses-groups</a></li>
 </ul>
 </li>
 </ul>
@@ -100,10 +105,13 @@
 <h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.ldaprouter.SCHOOL_MARKER" title="linuxmusterTools.ldapconnector.urls.ldaprouter.SCHOOL_MARKER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCHOOL_MARKER</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.ldaprouter.logger" title="linuxmusterTools.ldapconnector.urls.ldaprouter.logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logger</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.ldaprouter.router" title="linuxmusterTools.ldapconnector.urls.ldaprouter.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.ldaprouter.SCHOOL_MARKER" title="linuxmusterTools.ldapconnector.urls.ldaprouter.SCHOOL_MARKER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCHOOL_MARKER</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.ldaprouter.router" title="linuxmusterTools.ldapconnector.urls.ldaprouter.router"><code class="xref py py-obj docutils literal notranslate"><span class="pre">router</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -122,13 +130,18 @@
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
 <dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.ldaprouter.logger">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.ldaprouter.</span></span><span class="sig-name descname"><span class="pre">logger</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/urls/ldaprouter.html#logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.ldaprouter.logger" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.ldaprouter.SCHOOL_MARKER">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.ldaprouter.</span></span><span class="sig-name descname"><span class="pre">SCHOOL_MARKER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'##SCHOOL_MARKER##'</span></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/urls/ldaprouter.html#SCHOOL_MARKER"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.ldaprouter.SCHOOL_MARKER" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.ldaprouter.LMNLdapRouter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.ldaprouter.</span></span><span class="sig-name descname"><span class="pre">LMNLdapRouter</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/urls/ldaprouter.html#LMNLdapRouter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.ldaprouter.LMNLdapRouter" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.ldaprouter.</span></span><span class="sig-name descname"><span class="pre">LMNLdapRouter</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/urls/ldaprouter.html#LMNLdapRouter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.ldaprouter.LMNLdapRouter" title="Link to this definition"></a></dt>
 <dd><dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.ldaprouter.LMNLdapRouter.lr">
 <span class="sig-name descname"><span class="pre">lr</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/urls/ldaprouter.html#LMNLdapRouter.lr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.ldaprouter.LMNLdapRouter.lr" title="Link to this definition"></a></dt>
@@ -161,6 +174,11 @@
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.ldaprouter.LMNLdapRouter.print_urls">
+<span class="sig-name descname"><span class="pre">print_urls</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/urls/ldaprouter.html#LMNLdapRouter.print_urls"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.ldaprouter.LMNLdapRouter.print_urls" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.ldaprouter.LMNLdapRouter.ascsv">
 <span class="sig-name descname"><span class="pre">ascsv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">';'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csvfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/urls/ldaprouter.html#LMNLdapRouter.ascsv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.ldaprouter.LMNLdapRouter.ascsv" title="Link to this definition"></a></dt>
 <dd></dd></dl>
@@ -187,7 +205,7 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pattern</strong> (<em>basestring</em>) – URL pattern</p></li>
-<li><p><strong>model</strong> (<em>dataclass object</em>) – model obejct to return, can be e.g. LMNUser</p></li>
+<li><p><strong>model</strong> (<em>dataclass object</em>) – model object to return, can be e.g. LMNUserModel</p></li>
 </ul>
 </dd>
 </dl>
@@ -201,7 +219,7 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pattern</strong> (<em>basestring</em>) – URL pattern</p></li>
-<li><p><strong>model</strong> (<em>dataclass object</em>) – model obejct to return, can be e.g. LMNUser</p></li>
+<li><p><strong>model</strong> (<em>dataclass object</em>) – model object to return, can be e.g. LMNUserModel</p></li>
 </ul>
 </dd>
 </dl>

@@ -9,6 +9,7 @@ Attributes
 
 .. autoapisummary::
 
+   linuxmusterTools.samba_util.samba_tool.logger
    linuxmusterTools.samba_util.samba_tool.lp
    linuxmusterTools.samba_util.samba_tool.SAMDB_PATH
 
@@ -26,6 +27,8 @@ Classes
 
 Module Contents
 ---------------
+
+.. py:data:: logger
 
 .. py:data:: lp
 

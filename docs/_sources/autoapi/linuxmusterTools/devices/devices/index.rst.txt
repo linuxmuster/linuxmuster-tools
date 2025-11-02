@@ -9,7 +9,10 @@ Attributes
 
 .. autoapisummary::
 
+   linuxmusterTools.devices.devices.sophomorix_ini
    linuxmusterTools.devices.devices.CLIENT_ROLES
+   linuxmusterTools.devices.devices.COMPUTER_ROLES
+   linuxmusterTools.devices.devices.name_checker
 
 
 Classes
@@ -23,9 +26,15 @@ Classes
 Module Contents
 ---------------
 
+.. py:data:: sophomorix_ini
+
 .. py:data:: CLIENT_ROLES
    :value: ['classroom-teachercomputer', 'classroom-studentcomputer', 'faculty-teachercomputer',...
 
+
+.. py:data:: COMPUTER_ROLES
+
+.. py:data:: name_checker
 
 .. py:class:: Devices(school='default-school')
 
@@ -50,5 +59,8 @@ Module Contents
 
 
    .. py:method:: get_clients(groups=[])
+
+
+   .. py:method:: check_conf()
 
 

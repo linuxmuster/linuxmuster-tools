@@ -9,15 +9,15 @@ Classes
 
 .. autoapisummary::
 
-   linuxmusterTools.ldapconnector.models.lmnuser.LMNUser
+   linuxmusterTools.ldapconnector.models.lmnuser.LMNUserModel
 
 
 Module Contents
 ---------------
 
-.. py:class:: LMNUser
+.. py:class:: LMNUserModel
 
-   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNParent`
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.models.common.LMNModel`
 
 
    Common parent class to gather common methods.
@@ -65,6 +65,10 @@ Module Contents
 
    .. py:attribute:: objectClass
       :type:  list
+
+
+   .. py:attribute:: preferredLanguage
+      :type:  str
 
 
    .. py:attribute:: proxyAddresses
@@ -171,11 +175,43 @@ Module Contents
       :type:  str
 
 
+   .. py:attribute:: sophomorixIntrinsic1
+      :type:  str
+
+
    .. py:attribute:: sophomorixIntrinsic2
-      :type:  list
+      :type:  str
 
 
    .. py:attribute:: sophomorixIntrinsic3
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic4
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsic5
+      :type:  str
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti1
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti2
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti3
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti4
+      :type:  list
+
+
+   .. py:attribute:: sophomorixIntrinsicMulti5
       :type:  list
 
 
@@ -247,12 +283,20 @@ Module Contents
       :type:  str
 
 
+   .. py:attribute:: userAccountControl
+      :type:  int
+
+
    .. py:attribute:: whenChanged
       :type:  str
 
 
    .. py:attribute:: dn
       :type:  str
+
+
+   .. py:attribute:: children
+      :type:  dict
 
 
    .. py:attribute:: customFields
@@ -284,6 +328,10 @@ Module Contents
 
 
    .. py:attribute:: lmnsessions
+      :type:  list
+
+
+   .. py:attribute:: parents
       :type:  list
 
 
@@ -346,6 +394,12 @@ Module Contents
 
 
    .. py:method:: create_custom_fields_objects(custom_config={})
+
+
+   .. py:method:: get_parents()
+
+
+   .. py:method:: get_children()
 
 
    .. py:method:: __post_init__(custom_fields_config={})

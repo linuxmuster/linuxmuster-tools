@@ -5,8 +5,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.urls.users &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.ldapconnector.urls.users &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/theme_overrides.css?v=472cca7c" />
@@ -14,7 +14,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/translations.js?v=8fd896e3"></script>
@@ -62,6 +62,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../linuxmusterTools.html">linuxmusterTools</a></li>
           <li class="breadcrumb-item"><a href="../../ldapconnector.html">linuxmusterTools.ldapconnector</a></li>
       <li class="breadcrumb-item active">linuxmusterTools.ldapconnector.urls.users</li>
       <li class="wy-breadcrumbs-aside">
@@ -73,17 +74,17 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.ldapconnector.urls.users</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">linuxmusterTools.ldapconnector.models</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">models</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.ldapconnector.urls.ldaprouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">router</span>
+<span></span><span class="kn">import</span> <span class="nn">linuxmusterTools.ldapconnector.models</span> <span class="k">as</span> <span class="nn">models</span>
+<span class="kn">from</span> <span class="nn">linuxmusterTools.ldapconnector.urls.ldaprouter</span> <span class="kn">import</span> <span class="n">router</span>
 
 
-<span class="nd">@router</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/users&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNUser</span><span class="p">)</span>
+<span class="nd">@router</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/users&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNUserModel</span><span class="p">)</span>
 <div class="viewcode-block" id="get_all_users">
 <a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/users/index.html#linuxmusterTools.ldapconnector.urls.get_all_users">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_all_users</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">get_all_users</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get all details from all users.</span>
-<span class="sd">    Return a list of LMNUser data object.</span>
+<span class="sd">    Return a list of LMNUserModel data object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">ldap_filter</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;(&amp;</span>
@@ -93,19 +94,21 @@
 <span class="s2">                                    (sophomorixRole=schooladministrator)</span>
 <span class="s2">                                    (sophomorixRole=teacher)</span>
 <span class="s2">                                    (sophomorixRole=student)</span>
+<span class="s2">                                    (sophomorixRole=parent)</span>
+<span class="s2">                                    (sophomorixRole=staff)</span>
 <span class="s2">                                )</span>
 <span class="s2">                            )&quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="n">ldap_filter</span></div>
 
 
-<span class="nd">@router</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/users/exam&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNUser</span><span class="p">)</span>
+<span class="nd">@router</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/users/exam&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNUserModel</span><span class="p">)</span>
 <div class="viewcode-block" id="get_exam_users">
 <a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/users/index.html#linuxmusterTools.ldapconnector.urls.get_exam_users">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_exam_users</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">get_exam_users</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get all details from all users in exam mode.</span>
-<span class="sd">    Return a LMNUser data object.</span>
+<span class="sd">    Return a LMNUserModel data object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">ldap_filter</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;(&amp;</span>
@@ -118,13 +121,13 @@
     <span class="k">return</span> <span class="n">ldap_filter</span></div>
 
 
-<span class="nd">@router</span><span class="o">.</span><span class="n">single</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/users/exam/(?P&lt;username&gt;[\w\-]*)&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNUser</span><span class="p">)</span>
+<span class="nd">@router</span><span class="o">.</span><span class="n">single</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/users/exam/(?P&lt;username&gt;[\w\-]*)&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNUserModel</span><span class="p">)</span>
 <div class="viewcode-block" id="get_exam_user">
 <a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/users/index.html#linuxmusterTools.ldapconnector.urls.get_exam_user">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_exam_user</span><span class="p">(</span><span class="n">username</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_exam_user</span><span class="p">(</span><span class="n">username</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get all details from a specific user in exam mode.</span>
-<span class="sd">    Return a LMNUser data object.</span>
+<span class="sd">    Return a LMNUserModel data object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">ldap_filter</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;(&amp;</span>
@@ -138,13 +141,13 @@
     <span class="k">return</span> <span class="n">ldap_filter</span></div>
 
 
-<span class="nd">@router</span><span class="o">.</span><span class="n">single</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/users/(?P&lt;username&gt;[\w\-]*)&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNUser</span><span class="p">)</span>
+<span class="nd">@router</span><span class="o">.</span><span class="n">single</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/users/(?P&lt;username&gt;[\w\-]*)&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNUserModel</span><span class="p">)</span>
 <div class="viewcode-block" id="get_user">
 <a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/users/index.html#linuxmusterTools.ldapconnector.urls.get_user">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">username</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="n">username</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get all details from a specific user.</span>
-<span class="sd">    Return a LMNUser data object.</span>
+<span class="sd">    Return a LMNUserModel data object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">ldap_filter</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;(&amp;</span>
@@ -155,20 +158,22 @@
 <span class="s2">                                    (sophomorixRole=schooladministrator)</span>
 <span class="s2">                                    (sophomorixRole=teacher)</span>
 <span class="s2">                                    (sophomorixRole=student)</span>
+<span class="s2">                                    (sophomorixRole=parent)</span>
+<span class="s2">                                    (sophomorixRole=staff)</span>
 <span class="s2">                                )</span>
 <span class="s2">                            )&quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="n">ldap_filter</span></div>
 
 
-<span class="nd">@router</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/users/search/(?P&lt;selection&gt;\w*)/(?P&lt;query&gt;[\w\+]*)&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNUser</span><span class="p">)</span>
+<span class="nd">@router</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/users/search/(?P&lt;selection&gt;\w*)/(?P&lt;query&gt;[\w\+]*)&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNUserModel</span><span class="p">)</span>
 <div class="viewcode-block" id="get_results_search_user">
 <a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/users/index.html#linuxmusterTools.ldapconnector.urls.get_results_search_user">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_results_search_user</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="p">[]):</span>
+<span class="k">def</span> <span class="nf">get_results_search_user</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="p">[]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get all details from a search on a specific user login scheme and a</span>
 <span class="sd">    selection of roles.</span>
-<span class="sd">    Return a list of LMNUser data object.</span>
+<span class="sd">    Return a list of LMNUserModel data object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">role_filter</span> <span class="o">=</span> <span class="p">{</span>
@@ -177,6 +182,8 @@
 <span class="s2">                (sophomorixRole=schooladministrator)</span>
 <span class="s2">                (sophomorixRole=teacher)</span>
 <span class="s2">                (sophomorixRole=student)</span>
+<span class="s2">                (sophomorixRole=parent)</span>
+<span class="s2">                (sophomorixRole=staff)</span>
 <span class="s2">            &quot;&quot;&quot;</span><span class="p">,</span>
         <span class="s1">&#39;admins&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">                (sophomorixRole=globaladministrator)</span>
@@ -184,7 +191,7 @@
 <span class="s2">            &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="p">}</span>
 
-    <span class="k">for</span> <span class="n">role</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;globaladministrator&#39;</span><span class="p">,</span> <span class="s1">&#39;schooladministrator&#39;</span><span class="p">,</span> <span class="s1">&#39;teacher&#39;</span><span class="p">,</span> <span class="s1">&#39;student&#39;</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">role</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;globaladministrator&#39;</span><span class="p">,</span> <span class="s1">&#39;schooladministrator&#39;</span><span class="p">,</span> <span class="s1">&#39;teacher&#39;</span><span class="p">,</span> <span class="s1">&#39;student&#39;</span><span class="p">,</span> <span class="s1">&#39;parent&#39;</span><span class="p">]:</span>
         <span class="n">role_filter</span><span class="p">[</span><span class="n">role</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;(sophomorixRole=</span><span class="si">{</span><span class="n">role</span><span class="si">}</span><span class="s1">)&#39;</span>
 
     <span class="k">if</span> <span class="n">query</span><span class="p">:</span>

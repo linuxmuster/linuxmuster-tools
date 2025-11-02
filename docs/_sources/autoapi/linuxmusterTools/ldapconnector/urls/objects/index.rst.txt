@@ -17,6 +17,6 @@ Module Contents
 
 .. py:function:: get_from_dn(dn)
 
-   Search for a specific dn and retrieve a common LMNObject from it.
+   Search for a specific dn and retrieve a common LMNObjectModel from it.
 
 

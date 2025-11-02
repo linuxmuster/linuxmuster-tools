@@ -5,8 +5,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.ldap_writer &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.ldapconnector.ldap_writer &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/translations.js?v=8fd896e3"></script>
@@ -62,6 +62,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../linuxmusterTools.html">linuxmusterTools</a></li>
           <li class="breadcrumb-item"><a href="../ldapconnector.html">linuxmusterTools.ldapconnector</a></li>
       <li class="breadcrumb-item active">linuxmusterTools.ldapconnector.ldap_writer</li>
       <li class="wy-breadcrumbs-aside">
@@ -73,11 +74,17 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.ldapconnector.ldap_writer</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ldap</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span></span><span class="kn">import</span> <span class="nn">ldap</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">fields</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.ldapconnector.connector</span><span class="w"> </span><span class="kn">import</span> <span class="n">LdapConnector</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.urls.ldaprouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">router</span> <span class="k">as</span> <span class="n">LMNLdapReader</span>
+<span class="kn">from</span> <span class="nn">linuxmusterTools.ldapconnector.connector</span> <span class="kn">import</span> <span class="n">LdapConnector</span>
+<span class="kn">from</span> <span class="nn">.urls.ldaprouter</span> <span class="kn">import</span> <span class="n">router</span> <span class="k">as</span> <span class="n">LMNLdapReader</span>
+
+
+<div class="viewcode-block" id="logger">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/ldap_writer/index.html#linuxmusterTools.ldapconnector.logger">[docs]</a>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="OBJECT_MAPPING">
@@ -95,9 +102,9 @@
 
 <div class="viewcode-block" id="LdapWriter">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LdapWriter">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">LdapWriter</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">LdapWriter</span><span class="p">:</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <div class="viewcode-block" id="LdapWriter.lc">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/ldap_writer/index.html#linuxmusterTools.ldapconnector.LdapWriter.lc">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">lc</span> <span class="o">=</span> <span class="n">LdapConnector</span><span class="p">()</span></div>
@@ -107,39 +114,97 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">LMNLdapReader</span></div>
 
 
-<div class="viewcode-block" id="LdapWriter._setattr">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LdapWriter._setattr">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_details</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="LdapWriter._addLDIF">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LdapWriter._addLDIF">[docs]</a>
+    <span class="k">def</span> <span class="nf">_addLDIF</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lmnobject</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{}):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set one or more attributes only for a ldap entry.</span>
-
-<span class="sd">        :param obj_details: object to modify (project, ...)</span>
-<span class="sd">        :type obj_details: dict</span>
-<span class="sd">        :param data: Dict of attributes:values to write</span>
-<span class="sd">        :type data: dict</span>
-<span class="sd">        :type add: bool</span>
-<span class="sd">        :param add: Define if the attribute should be added, even if the</span>
-<span class="sd">        attribute is already present</span>
+<span class="sd">        Create a list of tuples (attr, new_val) to be sent as add attributes to</span>
+<span class="sd">        Ldap. lmnobject is one the objects whose classes are defined in the</span>
+<span class="sd">        directory &#39;writers&#39;.</span>
+<span class="sd">        Method add_s of python-ldap only accepts a list a 2-Tuples (attr,value).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No data provided, doing nothing.&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No data provided, doing nothing.&quot;</span><span class="p">)</span>
             <span class="k">return</span>
 
         <span class="n">ldif</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">new_val</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">obj_details</span><span class="p">:</span>
+        <span class="n">valid_fields</span> <span class="o">=</span> <span class="p">{</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">:</span><span class="n">field</span><span class="o">.</span><span class="n">type</span><span class="p">()</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">(</span><span class="n">lmnobject</span><span class="o">.</span><span class="n">model</span><span class="p">)</span> <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">init</span><span class="p">}</span>
 
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj_details</span><span class="p">[</span><span class="n">attr</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">new_val</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">new_val</span> <span class="ow">and</span> <span class="n">new_val</span> <span class="o">!=</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">valid_fields</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">valid_fields</span><span class="p">[</span><span class="n">attr</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_val</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">new_val</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">val</span><span class="p">:</span>
+                                <span class="n">ldif</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">attr</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">()]))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">ldif</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">attr</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">new_val</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">()]))</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Single-value</span>
+                    <span class="c1"># Bug in attributeSyntax of sophomorixHidden</span>
+                    <span class="c1"># it should be 2.5.5.8 (bool) and not 2.5.5.12 (string)</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_val</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+                        <span class="n">ldif</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">attr</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">new_val</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">()]))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">ldif</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">attr</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">new_val</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">()]))</span>
+
+            <span class="k">elif</span> <span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;unicodePwd&#39;</span><span class="p">:</span>
+                <span class="n">ldif</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;unicodePwd&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">new_val</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-16-le&#39;</span><span class="p">)))</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Attribute </span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2"> not found in </span><span class="si">{</span><span class="n">lmnobject</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> to add in </span><span class="si">{</span><span class="n">lmnobject</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;distinguishedName&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ldif</span></div>
+
+
+<div class="viewcode-block" id="LdapWriter._setattr">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LdapWriter._setattr">[docs]</a>
+    <span class="k">def</span> <span class="nf">_setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lmnobject</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set one or more attributes only for a ldap entry.</span>
+<span class="sd">        data is a dict of attributes/values to set.</span>
+<span class="sd">        If some attributes are lists, the boolean add permit to decide if the</span>
+<span class="sd">        new values must be added to the existing value list (add=True) or</span>
+<span class="sd">        if the list must be completely replaced (add=False, default behaviour).</span>
+
+<span class="sd">        :param lmnobject: object to modify (project, student ...)</span>
+<span class="sd">        :type lmnobject: something like User, Project, etc</span>
+<span class="sd">        :param data: Dict of attributes:values to write</span>
+<span class="sd">        :type data: dict</span>
+<span class="sd">        :param add: Replace a list values with the new values or add the</span>
+<span class="sd">        new values to the existing ones.</span>
+<span class="sd">        :type add: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No data provided, doing nothing.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">ldif</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">valid_fields</span> <span class="o">=</span> <span class="p">{</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">:</span><span class="n">field</span><span class="o">.</span><span class="n">type</span><span class="p">()</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">(</span><span class="n">lmnobject</span><span class="o">.</span><span class="n">model</span><span class="p">)</span> <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">init</span><span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">new_val</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">valid_fields</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">valid_fields</span><span class="p">[</span><span class="n">attr</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
                     <span class="c1"># Multi-value</span>
-                    <span class="k">if</span> <span class="ow">not</span> <span class="n">add</span> <span class="ow">and</span> <span class="n">obj_details</span><span class="p">[</span><span class="n">attr</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">add</span> <span class="ow">and</span> <span class="n">lmnobject</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">attr</span><span class="p">]:</span>
                         <span class="c1"># Delete attribute first</span>
                         <span class="n">ldif</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ldap</span><span class="o">.</span><span class="n">MOD_DELETE</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 
                     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_val</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">new_val</span><span class="p">:</span>
-                            <span class="n">ldif</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ldap</span><span class="o">.</span><span class="n">MOD_ADD</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">()]))</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_val</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">ldif</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ldap</span><span class="o">.</span><span class="n">MOD_ADD</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="p">[]))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">new_val</span><span class="p">:</span>
+                                <span class="n">ldif</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ldap</span><span class="o">.</span><span class="n">MOD_ADD</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">()]))</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">ldif</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ldap</span><span class="o">.</span><span class="n">MOD_ADD</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">new_val</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">()]))</span>
 
@@ -151,130 +216,148 @@
                         <span class="k">continue</span>
 
                     <span class="c1"># Single-value</span>
-                    <span class="k">elif</span> <span class="n">obj_details</span><span class="p">[</span><span class="n">attr</span><span class="p">]:</span>
+                    <span class="k">elif</span> <span class="n">lmnobject</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="ow">or</span> <span class="n">lmnobject</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
                         <span class="c1"># Delete attribute first</span>
                         <span class="n">ldif</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ldap</span><span class="o">.</span><span class="n">MOD_DELETE</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 
-                    <span class="n">ldif</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ldap</span><span class="o">.</span><span class="n">MOD_ADD</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">new_val</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">()]))</span>
+                    <span class="c1"># Bug in attributeSyntax of sophomorixHidden</span>
+                    <span class="c1"># it should be 2.5.5.8 (bool) and not 2.5.5.12 (string)</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_val</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+                        <span class="n">ldif</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ldap</span><span class="o">.</span><span class="n">MOD_ADD</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">new_val</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">()]))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">ldif</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ldap</span><span class="o">.</span><span class="n">MOD_ADD</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">new_val</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">()]))</span>
 
             <span class="k">elif</span> <span class="n">attr</span> <span class="o">==</span> <span class="s1">&#39;unicodePwd&#39;</span><span class="p">:</span>
                 <span class="n">ldif</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ldap</span><span class="o">.</span><span class="n">MOD_REPLACE</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">new_val</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-16-le&#39;</span><span class="p">)))</span>
 
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Attribute </span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2"> not found in </span><span class="si">{</span><span class="n">obj_details</span><span class="p">[</span><span class="s1">&#39;distinguishedName&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Attribute </span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2"> not found in </span><span class="si">{</span><span class="n">lmnobject</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;distinguishedName&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">ldif</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">lc</span><span class="o">.</span><span class="n">_set</span><span class="p">(</span><span class="n">obj_details</span><span class="p">[</span><span class="s1">&#39;distinguishedName&#39;</span><span class="p">],</span> <span class="n">ldif</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lc</span><span class="o">.</span><span class="n">_set</span><span class="p">(</span><span class="n">lmnobject</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;distinguishedName&#39;</span><span class="p">],</span> <span class="n">ldif</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LdapWriter._delattr">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LdapWriter._delattr">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_details</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lmnobject</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete one or more attributes only for a ldap entry.</span>
 
-<span class="sd">        :param name: cn</span>
-<span class="sd">        :type name: basestring</span>
-<span class="sd">        :param objecttype: user, device, etc ... see OBJECT_MAPPING above</span>
-<span class="sd">        :type objecttype: basestring</span>
+<span class="sd">        :param lmnobject: object to modify (project, student ...)</span>
+<span class="sd">        :type lmnobject: something like User, Project, etc</span>
 <span class="sd">        :param data: Dict of attributes:values to delete.</span>
 <span class="sd">        Value may be empty if the attribute is not ambiguous</span>
 <span class="sd">        :type data: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No data provided, doing nothing.&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No data provided, doing nothing.&quot;</span><span class="p">)</span>
             <span class="k">return</span>
 
         <span class="n">ldif</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">valid_fields</span> <span class="o">=</span> <span class="p">{</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">:</span><span class="n">field</span><span class="o">.</span><span class="n">type</span><span class="p">()</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">(</span><span class="n">lmnobject</span><span class="o">.</span><span class="n">model</span><span class="p">)</span> <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">init</span><span class="p">}</span>
+
         <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">obj_details</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">valid_fields</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">val</span><span class="p">:</span>
                     <span class="c1"># Delete the whole attribute</span>
                     <span class="n">ldif</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ldap</span><span class="o">.</span><span class="n">MOD_DELETE</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                        <span class="k">if</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">obj_details</span><span class="p">[</span><span class="n">attr</span><span class="p">]:</span>
+                        <span class="k">if</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">lmnobject</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">attr</span><span class="p">]:</span>
                             <span class="n">ldif</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ldap</span><span class="o">.</span><span class="n">MOD_DELETE</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">val</span><span class="o">.</span><span class="n">encode</span><span class="p">()))</span>
                         <span class="k">else</span><span class="p">:</span>
-                            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                                <span class="sa">f</span><span class="s2">&quot;Value </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2"> not found in attribute </span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">obj_details</span><span class="p">[</span><span class="s1">&#39;distinguishedName&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;Value </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2"> not found in attribute </span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">lmnobject</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;distinguishedName&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
                     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
                         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
-                            <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">obj_details</span><span class="p">[</span><span class="n">attr</span><span class="p">]:</span>
+                            <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">lmnobject</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">attr</span><span class="p">]:</span>
                                 <span class="n">ldif</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ldap</span><span class="o">.</span><span class="n">MOD_DELETE</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">encode</span><span class="p">()))</span>
                             <span class="k">else</span><span class="p">:</span>
-                                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                                    <span class="sa">f</span><span class="s2">&quot;Value </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2"> not found in attribute </span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">obj_details</span><span class="p">[</span><span class="s1">&#39;distinguishedName&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                                    <span class="sa">f</span><span class="s2">&quot;Value </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2"> not found in attribute </span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">lmnobject</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;distinguishedName&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Attribute </span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2"> not found in </span><span class="si">{</span><span class="n">obj_details</span><span class="p">[</span><span class="s1">&#39;distinguishedName&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Attribute </span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2"> not found in </span><span class="si">{</span><span class="n">lmnobject</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;distinguishedName&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">ldif</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">lc</span><span class="o">.</span><span class="n">_set</span><span class="p">(</span><span class="n">obj_details</span><span class="p">[</span><span class="s1">&#39;distinguishedName&#39;</span><span class="p">],</span> <span class="n">ldif</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lc</span><span class="o">.</span><span class="n">_set</span><span class="p">(</span><span class="n">lmnobject</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;distinguishedName&#39;</span><span class="p">],</span> <span class="n">ldif</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LdapWriter._rename">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LdapWriter._rename">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_dn</span><span class="p">,</span> <span class="n">new_cn</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_dn</span><span class="p">,</span> <span class="n">new_cn</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-
-<span class="sd">        :param old_dn:</span>
-<span class="sd">        :type old_dn:</span>
-<span class="sd">        :param new_cn:</span>
-<span class="sd">        :type new_cn:</span>
-<span class="sd">        :return:</span>
-<span class="sd">        :rtype:</span>
+<span class="sd">        Update the CN of an entry, given by its dn.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
 
         <span class="bp">self</span><span class="o">.</span><span class="n">lc</span><span class="o">.</span><span class="n">_rename</span><span class="p">(</span><span class="n">old_dn</span><span class="p">,</span> <span class="n">new_cn</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LdapWriter._move">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LdapWriter._move">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_dn</span><span class="p">,</span> <span class="n">new_ou</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_dn</span><span class="p">,</span> <span class="n">new_ou</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-
-<span class="sd">        :param old_dn:</span>
-<span class="sd">        :type old_dn:</span>
-<span class="sd">        :param new_dn:</span>
-<span class="sd">        :type new_dn:</span>
-<span class="sd">        :return:</span>
-<span class="sd">        :rtype:</span>
+<span class="sd">        Move an entry, given by its dn, to a new OU.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
 
         <span class="bp">self</span><span class="o">.</span><span class="n">lc</span><span class="o">.</span><span class="n">_move</span><span class="p">(</span><span class="n">old_dn</span><span class="p">,</span> <span class="n">new_ou</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="LdapWriter._add_ou">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LdapWriter._add_ou">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_add_ou</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dn</span><span class="p">):</span>
+<div class="viewcode-block" id="LdapWriter._add">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LdapWriter._add">[docs]</a>
+    <span class="k">def</span> <span class="nf">_add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lmnobject</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{}):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Create an organisational unit with the given dn.</span>
+<span class="sd">        Create an entry with the given dn.</span>
+<span class="sd">        Should be mostly used for users or computers.</span>
 
-<span class="sd">        :param dn: dn of the object to modify</span>
+<span class="sd">        :param dn: dn of the object to add</span>
 <span class="sd">        :type dn: basestring</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
 
+        <span class="n">ldif</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">ldif</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_addLDIF</span><span class="p">(</span><span class="n">lmnobject</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lc</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">lmnobject</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;distinguishedName&#39;</span><span class="p">],</span> <span class="n">ldif</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LdapWriter._add_ou">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LdapWriter._add_ou">[docs]</a>
+    <span class="k">def</span> <span class="nf">_add_ou</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dn</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create an organisational unit with the given dn.</span>
+
+<span class="sd">        :param dn: dn of the object to add</span>
+<span class="sd">        :type dn: basestring</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="c1"># TODO: still necessary ? ldif ?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lc</span><span class="o">.</span><span class="n">_add_ou</span><span class="p">(</span><span class="n">dn</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LdapWriter._add_group">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LdapWriter._add_group">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_add_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dn</span><span class="p">,</span> <span class="n">ldif</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="k">def</span> <span class="nf">_add_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lmnobject</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{}):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a group with the given dn.</span>
 
-<span class="sd">        :param dn: dn of the object to modify</span>
+<span class="sd">        :param dn: dn of the object to add</span>
 <span class="sd">        :type dn: basestring</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">lc</span><span class="o">.</span><span class="n">_add_group</span><span class="p">(</span><span class="n">dn</span><span class="p">,</span> <span class="n">ldif</span><span class="p">)</span></div>
+
+        <span class="n">ldif</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">ldif</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_addLDIF</span><span class="p">(</span><span class="n">lmnobject</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lc</span><span class="o">.</span><span class="n">_add_group</span><span class="p">(</span><span class="n">lmnobject</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;distinguishedName&#39;</span><span class="p">],</span> <span class="n">ldif</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LdapWriter._del">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LdapWriter._del">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_del</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dn</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_del</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dn</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete an Ldap object.</span>
 

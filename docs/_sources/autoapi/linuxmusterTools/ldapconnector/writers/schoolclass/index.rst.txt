@@ -4,40 +4,136 @@ linuxmusterTools.ldapconnector.writers.schoolclass
 .. py:module:: linuxmusterTools.ldapconnector.writers.schoolclass
 
 
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.writers.schoolclass.logger
+   linuxmusterTools.ldapconnector.writers.schoolclass.name_checker
+
+
 Classes
 -------
 
 .. autoapisummary::
 
-   linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassWriter
+   linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassGroup
+   linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclass
+   linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclasses
 
 
 Module Contents
 ---------------
 
-.. py:class:: LMNSchoolclassWriter
+.. py:data:: logger
 
-   .. py:attribute:: lw
+.. py:data:: name_checker
 
+.. py:class:: LMNSchoolclassGroup(cn, suffix='', schoolclass_data={})
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon`
+
+
+   Class to handle subgroups of a schoolclass, like e.g. 7a-students, 7a-teachers
+   and 7a-parents for the schoolclass 7a.
+
+
+   .. py:attribute:: schoolclass_data
+
+
+   .. py:attribute:: suffix
+      :value: ''
+
+
+
+   .. py:attribute:: type
+      :value: None
+
+
+
+   .. py:attribute:: school
+
+
+   .. py:method:: load_data()
+
+
+   .. py:method:: delete()
+
+
+   .. py:method:: fill_members()
+
+      This method is only intended for subgroups like 7a-teachers, 7a-parents
+      and 7a-students, and will fill the membership through the memberships
+      stored in CN=7a,OU=7a or OU=Student-Parents,OU=Parents.
+
+
+
+.. py:class:: LMNSchoolclass(cn, school='default-school')
+
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon`
+
+
+   Comme group class for all group types in the linuxmuster project (Projects,
+   Schoolclasses, ManagementGroup, Sophomorix Group, etc ...).
+
+
+   .. py:attribute:: model
+
+
+   .. py:method:: load_data()
+
+
+   .. py:method:: add_member(user)
+
+
+   .. py:method:: add_members(userlist)
+
+      Shortcut to add all members from a given list
+
+      :param userlist: List of valid cn
+
+
+
+   .. py:method:: remove_member(user)
+
+
+   .. py:method:: remove_members(userlist)
+
+      Shortcut to remove all members from a given list
+
+      :param userlist: List of valid cn
+
+
+
+   .. py:method:: remove_all_teachers()
+
+
+   .. py:method:: fill_group_members()
+
+      This method is only intended to populate subgroups like 7a-teachers,
+      7a-parents and 7a-students, and will fill the membership through the
+      memberships stored in CN=7a,OU=7a or OU=Student-Parents,OU=Parents.
+
+
+
+.. py:class:: LMNSchoolclasses(school='default-school')
 
    .. py:attribute:: lr
 
 
-   .. py:method:: setattr(name, **kwargs)
-
-      Middleware to check if the object exists.
-
-      :param name: cn of the object
-      :type name: basestring
+   .. py:attribute:: schoolclasses
 
 
+   .. py:method:: __len__()
 
-   .. py:method:: delattr(name, **kwargs)
 
-      Middleware to check if the object exists.
+   .. py:method:: keys()
 
-      :param name: cn of the object
-      :type name: basestring
 
+   .. py:method:: items()
+
+
+   .. py:method:: __getitem__(schoolclass_cn)
 
 

@@ -1,0 +1,34 @@
+00-update-schoolclasses-groups
+==============================
+
+.. py:module:: 00-update-schoolclasses-groups
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   00-update-schoolclasses-groups.epoch
+   00-update-schoolclasses-groups.school
+   00-update-schoolclasses-groups.updates
+   00-update-schoolclasses-groups.schoolclass_groups_to_update
+   00-update-schoolclasses-groups.user
+   00-update-schoolclasses-groups.schoolclass_group
+
+
+Module Contents
+---------------
+
+.. py:data:: epoch
+
+.. py:data:: school
+
+.. py:data:: updates
+
+.. py:data:: schoolclass_groups_to_update
+
+.. py:data:: user
+
+.. py:data:: schoolclass_group
+

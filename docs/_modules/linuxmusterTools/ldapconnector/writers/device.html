@@ -5,8 +5,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.writers.device &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.ldapconnector.writers.device &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/theme_overrides.css?v=472cca7c" />
@@ -14,7 +14,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/translations.js?v=8fd896e3"></script>
@@ -62,8 +62,8 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../linuxmusterTools.html">linuxmusterTools</a></li>
           <li class="breadcrumb-item"><a href="../../ldapconnector.html">linuxmusterTools.ldapconnector</a></li>
-          <li class="breadcrumb-item"><a href="../writers.html">linuxmusterTools.ldapconnector.writers</a></li>
       <li class="breadcrumb-item active">linuxmusterTools.ldapconnector.writers.device</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -74,250 +74,378 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.ldapconnector.writers.device</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ldap</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">fields</span>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">fields</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..ldap_writer</span><span class="w"> </span><span class="kn">import</span> <span class="n">LdapWriter</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..urls.ldaprouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">router</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.object</span><span class="w"> </span><span class="kn">import</span> <span class="n">LMNObjectWriter</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..models</span><span class="w"> </span><span class="kn">import</span> <span class="n">LMNRoom</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">Validator</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.lmnconfig</span><span class="w"> </span><span class="kn">import</span> <span class="n">LDAP_CONTEXT</span>
+<span class="kn">from</span> <span class="nn">..ldap_writer</span> <span class="kn">import</span> <span class="n">LdapWriter</span>
+<span class="kn">from</span> <span class="nn">..urls.ldaprouter</span> <span class="kn">import</span> <span class="n">router</span>
+<span class="kn">from</span> <span class="nn">..models</span> <span class="kn">import</span> <span class="n">LMNDeviceModel</span><span class="p">,</span> <span class="n">LMNRoomModel</span>
+<span class="kn">from</span> <span class="nn">linuxmusterTools.common</span> <span class="kn">import</span> <span class="n">Validator</span>
+<span class="kn">from</span> <span class="nn">linuxmusterTools.lmnconfig</span> <span class="kn">import</span> <span class="n">LDAP_CONTEXT</span><span class="p">,</span> <span class="n">SAMBA_REALM</span>
+<span class="kn">from</span> <span class="nn">linuxmusterTools.common.checks</span> <span class="kn">import</span> <span class="n">NameChecker</span>
 
 
-<div class="viewcode-block" id="LMNDeviceWriter">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNDeviceWriter">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">LMNDeviceWriter</span><span class="p">:</span>
+<div class="viewcode-block" id="name_checker">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/device/index.html#linuxmusterTools.ldapconnector.name_checker">[docs]</a>
+<span class="n">name_checker</span> <span class="o">=</span> <span class="n">NameChecker</span><span class="p">()</span></div>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<div class="viewcode-block" id="LMNDeviceWriter.lw">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/device/index.html#linuxmusterTools.ldapconnector.LMNDeviceWriter.lw">[docs]</a>
+<div class="viewcode-block" id="logger">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/device/index.html#linuxmusterTools.ldapconnector.logger">[docs]</a>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNRoom">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNRoom">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNRoom</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cn</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">check_room_name</span><span class="p">(</span><span class="n">cn</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cn</span><span class="si">}</span><span class="s2"> is not a valid CN&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LMNRoom.cn">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/device/index.html#linuxmusterTools.ldapconnector.LMNRoom.cn">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cn</span> <span class="o">=</span> <span class="n">cn</span></div>
+
+<div class="viewcode-block" id="LMNRoom.lw">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/device/index.html#linuxmusterTools.ldapconnector.LMNRoom.lw">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">lw</span> <span class="o">=</span> <span class="n">LdapWriter</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="LMNDeviceWriter.lr">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/device/index.html#linuxmusterTools.ldapconnector.LMNDeviceWriter.lr">[docs]</a>
+<div class="viewcode-block" id="LMNRoom.lr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/device/index.html#linuxmusterTools.ldapconnector.LMNRoom.lr">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">router</span></div>
 
-<div class="viewcode-block" id="LMNDeviceWriter.ow">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/device/index.html#linuxmusterTools.ldapconnector.LMNDeviceWriter.ow">[docs]</a>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ow</span> <span class="o">=</span> <span class="n">LMNObjectWriter</span><span class="p">()</span></div>
+<div class="viewcode-block" id="LMNRoom.model">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/device/index.html#linuxmusterTools.ldapconnector.LMNRoom.model">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">LMNRoomModel</span></div>
+
+<div class="viewcode-block" id="LMNRoom.data">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/device/index.html#linuxmusterTools.ldapconnector.LMNRoom.data">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+<div class="viewcode-block" id="LMNRoom.new">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/device/index.html#linuxmusterTools.ldapconnector.LMNRoom.new">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="LMNRoom.school">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/device/index.html#linuxmusterTools.ldapconnector.LMNRoom.school">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">school</span> <span class="o">=</span> <span class="n">school</span></div>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+
+<div class="viewcode-block" id="LMNRoom.load_data">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNRoom.load_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/rooms/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The room </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span>  <span class="p">{</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">:</span><span class="n">field</span><span class="o">.</span><span class="n">type</span><span class="p">()</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span> <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">init</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cn</span></div>
 
 
-<div class="viewcode-block" id="LMNDeviceWriter.setattr">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNDeviceWriter.setattr">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="LMNRoom.setattr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNRoom.setattr">[docs]</a>
+    <span class="k">def</span> <span class="nf">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Middleware to check if the object exists.</span>
-
-<span class="sd">        :param name: cn of the object</span>
-<span class="sd">        :type name: basestring</span>
+<span class="sd">        Set some attributes of the object directly in Ldap,</span>
+<span class="sd">        only for an existing object.</span>
+<span class="sd">        kwargs must contain a data dict with attributes/values to set.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">details</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/devices/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">details</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The device </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The device </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_setattr</span><span class="p">(</span><span class="n">details</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">new</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;This object does not exist in Ldap, please create it first using the method .create()&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="LMNDeviceWriter.delattr">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNDeviceWriter.delattr">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+<div class="viewcode-block" id="LMNRoom.delattr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNRoom.delattr">[docs]</a>
+    <span class="k">def</span> <span class="nf">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Middleware to check if the object exists.</span>
-
-<span class="sd">        :param name: cn of the object</span>
-<span class="sd">        :type name: basestring</span>
+<span class="sd">        Delete some attributes of the object directly in Ldap,</span>
+<span class="sd">        only for an existing object.</span>
+<span class="sd">        kwargs must contain a data dict with attributes/values to set.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">details</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/devices/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">details</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The device </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The device </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_delattr</span><span class="p">(</span><span class="n">details</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">new</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;This object does not exist in Ldap, please create it first using the method .create()&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="LMNDeviceWriter.rename">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNDeviceWriter.rename">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">new_name</span><span class="p">):</span>
+
+<div class="viewcode-block" id="LMNRoom.getattr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNRoom.getattr">[docs]</a>
+    <span class="k">def</span> <span class="nf">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Rename a device inside a room.</span>
-
-<span class="sd">        :param new_name:</span>
-<span class="sd">        :type new_name:</span>
-<span class="sd">        :return:</span>
-<span class="sd">        :rtype:</span>
+<span class="sd">        Get a specific attribute of the object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">Validator</span><span class="o">.</span><span class="n">check_host_name</span><span class="p">(</span><span class="n">new_name</span><span class="p">):</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">new_name</span><span class="si">}</span><span class="s2"> is not a valid hostname&quot;</span><span class="p">)</span>
-            <span class="k">return</span>
-
-        <span class="n">new_name</span> <span class="o">=</span> <span class="n">new_name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-
-        <span class="n">details</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/devices/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">details</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Device </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> not found in ldap, doing nothing.&quot;</span><span class="p">)</span>
-            <span class="k">return</span>
-
-        <span class="c1"># Check if new_name is already used</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/devices/</span><span class="si">{</span><span class="n">new_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">):</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">new_name</span><span class="si">}</span><span class="s2"> is already used, please use another hostname.&quot;</span><span class="p">)</span>
-            <span class="k">return</span>
-
-        <span class="c1"># Update attributes</span>
-
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;displayName&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Computer </span><span class="si">{</span><span class="n">new_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;dNSHostName&quot;</span><span class="p">:</span> <span class="n">details</span><span class="p">[</span><span class="s2">&quot;dNSHostName&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">new_name</span><span class="p">),</span>
-            <span class="s2">&quot;sAMAccountName&quot;</span><span class="p">:</span> <span class="n">details</span><span class="p">[</span><span class="s2">&quot;sAMAccountName&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">new_name</span><span class="p">),</span>
-            <span class="s2">&quot;servicePrincipalName&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">spn</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">new_name</span><span class="p">)</span> <span class="k">for</span> <span class="n">spn</span> <span class="ow">in</span> <span class="n">details</span><span class="p">[</span><span class="s2">&quot;servicePrincipalName&quot;</span><span class="p">]],</span>
-            <span class="s2">&quot;sophomorixDnsNodename&quot;</span><span class="p">:</span> <span class="n">new_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="p">}</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_rename</span><span class="p">(</span><span class="n">details</span><span class="p">[</span><span class="s1">&#39;dn&#39;</span><span class="p">],</span> <span class="n">new_name</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="LMNDeviceWriter.move">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNDeviceWriter.move">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">new_room</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Move a device to another room, e.g. to another OU</span>
-
-<span class="sd">        :param name: name of the device to move</span>
-<span class="sd">        :type name: basestring</span>
-<span class="sd">        :param new_room: New OU for the device</span>
-<span class="sd">        :type new_room: basestring</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">Validator</span><span class="o">.</span><span class="n">check_host_name</span><span class="p">(</span><span class="n">new_room</span><span class="p">):</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">new_room</span><span class="si">}</span><span class="s2"> is not a valid room name&quot;</span><span class="p">)</span>
-            <span class="k">return</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/rooms/</span><span class="si">{</span><span class="n">new_room</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;cn&#39;</span><span class="p">):</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Can not move to </span><span class="si">{</span><span class="n">new_room</span><span class="si">}</span><span class="s2">, this group does not exist in LDAP.&quot;</span><span class="p">)</span>
-            <span class="k">return</span>
-
-        <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-
-        <span class="n">details</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/devices/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">details</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Device </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> not found in ldap, doing nothing.&quot;</span><span class="p">)</span>
-            <span class="k">return</span>
-
-        <span class="c1"># Build new parent OU</span>
-        <span class="n">dn_splitted</span> <span class="o">=</span> <span class="n">details</span><span class="p">[</span><span class="s1">&#39;dn&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
-        <span class="n">old_room</span> <span class="o">=</span> <span class="n">dn_splitted</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">ou_prefix</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dn_splitted</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span>
-
-        <span class="n">new_ou</span> <span class="o">=</span> <span class="n">details</span><span class="p">[</span><span class="s1">&#39;dn&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ou_prefix</span><span class="si">}</span><span class="s2">,&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;OU=</span><span class="si">{</span><span class="n">new_room</span><span class="si">}</span><span class="s2">,&quot;</span><span class="p">)</span>
-        <span class="n">new_dn</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;CN=</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">new_ou</span><span class="si">}</span><span class="s2">&quot;</span>
-
-        <span class="c1"># Move to new OU</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_move</span><span class="p">(</span><span class="n">details</span><span class="p">[</span><span class="s1">&#39;dn&#39;</span><span class="p">],</span> <span class="n">new_ou</span><span class="p">)</span>
-
-        <span class="c1"># Update attributes</span>
-
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;sophomorixAdminClass&quot;</span><span class="p">:</span> <span class="n">new_room</span><span class="p">,</span>
-            <span class="s2">&quot;sophomorixComputerRoom&quot;</span><span class="p">:</span> <span class="n">new_room</span><span class="p">,</span>
-        <span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
-
-        <span class="c1"># Update membership</span>
-
-        <span class="n">old_group</span> <span class="o">=</span> <span class="n">details</span><span class="p">[</span><span class="s1">&#39;dn&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CN=</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">,&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;CN=</span><span class="si">{</span><span class="n">old_room</span><span class="si">}</span><span class="s2">,&quot;</span><span class="p">)</span>
-        <span class="n">new_group</span> <span class="o">=</span> <span class="n">new_dn</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CN=</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">,&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;CN=</span><span class="si">{</span><span class="n">new_room</span><span class="si">}</span><span class="s2">,&quot;</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">ow</span><span class="o">.</span><span class="n">remove_member</span><span class="p">(</span><span class="n">old_group</span><span class="p">,</span> <span class="n">new_dn</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ow</span><span class="o">.</span><span class="n">add_member</span><span class="p">(</span><span class="n">new_group</span><span class="p">,</span> <span class="n">new_dn</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="LMNDeviceWriter.delete_room">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNDeviceWriter.delete_room">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">delete_room</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">room</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Delete the OU and his group associated to a room, if this does not contain any device.</span>
-
-<span class="sd">        :param room: Name of the room to dele</span>
-<span class="sd">        :type room: basestring</span>
-<span class="sd">        :param school: Concerned school</span>
-<span class="sd">        :type school: basestring</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-
-        <span class="k">if</span> <span class="n">room</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/ou/rooms&quot;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">):</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Organizational unit </span><span class="si">{</span><span class="n">room</span><span class="si">}</span><span class="s2"> doesn&#39;t exist in LDAP.&quot;</span><span class="p">)</span>
-            <span class="k">return</span>
-
-        <span class="n">group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/rooms/</span><span class="si">{</span><span class="n">room</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">group</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="s1">&#39;member&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Room </span><span class="si">{</span><span class="n">room</span><span class="si">}</span><span class="s2"> still contain some devices, can not delete it.&quot;</span><span class="p">)</span>
-            <span class="k">return</span>
-
-        <span class="n">ou_dn</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;OU=</span><span class="si">{</span><span class="n">room</span><span class="si">}</span><span class="s2">,OU=Devices,OU=</span><span class="si">{</span><span class="n">school</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">LDAP_CONTEXT</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_del</span><span class="p">(</span><span class="n">ou_dn</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="LMNDeviceWriter.create_room">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNDeviceWriter.create_room">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_room</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_room</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{}):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Create a new room, e.g. another OU</span>
-
-<span class="sd">        :param new_room: New OU to create</span>
-<span class="sd">        :type new_room: basestring</span>
-<span class="sd">        :param school: Concerned school</span>
-<span class="sd">        :type school: basestring</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">Validator</span><span class="o">.</span><span class="n">check_host_name</span><span class="p">(</span><span class="n">new_room</span><span class="p">):</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">new_room</span><span class="si">}</span><span class="s2"> is not a valid room name&quot;</span><span class="p">)</span>
-            <span class="k">return</span>
-
-        <span class="k">if</span> <span class="n">new_room</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/ou/rooms&quot;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">):</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Organizational unit </span><span class="si">{</span><span class="n">new_room</span><span class="si">}</span><span class="s2"> already exists in LDAP.&quot;</span><span class="p">)</span>
-            <span class="k">return</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/rooms/</span><span class="si">{</span><span class="n">new_room</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;cn&#39;</span><span class="p">):</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Group </span><span class="si">{</span><span class="n">new_room</span><span class="si">}</span><span class="s2"> already exists in LDAP.&quot;</span><span class="p">)</span>
-            <span class="k">return</span>
-
-        <span class="c1">## Create OU</span>
-        <span class="n">ou_dn</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;OU=</span><span class="si">{</span><span class="n">new_room</span><span class="si">}</span><span class="s2">,OU=Devices,OU=</span><span class="si">{</span><span class="n">school</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">LDAP_CONTEXT</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_add_ou</span><span class="p">(</span><span class="n">ou_dn</span><span class="p">)</span>
-
-        <span class="c1">## Create group</span>
-        <span class="n">ldif</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">group_dn</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;CN=</span><span class="si">{</span><span class="n">new_room</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">ou_dn</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="n">valid_fields</span> <span class="o">=</span> <span class="p">{</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">:</span><span class="n">field</span><span class="o">.</span><span class="n">type</span><span class="p">()</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">(</span><span class="n">LMNRoom</span><span class="p">)</span> <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">init</span><span class="p">}</span>
-
-        <span class="k">for</span> <span class="n">attr</span><span class="p">,</span><span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">valid_fields</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">valid_fields</span><span class="p">[</span><span class="n">attr</span><span class="p">],</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                    <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
-                        <span class="n">ldif</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">attr</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">()]))</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">ldif</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">attr</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">()]))</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Attribute </span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2"> not found in LMNRoom details&quot;</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_add_group</span><span class="p">(</span><span class="n">group_dn</span><span class="p">,</span> <span class="n">ldif</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 </div>
 
+
+
+<div class="viewcode-block" id="LMNDevice">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNDevice">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNDevice</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cn</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">check_host_name</span><span class="p">(</span><span class="n">cn</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cn</span><span class="si">}</span><span class="s2"> is not a valid CN&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LMNDevice.cn">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/device/index.html#linuxmusterTools.ldapconnector.LMNDevice.cn">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cn</span> <span class="o">=</span> <span class="n">cn</span></div>
+
+<div class="viewcode-block" id="LMNDevice.lw">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/device/index.html#linuxmusterTools.ldapconnector.LMNDevice.lw">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lw</span> <span class="o">=</span> <span class="n">LdapWriter</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LMNDevice.lr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/device/index.html#linuxmusterTools.ldapconnector.LMNDevice.lr">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">router</span></div>
+
+<div class="viewcode-block" id="LMNDevice.model">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/device/index.html#linuxmusterTools.ldapconnector.LMNDevice.model">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">LMNDeviceModel</span></div>
+
+<div class="viewcode-block" id="LMNDevice.data">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/device/index.html#linuxmusterTools.ldapconnector.LMNDevice.data">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+<div class="viewcode-block" id="LMNDevice.new">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/device/index.html#linuxmusterTools.ldapconnector.LMNDevice.new">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="LMNDevice.school">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/device/index.html#linuxmusterTools.ldapconnector.LMNDevice.school">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">school</span> <span class="o">=</span> <span class="n">school</span></div>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+
+<div class="viewcode-block" id="LMNDevice.load_data">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNDevice.load_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/devices/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The device </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span>  <span class="p">{</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">:</span><span class="n">field</span><span class="o">.</span><span class="n">type</span><span class="p">()</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span> <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">init</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cn</span></div>
+
+
+<div class="viewcode-block" id="LMNDevice.setattr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNDevice.setattr">[docs]</a>
+    <span class="k">def</span> <span class="nf">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set some attributes of the object directly in Ldap,</span>
+<span class="sd">        only for an existing object.</span>
+<span class="sd">        kwargs must contain a data dict with attributes/values to set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">new</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;This object does not exist in Ldap, please create it first using the method .create()&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNDevice.delattr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNDevice.delattr">[docs]</a>
+    <span class="k">def</span> <span class="nf">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete some attributes of the object directly in Ldap,</span>
+<span class="sd">        only for an existing object.</span>
+<span class="sd">        kwargs must contain a data dict with attributes/values to set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">new</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;This object does not exist in Ldap, please create it first using the method .create()&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNDevice.getattr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNDevice.getattr">[docs]</a>
+    <span class="k">def</span> <span class="nf">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a specific attribute of the object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNDevice.rename">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.ldapconnector.LMNDevice.rename">[docs]</a>
+    <span class="k">def</span> <span class="nf">rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_cn</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Rename a device inside a room.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">check_host_name</span><span class="p">(</span><span class="n">new_cn</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">new_cn</span><span class="si">}</span><span class="s2"> is not a valid hostname&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">new_cn</span> <span class="o">=</span> <span class="n">new_cn</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="n">cn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+        <span class="c1"># Check if new_name is already used</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/devices/</span><span class="si">{</span><span class="n">new_cn</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">new_cn</span><span class="si">}</span><span class="s2"> is already used, please use another hostname.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Update attributes</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;displayName&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Computer </span><span class="si">{</span><span class="n">new_cn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;dNSHostName&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">new_cn</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">SAMBA_REALM</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sAMAccountName&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">new_cn</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;servicePrincipalName&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="sa">f</span><span class="s1">&#39;HOST/</span><span class="si">{</span><span class="n">new_cn</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">&#39;HOST/</span><span class="si">{</span><span class="n">new_cn</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">SAMBA_REALM</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">&#39;RestrictedKrbHost/</span><span class="si">{</span><span class="n">new_cn</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">&#39;RestrictedKrbHost/</span><span class="si">{</span><span class="n">new_cn</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">SAMBA_REALM</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;sophomorixDnsNodename&quot;</span><span class="p">:</span> <span class="n">new_cn</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_rename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;dn&#39;</span><span class="p">],</span> <span class="n">new_cn</span><span class="p">)</span></div>
+</div>
+
+    <span class="c1">#</span>
+    <span class="c1"># def move(self, name, new_room):</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     Move a device to another room, e.g. to another OU</span>
+    <span class="c1">#</span>
+    <span class="c1">#     :param name: name of the device to move</span>
+    <span class="c1">#     :type name: basestring</span>
+    <span class="c1">#     :param new_room: New OU for the device</span>
+    <span class="c1">#     :type new_room: basestring</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+    <span class="c1">#     if not Validator.check_host_name(new_room):</span>
+    <span class="c1">#         logger.error(f&quot;{new_room} is not a valid room name&quot;)</span>
+    <span class="c1">#         return</span>
+    <span class="c1">#</span>
+    <span class="c1">#     if not self.lr.getval(f&quot;/rooms/{new_room}&quot;, &#39;cn&#39;):</span>
+    <span class="c1">#         logger.error(f&quot;Can not move to {new_room}, this group does not exist in LDAP.&quot;)</span>
+    <span class="c1">#         return</span>
+    <span class="c1">#</span>
+    <span class="c1">#     name = name.upper()</span>
+    <span class="c1">#</span>
+    <span class="c1">#     details = self.lr.get(f&#39;/devices/{name}&#39;)</span>
+    <span class="c1">#</span>
+    <span class="c1">#     if not details:</span>
+    <span class="c1">#         logger.warning(f&quot;Device {name} not found in ldap, doing nothing.&quot;)</span>
+    <span class="c1">#         return</span>
+    <span class="c1">#</span>
+    <span class="c1">#     # Build new parent OU</span>
+    <span class="c1">#     dn_splitted = details[&#39;dn&#39;].split(&#39;,&#39;)</span>
+    <span class="c1">#     old_room = dn_splitted[1].split(&#39;=&#39;)[1]</span>
+    <span class="c1">#     ou_prefix = &#39;,&#39;.join(dn_splitted[:2])</span>
+    <span class="c1">#</span>
+    <span class="c1">#     new_ou = details[&#39;dn&#39;].replace(f&quot;{ou_prefix},&quot;, f&quot;OU={new_room},&quot;)</span>
+    <span class="c1">#     new_dn = f&quot;CN={name},{new_ou}&quot;</span>
+    <span class="c1">#</span>
+    <span class="c1">#     # Move to new OU</span>
+    <span class="c1">#     self.lw._move(details[&#39;dn&#39;], new_ou)</span>
+    <span class="c1">#</span>
+    <span class="c1">#     # Update attributes</span>
+    <span class="c1">#</span>
+    <span class="c1">#     data = {</span>
+    <span class="c1">#         &quot;sophomorixAdminClass&quot;: new_room,</span>
+    <span class="c1">#         &quot;sophomorixComputerRoom&quot;: new_room,</span>
+    <span class="c1">#     }</span>
+    <span class="c1">#     self.setattr(name, data=data)</span>
+    <span class="c1">#</span>
+    <span class="c1">#     # Update membership</span>
+    <span class="c1">#</span>
+    <span class="c1">#     old_group = details[&#39;dn&#39;].replace(f&quot;CN={name},&quot;, f&quot;CN={old_room},&quot;)</span>
+    <span class="c1">#     new_group = new_dn.replace(f&quot;CN={name},&quot;, f&quot;CN={new_room},&quot;)</span>
+    <span class="c1">#</span>
+    <span class="c1">#     self.ow.remove_member(old_group, new_dn)</span>
+    <span class="c1">#     self.ow.add_member(new_group, new_dn)</span>
+    <span class="c1">#</span>
+    <span class="c1"># def delete_room(self, room, school=&#39;default-school&#39;):</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     Delete the OU and his group associated to a room, if this does not contain any device.</span>
+    <span class="c1">#</span>
+    <span class="c1">#     :param room: Name of the room to dele</span>
+    <span class="c1">#     :type room: basestring</span>
+    <span class="c1">#     :param school: Concerned school</span>
+    <span class="c1">#     :type school: basestring</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+    <span class="c1">#     if room not in self.lr.getval(f&quot;/ou/rooms&quot;, &#39;name&#39;):</span>
+    <span class="c1">#         logger.error(f&quot;Organizational unit {room} doesn&#39;t exist in LDAP.&quot;)</span>
+    <span class="c1">#         return</span>
+    <span class="c1">#</span>
+    <span class="c1">#     group = self.lr.get(f&#39;/rooms/{room}&#39;)</span>
+    <span class="c1">#     if group and len(group[&#39;member&#39;]) &gt; 0:</span>
+    <span class="c1">#         logger.error(f&quot;Room {room} still contain some devices, can not delete it.&quot;)</span>
+    <span class="c1">#         return</span>
+    <span class="c1">#</span>
+    <span class="c1">#     ou_dn = f&quot;OU={room},OU=Devices,OU={school},{LDAP_CONTEXT}&quot;</span>
+    <span class="c1">#     self.lw._del(ou_dn)</span>
+    <span class="c1">#</span>
+    <span class="c1"># def create_room(self, new_room, school=&#39;default-school&#39;, data={}):</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     Create a new room, e.g. another OU</span>
+    <span class="c1">#</span>
+    <span class="c1">#     :param new_room: New OU to create</span>
+    <span class="c1">#     :type new_room: basestring</span>
+    <span class="c1">#     :param school: Concerned school</span>
+    <span class="c1">#     :type school: basestring</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+    <span class="c1">#     if not Validator.check_host_name(new_room):</span>
+    <span class="c1">#         logger.error(f&quot;{new_room} is not a valid room name&quot;)</span>
+    <span class="c1">#         return</span>
+    <span class="c1">#</span>
+    <span class="c1">#     if new_room in self.lr.getval(f&quot;/ou/rooms&quot;, &#39;name&#39;):</span>
+    <span class="c1">#         logger.error(f&quot;Organizational unit {new_room} already exists in LDAP.&quot;)</span>
+    <span class="c1">#         return</span>
+    <span class="c1">#</span>
+    <span class="c1">#     if self.lr.getval(f&quot;/rooms/{new_room}&quot;, &#39;cn&#39;):</span>
+    <span class="c1">#         logger.error(f&quot;Group {new_room} already exists in LDAP.&quot;)</span>
+    <span class="c1">#         return</span>
+    <span class="c1">#</span>
+    <span class="c1">#     ## Create OU</span>
+    <span class="c1">#     ou_dn = f&quot;OU={new_room},OU=Devices,OU={school},{LDAP_CONTEXT}&quot;</span>
+    <span class="c1">#     self.lw._add_ou(ou_dn)</span>
+    <span class="c1">#</span>
+    <span class="c1">#     ## Create group</span>
+    <span class="c1">#     ldif = []</span>
+    <span class="c1">#     group_dn = f&quot;CN={new_room},{ou_dn}&quot;</span>
+    <span class="c1">#     valid_fields = {field.name:field.type() for field in fields(LMNRoomModel) if field.init}</span>
+    <span class="c1">#</span>
+    <span class="c1">#     for attr,value in data.items():</span>
+    <span class="c1">#         if attr in valid_fields:</span>
+    <span class="c1">#             if isinstance(valid_fields[attr], list) and isinstance(value, list):</span>
+    <span class="c1">#                 for val in value:</span>
+    <span class="c1">#                     ldif.append((attr, [f&quot;{val}&quot;.encode()]))</span>
+    <span class="c1">#             else:</span>
+    <span class="c1">#                 ldif.append((attr, [f&quot;{value}&quot;.encode()]))</span>
+    <span class="c1">#         else:</span>
+    <span class="c1">#             logger.warning(f&quot;Attribute {attr} not found in LMNRoom details&quot;)</span>
+    <span class="c1">#</span>
+    <span class="c1">#     self.lw._add_group(group_dn, ldif)</span>
 </pre></div>
 
            </div>

@@ -47,6 +47,10 @@ Module Contents
       :type:  str
 
 
+   .. py:attribute:: hostname
+      :type:  str
+
+
    .. py:attribute:: machine
       :type:  str
 
@@ -56,6 +60,10 @@ Module Contents
 
 
    .. py:attribute:: protocol
+      :type:  str
+
+
+   .. py:attribute:: room
       :type:  str
 
 
@@ -71,15 +79,7 @@ Module Contents
       :type:  str
 
 
-   .. py:attribute:: hostnames
-      :type:  dataclasses.InitVar[dict]
-
-
-   .. py:attribute:: hostname
-      :type:  str
-
-
-   .. py:method:: __post_init__(hostnames)
+   .. py:method:: asdict()
 
 
 .. py:data:: users_regex

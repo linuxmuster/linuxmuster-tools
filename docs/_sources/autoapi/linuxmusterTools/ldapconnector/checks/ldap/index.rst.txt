@@ -4,6 +4,14 @@ linuxmusterTools.ldapconnector.checks.ldap
 .. py:module:: linuxmusterTools.ldapconnector.checks.ldap
 
 
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.checks.ldap.logger
+
+
 Functions
 ---------
 
@@ -15,6 +23,8 @@ Functions
 
 Module Contents
 ---------------
+
+.. py:data:: logger
 
 .. py:function:: check_empty_ou_rooms()
 

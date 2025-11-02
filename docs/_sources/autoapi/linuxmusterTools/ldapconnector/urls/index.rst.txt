@@ -21,6 +21,7 @@ Submodules
    /autoapi/linuxmusterTools/ldapconnector/urls/schoolclasses/index
    /autoapi/linuxmusterTools/ldapconnector/urls/schools/index
    /autoapi/linuxmusterTools/ldapconnector/urls/search/index
+   /autoapi/linuxmusterTools/ldapconnector/urls/system/index
    /autoapi/linuxmusterTools/ldapconnector/urls/users/index
 
 
@@ -29,6 +30,7 @@ Attributes
 
 .. autoapisummary::
 
+   linuxmusterTools.ldapconnector.urls.logger
    linuxmusterTools.ldapconnector.urls.SCHOOL_MARKER
    linuxmusterTools.ldapconnector.urls.router
    linuxmusterTools.ldapconnector.urls.router
@@ -44,6 +46,8 @@ Attributes
    linuxmusterTools.ldapconnector.urls.router
    linuxmusterTools.ldapconnector.urls.SCHOOL_MARKER
    linuxmusterTools.ldapconnector.urls.router
+   linuxmusterTools.ldapconnector.urls.router
+   linuxmusterTools.ldapconnector.urls.SCHOOL_MARKER
    linuxmusterTools.ldapconnector.urls.router
    linuxmusterTools.ldapconnector.urls.SCHOOL_MARKER
 
@@ -72,6 +76,7 @@ Functions
    linuxmusterTools.ldapconnector.urls.get_all_students_from_schoolclass
    linuxmusterTools.ldapconnector.urls.get_all_schoolclasses
    linuxmusterTools.ldapconnector.urls.get_results_search_schoolclasses
+   linuxmusterTools.ldapconnector.urls.get_results_search_empty_schoolclasses
    linuxmusterTools.ldapconnector.urls.get_project
    linuxmusterTools.ldapconnector.urls.get_all_projects
    linuxmusterTools.ldapconnector.urls.get_all_schools
@@ -81,6 +86,7 @@ Functions
    linuxmusterTools.ldapconnector.urls.get_results_search_device
    linuxmusterTools.ldapconnector.urls.get_rooms
    linuxmusterTools.ldapconnector.urls.get_room
+   linuxmusterTools.ldapconnector.urls.get_empty_rooms
    linuxmusterTools.ldapconnector.urls.get_all_units
    linuxmusterTools.ldapconnector.urls.get_group
    linuxmusterTools.ldapconnector.urls.get_all_groups
@@ -93,6 +99,10 @@ Functions
    linuxmusterTools.ldapconnector.urls.get_all_ou
    linuxmusterTools.ldapconnector.urls.get_devices_ou
    linuxmusterTools.ldapconnector.urls.get_students_ou
+   linuxmusterTools.ldapconnector.urls.get_students_parents_ou
+   linuxmusterTools.ldapconnector.urls.get_staff_ou
+   linuxmusterTools.ldapconnector.urls.get_all_gpos
+   linuxmusterTools.ldapconnector.urls.get_one_gpo
 
 
 Package Contents
@@ -114,7 +124,7 @@ Package Contents
       Handle a single result from a ldap request (with required ldap filter)
       and convert it in the given object class.
 
-      :param objectclass: dataclass like LMNUser
+      :param objectclass: dataclass like LMNUserModel
       :type objectclass:
       :param ldap_filter: A valid ldap filter
       :type ldap_filter: basestring
@@ -132,7 +142,7 @@ Package Contents
       Handle multiples results from a ldap request (with required ldap filter)
       and convert it in a list of given object class.
 
-      :param objectclass: dataclass like LMNUser
+      :param objectclass: dataclass like LMNUserModel
       :type objectclass:
       :param ldap_filter: A valid ldap filter
       :type ldap_filter: basestring
@@ -156,6 +166,8 @@ Package Contents
       type of object.
 
 
+
+.. py:data:: logger
 
 .. py:data:: SCHOOL_MARKER
    :value: '##SCHOOL_MARKER##'
@@ -184,6 +196,9 @@ Package Contents
    .. py:method:: getvalues(url, attributes, dict=True, **kwargs)
 
 
+   .. py:method:: print_urls()
+
+
    .. py:method:: ascsv(url, delimiter=';', csvfile=None, attributes=[], header=True, **kwargs)
 
 
@@ -204,7 +219,7 @@ Package Contents
 
       :param pattern: URL pattern
       :type pattern: basestring
-      :param model: model obejct to return, can be e.g. LMNUser
+      :param model: model object to return, can be e.g. LMNUserModel
       :type model: dataclass object
 
 
@@ -215,7 +230,7 @@ Package Contents
 
       :param pattern: URL pattern
       :type pattern: basestring
-      :param model: model obejct to return, can be e.g. LMNUser
+      :param model: model object to return, can be e.g. LMNUserModel
       :type model: dataclass object
 
 
@@ -227,32 +242,32 @@ Package Contents
 .. py:function:: get_all_users()
 
    Get all details from all users.
-   Return a list of LMNUser data object.
+   Return a list of LMNUserModel data object.
 
 
 .. py:function:: get_exam_users()
 
    Get all details from all users in exam mode.
-   Return a LMNUser data object.
+   Return a LMNUserModel data object.
 
 
 .. py:function:: get_exam_user(username)
 
    Get all details from a specific user in exam mode.
-   Return a LMNUser data object.
+   Return a LMNUserModel data object.
 
 
 .. py:function:: get_user(username)
 
    Get all details from a specific user.
-   Return a LMNUser data object.
+   Return a LMNUserModel data object.
 
 
 .. py:function:: get_results_search_user(query='', selection=[])
 
    Get all details from a search on a specific user login scheme and a
    selection of roles.
-   Return a list of LMNUser data object.
+   Return a list of LMNUserModel data object.
 
 
 .. py:data:: router
@@ -260,7 +275,7 @@ Package Contents
 .. py:function:: get_all_from_role(role='teacher')
 
    Get all user from a same role.
-   Return a list of LMNUser data objects.
+   Return a list of LMNUserModel data objects.
 
 
 .. py:data:: router
@@ -268,25 +283,31 @@ Package Contents
 .. py:function:: get_schoolclass(schoolclass)
 
    Get all details from a specific schoolclass.
-   Return a LMNSchoolClass data object
+   Return a LMNSchoolClassModel data object
 
 
 .. py:function:: get_all_students_from_schoolclass(schoolclass)
 
    Get all students details from a specific schoolclass.
-   Return a list of LMNUser data objects.
+   Return a list of LMNUserModel data objects.
 
 
 .. py:function:: get_all_schoolclasses()
 
    Get all schoolclasses details.
-   Return a list of LMNSchoolClass data objects.
+   Return a list of LMNSchoolClassModel data objects.
 
 
 .. py:function:: get_results_search_schoolclasses(query)
 
    Get all details from a search about schoolclasses.
-   Return a list of LMNSchoolClass data objects.
+   Return a list of LMNSchoolClassModel data objects.
+
+
+.. py:function:: get_results_search_empty_schoolclasses()
+
+   Get all details from empty schoolclasses.
+   Return a list of LMNSchoolClassModel data objects.
 
 
 .. py:data:: router
@@ -294,13 +315,13 @@ Package Contents
 .. py:function:: get_project(project)
 
    Get all details from a specific project.
-   Return a LMNProject data object
+   Return a LMNProjectModel data object
 
 
 .. py:function:: get_all_projects()
 
    Get all projects details.
-   Return a list of LMNProject data objects.
+   Return a list of LMNProjectModel data objects.
 
 
 .. py:data:: router
@@ -308,13 +329,13 @@ Package Contents
 .. py:function:: get_all_schools()
 
    Get all schools.
-   Return a LMNSchool data object
+   Return a LMNSchoolModel data object
 
 
 .. py:function:: get_specific_school(school)
 
    Get a specific school.
-   Return a LMNSchool data object
+   Return a LMNSchoolModel data object
 
 
 .. py:data:: router
@@ -326,20 +347,20 @@ Package Contents
 .. py:function:: get_all_devices()
 
    Get all devices.
-   Return a a list of LMNDevice data object.
+   Return a a list of LMNDeviceModel data object.
 
 
 .. py:function:: get_device(name)
 
    Get all details from a specific device.
-   Return a LMNDevice data object.
+   Return a LMNDeviceModel data object.
 
 
 .. py:function:: get_results_search_device(query, selection=[])
 
    Get all details from a search on a specific device scheme and having a specific role
    (something like 'printer', 'server', ...).
-   Return a list of LMNDevice data object.
+   Return a list of LMNDeviceModel data object.
 
 
 .. py:function:: get_rooms()
@@ -352,6 +373,11 @@ Package Contents
    Get a specific room under the Devices tree.
 
 
+.. py:function:: get_empty_rooms()
+
+   List empty rooms under the Devices tree.
+
+
 .. py:data:: router
 
 .. py:data:: SCHOOL_MARKER
@@ -362,38 +388,38 @@ Package Contents
 
    Get all units. The terminology "unit" was chosen in order to differenciate with a "group" from
    sophomorix-group. A unit can be a schoolclass, a project, a group, etc ...
-   Return a list of LMNGroup data objects.
+   Return a list of LMNGroupModel data objects.
 
 
 .. py:function:: get_group(name='')
 
    Get a group (meaning units with sophomorixType sophomorix-group) specified by its name.
-   Return a LMNGroup data object.
+   Return a LMNGroupModel data object.
 
 
 .. py:function:: get_all_groups()
 
    Get all groups (meaning units with sophomorixType sophomorix-group).
-   Return a list of LMNGroup data objects.
+   Return a list of LMNGroupModel data objects.
 
 
 .. py:function:: get_all_printers()
 
    Get all printer groups.
-   Return a list of LMNGroup data objects.
+   Return a list of LMNGroupModel data objects.
 
 
 .. py:function:: get_printer(name='')
 
    Get a specific printer.
-   Return a LMNGroup data object.
+   Return a LMNGroupModel data object.
 
 
 .. py:data:: router
 
 .. py:function:: global_search(query='')
 
-   Search all cn containing the query search
+   Search all cn containing the query search.
 
 
 .. py:data:: router
@@ -405,20 +431,20 @@ Package Contents
 .. py:function:: get_all_management_groups()
 
    Get all management groups.
-   Return a list of LMNGroup data objects.
+   Return a list of LMNGroupModel data objects.
 
 
 .. py:function:: get_management_group(name='')
 
    Get a management group specified by its name.
-   Return a LMNGroup data object.
+   Return a LMNGroupModel data object.
 
 
 .. py:data:: router
 
 .. py:function:: get_from_dn(dn)
 
-   Search for a specific dn and retrieve a common LMNObject from it.
+   Search for a specific dn and retrieve a common LMNObjectModel from it.
 
 
 .. py:data:: router
@@ -430,19 +456,49 @@ Package Contents
 .. py:function:: get_all_ou()
 
    Get all organizational units.
-   Return a a list of LMNOU data object.
+   Return a list of LMNOUModel data object.
 
 
 .. py:function:: get_devices_ou()
 
    Get all details from the Devices organizational unit.
-   Return a LMNOU data object.
+   Return a LMNOUModel data object.
 
 
 .. py:function:: get_students_ou()
 
    Get all details from the students organizational unit.
-   Return a LMNOU data object.
+   Return a LMNOUModel data object.
    Quit the same as a schoolclasses request.
+
+
+.. py:function:: get_students_parents_ou()
+
+   Get all details from all OU in parents OU organizational unit.
+   Return a LMNOUModel data object.
+
+
+.. py:function:: get_staff_ou()
+
+   Get all details from the staff organizational unit.
+   Return a LMNOUModel data object.
+
+
+.. py:data:: router
+
+.. py:data:: SCHOOL_MARKER
+   :value: '##SCHOOL_MARKER##'
+
+
+.. py:function:: get_all_gpos()
+
+   Get all Group Policies Objects
+   Return a list of LMNGPOModel data object.
+
+
+.. py:function:: get_one_gpo(name)
+
+   Get one specific Group Policy Object after his displayName
+   Return a LMNGPOModel data object.
 
 

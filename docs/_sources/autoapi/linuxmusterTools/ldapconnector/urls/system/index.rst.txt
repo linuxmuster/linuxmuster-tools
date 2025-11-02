@@ -1,0 +1,30 @@
+linuxmusterTools.ldapconnector.urls.system
+==========================================
+
+.. py:module:: linuxmusterTools.ldapconnector.urls.system
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.urls.system.get_all_gpos
+   linuxmusterTools.ldapconnector.urls.system.get_one_gpo
+
+
+Module Contents
+---------------
+
+.. py:function:: get_all_gpos()
+
+   Get all Group Policies Objects
+   Return a list of LMNGPOModel data object.
+
+
+.. py:function:: get_one_gpo(name)
+
+   Get one specific Group Policy Object after his displayName
+   Return a LMNGPOModel data object.
+
+

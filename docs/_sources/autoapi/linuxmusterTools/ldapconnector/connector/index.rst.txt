@@ -10,6 +10,7 @@ Attributes
 .. autoapisummary::
 
    linuxmusterTools.ldapconnector.connector.webui_import
+   linuxmusterTools.ldapconnector.connector.logger
 
 
 Classes
@@ -27,9 +28,11 @@ Module Contents
    :value: True
 
 
+.. py:data:: logger
+
 .. py:class:: LdapConnector
 
-   .. py:method:: _connect(webui=False)
+   .. py:method:: _connect()
 
       Choose the right credentials, depending if the this module is imported in linuxmuster-webui7 or used directly on
       the server, and the perform a connection to the ldap server.
@@ -67,7 +70,7 @@ Module Contents
 
 
 
-   .. py:method:: _add(dn, ldif)
+   .. py:method:: _add(dn, ldif=[])
 
       Connect to ldap and insert an object with the given dn and ldif attributes.
 

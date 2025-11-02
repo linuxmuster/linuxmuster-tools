@@ -9,8 +9,13 @@ Attributes
 
 .. autoapisummary::
 
+   linuxmusterTools.lmnconfig.samba.logger
    linuxmusterTools.lmnconfig.samba.smbconf
    linuxmusterTools.lmnconfig.samba.LOG_LEVEL
+   linuxmusterTools.lmnconfig.samba.DFS
+   linuxmusterTools.lmnconfig.samba.config
+   linuxmusterTools.lmnconfig.samba.SHARES_LIST
+   linuxmusterTools.lmnconfig.samba.dfs_proxy
 
 
 Functions
@@ -23,6 +28,8 @@ Functions
 
 Module Contents
 ---------------
+
+.. py:data:: logger
 
 .. py:data:: smbconf
 
@@ -38,4 +45,14 @@ Module Contents
 
 
 .. py:data:: LOG_LEVEL
+
+.. py:data:: DFS
+
+.. py:data:: config
+
+.. py:data:: SHARES_LIST
+   :value: []
+
+
+.. py:data:: dfs_proxy
 

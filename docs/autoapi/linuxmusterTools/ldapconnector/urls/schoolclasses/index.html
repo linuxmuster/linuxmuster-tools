@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.urls.schoolclasses &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.ldapconnector.urls.schoolclasses &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/theme_overrides.css?v=472cca7c" />
@@ -15,7 +15,7 @@
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../../_static/translations.js?v=8fd896e3"></script>
@@ -60,8 +60,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../samba_util/index.html">linuxmusterTools.samba_util</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#attributes">Attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#package-contents">Package Contents</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../create_students_groups/index.html">create_students_groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../00-update-schoolclasses-groups/index.html">00-update-schoolclasses-groups</a></li>
 </ul>
 </li>
 </ul>
@@ -112,6 +117,9 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.schoolclasses.get_results_search_schoolclasses" title="linuxmusterTools.ldapconnector.urls.schoolclasses.get_results_search_schoolclasses"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_results_search_schoolclasses</span></code></a>(query)</p></td>
 <td><p>Get all details from a search about schoolclasses.</p></td>
 </tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.urls.schoolclasses.get_results_search_empty_schoolclasses" title="linuxmusterTools.ldapconnector.urls.schoolclasses.get_results_search_empty_schoolclasses"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_results_search_empty_schoolclasses</span></code></a>()</p></td>
+<td><p>Get all details from empty schoolclasses.</p></td>
+</tr>
 </tbody>
 </table>
 </section>
@@ -121,28 +129,35 @@
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.schoolclasses.get_schoolclass">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.schoolclasses.</span></span><span class="sig-name descname"><span class="pre">get_schoolclass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schoolclass</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/urls/schoolclasses.html#get_schoolclass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.schoolclasses.get_schoolclass" title="Link to this definition"></a></dt>
 <dd><p>Get all details from a specific schoolclass.
-Return a LMNSchoolClass data object</p>
+Return a LMNSchoolClassModel data object</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.schoolclasses.get_all_students_from_schoolclass">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.schoolclasses.</span></span><span class="sig-name descname"><span class="pre">get_all_students_from_schoolclass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schoolclass</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/urls/schoolclasses.html#get_all_students_from_schoolclass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.schoolclasses.get_all_students_from_schoolclass" title="Link to this definition"></a></dt>
 <dd><p>Get all students details from a specific schoolclass.
-Return a list of LMNUser data objects.</p>
+Return a list of LMNUserModel data objects.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.schoolclasses.get_all_schoolclasses">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.schoolclasses.</span></span><span class="sig-name descname"><span class="pre">get_all_schoolclasses</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/urls/schoolclasses.html#get_all_schoolclasses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.schoolclasses.get_all_schoolclasses" title="Link to this definition"></a></dt>
 <dd><p>Get all schoolclasses details.
-Return a list of LMNSchoolClass data objects.</p>
+Return a list of LMNSchoolClassModel data objects.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.schoolclasses.get_results_search_schoolclasses">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.schoolclasses.</span></span><span class="sig-name descname"><span class="pre">get_results_search_schoolclasses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/urls/schoolclasses.html#get_results_search_schoolclasses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.schoolclasses.get_results_search_schoolclasses" title="Link to this definition"></a></dt>
 <dd><p>Get all details from a search about schoolclasses.
-Return a list of LMNSchoolClass data objects.</p>
+Return a list of LMNSchoolClassModel data objects.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.schoolclasses.get_results_search_empty_schoolclasses">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.schoolclasses.</span></span><span class="sig-name descname"><span class="pre">get_results_search_empty_schoolclasses</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/urls/schoolclasses.html#get_results_search_empty_schoolclasses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.schoolclasses.get_results_search_empty_schoolclasses" title="Link to this definition"></a></dt>
+<dd><p>Get all details from empty schoolclasses.
+Return a list of LMNSchoolClassModel data objects.</p>
 </dd></dl>
 
 </section>

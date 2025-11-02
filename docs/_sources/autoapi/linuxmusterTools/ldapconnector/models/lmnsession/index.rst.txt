@@ -9,13 +9,13 @@ Classes
 
 .. autoapisummary::
 
-   linuxmusterTools.ldapconnector.models.lmnsession.LMNSession
+   linuxmusterTools.ldapconnector.models.lmnsession.LMNSessionModel
 
 
 Module Contents
 ---------------
 
-.. py:class:: LMNSession
+.. py:class:: LMNSessionModel
 
    .. py:attribute:: sid
       :type:  str

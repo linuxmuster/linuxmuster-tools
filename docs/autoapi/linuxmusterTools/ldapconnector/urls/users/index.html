@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.urls.users &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.ldapconnector.urls.users &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/theme_overrides.css?v=472cca7c" />
@@ -15,7 +15,7 @@
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../../_static/translations.js?v=8fd896e3"></script>
@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
     <link rel="next" title="linuxmusterTools.ldapconnector.writers" href="../../writers/index.html" />
-    <link rel="prev" title="linuxmusterTools.ldapconnector.urls.search" href="../search/index.html" /> 
+    <link rel="prev" title="linuxmusterTools.ldapconnector.urls.system" href="../system/index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -60,8 +60,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../samba_util/index.html">linuxmusterTools.samba_util</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#attributes">Attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#package-contents">Package Contents</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../create_students_groups/index.html">create_students_groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../00-update-schoolclasses-groups/index.html">00-update-schoolclasses-groups</a></li>
 </ul>
 </li>
 </ul>
@@ -124,28 +129,28 @@
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.users.get_all_users">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.users.</span></span><span class="sig-name descname"><span class="pre">get_all_users</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/urls/users.html#get_all_users"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.users.get_all_users" title="Link to this definition"></a></dt>
 <dd><p>Get all details from all users.
-Return a list of LMNUser data object.</p>
+Return a list of LMNUserModel data object.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.users.get_exam_users">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.users.</span></span><span class="sig-name descname"><span class="pre">get_exam_users</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/urls/users.html#get_exam_users"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.users.get_exam_users" title="Link to this definition"></a></dt>
 <dd><p>Get all details from all users in exam mode.
-Return a LMNUser data object.</p>
+Return a LMNUserModel data object.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.users.get_exam_user">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.users.</span></span><span class="sig-name descname"><span class="pre">get_exam_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/urls/users.html#get_exam_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.users.get_exam_user" title="Link to this definition"></a></dt>
 <dd><p>Get all details from a specific user in exam mode.
-Return a LMNUser data object.</p>
+Return a LMNUserModel data object.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.urls.users.get_user">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.users.</span></span><span class="sig-name descname"><span class="pre">get_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/urls/users.html#get_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.users.get_user" title="Link to this definition"></a></dt>
 <dd><p>Get all details from a specific user.
-Return a LMNUser data object.</p>
+Return a LMNUserModel data object.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -153,7 +158,7 @@ Return a LMNUser data object.</p>
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.urls.users.</span></span><span class="sig-name descname"><span class="pre">get_results_search_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/urls/users.html#get_results_search_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.urls.users.get_results_search_user" title="Link to this definition"></a></dt>
 <dd><p>Get all details from a search on a specific user login scheme and a
 selection of roles.
-Return a list of LMNUser data object.</p>
+Return a list of LMNUserModel data object.</p>
 </dd></dl>
 
 </section>
@@ -163,7 +168,7 @@ Return a list of LMNUser data object.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../search/index.html" class="btn btn-neutral float-left" title="linuxmusterTools.ldapconnector.urls.search" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../system/index.html" class="btn btn-neutral float-left" title="linuxmusterTools.ldapconnector.urls.system" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="../../writers/index.html" class="btn btn-neutral float-right" title="linuxmusterTools.ldapconnector.writers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

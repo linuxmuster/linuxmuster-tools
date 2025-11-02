@@ -5,8 +5,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.connector &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.ldapconnector.connector &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/translations.js?v=8fd896e3"></script>
@@ -62,6 +62,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../linuxmusterTools.html">linuxmusterTools</a></li>
           <li class="breadcrumb-item"><a href="../ldapconnector.html">linuxmusterTools.ldapconnector</a></li>
       <li class="breadcrumb-item active">linuxmusterTools.ldapconnector.connector</li>
       <li class="wy-breadcrumbs-aside">
@@ -73,14 +74,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.ldapconnector.connector</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">ldap</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">ldap</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..lmnfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">LMNFile</span>
+<span class="kn">from</span> <span class="nn">..lmnfile</span> <span class="kn">import</span> <span class="n">LMNFile</span>
+
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">aj.plugins.lmn_common.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">ldap_config</span> <span class="k">as</span> <span class="n">params</span>
+    <span class="kn">from</span> <span class="nn">aj.plugins.lmn_common.api</span> <span class="kn">import</span> <span class="n">ldap_config</span> <span class="k">as</span> <span class="n">params</span>
 <div class="viewcode-block" id="webui_import">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/connector/index.html#linuxmusterTools.ldapconnector.connector.webui_import">[docs]</a>
     <span class="n">webui_import</span> <span class="o">=</span> <span class="kc">True</span></div>
@@ -88,14 +89,18 @@
 <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="n">webui_import</span> <span class="o">=</span> <span class="kc">False</span>
 
+<div class="viewcode-block" id="logger">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/connector/index.html#linuxmusterTools.ldapconnector.connector.logger">[docs]</a>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="LdapConnector">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/connector/index.html#linuxmusterTools.ldapconnector.connector.LdapConnector">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">LdapConnector</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">LdapConnector</span><span class="p">:</span>
 
 <div class="viewcode-block" id="LdapConnector._connect">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/connector/index.html#linuxmusterTools.ldapconnector.connector.LdapConnector._connect">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">webui</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Choose the right credentials, depending if the this module is imported in linuxmuster-webui7 or used directly on</span>
 <span class="sd">        the server, and the perform a connection to the ldap server.</span>
@@ -129,9 +134,10 @@
         <span class="c1">#     l.sasl_interactive_bind_s(&quot;&quot;, sasl_auth)</span>
 
         <span class="c1"># On the server, accessing directly to bind user credentials</span>
-        <span class="n">conn</span> <span class="o">=</span> <span class="n">ldap</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;ldap://localhost:389/&quot;</span><span class="p">)</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">ldap</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;ldaps://localhost:636/&quot;</span><span class="p">)</span>
         <span class="n">conn</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="n">ldap</span><span class="o">.</span><span class="n">OPT_REFERRALS</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">conn</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="n">ldap</span><span class="o">.</span><span class="n">OPT_RESTART</span><span class="p">,</span> <span class="n">ldap</span><span class="o">.</span><span class="n">OPT_ON</span><span class="p">)</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="n">ldap</span><span class="o">.</span><span class="n">OPT_X_TLS_REQUIRE_CERT</span><span class="p">,</span> <span class="n">ldap</span><span class="o">.</span><span class="n">OPT_X_TLS_ALLOW</span><span class="p">)</span>
         <span class="n">conn</span><span class="o">.</span><span class="n">protocol_version</span> <span class="o">=</span> <span class="n">ldap</span><span class="o">.</span><span class="n">VERSION3</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">webui_import</span><span class="p">:</span>
@@ -144,7 +150,7 @@
             <span class="n">binddn</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;CN=Administrator,CN=Users,</span><span class="si">{</span><span class="n">ldap_params</span><span class="p">[</span><span class="s1">&#39;searchdn&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="n">searchdn</span> <span class="o">=</span> <span class="n">ldap_params</span><span class="p">[</span><span class="s1">&#39;searchdn&#39;</span><span class="p">]</span>
 
-        <span class="k">elif</span> <span class="n">webui</span><span class="p">:</span>
+        <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Importing lmntools from the Webui will resulting into using the same binddn as the one configured</span>
             <span class="c1"># in the config.yml from the Webui</span>
             <span class="k">try</span><span class="p">:</span>
@@ -152,7 +158,7 @@
                 <span class="n">bindpwd</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;bindpw&#39;</span><span class="p">]</span>
                 <span class="n">searchdn</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;searchdn&#39;</span><span class="p">]</span>
             <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;LDAP credentials not found, is linuxmuster installed and configured ?&#39;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;LDAP credentials not found, is linuxmuster installed and configured ?&#39;</span><span class="p">)</span>
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;LDAP credentials not found, is linuxmuster installed and configured ?&#39;</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
@@ -161,13 +167,13 @@
             <span class="c1"># Removing sensitive data</span>
             <span class="n">binddn</span><span class="p">,</span> <span class="n">bindpwd</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span>
         <span class="k">except</span> <span class="n">ldap</span><span class="o">.</span><span class="n">INVALID_CREDENTIALS</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid credentials: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">ldap</span><span class="o">.</span><span class="n">SERVER_DOWN</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Ldap server down: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">ldap</span><span class="o">.</span><span class="n">LDAPError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="s1">&#39;desc&#39;</span><span class="p">])</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="s1">&#39;desc&#39;</span><span class="p">])</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Other ldap error: </span><span class="si">{</span><span class="n">e</span><span class="p">[</span><span class="s1">&#39;desc&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">conn</span><span class="p">,</span> <span class="n">searchdn</span></div>
@@ -175,7 +181,7 @@
 
 <div class="viewcode-block" id="LdapConnector._get">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/connector/index.html#linuxmusterTools.ldapconnector.connector.LdapConnector._get">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ldap_filter</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="n">ldap</span><span class="o">.</span><span class="n">SCOPE_SUBTREE</span><span class="p">,</span> <span class="n">subdn</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ldap_filter</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="n">ldap</span><span class="o">.</span><span class="n">SCOPE_SUBTREE</span><span class="p">,</span> <span class="n">subdn</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Connect to ldap and perform a search.</span>
 
@@ -189,7 +195,7 @@
 <span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">conn</span><span class="p">,</span> <span class="n">_searchdn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connect</span><span class="p">(</span><span class="n">webui</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">conn</span><span class="p">,</span> <span class="n">_searchdn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connect</span><span class="p">()</span>
 
         <span class="n">searchdn</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subdn</span><span class="si">}{</span><span class="n">_searchdn</span><span class="si">}</span><span class="s2">&quot;</span>
 
@@ -197,7 +203,7 @@
             <span class="n">response</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">search_s</span><span class="p">(</span><span class="n">searchdn</span><span class="p">,</span> <span class="n">scope</span><span class="p">,</span> <span class="n">ldap_filter</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">ldap</span><span class="o">.</span><span class="n">NO_SUCH_OBJECT</span><span class="p">:</span>
             <span class="c1"># Searchdn is maybe wrong, returning empty response</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Searchdn </span><span class="si">{</span><span class="n">searchdn</span><span class="si">}</span><span class="s2"> is maybe wrong&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Searchdn </span><span class="si">{</span><span class="n">searchdn</span><span class="si">}</span><span class="s2"> is maybe wrong&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="p">[]</span>
 
         <span class="c1"># Filter non-interesting values</span>
@@ -213,7 +219,7 @@
 
 <div class="viewcode-block" id="LdapConnector._set">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/connector/index.html#linuxmusterTools.ldapconnector.connector.LdapConnector._set">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dn</span><span class="p">,</span> <span class="n">ldif</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dn</span><span class="p">,</span> <span class="n">ldif</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Connect to ldap and apply a ldif on the given dn.</span>
 
@@ -225,13 +231,14 @@
 
 
         <span class="n">conn</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connect</span><span class="p">()</span>
+        <span class="c1"># Here the ldif is a list of 3-Tuples (MOD_*, attr, value)</span>
         <span class="n">conn</span><span class="o">.</span><span class="n">modify_s</span><span class="p">(</span><span class="n">dn</span><span class="p">,</span> <span class="n">ldif</span><span class="p">)</span>
         <span class="n">conn</span><span class="o">.</span><span class="n">unbind_s</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="LdapConnector._add">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/connector/index.html#linuxmusterTools.ldapconnector.connector.LdapConnector._add">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dn</span><span class="p">,</span> <span class="n">ldif</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dn</span><span class="p">,</span> <span class="n">ldif</span><span class="o">=</span><span class="p">[]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Connect to ldap and insert an object with the given dn and ldif attributes.</span>
 
@@ -243,13 +250,14 @@
 
 
         <span class="n">conn</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connect</span><span class="p">()</span>
+        <span class="c1"># Here the ldif can only be a list of 2-Tuples (attr,value)</span>
         <span class="n">conn</span><span class="o">.</span><span class="n">add_s</span><span class="p">(</span><span class="n">dn</span><span class="p">,</span> <span class="n">ldif</span><span class="p">)</span>
         <span class="n">conn</span><span class="o">.</span><span class="n">unbind_s</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="LdapConnector._add_ou">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/connector/index.html#linuxmusterTools.ldapconnector.connector.LdapConnector._add_ou">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_add_ou</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dn</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_add_ou</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dn</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Connect to ldap and insert an organisational unit with the given dn.</span>
 
@@ -263,7 +271,7 @@
 
 <div class="viewcode-block" id="LdapConnector._add_group">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/connector/index.html#linuxmusterTools.ldapconnector.connector.LdapConnector._add_group">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_add_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dn</span><span class="p">,</span> <span class="n">ldif</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="k">def</span> <span class="nf">_add_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dn</span><span class="p">,</span> <span class="n">ldif</span><span class="o">=</span><span class="p">[]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Connect to ldap and insert a group with the given dn.</span>
 
@@ -271,13 +279,16 @@
 <span class="sd">        :type dn: basestring</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">ldif</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;objectclass&#39;</span><span class="p">,</span> <span class="p">[</span><span class="sa">b</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;group&#39;</span><span class="p">]))</span>
+
+        <span class="n">objectclass</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;objectclass&#39;</span><span class="p">,</span> <span class="p">[</span><span class="sa">b</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;group&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">objectclass</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ldif</span><span class="p">:</span>
+            <span class="n">ldif</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">objectclass</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">dn</span><span class="p">,</span> <span class="n">ldif</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LdapConnector._rename">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/connector/index.html#linuxmusterTools.ldapconnector.connector.LdapConnector._rename">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_dn</span><span class="p">,</span> <span class="n">new_cn</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_dn</span><span class="p">,</span> <span class="n">new_cn</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Rename an entry with a new CN.</span>
 
@@ -296,7 +307,7 @@
 
 <div class="viewcode-block" id="LdapConnector._move">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/connector/index.html#linuxmusterTools.ldapconnector.connector.LdapConnector._move">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_dn</span><span class="p">,</span> <span class="n">new_ou</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_dn</span><span class="p">,</span> <span class="n">new_ou</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Move an entry to a new OU.</span>
 
@@ -315,7 +326,7 @@
 
 <div class="viewcode-block" id="LdapConnector._del">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/ldapconnector/connector/index.html#linuxmusterTools.ldapconnector.connector.LdapConnector._del">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_del</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dn</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_del</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dn</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Connect to ldap and delete the object with the given dn.</span>
 

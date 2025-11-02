@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.models.common &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.ldapconnector.models.common &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/theme_overrides.css?v=472cca7c" />
@@ -15,7 +15,7 @@
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../../_static/translations.js?v=8fd896e3"></script>
@@ -60,8 +60,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../samba_util/index.html">linuxmusterTools.samba_util</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#attributes">Attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#package-contents">Package Contents</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../create_students_groups/index.html">create_students_groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../00-update-schoolclasses-groups/index.html">00-update-schoolclasses-groups</a></li>
 </ul>
 </li>
 </ul>
@@ -100,10 +105,13 @@
 <h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.models.common.LMNParent" title="linuxmusterTools.ldapconnector.models.common.LMNParent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNParent</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.models.common.LMNModel" title="linuxmusterTools.ldapconnector.models.common.LMNModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNModel</span></code></a></p></td>
 <td><p>Common parent class to gather common methods.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.models.common.LMNOU" title="linuxmusterTools.ldapconnector.models.common.LMNOU"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNOU</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.models.common.LMNOUModel" title="linuxmusterTools.ldapconnector.models.common.LMNOUModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNOUModel</span></code></a></p></td>
+<td><p>Common parent class to gather common methods.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.models.common.LMNGPOModel" title="linuxmusterTools.ldapconnector.models.common.LMNGPOModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNGPOModel</span></code></a></p></td>
 <td><p>Common parent class to gather common methods.</p></td>
 </tr>
 </tbody>
@@ -112,69 +120,121 @@
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNParent">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.models.common.</span></span><span class="sig-name descname"><span class="pre">LMNParent</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNParent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNParent" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNModel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.models.common.</span></span><span class="sig-name descname"><span class="pre">LMNModel</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNModel" title="Link to this definition"></a></dt>
 <dd><p>Common parent class to gather common methods.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNParent.asdict">
-<span class="sig-name descname"><span class="pre">asdict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNParent.asdict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNParent.asdict" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNModel.asdict">
+<span class="sig-name descname"><span class="pre">asdict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNModel.asdict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNModel.asdict" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNParent.asjson">
-<span class="sig-name descname"><span class="pre">asjson</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNParent.asjson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNParent.asjson" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNModel.asjson">
+<span class="sig-name descname"><span class="pre">asjson</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNModel.asjson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNModel.asjson" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNParent.split_dn">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">split_dn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNParent.split_dn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNParent.split_dn" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNModel.split_dn">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">split_dn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNModel.split_dn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNModel.split_dn" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNParent.common_name">
-<span class="sig-name descname"><span class="pre">common_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNParent.common_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNParent.common_name" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNModel.common_name">
+<span class="sig-name descname"><span class="pre">common_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNModel.common_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNModel.common_name" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNOU">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.models.common.</span></span><span class="sig-name descname"><span class="pre">LMNOU</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNOU"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNOU" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#linuxmusterTools.ldapconnector.models.common.LMNParent" title="linuxmusterTools.ldapconnector.models.common.LMNParent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNParent</span></code></a></p>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNOUModel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.models.common.</span></span><span class="sig-name descname"><span class="pre">LMNOUModel</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNOUModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNOUModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#linuxmusterTools.ldapconnector.models.common.LMNModel" title="linuxmusterTools.ldapconnector.models.common.LMNModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNModel</span></code></a></p>
 <p>Common parent class to gather common methods.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNOU.distinguishedName">
-<span class="sig-name descname"><span class="pre">distinguishedName</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNOU.distinguishedName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNOU.distinguishedName" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNOUModel.distinguishedName">
+<span class="sig-name descname"><span class="pre">distinguishedName</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNOUModel.distinguishedName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNOUModel.distinguishedName" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNOU.dn">
-<span class="sig-name descname"><span class="pre">dn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNOU.dn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNOU.dn" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNOUModel.dn">
+<span class="sig-name descname"><span class="pre">dn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNOUModel.dn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNOUModel.dn" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNOU.name">
-<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNOU.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNOU.name" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNOUModel.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNOUModel.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNOUModel.name" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNOU.objectCategory">
-<span class="sig-name descname"><span class="pre">objectCategory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNOU.objectCategory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNOU.objectCategory" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNOUModel.objectCategory">
+<span class="sig-name descname"><span class="pre">objectCategory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNOUModel.objectCategory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNOUModel.objectCategory" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNOU.objectClass">
-<span class="sig-name descname"><span class="pre">objectClass</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNOU.objectClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNOU.objectClass" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNOUModel.objectClass">
+<span class="sig-name descname"><span class="pre">objectClass</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNOUModel.objectClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNOUModel.objectClass" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNOU.ou">
-<span class="sig-name descname"><span class="pre">ou</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNOU.ou"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNOU.ou" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNOUModel.ou">
+<span class="sig-name descname"><span class="pre">ou</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNOUModel.ou"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNOUModel.ou" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNOU.__post_init__">
-<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNOU.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNOU.__post_init__" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNOUModel.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNOUModel.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNOUModel.__post_init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNGPOModel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.models.common.</span></span><span class="sig-name descname"><span class="pre">LMNGPOModel</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNGPOModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNGPOModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#linuxmusterTools.ldapconnector.models.common.LMNModel" title="linuxmusterTools.ldapconnector.models.common.LMNModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNModel</span></code></a></p>
+<p>Common parent class to gather common methods.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNGPOModel.cn">
+<span class="sig-name descname"><span class="pre">cn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNGPOModel.cn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNGPOModel.cn" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNGPOModel.distinguishedName">
+<span class="sig-name descname"><span class="pre">distinguishedName</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNGPOModel.distinguishedName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNGPOModel.distinguishedName" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNGPOModel.displayName">
+<span class="sig-name descname"><span class="pre">displayName</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNGPOModel.displayName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNGPOModel.displayName" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNGPOModel.dn">
+<span class="sig-name descname"><span class="pre">dn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNGPOModel.dn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNGPOModel.dn" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNGPOModel.gPCFileSysPath">
+<span class="sig-name descname"><span class="pre">gPCFileSysPath</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNGPOModel.gPCFileSysPath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNGPOModel.gPCFileSysPath" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNGPOModel.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNGPOModel.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNGPOModel.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNGPOModel.objectCategory">
+<span class="sig-name descname"><span class="pre">objectCategory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNGPOModel.objectCategory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNGPOModel.objectCategory" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNGPOModel.objectClass">
+<span class="sig-name descname"><span class="pre">objectClass</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNGPOModel.objectClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNGPOModel.objectClass" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.common.LMNGPOModel.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/common.html#LMNGPOModel.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.common.LMNGPOModel.__post_init__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

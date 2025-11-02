@@ -19,7 +19,9 @@ Attributes
 .. autoapisummary::
 
    linuxmusterTools.quotas.DFS
+   linuxmusterTools.quotas.SHARES_LIST
    linuxmusterTools.quotas.lr
+   linuxmusterTools.quotas.logger
 
 
 Functions
@@ -43,9 +45,15 @@ Package Contents
 
 .. py:data:: DFS
 
+.. py:data:: SHARES_LIST
+   :value: []
+
+
 .. py:data:: lr
 
 .. py:function:: format_size(num, suffix='B', base=2)
+
+.. py:data:: logger
 
 .. py:function:: timestamp2date(t)
 

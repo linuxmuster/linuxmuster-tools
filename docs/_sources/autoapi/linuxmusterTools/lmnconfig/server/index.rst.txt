@@ -1,0 +1,25 @@
+linuxmusterTools.lmnconfig.server
+=================================
+
+.. py:module:: linuxmusterTools.lmnconfig.server
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.lmnconfig.server.SERVER_HOSTNAME
+   linuxmusterTools.lmnconfig.server.server_ip
+   linuxmusterTools.lmnconfig.server.SERVER_IP
+
+
+Module Contents
+---------------
+
+.. py:data:: SERVER_HOSTNAME
+
+.. py:data:: server_ip
+
+.. py:data:: SERVER_IP
+

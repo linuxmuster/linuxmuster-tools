@@ -4,18 +4,35 @@ linuxmusterTools.ldapconnector.writers.device
 .. py:module:: linuxmusterTools.ldapconnector.writers.device
 
 
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.writers.device.name_checker
+   linuxmusterTools.ldapconnector.writers.device.logger
+
+
 Classes
 -------
 
 .. autoapisummary::
 
-   linuxmusterTools.ldapconnector.writers.device.LMNDeviceWriter
+   linuxmusterTools.ldapconnector.writers.device.LMNRoom
+   linuxmusterTools.ldapconnector.writers.device.LMNDevice
 
 
 Module Contents
 ---------------
 
-.. py:class:: LMNDeviceWriter
+.. py:data:: name_checker
+
+.. py:data:: logger
+
+.. py:class:: LMNRoom(cn, school='default-school')
+
+   .. py:attribute:: cn
+
 
    .. py:attribute:: lw
 
@@ -23,68 +40,102 @@ Module Contents
    .. py:attribute:: lr
 
 
-   .. py:attribute:: ow
+   .. py:attribute:: model
 
 
-   .. py:method:: setattr(name, **kwargs)
-
-      Middleware to check if the object exists.
-
-      :param name: cn of the object
-      :type name: basestring
+   .. py:attribute:: data
 
 
-
-   .. py:method:: delattr(name, **kwargs)
-
-      Middleware to check if the object exists.
-
-      :param name: cn of the object
-      :type name: basestring
+   .. py:attribute:: new
+      :value: False
 
 
 
-   .. py:method:: rename(name, new_name)
+   .. py:attribute:: school
+      :value: 'default-school'
+
+
+
+   .. py:method:: load_data()
+
+
+   .. py:method:: setattr(**kwargs)
+
+      Set some attributes of the object directly in Ldap,
+      only for an existing object.
+      kwargs must contain a data dict with attributes/values to set.
+
+
+
+   .. py:method:: delattr(**kwargs)
+
+      Delete some attributes of the object directly in Ldap,
+      only for an existing object.
+      kwargs must contain a data dict with attributes/values to set.
+
+
+
+   .. py:method:: getattr(attr)
+
+      Get a specific attribute of the object.
+
+
+
+.. py:class:: LMNDevice(cn, school='default-school')
+
+   .. py:attribute:: cn
+
+
+   .. py:attribute:: lw
+
+
+   .. py:attribute:: lr
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: data
+
+
+   .. py:attribute:: new
+      :value: False
+
+
+
+   .. py:attribute:: school
+      :value: 'default-school'
+
+
+
+   .. py:method:: load_data()
+
+
+   .. py:method:: setattr(**kwargs)
+
+      Set some attributes of the object directly in Ldap,
+      only for an existing object.
+      kwargs must contain a data dict with attributes/values to set.
+
+
+
+   .. py:method:: delattr(**kwargs)
+
+      Delete some attributes of the object directly in Ldap,
+      only for an existing object.
+      kwargs must contain a data dict with attributes/values to set.
+
+
+
+   .. py:method:: getattr(attr)
+
+      Get a specific attribute of the object.
+
+
+
+   .. py:method:: rename(new_cn)
 
       Rename a device inside a room.
-
-      :param new_name:
-      :type new_name:
-      :return:
-      :rtype:
-
-
-
-   .. py:method:: move(name, new_room)
-
-      Move a device to another room, e.g. to another OU
-
-      :param name: name of the device to move
-      :type name: basestring
-      :param new_room: New OU for the device
-      :type new_room: basestring
-
-
-
-   .. py:method:: delete_room(room, school='default-school')
-
-      Delete the OU and his group associated to a room, if this does not contain any device.
-
-      :param room: Name of the room to dele
-      :type room: basestring
-      :param school: Concerned school
-      :type school: basestring
-
-
-
-   .. py:method:: create_room(new_room, school='default-school', data={})
-
-      Create a new room, e.g. another OU
-
-      :param new_room: New OU to create
-      :type new_room: basestring
-      :param school: Concerned school
-      :type school: basestring
 
 
 

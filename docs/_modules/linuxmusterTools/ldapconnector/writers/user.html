@@ -5,8 +5,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.writers.user &mdash; linuxmuster-tools7 7.2.44 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+  <title>linuxmusterTools.ldapconnector.writers.user &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/theme_overrides.css?v=472cca7c" />
@@ -14,7 +14,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=fb48c5a4"></script>
+      <script src="../../../../_static/documentation_options.js?v=ac320c09"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/translations.js?v=8fd896e3"></script>
@@ -62,8 +62,8 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../linuxmusterTools.html">linuxmusterTools</a></li>
           <li class="breadcrumb-item"><a href="../../ldapconnector.html">linuxmusterTools.ldapconnector</a></li>
-          <li class="breadcrumb-item"><a href="../writers.html">linuxmusterTools.ldapconnector.writers</a></li>
       <li class="breadcrumb-item active">linuxmusterTools.ldapconnector.writers.user</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -74,61 +74,973 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.ldapconnector.writers.user</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">fields</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..ldap_writer</span><span class="w"> </span><span class="kn">import</span> <span class="n">LdapWriter</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..urls.ldaprouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">router</span>
+<span class="kn">from</span> <span class="nn">..ldap_writer</span> <span class="kn">import</span> <span class="n">LdapWriter</span>
+<span class="kn">from</span> <span class="nn">..urls.ldaprouter</span> <span class="kn">import</span> <span class="n">router</span>
+<span class="kn">from</span> <span class="nn">.schoolclass</span> <span class="kn">import</span> <span class="n">LMNSchoolclass</span>
+<span class="kn">from</span> <span class="nn">linuxmusterTools.common</span> <span class="kn">import</span> <span class="n">lprint</span><span class="p">,</span> <span class="n">spinner</span>
+<span class="kn">from</span> <span class="nn">linuxmusterTools.common.checks</span> <span class="kn">import</span> <span class="n">NameChecker</span>
+<span class="kn">from</span> <span class="nn">..models</span> <span class="kn">import</span> <span class="n">LMNUserModel</span>
+<span class="kn">from</span> <span class="nn">.group</span> <span class="kn">import</span> <span class="n">LMNGroupCommon</span>
+<span class="kn">from</span> <span class="nn">.schoolclass</span> <span class="kn">import</span> <span class="n">LMNSchoolclass</span>
 
-<div class="viewcode-block" id="LMNUserWriter">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUserWriter">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">LMNUserWriter</span><span class="p">:</span>
+<div class="viewcode-block" id="logger">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.logger">[docs]</a>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<div class="viewcode-block" id="LMNUserWriter.lw">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUserWriter.lw">[docs]</a>
+<div class="viewcode-block" id="name_checker">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.name_checker">[docs]</a>
+<span class="n">name_checker</span> <span class="o">=</span> <span class="n">NameChecker</span><span class="p">()</span></div>
+
+
+<span class="c1">## TODO:</span>
+<span class="c1"># - load data ✅</span>
+<span class="c1"># - setattr, delattr, getattr ✅</span>
+<span class="c1"># - rename entry (change cn) ✅</span>
+<span class="c1"># - delete entry ✅</span>
+<span class="c1"># - move (to another OU) ✅</span>
+<span class="c1"># - create (self.new == False, needs OU, create new CN with ldif in it) ✅</span>
+<span class="c1"># - check ?</span>
+<span class="c1"># - Student, Teacher, Staff, Parent, Admins classes</span>
+
+
+<div class="viewcode-block" id="LMNUser">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUser">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNUser</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cn</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">check_login_name</span><span class="p">(</span><span class="n">cn</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cn</span><span class="si">}</span><span class="s2"> is not a valid CN&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LMNUser.cn">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUser.cn">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cn</span> <span class="o">=</span> <span class="n">cn</span></div>
+
+<div class="viewcode-block" id="LMNUser.lw">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUser.lw">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">lw</span> <span class="o">=</span> <span class="n">LdapWriter</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="LMNUserWriter.lr">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUserWriter.lr">[docs]</a>
+<div class="viewcode-block" id="LMNUser.lr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUser.lr">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">router</span></div>
 
+<div class="viewcode-block" id="LMNUser.model">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUser.model">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">LMNUserModel</span></div>
 
-<div class="viewcode-block" id="LMNUserWriter.setattr">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUserWriter.setattr">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="LMNUser.data">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUser.data">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+<div class="viewcode-block" id="LMNUser.new">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUser.new">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="LMNUser.school">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUser.school">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">school</span> <span class="o">=</span> <span class="n">school</span></div>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+
+<div class="viewcode-block" id="LMNUser.load_data">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUser.load_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/users/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The user </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">new</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span>  <span class="p">{</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">:</span><span class="n">field</span><span class="o">.</span><span class="n">type</span><span class="p">()</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span> <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">init</span><span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cn</span></div>
+
+
+<div class="viewcode-block" id="LMNUser.setattr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUser.setattr">[docs]</a>
+    <span class="k">def</span> <span class="nf">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Middleware to check if the object exists.</span>
-
-<span class="sd">        :param name: cn of the object</span>
-<span class="sd">        :type name: basestring</span>
+<span class="sd">        Set some attributes of the object directly in Ldap,</span>
+<span class="sd">        only for an existing object.</span>
+<span class="sd">        kwargs must contain a data dict with attributes/values to set.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">details</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/users/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">details</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The user </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The user </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_setattr</span><span class="p">(</span><span class="n">details</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">new</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;This object does not exist in Ldap, please create it first using the method .create()&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="LMNUserWriter.delattr">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUserWriter.delattr">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="LMNUser.delattr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUser.delattr">[docs]</a>
+    <span class="k">def</span> <span class="nf">delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Middleware to check if the object exists.</span>
-
-<span class="sd">        :param name: cn of the object</span>
-<span class="sd">        :type name: basestring</span>
+<span class="sd">        Delete some attributes of the object directly in Ldap,</span>
+<span class="sd">        only for an existing object.</span>
+<span class="sd">        kwargs must contain a data dict with attributes/values to set.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">details</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/users/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">new</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_delattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;This object does not exist in Ldap, please create it first using the method .create()&#39;</span><span class="p">)</span></div>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">details</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The user </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The user </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_delattr</span><span class="p">(</span><span class="n">details</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+<div class="viewcode-block" id="LMNUser.getattr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUser.getattr">[docs]</a>
+    <span class="k">def</span> <span class="nf">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a specific attribute of the object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNUser.rename">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUser.rename">[docs]</a>
+    <span class="k">def</span> <span class="nf">rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_cn</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the cn of an user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">new</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">check_login_name</span><span class="p">(</span><span class="n">new_cn</span><span class="p">):</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">new_cn</span><span class="si">}</span><span class="s2"> contains not allowed characters, please check it again.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_rename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;distinguishedName&#39;</span><span class="p">],</span> <span class="n">new_cn</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cn</span> <span class="o">=</span> <span class="n">new_cn</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;This object does not exist in Ldap, please create it first using the method .create()&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNUser.delete">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUser.delete">[docs]</a>
+    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete the user&#39;s entry.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">new</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_del</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;distinguishedName&#39;</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span> <span class="c1"># Will load an empty User</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;This object does not exist in Ldap, please create it first using the method .create()&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNUser.get_children">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUser.get_children">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_children</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">memberships</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;memberOf&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;Student-Parents&#39;</span> <span class="ow">in</span> <span class="n">m</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">children_cn</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">m</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-parents&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">memberships</span>
+        <span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">children_schoolclasses</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">cn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children_cn</span><span class="p">:</span>
+            <span class="n">children_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/users/</span><span class="si">{</span><span class="n">cn</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">children_data</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">children_schoolclasses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">children_data</span><span class="p">[</span><span class="s1">&#39;sophomorixAdminClass&#39;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="LMNUser._move">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUser._move">[docs]</a>
+    <span class="k">def</span> <span class="nf">_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dst_ou</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Move the user to a new Organisational Unit.This method just move an</span>
+<span class="sd">        existing ldap account to a new OU but do not handle the filesystem</span>
+<span class="sd">        to move the user&#39;s files: it&#39;s necessary to use separately</span>
+<span class="sd">        Samba/smbclient for this. Use this method very carefully!</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="c1"># Maybe it is better and safer to implement this method only per role</span>
+        <span class="c1"># and avoid movement across roles.</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">new</span><span class="p">:</span>
+            <span class="c1"># Check OU ?</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_move</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;distinguishedName&#39;</span><span class="p">],</span> <span class="n">dst_ou</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;This object does not exist in Ldap, please create it first using the method .create()&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNUser._create">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUser._create">[docs]</a>
+    <span class="k">def</span> <span class="nf">_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dst_ou</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        For an user marked as new, create an entry in the specified OU.</span>
+<span class="sd">        This method just create an account ldap but do not handle the filesystem</span>
+<span class="sd">        to create the appropriate directory tree for the user: it&#39;s necessary to</span>
+<span class="sd">        use separately Samba/smbclient for this. Use this method very carefully!</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">new</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Can not create an entry without a valid CN.&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">dst_ou</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Can not create an entry without a valid OU.&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">check_login_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="p">):</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="si">}</span><span class="s2"> contains not allowed characters, please check it again.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Check OU ?</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;objectClass&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="s1">&#39;person&#39;</span><span class="p">,</span> <span class="s1">&#39;organizationalPerson&#39;</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;distinguishedName&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;CN=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">dst_ou</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sAMAccountName&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cn</span>
+
+                    <span class="c1"># userAccountControl:</span>
+                    <span class="c1"># DONT_EXPIRE_PASSWORD (65536) + NORMAL_ACCOUNT (512)</span>
+                    <span class="c1"># see https://learn.microsoft.com/fr-fr/troubleshoot/windows-server/active-directory/useraccountcontrol-manipulate-account-properties</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;userAccountControl&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">66048</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">new</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;This object already exists in Ldap, it&#39;s not possible to create it!&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNUser.create">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUser.create">[docs]</a>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="LMNUser.move">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUser.move">[docs]</a>
+    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="LMNUser.check">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUser.check">[docs]</a>
+    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check the LDAP consistence of the user&#39;s entry.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">pass</span></div>
+</div>
+
+
+<div class="viewcode-block" id="LMNUsers">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUsers">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNUsers</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="LMNUsers.lr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUsers.lr">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">router</span></div>
+
+<div class="viewcode-block" id="LMNUsers.users">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUsers.users">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">users</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">user</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">]:</span> <span class="n">LMNUser</span><span class="p">(</span><span class="n">user</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">],</span> <span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/users&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">user</span><span class="p">[</span><span class="s1">&#39;school&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;global&#39;</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="LMNUsers.__len__">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUsers.__len__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">users</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNUsers.keys">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUsers.keys">[docs]</a>
+    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">users</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNUsers.items">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUsers.items">[docs]</a>
+    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">users</span><span class="o">.</span><span class="n">items</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNUsers.__getitem__">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNUsers.__getitem__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_cn</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">users</span><span class="p">[</span><span class="n">user_cn</span><span class="p">]</span></div>
+</div>
+
+
+<div class="viewcode-block" id="LMNStudent">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStudent">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNStudent</span><span class="p">(</span><span class="n">LMNUser</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cn</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cn</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sophomorixRole&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;student&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cn</span><span class="si">}</span><span class="s2"> is not a student!&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_parents</span><span class="p">()</span>
+
+<div class="viewcode-block" id="LMNStudent.load_parents">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStudent.load_parents">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_parents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">parents_group</span> <span class="o">=</span> <span class="n">LMNParentsGroup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parents_group</span><span class="o">.</span><span class="n">parents</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parents_cn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parents_group</span><span class="o">.</span><span class="n">parents_cn</span></div>
+
+
+<div class="viewcode-block" id="LMNStudent.add_parent">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStudent.add_parent">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_parent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent_cn</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add one parent to a specific user.</span>
+
+<span class="sd">        :param parent_cn: cn of the parent</span>
+<span class="sd">        :type parent_cn: basestring</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">parents_group</span><span class="o">.</span><span class="n">add_parent</span><span class="p">(</span><span class="n">parent_cn</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_parents</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNStudent.remove_parent">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStudent.remove_parent">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_parent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent_cn</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove one parent from a specific user.</span>
+
+<span class="sd">        :param parent_cn: cn of the parent</span>
+<span class="sd">        :type parent_cn: basestring</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">parents_group</span><span class="o">.</span><span class="n">remove_parent</span><span class="p">(</span><span class="n">parent_cn</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_parents</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNStudent.add_parents">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStudent.add_parents">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_parents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parents_cn</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add many parents to a specific user.</span>
+
+<span class="sd">        :param parents_cn: list of cn of the parents</span>
+<span class="sd">        :type parents_cn: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">parents_group</span><span class="o">.</span><span class="n">add_parents</span><span class="p">(</span><span class="n">parents_cn</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_parents</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNStudent.remove_parents">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStudent.remove_parents">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_parents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parents_cn</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove parents from a specific user.</span>
+
+<span class="sd">        :param parent_cn: list of cn of the parent s</span>
+<span class="sd">        :type parent_cn: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">parents_group</span><span class="o">.</span><span class="n">remove_parents</span><span class="p">(</span><span class="n">parents_cn</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_parents</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNStudent.move">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStudent.move">[docs]</a>
+    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_schoolclass</span><span class="p">):</span>
+
+        <span class="n">valid_schoolclasses</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="s1">&#39;/schoolclasses&#39;</span><span class="p">,</span> <span class="s1">&#39;cn&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">new_schoolclass</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_schoolclasses</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">new_schoolclass</span><span class="si">}</span><span class="s1"> is not even a valid schoolclass!&#39;</span><span class="p">)</span>
+
+        <span class="n">old_schoolclass</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sophomorixAdminClass&#39;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">old_schoolclass</span> <span class="o">==</span> <span class="n">new_schoolclass</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">dst_ou</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;distinguishedName&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;OU=</span><span class="si">{</span><span class="n">old_schoolclass</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;OU=</span><span class="si">{</span><span class="n">new_schoolclass</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">dst_ou</span> <span class="o">=</span> <span class="n">dst_ou</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;CN=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="si">}</span><span class="s1">,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_move</span><span class="p">(</span><span class="n">dst_ou</span><span class="p">)</span>
+
+        <span class="c1"># Only modify the attributes, does not actually move the user&#39;s files.</span>
+
+        <span class="n">old_schoolclass_group</span> <span class="o">=</span> <span class="n">LMNSchoolclass</span><span class="p">(</span><span class="n">old_schoolclass</span><span class="p">)</span>
+        <span class="n">old_schoolclass_group</span><span class="o">.</span><span class="n">remove_member</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="p">)</span>
+
+        <span class="n">new_schoolclass_group</span> <span class="o">=</span> <span class="n">LMNSchoolclass</span><span class="p">(</span><span class="n">new_schoolclass</span><span class="p">)</span>
+        <span class="n">new_schoolclass_group</span><span class="o">.</span><span class="n">add_member</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;sophomorixAdminClass&#39;</span><span class="p">:</span> <span class="n">new_schoolclass</span><span class="p">,</span>
+            <span class="s1">&#39;homeDirectory&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;homeDirectory&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">old_schoolclass</span><span class="p">,</span> <span class="n">new_schoolclass</span><span class="p">),</span>
+            <span class="s1">&#39;unixHomeDirectory&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;unixHomeDirectory&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">old_schoolclass</span><span class="p">,</span> <span class="n">new_schoolclass</span><span class="p">),</span>
+            <span class="s1">&#39;sophomorixIntrinsic2&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sophomorixIntrinsic2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">old_schoolclass</span><span class="p">,</span> <span class="n">new_schoolclass</span><span class="p">)</span>
+        <span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="LMNStudent.create">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStudent.create">[docs]</a>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="p">,</span> <span class="n">new_schoolclass</span><span class="p">):</span>
+        <span class="c1"># Will come later, just need to provide specific data to students</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sophomorixRole&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;student&#39;</span>
+        <span class="c1"># dst_ou = BASE_OU + school + schoolclass</span>
+        <span class="c1"># self._create(dst_ou)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+</div>
+
+
+<div class="viewcode-block" id="LMNStudents">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStudents">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNStudents</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="LMNStudents.lr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStudents.lr">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">router</span></div>
+
+<div class="viewcode-block" id="LMNStudents.students">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStudents.students">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">students</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">student</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">]:</span> <span class="n">LMNStudent</span><span class="p">(</span><span class="n">student</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">],</span> <span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">student</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/roles/student&#39;</span><span class="p">)</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="LMNStudents.__len__">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStudents.__len__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">students</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNStudents.keys">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStudents.keys">[docs]</a>
+    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">students</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNStudents.items">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStudents.items">[docs]</a>
+    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">students</span><span class="o">.</span><span class="n">items</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNStudents.__getitem__">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStudents.__getitem__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">student_cn</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">students</span><span class="p">[</span><span class="n">student_cn</span><span class="p">]</span></div>
+</div>
+
+
+<div class="viewcode-block" id="LMNTeacher">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNTeacher">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNTeacher</span><span class="p">(</span><span class="n">LMNUser</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cn</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cn</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sophomorixRole&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;teacher&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cn</span><span class="si">}</span><span class="s2"> is not a teacher!&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LMNTeacher.move">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNTeacher.move">[docs]</a>
+    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># The only moves for a teacher should be in attic or back in teacher</span>
+        <span class="c1"># role</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="LMNTeacher.create">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNTeacher.create">[docs]</a>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Will come later, just need to provide specific data to teachers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sophomorixRole&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;teacher&#39;</span>
+        <span class="c1"># dst_ou = BASE_OU + school + teachers</span>
+        <span class="c1"># self._create(dst_ou)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+</div>
+
+
+<div class="viewcode-block" id="LMNTeachers">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNTeachers">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNTeachers</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="LMNTeachers.lr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNTeachers.lr">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">router</span></div>
+
+<div class="viewcode-block" id="LMNTeachers.teachers">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNTeachers.teachers">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">teachers</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">teacher</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">]:</span> <span class="n">LMNTeacher</span><span class="p">(</span><span class="n">teacher</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">],</span> <span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">teacher</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/roles/teacher&#39;</span><span class="p">)</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="LMNTeachers.__len__">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNTeachers.__len__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">teachers</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNTeachers.keys">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNTeachers.keys">[docs]</a>
+    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">teachers</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNTeachers.items">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNTeachers.items">[docs]</a>
+    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">teachers</span><span class="o">.</span><span class="n">items</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNTeachers.__getitem__">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNTeachers.__getitem__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">teacher_cn</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">teachers</span><span class="p">[</span><span class="n">teacher_cn</span><span class="p">]</span></div>
+</div>
+
+
+<div class="viewcode-block" id="LMNParent">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNParent">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNParent</span><span class="p">(</span><span class="n">LMNUser</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cn</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cn</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sophomorixRole&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;parent&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cn</span><span class="si">}</span><span class="s2"> is not a parent!&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LMNParent.move">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNParent.move">[docs]</a>
+    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># The only moves for a parent should be in attic or back in parent</span>
+        <span class="c1"># role</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="LMNParent.create">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNParent.create">[docs]</a>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Will come later, just need to provide specific data to parents</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sophomorixRole&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;parent&#39;</span>
+        <span class="c1"># dst_ou = BASE_OU + school + parents</span>
+        <span class="c1"># self._create(dst_ou)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+</div>
+
+
+<div class="viewcode-block" id="LMNParents">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNParents">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNParents</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="LMNParents.lr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNParents.lr">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">router</span></div>
+
+<div class="viewcode-block" id="LMNParents.parents">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNParents.parents">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parents</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">parent</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">]:</span> <span class="n">LMNParent</span><span class="p">(</span><span class="n">parent</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">],</span> <span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/roles/parent&#39;</span><span class="p">)</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="LMNParents.__len__">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNParents.__len__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNParents.keys">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNParents.keys">[docs]</a>
+    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNParents.items">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNParents.items">[docs]</a>
+    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">items</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNParents.__getitem__">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNParents.__getitem__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent_cn</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="n">parent_cn</span><span class="p">]</span></div>
+</div>
+
+
+<div class="viewcode-block" id="LMNStaff">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStaff">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNStaff</span><span class="p">(</span><span class="n">LMNUser</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cn</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cn</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sophomorixRole&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;staff&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cn</span><span class="si">}</span><span class="s2"> is not a staff member!&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LMNStaff.move">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStaff.move">[docs]</a>
+    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># The only moves for a staff member should be in attic or back in staff</span>
+        <span class="c1"># role</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="LMNStaff.create">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStaff.create">[docs]</a>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Will come later, just need to provide specific data to staff</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sophomorixRole&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;staff&#39;</span>
+        <span class="c1"># dst_ou = BASE_OU + school + staff</span>
+        <span class="c1"># self._create(dst_ou)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+</div>
+
+
+<div class="viewcode-block" id="LMNStaffs">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStaffs">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNStaffs</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="LMNStaffs.lr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStaffs.lr">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">router</span></div>
+
+<div class="viewcode-block" id="LMNStaffs.staffs">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStaffs.staffs">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">staffs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">staff</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">]:</span> <span class="n">LMNStaff</span><span class="p">(</span><span class="n">staff</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">],</span> <span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">staff</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/roles/staff&#39;</span><span class="p">)</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="LMNStaffs.__len__">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStaffs.__len__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">staffs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNStaffs.keys">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStaffs.keys">[docs]</a>
+    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">staffs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNStaffs.items">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStaffs.items">[docs]</a>
+    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">staffs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNStaffs.__getitem__">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNStaffs.__getitem__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">staff_cn</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">staffs</span><span class="p">[</span><span class="n">staff_cn</span><span class="p">]</span></div>
+</div>
+
+
+<div class="viewcode-block" id="LMNSchoolAdmin">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNSchoolAdmin">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNSchoolAdmin</span><span class="p">(</span><span class="n">LMNUser</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cn</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cn</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sophomorixRole&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;schooladministrator&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cn</span><span class="si">}</span><span class="s2"> is not a schooladministrator!&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNSchoolAdmins">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNSchoolAdmins">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNSchoolAdmins</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="LMNSchoolAdmins.lr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNSchoolAdmins.lr">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">router</span></div>
+
+<div class="viewcode-block" id="LMNSchoolAdmins.schooladmins">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNSchoolAdmins.schooladmins">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">schooladmins</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">schooladmin</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">]:</span> <span class="n">LMNSchoolAdmin</span><span class="p">(</span><span class="n">schooladmin</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">],</span> <span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">schooladmin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/roles/schooladministrator&#39;</span><span class="p">)</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="LMNSchoolAdmins.__len__">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNSchoolAdmins.__len__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">schooladmins</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNSchoolAdmins.keys">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNSchoolAdmins.keys">[docs]</a>
+    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">schooladmins</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNSchoolAdmins.items">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNSchoolAdmins.items">[docs]</a>
+    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">schooladmins</span><span class="o">.</span><span class="n">items</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNSchoolAdmins.__getitem__">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNSchoolAdmins.__getitem__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schooladmin_cn</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">schooladmins</span><span class="p">[</span><span class="n">schooladmin_cn</span><span class="p">]</span></div>
+</div>
+
+
+<div class="viewcode-block" id="LMNGlobalAdmin">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNGlobalAdmin">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNGlobalAdmin</span><span class="p">(</span><span class="n">LMNUser</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cn</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">cn</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sophomorixRole&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;globaladministrator&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cn</span><span class="si">}</span><span class="s2"> is not a globaladministrator!&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNGlobalAdmins">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNGlobalAdmins">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNGlobalAdmins</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="LMNGlobalAdmins.lr">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNGlobalAdmins.lr">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">router</span></div>
+
+<div class="viewcode-block" id="LMNGlobalAdmins.globaladmins">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNGlobalAdmins.globaladmins">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">globaladmins</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">globaladmin</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">]:</span> <span class="n">LMNGlobalAdmin</span><span class="p">(</span><span class="n">globaladmin</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">],</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;global&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">globaladmin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/roles/globaladministrator&#39;</span><span class="p">)</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="LMNGlobalAdmins.__len__">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNGlobalAdmins.__len__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">globaladmins</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNGlobalAdmins.keys">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNGlobalAdmins.keys">[docs]</a>
+    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">globaladmins</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNGlobalAdmins.items">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNGlobalAdmins.items">[docs]</a>
+    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">globaladmins</span><span class="o">.</span><span class="n">items</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNGlobalAdmins.__getitem__">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNGlobalAdmins.__getitem__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">globaladmin_cn</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">globaladmins</span><span class="p">[</span><span class="n">globaladmin_cn</span><span class="p">]</span></div>
+</div>
+
+
+<div class="viewcode-block" id="LMNParentsGroup">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNParentsGroup">[docs]</a>
+<span class="k">class</span> <span class="nc">LMNParentsGroup</span><span class="p">(</span><span class="n">LMNGroupCommon</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">student_cn</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        cn represents the cn of the students. For example, if cn is frayka, this</span>
+<span class="sd">         class will handle the group</span>
+<span class="sd">         CN=frayka-parents,OU=Student-Parents,OU=Parents,OU=default-school,OU=SCHOOLS...</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="LMNParentsGroup.cn">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNParentsGroup.cn">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cn</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">student_cn</span><span class="si">}</span><span class="s2">-parents&quot;</span></div>
+
+<div class="viewcode-block" id="LMNParentsGroup.student_cn">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNParentsGroup.student_cn">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">student_cn</span> <span class="o">=</span> <span class="n">student_cn</span></div>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LMNParentsGroup._check_ou">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNParentsGroup._check_ou">[docs]</a>
+    <span class="k">def</span> <span class="nf">_check_ou</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Check if the Student-Parents group exists</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;Student-Parents&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="s1">&#39;/ou/parents&#39;</span><span class="p">,</span> <span class="s1">&#39;ou&#39;</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="p">):</span>
+            <span class="n">domain</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">student</span><span class="p">[</span><span class="s1">&#39;dn&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">:])</span>
+            <span class="n">new_ou</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;OU=Student-Parents,OU=Parents,</span><span class="si">{</span><span class="n">domain</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_add_ou</span><span class="p">(</span><span class="n">new_ou</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNParentsGroup.load_data">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNParentsGroup.load_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_ou</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">student_cn</span><span class="p">:</span>
+            <span class="c1"># Ignoring dummy checks like LMNParentsGroup(&#39;&#39;)</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Check if the given cn is from a student</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">student</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/users/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">student_cn</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">student</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sophomorixRole&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;student&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The student </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">student_cn</span><span class="si">}</span><span class="s2"> was not found in ldap.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/units/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="c1"># This kind of group must always be provided in Ldap, so if it&#39;s not</span>
+            <span class="c1"># existing, it must be automatically created.</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The group </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="si">}</span><span class="s2">-parents was not found in ldap, creating it!&quot;</span><span class="p">)</span>
+
+            <span class="c1"># TODO: Check the following attributes:</span>
+            <span class="n">domain</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">student</span><span class="p">[</span><span class="s1">&#39;dn&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">:])</span>
+            <span class="n">new_dn</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;CN=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="si">}</span><span class="s2">,OU=Student-Parents,OU=Parents,</span><span class="si">{</span><span class="n">domain</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="p">,</span>
+                <span class="s1">&#39;displayName&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="p">,</span>
+                <span class="s1">&#39;distinguishedName&#39;</span><span class="p">:</span> <span class="n">new_dn</span><span class="p">,</span>
+                <span class="s1">&#39;mail&#39;</span><span class="p">:</span> <span class="p">[],</span>
+                <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="p">,</span>
+                <span class="s1">&#39;sAMAccountName&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cn</span><span class="p">,</span>
+                <span class="s1">&#39;sophomorixCreationDate&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;sophomorixHidden&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s1">&#39;sophomorixJoinable&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s1">&#39;sophomorixMailAlias&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s1">&#39;sophomorixMailList&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s1">&#39;sophomorixSchoolname&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="p">,</span>
+                <span class="s1">&#39;sophomorixStatus&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;sophomorixType&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;adminparents&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_add_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_parents</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNParentsGroup.get_parents">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNParentsGroup.get_parents">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_parents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">parents_cn</span> <span class="o">=</span> <span class="p">[</span><span class="n">dn</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">dn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;member&#39;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parents</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/users/</span><span class="si">{</span><span class="n">cn</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">cn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parents_cn</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="LMNParentsGroup.add_parent">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNParentsGroup.add_parent">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_parent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent_cn</span><span class="p">):</span>
+
+        <span class="c1"># TODO: this allow all roles to be a parent, should this be restricted to</span>
+        <span class="c1"># users in parents OU ?</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_member</span><span class="p">(</span><span class="n">parent_cn</span><span class="p">)</span>
+
+        <span class="c1"># Add parent to schoolclass group</span>
+        <span class="n">schoolclass</span> <span class="o">=</span> <span class="n">LMNSchoolclass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">student</span><span class="p">[</span><span class="s1">&#39;sophomorixAdminClass&#39;</span><span class="p">],</span> <span class="n">school</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="p">)</span>
+        <span class="n">schoolclass</span><span class="o">.</span><span class="n">parents_group</span><span class="o">.</span><span class="n">add_member</span><span class="p">(</span><span class="n">parent_cn</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_parents</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNParentsGroup.remove_parent">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNParentsGroup.remove_parent">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_parent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent_cn</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_member</span><span class="p">(</span><span class="n">parent_cn</span><span class="p">)</span>
+
+        <span class="c1"># Remove parent from schoolclass group</span>
+        <span class="n">schoolclass</span> <span class="o">=</span> <span class="n">LMNSchoolclass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">student</span><span class="p">[</span><span class="s1">&#39;sophomorixAdminClass&#39;</span><span class="p">],</span> <span class="n">school</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="p">)</span>
+        <span class="n">schoolclass</span><span class="o">.</span><span class="n">parents_group</span><span class="o">.</span><span class="n">remove_member</span><span class="p">(</span><span class="n">parent_cn</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_parents</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNParentsGroup.add_parents">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNParentsGroup.add_parents">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_parents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parents_cn</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add all given parents to a specific user.</span>
+
+<span class="sd">        :param parents_cn: list of parents cn</span>
+<span class="sd">        :type parents_cn: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="c1"># TODO: this allow all roles to be a parent, should this be restricted to</span>
+        <span class="c1"># users in parents OU ?</span>
+        <span class="c1"># TODO: check if the given cn is not a student</span>
+
+        <span class="n">schoolclass</span> <span class="o">=</span> <span class="n">LMNSchoolclass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">student</span><span class="p">[</span><span class="s1">&#39;sophomorixAdminClass&#39;</span><span class="p">],</span> <span class="n">school</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">parent_cn</span> <span class="ow">in</span> <span class="n">parents_cn</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_member</span><span class="p">(</span><span class="n">parent_cn</span><span class="p">)</span>
+
+            <span class="c1"># Add parent to schoolclass group</span>
+            <span class="n">schoolclass</span><span class="o">.</span><span class="n">parents_group</span><span class="o">.</span><span class="n">add_member</span><span class="p">(</span><span class="n">parent_cn</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_parents</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNParentsGroup.remove_parents">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNParentsGroup.remove_parents">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_parents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parents_cn</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove all given parents from a specific user.</span>
+
+<span class="sd">        :param parents_cn: list of parents cn</span>
+<span class="sd">        :type parents_cn: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="n">schoolclass</span> <span class="o">=</span> <span class="n">LMNSchoolclass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">student</span><span class="p">[</span><span class="s1">&#39;sophomorixAdminClass&#39;</span><span class="p">],</span> <span class="n">school</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">parent_cn</span> <span class="ow">in</span> <span class="n">parents_cn</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove_member</span><span class="p">(</span><span class="n">parent_cn</span><span class="p">)</span>
+
+            <span class="c1"># Remove parent from schoolclass group</span>
+            <span class="n">schoolclass</span><span class="o">.</span><span class="n">parents_group</span><span class="o">.</span><span class="n">remove_member</span><span class="p">(</span><span class="n">parent_cn</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_parents</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LMNParentsGroup.delete">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/user/index.html#linuxmusterTools.ldapconnector.LMNParentsGroup.delete">[docs]</a>
+    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete the group in case of a student moved to attic</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lw</span><span class="o">.</span><span class="n">_del</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;distinguishedName&#39;</span><span class="p">])</span></div>
 </div>
 
 </pre></div>

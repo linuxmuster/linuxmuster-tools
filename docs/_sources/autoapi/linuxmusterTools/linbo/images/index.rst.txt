@@ -9,6 +9,7 @@ Attributes
 
 .. autoapisummary::
 
+   linuxmusterTools.linbo.images.logger
    linuxmusterTools.linbo.images.LINBO_PATH
    linuxmusterTools.linbo.images.TIMESTAMP_FMT
    linuxmusterTools.linbo.images.DATE_UI_FMT
@@ -41,6 +42,8 @@ Functions
 
 Module Contents
 ---------------
+
+.. py:data:: logger
 
 .. py:data:: LINBO_PATH
    :value: '/srv/linbo/images'

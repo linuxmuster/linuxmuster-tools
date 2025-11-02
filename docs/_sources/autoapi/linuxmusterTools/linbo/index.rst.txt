@@ -19,6 +19,7 @@ Attributes
 
 .. autoapisummary::
 
+   linuxmusterTools.linbo.logger
    linuxmusterTools.linbo.LINBO_PATH
    linuxmusterTools.linbo.TIMESTAMP_FMT
    linuxmusterTools.linbo.DATE_UI_FMT
@@ -152,6 +153,8 @@ Package Contents
       :rtype: string
 
 
+
+.. py:data:: logger
 
 .. py:data:: LINBO_PATH
    :value: '/srv/linbo/images'
@@ -406,6 +409,9 @@ Package Contents
 
 
    .. py:method:: get_clients(groups=[])
+
+
+   .. py:method:: check_conf()
 
 
 .. py:class:: Partition

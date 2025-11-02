@@ -4,6 +4,14 @@ linuxmusterTools.lmnconfig.setup
 .. py:module:: linuxmusterTools.lmnconfig.setup
 
 
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.lmnconfig.setup.logger
+
+
 Classes
 -------
 
@@ -14,6 +22,8 @@ Classes
 
 Module Contents
 ---------------
+
+.. py:data:: logger
 
 .. py:class:: SetupConfig(school='default-school')
 

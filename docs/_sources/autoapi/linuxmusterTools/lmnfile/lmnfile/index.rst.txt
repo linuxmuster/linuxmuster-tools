@@ -14,8 +14,10 @@ Attributes
 
 .. autoapisummary::
 
+   linuxmusterTools.lmnfile.lmnfile.logger
    linuxmusterTools.lmnfile.lmnfile.ALLOWED_PATHS
    linuxmusterTools.lmnfile.lmnfile.EMPTY_LINE_MARKER
+   linuxmusterTools.lmnfile.lmnfile.HEADER_MARKER
 
 
 Classes
@@ -42,12 +44,18 @@ Functions
 Module Contents
 ---------------
 
+.. py:data:: logger
+
 .. py:data:: ALLOWED_PATHS
-   :value: ['/etc/linuxmuster/webui/config.yml', '/etc/linuxmuster/sophomorix/', '/srv/linbo',...
+   :value: ['/etc/linuxmuster/api/config.yml', '/etc/linuxmuster/webui/config.yml',...
 
 
 .. py:data:: EMPTY_LINE_MARKER
    :value: '###EMPTY#LINE'
+
+
+.. py:data:: HEADER_MARKER
+   :value: '#HEADERS#'
 
 
 .. py:function:: convertBool(boolean)
@@ -198,6 +206,9 @@ Module Contents
 
 
    .. py:method:: read()
+
+
+   .. py:method:: fix_bom()
 
 
    .. py:method:: write(data)

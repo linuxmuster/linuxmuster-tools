@@ -1,0 +1,229 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>00-update-schoolclasses-groups &mdash; linuxmuster-tools7 7.3.26 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=ac320c09"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=8fd896e3"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">00-update-schoolclasses-groups</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for 00-update-schoolclasses-groups</h1><div class="highlight"><pre>
+<span></span><span class="ch">#! /usr/bin/env python3</span>
+
+<span class="c1"># This script is part of the sophomorix project and intended to update</span>
+<span class="c1"># CN of parents groups in students OU for students which attributes changed.</span>
+<span class="c1"># DO NOT EDIT OR REMOVE IT !</span>
+
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">linuxmusterTools.common</span> <span class="kn">import</span> <span class="n">lprint</span><span class="p">,</span> <span class="n">parse_update_log</span>
+<span class="kn">from</span> <span class="nn">linuxmusterTools.ldapconnector</span> <span class="kn">import</span> <span class="n">LMNUser</span><span class="p">,</span> <span class="n">LMNSchoolclass</span><span class="p">,</span> <span class="n">LMNStudent</span>
+
+
+<div class="viewcode-block" id="epoch">
+<a class="viewcode-back" href="../autoapi/00-update-schoolclasses-groups/index.html#00-update-schoolclasses-groups.epoch">[docs]</a>
+<span class="n">epoch</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="school">
+<a class="viewcode-back" href="../autoapi/00-update-schoolclasses-groups/index.html#00-update-schoolclasses-groups.school">[docs]</a>
+<span class="n">school</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span></div>
+
+
+<span class="k">if</span> <span class="n">epoch</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="updates">
+<a class="viewcode-back" href="../autoapi/00-update-schoolclasses-groups/index.html#00-update-schoolclasses-groups.updates">[docs]</a>
+    <span class="n">updates</span> <span class="o">=</span> <span class="n">parse_update_log</span><span class="p">(</span><span class="n">today</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+    <span class="n">timestamps</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">updates</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">timestamps</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="n">epoch</span> <span class="o">=</span> <span class="n">timestamps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">entries</span> <span class="o">=</span> <span class="n">updates</span><span class="p">[</span><span class="n">epoch</span><span class="p">]</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">entries</span> <span class="o">=</span> <span class="n">parse_update_log</span><span class="p">(</span><span class="n">epoch</span><span class="o">=</span><span class="n">epoch</span><span class="p">)</span>
+
+<div class="viewcode-block" id="schoolclass_groups_to_update">
+<a class="viewcode-back" href="../autoapi/00-update-schoolclasses-groups/index.html#00-update-schoolclasses-groups.schoolclass_groups_to_update">[docs]</a>
+<span class="n">schoolclass_groups_to_update</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;default-school&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;students&#39;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>
+        <span class="s1">&#39;teachers&#39;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>
+        <span class="s1">&#39;parents&#39;</span><span class="p">:</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span></div>
+
+
+<span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">:</span>
+<div class="viewcode-block" id="user">
+<a class="viewcode-back" href="../autoapi/00-update-schoolclasses-groups/index.html#00-update-schoolclasses-groups.user">[docs]</a>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span></div>
+
+    <span class="n">changes</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;changes&quot;</span><span class="p">]</span>
+    <span class="n">school</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;school&quot;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">school</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">schoolclass_groups_to_update</span><span class="p">:</span>
+        <span class="n">schoolclass_groups_to_update</span><span class="p">[</span><span class="n">school</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;students&#39;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>
+            <span class="s1">&#39;teachers&#39;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>
+            <span class="s1">&#39;parents&#39;</span><span class="p">:</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="p">}</span>
+
+    <span class="k">if</span> <span class="s1">&#39;group&#39;</span> <span class="ow">in</span> <span class="n">changes</span><span class="p">:</span>
+        <span class="n">old_group</span><span class="p">,</span> <span class="n">new_group</span> <span class="o">=</span> <span class="n">changes</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&gt;&#39;</span><span class="p">)</span>
+        <span class="n">old_role</span><span class="p">,</span> <span class="n">new_role</span> <span class="o">=</span> <span class="n">changes</span><span class="p">[</span><span class="s1">&#39;role&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&gt;&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">old_role</span> <span class="o">==</span> <span class="n">new_role</span> <span class="o">==</span> <span class="s1">&#39;student&#39;</span><span class="p">:</span>
+
+            <span class="c1"># Student moving from a schoolclass to another, eventually attic</span>
+
+            <span class="k">if</span> <span class="n">old_group</span> <span class="o">!=</span> <span class="s1">&#39;attic&#39;</span><span class="p">:</span>
+                <span class="c1"># Removing student / student&#39;s parents from old students / parents group</span>
+                <span class="n">schoolclass_groups_to_update</span><span class="p">[</span><span class="n">school</span><span class="p">][</span><span class="s1">&#39;students&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">old_group</span><span class="p">)</span>
+                <span class="n">schoolclass_groups_to_update</span><span class="p">[</span><span class="n">school</span><span class="p">][</span><span class="s1">&#39;parents&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">old_group</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">new_group</span> <span class="o">==</span> <span class="s1">&#39;attic&#39;</span><span class="p">:</span>
+                <span class="c1"># Delete CN in Student-Parents</span>
+                <span class="n">student</span> <span class="o">=</span> <span class="n">LMNStudent</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+                <span class="n">student</span><span class="o">.</span><span class="n">parents_group</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Adding student / student&#39;s parents to new students / parents group</span>
+                <span class="n">schoolclass_groups_to_update</span><span class="p">[</span><span class="n">school</span><span class="p">][</span><span class="s1">&#39;students&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_group</span><span class="p">)</span>
+                <span class="n">schoolclass_groups_to_update</span><span class="p">[</span><span class="n">school</span><span class="p">][</span><span class="s1">&#39;parents&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_group</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">old_group</span> <span class="o">==</span> <span class="s1">&#39;teachers&#39;</span> <span class="ow">and</span> <span class="n">new_group</span> <span class="o">==</span> <span class="s1">&#39;attic&#39;</span><span class="p">:</span>
+
+            <span class="c1"># Teacher moves to attic to be deleted. It&#39;s necessary to remove this</span>
+            <span class="c1"># teacher from all teachers groups</span>
+
+            <span class="n">teacher</span> <span class="o">=</span> <span class="n">LMNUser</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">teacher</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;schoolclasses&#39;</span><span class="p">]:</span>
+                <span class="n">schoolclass_groups_to_update</span><span class="p">[</span><span class="n">school</span><span class="p">][</span><span class="s1">&#39;teachers&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">old_group</span> <span class="o">==</span> <span class="s1">&#39;parents&#39;</span> <span class="ow">and</span> <span class="n">new_group</span> <span class="o">==</span> <span class="s1">&#39;attic&#39;</span><span class="p">:</span>
+
+            <span class="c1"># Parent moves to attic to be deleted.</span>
+
+            <span class="n">parent</span> <span class="o">=</span> <span class="n">LMNUser</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+            <span class="n">parent</span><span class="o">.</span><span class="n">get_children</span><span class="p">()</span>
+
+            <span class="c1"># Remove parent from all parents groups in students</span>
+            <span class="k">for</span> <span class="n">schoolclass</span> <span class="ow">in</span> <span class="n">parent</span><span class="o">.</span><span class="n">children_schoolclasses</span><span class="p">:</span>
+                <span class="n">schoolclass_groups_to_update</span><span class="p">[</span><span class="n">school</span><span class="p">][</span><span class="s1">&#39;parents&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">schoolclass</span><span class="p">)</span>
+
+            <span class="c1"># Remove parent from Student-Parents&#39; entries</span>
+            <span class="k">for</span> <span class="n">student_cn</span> <span class="ow">in</span> <span class="n">parent</span><span class="o">.</span><span class="n">children_cn</span><span class="p">:</span>
+                <span class="n">student</span> <span class="o">=</span> <span class="n">LMNStudent</span><span class="p">(</span><span class="n">student_cn</span><span class="p">)</span>
+                <span class="n">student</span><span class="o">.</span><span class="n">remove_parent</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">school</span><span class="p">,</span> <span class="n">groups</span> <span class="ow">in</span> <span class="n">schoolclass_groups_to_update</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">schoolclass</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">[</span><span class="s1">&#39;students&#39;</span><span class="p">]:</span>
+        <span class="n">lprint</span><span class="o">.</span><span class="n">lmn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Updating students group of schoolclass </span><span class="si">{</span><span class="n">schoolclass</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">school</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="schoolclass_group">
+<a class="viewcode-back" href="../autoapi/00-update-schoolclasses-groups/index.html#00-update-schoolclasses-groups.schoolclass_group">[docs]</a>
+        <span class="n">schoolclass_group</span> <span class="o">=</span> <span class="n">LMNSchoolclass</span><span class="p">(</span><span class="n">schoolclass</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">)</span></div>
+
+        <span class="n">schoolclass_group</span><span class="o">.</span><span class="n">students_group</span><span class="o">.</span><span class="n">fill_members</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">schoolclass</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">[</span><span class="s1">&#39;parents&#39;</span><span class="p">]:</span>
+        <span class="n">lprint</span><span class="o">.</span><span class="n">lmn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Updating parents group of schoolclass </span><span class="si">{</span><span class="n">schoolclass</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">school</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">schoolclass_group</span> <span class="o">=</span> <span class="n">LMNSchoolclass</span><span class="p">(</span><span class="n">schoolclass</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">)</span>
+        <span class="n">schoolclass_group</span><span class="o">.</span><span class="n">parents_group</span><span class="o">.</span><span class="n">fill_members</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">schoolclass</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">[</span><span class="s1">&#39;teachers&#39;</span><span class="p">]:</span>
+        <span class="n">lprint</span><span class="o">.</span><span class="n">lmn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Updating teachers group of schoolclass </span><span class="si">{</span><span class="n">schoolclass</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">school</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">schoolclass_group</span> <span class="o">=</span> <span class="n">LMNSchoolclass</span><span class="p">(</span><span class="n">schoolclass</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">)</span>
+        <span class="n">schoolclass_group</span><span class="o">.</span><span class="n">teachers_group</span><span class="o">.</span><span class="n">fill_members</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

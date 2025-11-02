@@ -4,40 +4,35 @@ linuxmusterTools.ldapconnector.writers.managementgroup
 .. py:module:: linuxmusterTools.ldapconnector.writers.managementgroup
 
 
+Attributes
+----------
+
+.. autoapisummary::
+
+   linuxmusterTools.ldapconnector.writers.managementgroup.logger
+
+
 Classes
 -------
 
 .. autoapisummary::
 
-   linuxmusterTools.ldapconnector.writers.managementgroup.LMNMGMTGroupWriter
+   linuxmusterTools.ldapconnector.writers.managementgroup.LMNMgmtGroup
 
 
 Module Contents
 ---------------
 
-.. py:class:: LMNMGMTGroupWriter
+.. py:data:: logger
 
-   .. py:attribute:: lw
+.. py:class:: LMNMgmtGroup(cn, school='default-school')
 
-
-   .. py:attribute:: lr
-
-
-   .. py:method:: setattr(name, **kwargs)
-
-      Middleware to check if the object exists.
-
-      :param name: cn of the object
-      :type name: basestring
+   Bases: :py:obj:`linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon`
 
 
+   Class to handle the management groups
 
-   .. py:method:: delattr(name, **kwargs)
 
-      Middleware to check if the object exists.
-
-      :param name: cn of the object
-      :type name: basestring
-
+   .. py:method:: load_data()
 
 
