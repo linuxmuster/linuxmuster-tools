@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.3.28) lmn73; urgency=medium
+
+  * [ldapreader] Add raw user model for quick response 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sat, 08 Nov 2025 13:34:07 +0100
+
 linuxmuster-tools7 (7.3.27) lmn73; urgency=medium
 
   * [ldapwriter] Fix logic for accumulating parent DNs in fill_members
