@@ -10,3 +10,12 @@ def get_all_from_role(role='teacher'):
     """
 
     return f"(&(objectClass=user)(sophomorixRole={role}))"
+
+@router.collection(r'/rawroles/(?P<role>.*)', models.LMNRawUserModel)
+def get_all_raw_from_role(role='teacher'):
+    """
+    Get all user from a same role, but in this case without parents / children request.
+    Return a list of LMNRawUserModel data objects.
+    """
+
+    return f"(&(objectClass=user)(sophomorixRole={role}))"
