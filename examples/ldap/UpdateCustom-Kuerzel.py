@@ -15,7 +15,7 @@ Antolin;Christian;Ch,Bio
 
 
 import csv
-from linuxmusterTools.ldapconnector import LMNLdapReader as lr, UserWriter as uw
+from linuxmusterTools.ldapconnector import LMNLdapReader as lr, LMNTeacher
 from linuxmusterTools.quotas import get_user_quotas
 
 
@@ -38,14 +38,15 @@ with open('MYCSV.csv','r') as f:
             ldapname = f"{teacher['sn'].lower()};{teacher['givenName'].lower()}"
             # Matching teachers
             if ldapname == csvname:
+                teacher_obj = LMNTeacher(teacher['cn'])
                 subjects = entry[3].split(',')
                 
                 # Write new data for code and subjects
-                uw.setattr(teacher['cn'], data={'sophomorixCustom1':code, 'sophomorixCustomMulti1':subjects})
+                teacher_obj.setattr(data={'sophomorixCustom1':code, 'sophomorixCustomMulti1':subjects})
                 
                 # Update the LMNQuota too
                 quotas = get_user_quotas(teacher['cn'])['default-school']
-                uw.setattr(teacher['cn'], data={'sophomorixCustom2': f"{quotas['hard_limit']};{quotas['used']}"})
+                teacher_obj.setattr(data={'sophomorixCustom2': f"{quotas['hard_limit']};{quotas['used']}"})
                 break
         else:
             print(f"Teacher {csvname} not found.")
