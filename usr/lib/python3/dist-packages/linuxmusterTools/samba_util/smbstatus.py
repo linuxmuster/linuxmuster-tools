@@ -90,7 +90,7 @@ class SMBConnections:
                 user = data['username'].split('\\')[1]
                 data['hostname'] = self.hostnames.get(data['machine'], {'hostname': 'No hostname found'})['hostname']
                 data['room'] = self.hostnames.get(data['machine'], {'room': 'No room found'})['room']
-                if SERVER_IP not in data['machine'] and SERVER_IP not in data['ip4']:
+                if SERVER_IP != data['machine'] and f"{SERVER_IP}:" not in data['ip4']:
                     self.users[user] = SMBConnection(group='users', **data)
 
     def get_machines(self):
