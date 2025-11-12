@@ -60,6 +60,7 @@ case "$1" in
 
         # Print directory
         mkdir -p /var/lib/lmntools/print
+        mkdir -p /var/lib/lmntools/templates
 
         # Removing deprecated scripts (lmntools v7.3.15)
         rm -f /usr/local/sbin/lmntools-class
