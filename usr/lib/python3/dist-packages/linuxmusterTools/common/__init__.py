@@ -4,7 +4,7 @@ from .parsers import *
 from .color_shell import *
 
 Validator = NameChecker()
-lprint = ColorShell()
+lprint = PrintShell()
 spinner = Spinner()
 
 try:

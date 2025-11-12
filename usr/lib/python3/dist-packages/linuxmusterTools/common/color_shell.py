@@ -16,31 +16,59 @@ SHELL_COLOR_ENDC = '\033[0m'
 
 class ColorShell:
 
+    def _color(self, color, text):
+        return f'{color}{text}{SHELL_COLOR_ENDC}'
+
+    def red(self, text):
+        return self._color(text, SHELL_COLOR_DANGER)
+
+    def orange(self, text):
+        return self._color(text, SHELL_COLOR_ALERT)
+
+    def yellow(self, text):
+        return self._color(text, SHELL_COLOR_WARNING)
+
+    def blue(self, text):
+        return self._color(text, SHELL_COLOR_INFO)
+
+    def green(self, text):
+        return self._color(text, SHELL_COLOR_SUCCESS)
+
+    def lmn(self, text):
+        return self._color(text, SHELL_COLOR_LINUXMUSTER)
+
+
+class PrintShell:
+
+    def __init__(self):
+        self.color_shell = ColorShell()
+        self._color = self.color_shell._color
+
+    def printsh(self, color, text, end="\n"):
+        """
+        Method for not so common colors. But color should be a valid ANSI control sequence.
+        """
+
+        print(self._color(color, text), end=end)
+
     def danger(self, result, end="\n"):
-        print(f'{SHELL_COLOR_DANGER}{result}{SHELL_COLOR_ENDC}', end=end)
+        self.printsh(SHELL_COLOR_DANGER, result, end=end)
 
     def alert(self, result, end="\n"):
-        print(f'{SHELL_COLOR_ALERT}{result}{SHELL_COLOR_ENDC}', end=end)
+        self.printsh(SHELL_COLOR_ALERT, result, end=end)
 
     def warning(self, result, end="\n"):
-        print(f'{SHELL_COLOR_WARNING}{result}{SHELL_COLOR_ENDC}', end=end)
+        self.printsh(SHELL_COLOR_WARNING, result, end=end)
 
     def info(self, result, end="\n"):
-        print(f'{SHELL_COLOR_INFO}{result}{SHELL_COLOR_ENDC}', end=end)
+        self.printsh(SHELL_COLOR_INFO, result, end=end)
 
     def success(self, result, end="\n"):
-        print(f'{SHELL_COLOR_SUCCESS}{result}{SHELL_COLOR_ENDC}', end=end)
+        self.printsh(SHELL_COLOR_SUCCESS, result, end=end)
 
     def lmn(self, result, end="\n"):
-        print(f'{SHELL_COLOR_LINUXMUSTER}{result}{SHELL_COLOR_ENDC}', end=end)
+        self.printsh(SHELL_COLOR_LINUXMUSTER, result, end=end)
 
-    def printsh(self, text, color, end="\n"):
-        """
-        Method for not so common colors. But color should be a valid ANSI control sequence
-        """
-
-
-        print(f'{color}{text}{SHELL_COLOR_ENDC}', end=end)
 
 # Mostly copied from https://github.com/not-kennethreitz/blindspin
 class Spinner(object):
