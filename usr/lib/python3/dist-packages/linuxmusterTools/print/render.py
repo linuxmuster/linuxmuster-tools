@@ -20,7 +20,6 @@ class LatexRenderer:
         self.vars = vars
         self._sanitize()
 
-
     def _sanitize(self):
         """
         Filter some common problems for LaTeX compilation, like _ => \\_
@@ -54,7 +53,6 @@ class LatexRenderer:
         except Exception as e:
             raise
 
-
     def compile(self):
         """
         Prepare the tex file and compile, while trying to catch the compilations errors.
@@ -80,13 +78,13 @@ class LatexRenderer:
         self._clean()
 
         if p.returncode > 0:
-            # Isolate error for shell in red --> not good for API
-            log = stdout.decode().split("\n")
-            for idx,line in enumerate(log):
-                if line.startswith("!"):
-                    log[idx] = f"\033[91m{line}\033[0m"
+            # Isolate error for shell in red --> not pretty readable for JSON response in API
+            # log = stdout.decode().split("\n")
+            # for idx,line in enumerate(log):
+            #     if line.startswith("!"):
+            #         log[idx] = f"\033[91m{line}\033[0m"
 
-            raise Exception(f"Compilation failed: {'\n'.join(log)}")
+            raise Exception(f"Compilation failed: \n{stdout.decode()}")
 
         return self.destination_file.replace(".tex", ".pdf")
 
