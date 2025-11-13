@@ -9,10 +9,13 @@ TEMPLATES_DIR = "/var/lib/lmntools/templates/"
 
 @dataclass
 class LatexTemplate():
-    count: str
+    count: int
     filename: str
     lang: str
     type: str
+
+    def __post_init__(self):
+        self.count = int(self.count)
 
 class LatexTemplates:
 
