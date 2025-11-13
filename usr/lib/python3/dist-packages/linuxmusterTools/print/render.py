@@ -79,7 +79,17 @@ class LatexRenderer:
         with open(self.destination_file, 'w') as f:
             f.write(self.out)
 
-        p = subprocess.Popen(['/bin/pdflatex', '-halt-on-error', self.destination_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.Popen(
+            [
+                '/bin/pdflatex',
+                '-halt-on-error',
+                '-interaction=nonstopmode',
+                self.destination_file
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+
         stdout, stderr = p.communicate()
 
         self._clean()
