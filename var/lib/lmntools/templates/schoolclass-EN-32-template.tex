@@ -1,0 +1,69 @@
+\documentclass[11pt,fleqn,oneside,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{color}
+\usepackage[english]{babel}
+\usepackage{fancyhdr}
+\usepackage{array}
+\pagestyle{fancy}
+
+% page layout
+\setlength{\paperwidth}{210mm}
+\setlength{\paperheight}{297mm}
+\setlength{\voffset}{0mm}
+\setlength{\hoffset}{0mm}
+\setlength{\oddsidemargin}{0mm}
+\setlength{\evensidemargin}{0mm}
+\setlength{\marginparsep}{1.5mm}
+\setlength{\marginparwidth}{60mm}
+\setlength{\marginparpush}{1mm}
+\setlength{\parindent}{0cm} %% avoid indent on new paragraph
+\setlength{\oddsidemargin}{-17.9mm}
+\setlength{\headsep}{3mm}
+\setlength{\headheight}{8mm}
+\setlength{\topskip}{0mm}
+\setlength{\topmargin}{-18mm}
+\setlength{\footskip}{-1mm}
+\setlength{\headwidth}{189mm}
+\setlength{\textwidth}{189mm}
+\setlength{\textheight}{261.5mm}
+\renewcommand{\baselinestretch}{1}
+
+% rulewidth 
+\renewcommand{\headrulewidth}{0.25mm}
+\renewcommand{\footrulewidth}{0.25mm}
+\setlength{\fboxrule}{0.1mm}
+
+\chead{\bf Class {{ schoolclass }}}
+\lhead{\bf {{ school }} }
+\rhead{}
+\lfoot{}
+\rfoot{Page \thepage}
+\cfoot{\bf \large \today}
+
+
+\begin{document}
+
+\renewcommand{\arraystretch}{1.5}
+
+{% set ns = namespace(count = 0) %}
+{% for data in datablocks -%}
+
+    {% set block_loop = loop %}
+    \begin{tabular}{|m{1cm}|c|c|m{2cm}|m{2cm}|m{2cm}|m{2cm}|}
+    \hline
+    \textbf{No.} & \textbf{Lastname} & \textbf{Firstname} & & & & \\\hline
+
+    {% for student in data -%}
+        {% set ns.count = ns.count + 1 %}
+        {{ ns.count }} & {{ student['lastname'] }} & {{ student['firstname'] }} & & & & \\\hline
+    {% endfor %}
+
+    \end{tabular}
+
+    {% if not block_loop.last -%}
+        \newpage
+    {% endif %}
+
+{% endfor %}
+\end{document}
