@@ -20,22 +20,22 @@ class ColorShell:
         return f'{color}{text}{SHELL_COLOR_ENDC}'
 
     def red(self, text):
-        return self._color(text, SHELL_COLOR_DANGER)
+        return self._color(SHELL_COLOR_DANGER, text)
 
     def orange(self, text):
-        return self._color(text, SHELL_COLOR_ALERT)
+        return self._color(SHELL_COLOR_ALERT, text)
 
     def yellow(self, text):
-        return self._color(text, SHELL_COLOR_WARNING)
+        return self._color(SHELL_COLOR_WARNING, text)
 
     def blue(self, text):
-        return self._color(text, SHELL_COLOR_INFO)
+        return self._color(SHELL_COLOR_INFO, text)
 
     def green(self, text):
-        return self._color(text, SHELL_COLOR_SUCCESS)
+        return self._color(SHELL_COLOR_SUCCESS, text)
 
     def lmn(self, text):
-        return self._color(text, SHELL_COLOR_LINUXMUSTER)
+        return self._color(SHELL_COLOR_LINUXMUSTER, text)
 
 
 class PrintShell:
