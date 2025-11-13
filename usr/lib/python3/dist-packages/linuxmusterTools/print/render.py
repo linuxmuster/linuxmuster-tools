@@ -6,15 +6,14 @@ from jinja2 import Environment, FileSystemLoader
 OUTPUT_DIR = "/var/lib/lmntools/print/"
 TEMPLATES_DIR = "/var/lib/lmntools/templates/"
 
-# List templates ?
 
 class LatexRenderer:
 
-    def __init__(self, template, data, caller="", vars={}):
+    def __init__(self, template_obj, data, caller="", vars={}):
         # Option 1 per page ? only for PW
         self.data = data
         self.caller = caller
-        self.template = template
+        self.template_obj = template_obj
 
         self.vars = vars
         self._sanitize()
@@ -47,7 +46,7 @@ class LatexRenderer:
         try:
             # Check number of entries and number of pages
 
-            self.template = self.env.get_template(self.template)
+            self.template = self.env.get_template(self.template_obj.filename)
             self.out = self.template.render(data=self.data, **self.vars)
         except Exception as e:
             raise
@@ -62,7 +61,7 @@ class LatexRenderer:
 
         self.render()
 
-        if self.template['type'] == "schoolclass":
+        if self.template_obj.type == "schoolclass":
             output_file = f"{self.caller}-schoolclass-{self.vars['schoolclass']}.tex"
 
         self.destination_file = os.path.join(OUTPUT_DIR, output_file)
