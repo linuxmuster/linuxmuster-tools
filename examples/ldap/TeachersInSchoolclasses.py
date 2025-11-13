@@ -4,11 +4,10 @@
 Script to get a list of all teacher's memberships in schoolclasses.
 """
 
-from linuxmusterTools.common import ColorShell
+from linuxmusterTools.common import lcolor
 from linuxmusterTools.ldapconnector import LMNLdapReader as lr
 
 
-color = ColorShell()
 teacher_cache = {}
 
 # Get all schoolclasses, sorted by name
@@ -28,6 +27,6 @@ for schoolclass in lr.get('/schoolclasses', sortkey='cn'):
         teachers.append(teacher_cache[cn])
 
     # Some fancy colors
-    print(f"{color.green(schoolclass['cn']):<30} --> {color.lmn(','.join(teachers))}")
+    print(f"{lcolor.green(schoolclass['cn']):<30} --> {lcolor.lmn(','.join(teachers))}")
     print("-"*80)
 

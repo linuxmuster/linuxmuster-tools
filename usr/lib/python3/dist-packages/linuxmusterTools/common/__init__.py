@@ -5,6 +5,7 @@ from .color_shell import *
 
 Validator = NameChecker()
 lprint = PrintShell()
+lcolor = ColorShell()
 spinner = Spinner()
 
 try:
