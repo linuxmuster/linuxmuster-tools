@@ -47,7 +47,16 @@ class LatexRenderer:
             # Check number of entries and number of pages
 
             self.template = self.env.get_template(self.template_obj.filename)
-            self.out = self.template.render(data=self.data, **self.vars)
+
+            # Split into multiples pages if too much data
+            count = self.template_obj.count
+            datablocks = [
+                self.data[count*i:count*i+count]
+                for i in range(len(self.data)//count+1)
+                if count*i != len(self.data)
+            ]
+
+            self.out = self.template.render(datablocks=datablocks, **self.vars)
         except Exception as e:
             raise
 
