@@ -1,7 +1,7 @@
 from ..ldapconnector import LMNLdapReader as lr
 from .render import LatexRenderer
 
-def print_schoolclass_list(schoolclass, caller, school='default_school', template="datalist-DE-32-template.tex"):
+def print_schoolclass_list(schoolclass, caller, school='default_school', template="schoolclass-DE-32-template.tex"):
     """
     Print a list of students from a specific schoolclass.
 
