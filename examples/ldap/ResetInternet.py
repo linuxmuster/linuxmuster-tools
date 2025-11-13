@@ -10,9 +10,9 @@ from linuxmusterTools.common import lprint
 from linuxmusterTools.ldapconnector import LMNLdapReader as lr, LMNMgmtGroup
 
 
-# Get a list of all students
+# Get a "raw" list of all students ("raw" means without parents attributes, to speed up the process).
 
-students = lr.get('/roles/student')
+students = lr.get('/rawroles/student')
 total = len(students)
 internet_group = LMNMgmtGroup('internet')
 
