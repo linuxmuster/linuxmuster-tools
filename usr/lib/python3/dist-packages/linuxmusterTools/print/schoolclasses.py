@@ -1,5 +1,9 @@
 from ..ldapconnector import LMNLdapReader as lr
 from .render import LatexRenderer
+from .templates import *
+
+
+templates = LatexTemplates().templates
 
 def print_schoolclass_list(schoolclass, caller, school='default_school', template="schoolclass-DE-32-template.tex"):
     """
@@ -11,7 +15,11 @@ def print_schoolclass_list(schoolclass, caller, school='default_school', templat
 
 
     # use displayname if defined instead of school cn ?
-    # choice for templates !
+
+    if template not in templates:
+        raise Exception(f"Can not find the template {template} under {TEMPLATES_DIR}!")
+
+    template_obj = templates[template]
 
     data = []
     students = lr.getval(f'/schoolclasses/{schoolclass}', 'sophomorixMembers')
@@ -25,7 +33,7 @@ def print_schoolclass_list(schoolclass, caller, school='default_school', templat
 
     data_sorted = sorted(data, key=lambda item: item['lastname']+item['firstname'])
 
-    l = LatexRenderer(template, "schoolclass", data_sorted, caller, vars={"school":school, "schoolclass":schoolclass})
+    l = LatexRenderer(template_obj, data_sorted, caller, vars={"school":school, "schoolclass":schoolclass})
     return l.compile()
 
 def print_schoolclasses_list(schoolclasses, caller, school='default_school', template="datalist-DE-32-template.tex"):
