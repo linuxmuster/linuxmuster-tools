@@ -10,11 +10,10 @@ TEMPLATES_DIR = "/var/lib/lmntools/templates/"
 
 class LatexRenderer:
 
-    def __init__(self, template, type, data, caller="", vars={}):
+    def __init__(self, template, data, caller="", vars={}):
         # Option 1 per page ? only for PW
         self.data = data
         self.caller = caller
-        self.type = type
         self.template = template
 
         self.vars = vars
@@ -43,7 +42,7 @@ class LatexRenderer:
         """
 
 
-        self.env = Environment(loader=FileSystemLoader(os.path.join(TEMPLATES_DIR, self.type)))
+        self.env = Environment(loader=FileSystemLoader(TEMPLATES_DIR))
 
         try:
             # Check number of entries and number of pages
@@ -63,7 +62,7 @@ class LatexRenderer:
 
         self.render()
 
-        if self.type == "schoolclass":
+        if self.template['type'] == "schoolclass":
             output_file = f"{self.caller}-schoolclass-{self.vars['schoolclass']}.tex"
 
         self.destination_file = os.path.join(OUTPUT_DIR, output_file)
