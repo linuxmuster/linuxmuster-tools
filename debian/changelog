@@ -1,3 +1,17 @@
+linuxmuster-tools7 (7.3.29) lmn73; urgency=medium
+
+  * [common] Add colors for ColorShell
+  * [examples] Get list of teachers members of schoolclasses
+  * [examples] ResetInternet: speed up call of all students
+  * [ldapwriter] Allow custom fields in projects
+  * [print] Add template manager (jinja and LaTeX)
+  * [print] Add templates for students lists (DE, EN, FR)
+  * [print] Print schoolclass' students list
+  * [print] Support multipages
+  * [samba] Avoid prefix shadowing in smbstatus
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sat, 15 Nov 2025 13:07:01 +0100
+
 linuxmuster-tools7 (7.3.28) lmn73; urgency=medium
 
   * [ldapreader] Add raw user model for quick response 
