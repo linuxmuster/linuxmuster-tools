@@ -29,6 +29,7 @@ class LMNGroupCommon:
         self.model = LMNGroupModel
         self.data = {}
         self.school = school
+        self.new = False
         self.load_data()
 
     def load_data(self):

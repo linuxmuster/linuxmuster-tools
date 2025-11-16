@@ -21,6 +21,7 @@ class LMNProject(LMNGroupCommon):
         self.data = self.lr.get(f'/projects/{self.cn}', school=self.school)
 
         if not self.data:
+            self.new = True
             logging.info(f"The project {self.cn} was not found in ldap.")
 
             prefix = "p_"
@@ -54,7 +55,14 @@ class LMNProject(LMNGroupCommon):
             }
 
     def create(self):
-        self.lw._add_group(self, data=self.data)
+        if self.new:
+            try:
+                self.lw._add_group(self, data=self.data)
+                self.new = False
+            except Exception:
+                raise
+        else:
+            print(f"Project {self.cn} already exists in LDAP.")
 
 class LMNProjects:
 
