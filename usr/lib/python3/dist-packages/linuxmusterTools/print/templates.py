@@ -24,9 +24,8 @@ class LatexTemplates:
         self.load()
 
     def load(self):
-        os.chdir(TEMPLATES_DIR)
-
-        for filename in glob.glob('*.tex'):
+        for path in glob.glob(f'{TEMPLATES_DIR}/*.tex'):
+            filename = path.split('/')[-1]
             if data := re.match(FILENAME_REGEX, filename):
                 self.templates[filename] = LatexTemplate(filename=filename, **data.groupdict())
 
