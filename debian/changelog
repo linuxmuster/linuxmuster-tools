@@ -1,3 +1,10 @@
+linuxmuster-tools7 (7.3.31) lmn73; urgency=medium
+
+  * [ldapwriter] Only create new projects
+  * [print] Fix current working directory 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sun, 16 Nov 2025 13:52:23 +0100
+
 linuxmuster-tools7 (7.3.30) lmn73; urgency=medium
 
   * [ldapwriter] Allow custom fields in schoolclasses  
