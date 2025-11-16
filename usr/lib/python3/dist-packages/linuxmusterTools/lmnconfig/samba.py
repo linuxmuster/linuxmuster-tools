@@ -49,7 +49,7 @@ try:
     SAMBA_TLD = SAMBA_REALM.split('.')[-1].upper()
 
     # fandom.example.org --> 'DC=FANDOM,DC=EXAMPLE,DC=ORG'
-    LDAP_DC = ','.join([f"DC={comp}" for comp in r.upper().split(".") if comp])
+    LDAP_DC = ','.join([f"DC={comp}" for comp in SAMBA_REALM.upper().split(".") if comp])
     LDAP_CONTEXT = f"OU=SCHOOLS,{LDAP_DC}"
 
 except Exception as e:
