@@ -1,3 +1,12 @@
+linuxmuster-tools7 (7.3.30) lmn73; urgency=medium
+
+  * [ldapwriter] Allow custom fields in schoolclasses  
+  * [ldapwriter] Allow custom fields in groups
+  * [ldapwriter] Create non existing projects
+  * [lmnconfig] Fix LDAP domain component and context for complex domains 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sun, 16 Nov 2025 12:00:17 +0100
+
 linuxmuster-tools7 (7.3.29) lmn73; urgency=medium
 
   * [common] Add colors for ColorShell
