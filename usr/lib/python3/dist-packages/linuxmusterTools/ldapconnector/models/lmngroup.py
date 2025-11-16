@@ -19,6 +19,16 @@ class LMNGroupModel(LMNModel):
     sAMAccountType: str
     sophomorixAdminClass: str
     sophomorixCreationDate: str
+    sophomorixCustom1: str
+    sophomorixCustom2: str
+    sophomorixCustom3: str
+    sophomorixCustom4: str
+    sophomorixCustom5: str
+    sophomorixCustomMulti1: list
+    sophomorixCustomMulti2: list
+    sophomorixCustomMulti3: list
+    sophomorixCustomMulti4: list
+    sophomorixCustomMulti5: list
     sophomorixHidden: bool
     sophomorixJoinable: bool
     sophomorixIntrinsic1: str
