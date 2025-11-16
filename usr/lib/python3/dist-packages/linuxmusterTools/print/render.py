@@ -74,7 +74,6 @@ class LatexRenderer:
             output_file = f"{self.caller}-schoolclass-{self.vars['schoolclass']}.tex"
 
         self.destination_file = os.path.join(OUTPUT_DIR, output_file)
-        os.chdir(OUTPUT_DIR)
 
         with open(self.destination_file, 'w') as f:
             f.write(self.out)
@@ -87,7 +86,8 @@ class LatexRenderer:
                 self.destination_file
             ],
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
+            stderr=subprocess.PIPE,
+            cwd=OUTPUT_DIR
         )
 
         stdout, stderr = p.communicate()
