@@ -2,6 +2,7 @@ import logging
 
 from linuxmusterTools.common import lprint, spinner
 from linuxmusterTools.common.checks import NameChecker
+from linuxmusterTools.lmnconfig import LDAP_CONTEXT
 from ..models import LMNProjectModel
 from .group import LMNGroupCommon
 from ..urls.ldaprouter import router
@@ -20,7 +21,40 @@ class LMNProject(LMNGroupCommon):
         self.data = self.lr.get(f'/projects/{self.cn}', school=self.school)
 
         if not self.data:
-            raise Exception(f"The project {self.cn} was not found in ldap.")
+            logging.info(f"The project {self.cn} was not found in ldap.")
+
+            prefix = "p_"
+            if self.school != "default-school":
+                prefix = f"p_{self.school}-"
+
+            dn = f"CN={prefix}{self.cn},OU=Projects,OU={self.school},{LDAP_CONTEXT}"
+
+            logging.info(f"His DN would be {dn}. You can create it with the method .create.")
+
+            self.data = {
+                'description': self.cn,
+                'displayName': self.cn,
+                'distinguishedName': dn,
+                'mail': [],
+                'member': [],
+                'name': self.cn,
+                'sAMAccountName': self.cn,
+                'sophomorixAddMailQuota': '---',
+                'sophomorixAddQuota': '---',
+                'sophomorixCreationDate': '',
+                'sophomorixHidden': False,
+                'sophomorixJoinable': False,
+                'sophomorixMailAlias': False,
+                'sophomorixMailList': False,
+                'sophomorixMailQuota': '---:---:',
+                'sophomorixQuota': [f'{self.school}:---:---:', 'linuxmuster-global:---:---:'],
+                'sophomorixSchoolname': self.school,
+                'sophomorixStatus': '',
+                'sophomorixType': f"project",
+            }
+
+    def create(self):
+        self.lw._add_group(self, data=self.data)
 
 class LMNProjects:
 
