@@ -47,7 +47,11 @@ try:
     SAMBA_NETBIOS = smbconf["global"]["netbios name"].lower()
     SAMBA_DOMAIN = f'{SAMBA_NETBIOS}.{SAMBA_REALM}'
     SAMBA_TLD = SAMBA_REALM.split('.')[-1].upper()
-    LDAP_CONTEXT = f"OU=SCHOOLS,DC={SAMBA_WORKGROUP},DC={SAMBA_TLD}"
+
+    # fandom.example.org --> 'DC=FANDOM,DC=EXAMPLE,DC=ORG'
+    LDAP_DC = ','.join([f"DC={comp}" for comp in r.upper().split(".") if comp])
+    LDAP_CONTEXT = f"OU=SCHOOLS,{LDAP_DC}"
+
 except Exception as e:
     logger.error(f"Can not read realm and domain from smb.conf: {str(e)}. Is linuxmuster.net installed and configured ?")
 
