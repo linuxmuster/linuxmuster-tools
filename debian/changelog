@@ -1,3 +1,10 @@
+linuxmuster-tools7 (7.3.33) lmn73; urgency=medium
+
+  * Multischool support for group sync 
+  * [print] Use lmodern for more font compatibility
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Mon, 08 Dec 2025 20:45:37 +0100
+
 linuxmuster-tools7 (7.3.32) lmn73; urgency=medium
 
   * Fix missing templates 
