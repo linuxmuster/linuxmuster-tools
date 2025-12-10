@@ -11,15 +11,6 @@ def get_schoolclass(schoolclass):
 
     return f"""(&(cn={schoolclass})(objectClass=group)(sophomorixType=adminclass))"""
 
-@router.single(r'/extraclasses/(?P<schoolclass>[\w\-_ ]*)', models.LMNSchoolClassModel)
-def get_extraclass(schoolclass):
-    """
-    Get all details from a specific extraclass.
-    Return a LMNSchoolClassModel data object
-    """
-
-    return f"""(&(cn={schoolclass})(objectClass=group)(sophomorixType=extraclass))"""
-
 @router.collection(r'/schoolclasses/(?P<schoolclass>[a-z0-9\-_]*)/students', models.LMNUserModel)
 def get_all_students_from_schoolclass(schoolclass):
     """
@@ -59,3 +50,24 @@ def get_results_search_empty_schoolclasses():
     """
 
     return f"""(&(objectClass=group)(sophomorixType=adminclass)(!(sophomorixMembers=*)))"""
+
+## Extraclasses
+
+@router.single(r'/extraclasses/(?P<schoolclass>[\w\-_ ]*)', models.LMNSchoolClassModel)
+def get_extraclass(schoolclass):
+    """
+    Get all details from a specific extraclass.
+    Return a LMNSchoolClassModel data object
+    """
+
+    return f"""(&(cn={schoolclass})(objectClass=group)(sophomorixType=extraclass))"""
+
+@router.collection(r'/extraclasses', models.LMNSchoolClassModel)
+def get_all_extraclasses():
+    """
+    Get all extraclasses details.
+    Return a list of LMNSchoolClassModel data objects.
+    """
+
+    return """(&(objectClass=group)(sophomorixType=extraclass))"""
+
