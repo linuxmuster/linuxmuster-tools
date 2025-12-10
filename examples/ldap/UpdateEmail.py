@@ -25,8 +25,8 @@ for cn, teacher in teachers.items():
 
     # Shortcut for all teacher's data
     data = teacher.data
-    lastname = data['sn'].lower()
-    firstname = data['displayName'].lower()
+    lastname = data['sophomorixSurnameASCII'].lower()
+    firstname = data['sophomorixFirstnameASCII'].lower()
 
     # Prepare a new email like lastname-firstname@mydomain.school
     new_mail = f"{lastname}-{firstname}@{domain}"
