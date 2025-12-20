@@ -1,3 +1,4 @@
+import os
 import logging
 import ldap
 
@@ -54,7 +55,7 @@ class LdapConnector:
         conn.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_ALLOW)
         conn.protocol_version = ldap.VERSION3
 
-        if not webui_import:
+        if not webui_import or os.getuid() == 0:
             # Using Administrator password to be able to write data in LDAP
             with LMNFile('/etc/linuxmuster/webui/config.yml', 'r') as config:
                 ldap_params = config.data['linuxmuster']['ldap']
