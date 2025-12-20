@@ -103,6 +103,7 @@ class Spinner(object):
             self.stop_running = threading.Event()
             self.spin_thread = threading.Thread(target=self.init_spin)
             self.spin_thread.start()
+            self.first_print = True
 
     def stop(self):
         if self.spin_thread:
@@ -118,10 +119,14 @@ class Spinner(object):
         while not self.stop_running.is_set():
             sys.stdout.flush()
             sys.stdout.write(f"  {self.color}{next_val}{SHELL_COLOR_ENDC}  {self.text}")
-            if self.update and self.progress:
-                sys.stdout.write('\n')
+            if self.update:
+                if self.progress:
+                    if not self.first_print:
+                        sys.stdout.write(f"\r  {SHELL_COLOR_SUCCESS}{u'✓'}{SHELL_COLOR_ENDC}  {self.last_text}\n")
+                    else:
+                        self.first_print = False
                 self.update = False
-            if time.time() - last_time > 0:
+            if time.time() - last_time > 0.01:
                 last_time = time.time()
                 next_val = next(self.spinner_cycle)
 
@@ -138,5 +143,5 @@ class Spinner(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.stop()
-        sys.stdout.write(f"  {SHELL_COLOR_SUCCESS}{u'✓'}{SHELL_COLOR_ENDC}  {self.last_text}")
+        sys.stdout.write(f"  {SHELL_COLOR_SUCCESS}{u'✓'}{SHELL_COLOR_ENDC}  {self.text}")
         return False
