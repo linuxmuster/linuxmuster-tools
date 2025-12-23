@@ -75,7 +75,7 @@ class LMNSMBClient:
 
         return filelist
 
- def deltree(self, path):
+    def deltree(self, path):
         """
         Delete recursively the content of a directory.
 
