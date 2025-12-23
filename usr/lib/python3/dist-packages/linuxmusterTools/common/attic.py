@@ -4,12 +4,13 @@ import datetime
 
 from linuxmusterTools.lmnconfig import SchoolConfig
 from linuxmusterTools.ldapconnector import LMNLdapReader as lr
+from linuxmusterTools.smbclient import LMNSMBClient
 from .convert import convert_sophomorix_time
 
 
 logger = logging.getLogger(__name__)
 
-def get_killdate(user, school='default-school'):
+def get_killdate(user):
     """
     Get kill date of an user, if it exists.
     Actually only works with default-school on a single school instance.
@@ -23,23 +24,26 @@ def get_killdate(user, school='default-school'):
     """
 
 
-    if school != 'default-school':
-        logger.warning("This functionality only works on default-school.")
-
     try:
+        # Same log path for all schools
         killlog = open("/var/log/sophomorix/userlog/user-kill.log", "r")
         for line in reversed(list(killlog)):
             if f'::{user}::' in line:
-                killdate = convert_sophomorix_time(line.split('::')[2])
+                details = line.split('::')
+                killdate = convert_sophomorix_time(details[2])
+                school = details[3]
                 killlog.close()
-                return killdate
+                return killdate, school
     except Exception as e:
         killlog.close()
         logger.warning(str(e))
-        return None
-    return None
+        return None, None
 
-def get_attic_status(user, school='default-school'):
+    killlog.close()
+
+    return None, None
+
+def get_attic_status(user):
     """
     Get the actual status of an user in attic.
     Actually only works with default-school on a single school instance.
@@ -53,16 +57,14 @@ def get_attic_status(user, school='default-school'):
     """
 
 
-    if school != 'default-school':
-        logger.warning("This functionality only works on default-school.")
-
     details = lr.get(f'/users/{user}')
 
-    result = {'status': 'No information found.', 'start':'', 'end':''}
+    result = {'status': 'No information found.', 'start':'', 'end':'', 'school': ''}
 
     if not details:
-        killdate = get_killdate(user, school=school)
+        killdate, school = get_killdate(user)
         if killdate is not None:
+            result['school'] = school
             result['status'] = "killed"
             result['start'] = killdate
             result['end'] = killdate
@@ -77,8 +79,10 @@ def get_attic_status(user, school='default-school'):
 
     status = details['sophomorixStatus']
     admin_file = details['sophomorixAdminFile']
-    sophomorix_config = SchoolConfig().config
+    sophomorix_config = SchoolConfig(school=details['school']).config
     role_config = sophomorix_config.get(f'userfile.{admin_file}', {})
+
+    result['school'] = details['school']
 
     if status == "M" or status == "T":
         # Status Managed or Tolerates
@@ -114,17 +118,16 @@ def check_attic_dir(school='default-school'):
     """
 
 
-    if school != 'default-school':
-        logger.warning("This functionality only works on default-school.")
+    logger.warning("This functionality is still experimental")
 
-    attic_dir = "/srv/samba/schools/default-school/students/attic"
+    client = LMNSMBClient(school=school)
+    attic_dirs = [entry['name'] for entry in client.list('students/attic')]
 
     result = {}
-    for user in os.listdir(attic_dir):
-        result[user] = get_attic_status(user, school=school)
-        # if not lr.get(f'/users/{user}'):
-        #     killdate = get_killdate(user)
-        #     result[user] = killdate
+    for user in attic_dirs:
+
+        if user not in ['.', '..']:
+            result[user] = get_attic_status(user)
 
     return result
 
