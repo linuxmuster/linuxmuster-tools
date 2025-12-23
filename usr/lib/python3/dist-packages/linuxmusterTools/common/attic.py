@@ -59,7 +59,7 @@ def get_attic_status(user):
 
     details = lr.get(f'/users/{user}')
 
-    result = {'status': 'No information found.', 'start':'', 'end':'', 'school': ''}
+    result = {'status': 'No information found.', 'start':'', 'end':'', 'school': 'Unknown'}
 
     if not details:
         killdate, school = get_killdate(user)
@@ -120,14 +120,23 @@ def check_attic_dir(school='default-school'):
 
     logger.warning("This functionality is still experimental")
 
-    client = LMNSMBClient(school=school)
-    attic_dirs = [entry['name'] for entry in client.list('students/attic')]
+    if not school:
+        # If school is None, checking all schools
+        to_check = lr.getval('/schools', 'ou')
+    else:
+        to_check = [school]
 
+    client = LMNSMBClient()
     result = {}
-    for user in attic_dirs:
 
-        if user not in ['.', '..']:
-            result[user] = get_attic_status(user)
+    for s in to_check:
+        client.switch(s)
+        attic_dirs = [entry['name'] for entry in client.list('students/attic')]
+
+        for user in attic_dirs:
+
+            if user not in ['.', '..']:
+                result[user] = get_attic_status(user)
 
     return result
 
