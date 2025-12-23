@@ -4,12 +4,20 @@ A smbclient utility to perform some basic operations on the fileserver.
 
 
 # Actually still in experimental mode
+from ..ldapconnector import LMNLdapReader as lr
 from ..lmnconfig import SAMBA_DOMAIN
 import subprocess
 
 class LMNSMBClient:
     def __init__(self, school='default-school'):
-        self.school = school
+        self.switch(school)
+
+    def switch(self, school):
+        schools = lr.getval('/schools', 'ou')
+        if school in schools:
+            self.school = school
+        else:
+            raise Exception(f"School {school} not found.")
 
     def _execute(self, subcmd):
         with open('/etc/linuxmuster/.secret/administrator', 'r') as admpwd:
