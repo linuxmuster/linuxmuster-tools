@@ -75,5 +75,16 @@ class LMNSMBClient:
 
         return filelist
 
+ def deltree(self, path):
+        """
+        Delete recursively the content of a directory.
+
+        :param path: Samba path like students/attic/myuser
+        :return: list
+        """
+
+
+        cmd = f"deltree \"{path}\";"
+        self._execute(cmd)
 
 
