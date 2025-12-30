@@ -1,3 +1,12 @@
+linuxmuster-tools7 (7.3.34) lmn73; urgency=medium
+
+  * [common] Fix progress and last text in spinner 
+  * [ldapconnector] Allow root in the Webui to use administrator account
+  * [ldapreader] Get extraclasses
+  * [smbclient] Basic tool for common operations. EXPERIMENTAL.
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Tue, 30 Dec 2025 17:56:23 +0100
+
 linuxmuster-tools7 (7.3.33) lmn73; urgency=medium
 
   * Multischool support for group sync 
