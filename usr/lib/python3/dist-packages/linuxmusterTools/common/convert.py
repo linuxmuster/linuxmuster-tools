@@ -36,3 +36,29 @@ def convert_sophomorix_time(t):
         return  datetime.strptime(t, '%Y%m%d%H%M%S.%fZ').strftime("%d %b %Y %H:%M:%S")
     except Exception:
         return t
+
+def convert_sophomorix_status(s):
+    """
+    Convert a sophomorix status like 'T' in human readable output 'Tolerated (T)'.
+
+    :param s: statut read in sophomorixStatus.
+    """
+
+
+    userStatus = {
+        'A': 'Activated',
+        'U': 'Usable',
+        'P': 'Permanent',
+        'E': 'Enabled',
+        'S': 'Self-activated',
+        'T': 'Tolerated',
+        'L': 'Locked',
+        'D': 'Deactivated',
+        'F': 'Frozen',
+        'R': 'Removable',
+        'K': 'Killable',
+        'X': 'Exam',
+        'M': 'Managed',
+    }
+
+    return userStatus.get(s, 'Unknown')
