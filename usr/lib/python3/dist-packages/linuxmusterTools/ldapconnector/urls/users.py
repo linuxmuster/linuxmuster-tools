@@ -114,3 +114,25 @@ def get_results_search_user(query='', selection=[]):
                                     {role_filter[selection]}
                                 )
                             )"""
+
+@router.collection(r'/rawusers', models.LMNRawUserModel)
+def get_all_raw_users():
+    """
+    Get all details from all users.
+    Return a list of LMNRawUserModel data object.
+    """
+
+    ldap_filter = f"""(&
+                                (objectClass=user)
+                                (|
+                                    (sophomorixRole=globaladministrator)
+                                    (sophomorixRole=schooladministrator)
+                                    (sophomorixRole=teacher)
+                                    (sophomorixRole=student)
+                                    (sophomorixRole=parent)
+                                    (sophomorixRole=staff)
+                                )
+                            )"""
+
+    return ldap_filter
+
