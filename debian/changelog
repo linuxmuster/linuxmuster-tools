@@ -1,3 +1,10 @@
+linuxmuster-tools7 (7.3.35) lmn73; urgency=medium
+
+  * [common] Human readable output for sophomorix status
+  * [ldapreader] Add request to get raw users
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Thu, 01 Jan 2026 23:49:52 +0100
+
 linuxmuster-tools7 (7.3.34) lmn73; urgency=medium
 
   * [common] Fix progress and last text in spinner 
