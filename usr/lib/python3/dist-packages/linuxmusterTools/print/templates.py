@@ -15,6 +15,7 @@ SOPHOMORIX_CONFIG_DIR = "/etc/linuxmuster/sophomorix"
 class LatexTemplate():
     count: int
     filename: str
+    fullpath: str
     lang: str
     package: str
     school: str
@@ -61,6 +62,7 @@ class LatexTemplates:
                     filename=filename,
                     package="lmntools",
                     school="global",
+                    fullpath=path,
                     **data.groupdict()
                 )
 
@@ -71,6 +73,7 @@ class LatexTemplates:
                     filename=filename,
                     package="sophomorix",
                     school="global",
+                    fullpath=path,
                     **data.groupdict()
                 )
 
@@ -85,6 +88,7 @@ class LatexTemplates:
                         filename=filename,
                         package="school defined",
                         school=school,
+                        fullpath=path,
                         **data.groupdict()
                     )
 
