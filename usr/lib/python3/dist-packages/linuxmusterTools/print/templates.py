@@ -87,5 +87,14 @@ class LatexTemplates:
                         **data.groupdict()
                     )
 
+    def __str__(self):
+        result = f"{'Filename':45} | {'Count':5} | {'Lang':4} | {'Type':15} | {'School':15} | Package\n"
+        result += "-"*105 + "\n"
+        for filename, t in self.templates.items():
+            result += f"{filename:45} | {t.count:5} | {t.lang:4} | {t.type:15} | {t.school:15} | {t.package}\n"
+
+        return result
+
+
 
 
