@@ -22,6 +22,7 @@ class LatexTemplate():
 
     def __post_init__(self):
         self.count = int(self.count)
+        self.type = self.type if self.type != 'datalist' else 'passwords'
 
 class LatexTemplates:
     """
