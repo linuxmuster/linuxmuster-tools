@@ -1,4 +1,3 @@
-from ..ldapconnector import LMNLdapReader as lr
 from .render import LatexRenderer
 from .templates import *
 
@@ -14,10 +13,8 @@ def print_schoolclass_list(schoolclass, caller, school='default_school', templat
     """
 
 
-    # use displayname if defined instead of school cn ?
-
     if template not in templates:
-        raise Exception(f"Can not find the template {template} under {TEMPLATES_DIR}!")
+        raise Exception(f"Can not find the template {template}!")
 
     template_obj = templates[template]
 
