@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.3.36) lmn73; urgency=medium
+
+  * [print] List all LaTeX templates. 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Wed, 04 Feb 2026 20:59:03 +0100
+
 linuxmuster-tools7 (7.3.35) lmn73; urgency=medium
 
   * [common] Human readable output for sophomorix status
