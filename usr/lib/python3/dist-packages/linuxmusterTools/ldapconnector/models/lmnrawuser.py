@@ -71,7 +71,6 @@ class LMNRawUserModel(LMNModel):
     sophomorixUnid: str
     sophomorixUserToken: str
     sophomorixWebuiDashboard: list
-    sophomorixWebuiPermissionsCalculated: list
     thumbnailPhoto: str
     unixHomeDirectory: str
     userAccountControl: int
@@ -85,7 +84,6 @@ class LMNRawUserModel(LMNModel):
     intranet:       bool = field(init=False)
     isAdmin:        bool = field(init=False)
     lmnsessions:    list = field(init=False)
-    permissions:    list = field(init=False)
     printers:       list = field(init=False)
     printing:       bool = field(init=False)
     projects:       list = field(init=False)
@@ -146,13 +144,6 @@ class LMNRawUserModel(LMNModel):
                 if dn.startswith(f"CN={school_prefix}{group},OU=Management"):
                     setattr(self, group, True)
 
-    def parse_permissions(self):
-        self.permissions = {}
-
-        for perm in self.sophomorixWebuiPermissionsCalculated:
-            module, value = perm.split(': ')
-            self.permissions[module] = value == 'true'
-
     def parse_sessions(self):
         self.lmnsessions = []
         for v in self.sophomorixSessions:
@@ -211,7 +202,6 @@ class LMNRawUserModel(LMNModel):
         self.dn = self.distinguishedName
         self.school = self.sophomorixSchoolname
         self.extract_management()
-        self.parse_permissions()
         self.parse_sessions()
         self.parse_exam()
 
