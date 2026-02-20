@@ -231,7 +231,7 @@ class LMNStudent(LMNUser):
 
     def load_parents(self):
 
-        self.parents_group = LMNParentsGroup(self.cn)
+        self.parents_group = LMNParentsGroup(self.cn, school=self.school)
         self.parents = self.parents_group.parents
         self.parents_cn = self.parents_group.parents_cn
 
@@ -302,10 +302,10 @@ class LMNStudent(LMNUser):
 
         # Only modify the attributes, does not actually move the user's files.
 
-        old_schoolclass_group = LMNSchoolclass(old_schoolclass)
+        old_schoolclass_group = LMNSchoolclass(old_schoolclass, school=self.school)
         old_schoolclass_group.remove_member(self.cn)
 
-        new_schoolclass_group = LMNSchoolclass(new_schoolclass)
+        new_schoolclass_group = LMNSchoolclass(new_schoolclass, school=self.school)
         new_schoolclass_group.add_member(self.cn)
 
         self.setattr(data={
