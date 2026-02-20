@@ -34,9 +34,17 @@ class LMNUser:
 
         if not self.data:
             logger.info(f"The user {self.cn} was not found in ldap.")
+
+            if self.school == 'global':
+                logging.warning("Please provide a valid school name other than 'global', it's not possible to handle this new user.")
+
             self.new = True
             self.data =  {field.name:field.type() for field in fields(self.model) if field.init}
             self.data['cn'] = self.cn
+        else:
+            # School may be 'global'
+            if self.school == 'global':
+                self.school = self.data["sophomorixSchoolname"]
 
     def setattr(self, **kwargs):
         """
