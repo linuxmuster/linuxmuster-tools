@@ -13,37 +13,33 @@ class Partition:
 @dataclass
 class OS:
     Append: str
-    Autostart: bool
-    AutostartTimeout: int
     BaseImage: str
-    Boot: str
     DefaultAction: str
     Description: str
-    Hidden: bool
     IconName: str
     Initrd: str
     Kernel: str
-    NewEnabled: bool
+    Name: str
     Root: str
-    StartEnabled: bool
-    SyncEnabled: bool
-    Version: str
+    Autostart: bool = False
+    AutostartTimeout: int = 5
+    NewEnabled: bool = True
+    StartEnabled: bool = True
+    SyncEnabled: bool = True
 
 @dataclass
 class Linbo:
-    AutoFormat: bool
-    AutoInitCache: bool
-    AutoPartition: bool
     Cache: str
-    DownloadType: str
     Group: str
-    GuiDisabled: bool
     KernelOptions: str
-    Locale: str
-    RootTimeout: int
-    Server: str
-    SystemType: str
-    UseMinimalLayout: bool
+    AutoFormat: bool = False
+    AutoInitCache: bool = False
+    AutoPartition: bool = False
+    GuiDisabled: bool = False
+    Locale: str = 'de-de'
+    RootTimeout: int = 600
+    DownloadType: str = 'torrent'
+    UseMinimalLayout: bool = False
 
 @dataclass
 class LinboConfig:
