@@ -2,64 +2,14 @@ import os
 import locale
 import time
 from glob import glob
-from dataclasses import dataclass
 from datetime import datetime
 
+from .models import *
 from ..devices import Devices
 from ..lmnfile import LMNFile
 
 
 LINBO_PATH = '/srv/linbo'
-
-@dataclass
-class Partition:
-    Bootable: bool
-    Dev: str
-    FSType: str
-    Id: int
-    Label: str
-    Size: str
-
-@dataclass
-class OS:
-    Append: str
-    Autostart: bool
-    AutostartTimeout: int
-    BaseImage: str
-    Boot: str
-    DefaultAction: str
-    Description: str
-    Hidden: bool
-    IconName: str
-    Initrd: str
-    Kernel: str
-    NewEnabled: bool
-    Root: str
-    StartEnabled: bool
-    SyncEnabled: bool
-    Version: str
-
-@dataclass
-class Linbo:
-    AutoFormat: bool
-    AutoInitCache: bool
-    AutoPartition: bool
-    Cache: str
-    DownloadType: str
-    Group: str
-    GuiDisabled: bool
-    KernelOptions: str
-    Locale: str
-    RootTimeout: int
-    Server: str
-    SystemType: str
-    UseMinimalLayout: bool
-
-@dataclass
-class LinboConfig:
-    LINBO: Linbo
-    Partitions: list
-    OS: list
 
 class LinboConfigManager:
 
@@ -73,8 +23,43 @@ class LinboConfigManager:
         for config in glob('/srv/linbo/start.conf.*'):
             if not os.path.islink(config):
                 group = config.replace('/srv/linbo/start.conf.', '')
-                with LMNFile(config, 'r') as f:
-                    self.linbo_configs[group] = f.data
+                try:
+                    self.linbo_configs[group] = self.read_linbo_config(config)
+                except TypeError as e:
+                    logging.error(f"Failed to load {config}: {e}")
+
+    def read_linbo_config(self, config):
+        if not os.path.isfile(config):
+            raise FileNotFoundError(f'Linbo config file not found: {config}.')
+
+        with open(config, 'r') as f:
+            kwargs = {'config': config}
+            current_model = ''
+
+            lc = LinboConfig(path=config, LINBO=None, Partitions=[], OS=[])
+
+            for line in f:
+                line = line.split('#')[0].strip()
+
+                if line.startswith('['):
+                    if current_model == 'LINBO':
+                        lc.LINBO = Linbo.from_dict(kwargs)
+                    elif current_model == 'Partition':
+                        lc.Partitions.append(Partition.from_dict(kwargs))
+                    elif current_model == 'OS':
+                        lc.OS.append(OS.from_dict(kwargs))
+
+                    kwargs = {'config': config}
+                    current_model = line.strip('[]')
+
+                elif '=' in line:
+                    k, v = line.split('=', 1)
+                    v = v.strip()
+                    if v in ['yes', 'no']:
+                        v = v == 'yes'
+                    kwargs[k.strip()] = v
+
+            return lc
 
     def linbo_groups(self):
         return list(self.linbo_configs.keys())
