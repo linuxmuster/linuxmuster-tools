@@ -1,11 +1,15 @@
-from dataclasses import dataclass, field
-from datetime import datetime
 import os
 import locale
 import time
+from glob import glob
+from dataclasses import dataclass
+from datetime import datetime
 
 from ..devices import Devices
+from ..lmnfile import LMNFile
 
+
+LINBO_PATH = '/srv/linbo'
 
 @dataclass
 class Partition:
@@ -58,11 +62,24 @@ class LinboConfig:
     OS: list
 
 class LinboConfigManager:
-    pass
+
+    def __init__(self, school='default-school'):
+        self.school = school
+        self.linbo_configs = {}
+
+        self.load_linbo_config()
+
+    def load_linbo_config(self):
+        for config in glob('/srv/linbo/start.conf.*'):
+            if not os.path.islink(config):
+                group = config.replace('/srv/linbo/start.conf.', '')
+                with LMNFile(config, 'r') as f:
+                    self.linbo_configs[group] = f.data
+
+    def linbo_groups(self):
+        return list(self.linbo_configs.keys())
 
 ## The following functions need to be rewritten
-
-LINBO_PATH = '/srv/linbo'
 
 def read_config(group):
     """
