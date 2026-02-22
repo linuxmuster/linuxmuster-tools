@@ -371,6 +371,7 @@ class StartConfLoader(LMNFile):
     def __enter__(self):
         if os.path.isfile(self.file):
             self.opened = open(self.file, 'r', encoding=self.encoding)
+            # TODO: use new parser in linbo module
             if 'r' in self.mode or '+' in self.mode:
                 self.data = {
                     'config': {},

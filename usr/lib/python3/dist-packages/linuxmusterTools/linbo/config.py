@@ -66,35 +66,6 @@ class LinboConfigManager:
 
 ## The following functions need to be rewritten
 
-def read_config(group):
-    """
-    Get the os config from linbo config file start.conf.<group>
-
-    :param group: Linbo group
-    :type group: string
-    :return: Config as list of dict
-    :rtype: list of dict
-    """
-
-    path = os.path.join(LINBO_PATH, 'start.conf.'+group)
-    osConfig = []
-    if os.path.isfile(path):
-        for line in open(path):
-            line = line.split('#')[0].strip()
-
-            if line.startswith('['):
-                section = {}
-                section_name = line.strip('[]')
-                if section_name == 'OS':
-                    osConfig.append(section)
-            elif '=' in line:
-                k, v = line.split('=', 1)
-                v = v.strip()
-                if v in ['yes', 'no']:
-                    v = v == 'yes'
-                section[k.strip()] = v
-        return osConfig
-    return None
 
 def last_sync(workstation, image):
     """

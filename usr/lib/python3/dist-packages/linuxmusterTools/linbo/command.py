@@ -1,6 +1,12 @@
-
 from ..ldapconnector import LMNLdapReader as lr
 
+
+# TODO:
+#  - check nr for partitions and os
+#  - check if given ips, group and room are valid
+#  - run linbo command
+#  - add tmux support: https://github.com/tmux-python/libtmux
+#  - add support for remote linbo server (per ssh)
 
 class LinboRemote:
     """
