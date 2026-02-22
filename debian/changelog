@@ -1,3 +1,14 @@
+linuxmuster-tools7 (7.3.37) lmn73; urgency=medium
+
+  * [ldapreader] Remove webui permissions in rawuser response.
+  * [ldapreader] Add endpoints for school- and global admins. 
+  * [ldapreader] Add endpoints for school- and global bind users.
+  * [ldapwriter] Fix multischool issues.
+  * [linbo] Class for linbo-remote and build command. 
+  * [linbo] New parser for start.conf.
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sun, 22 Feb 2026 18:07:51 +0100
+
 linuxmuster-tools7 (7.3.36) lmn73; urgency=medium
 
   * [print] List all LaTeX templates. 

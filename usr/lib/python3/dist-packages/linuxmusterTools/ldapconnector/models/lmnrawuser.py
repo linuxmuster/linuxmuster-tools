@@ -1,6 +1,5 @@
 from dataclasses import dataclass, field, InitVar
 import re
-import ldap
 from .lmnsession import LMNSessionModel
 from .common import LMNModel
 
