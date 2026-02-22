@@ -2,135 +2,67 @@ import linuxmusterTools.ldapconnector.models as models
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router
 
 
-@router.collection(r'/users', models.LMNUserModel)
-def get_all_users():
+@router.collection(r'/globalbindusers', models.LMNUserModel)
+def get_all_globalbindusers():
     """
-    Get all details from all users.
+    Get all details from all globalbindusers.
     Return a list of LMNUserModel data object.
     """
 
     ldap_filter = f"""(&
                                 (objectClass=user)
                                 (|
-                                    (sophomorixRole=globaladministrator)
-                                    (sophomorixRole=schooladministrator)
-                                    (sophomorixRole=teacher)
-                                    (sophomorixRole=student)
-                                    (sophomorixRole=parent)
-                                    (sophomorixRole=staff)
+                                    (sophomorixRole=globalbinduser)
                                 )
                             )"""
 
     return ldap_filter
 
-@router.collection(r'/users/exam', models.LMNUserModel)
-def get_exam_users():
+@router.single(r'/globalbindusers/(?P<username>[\w\-]*)', models.LMNUserModel)
+def get_globalbinduser(username):
     """
-    Get all details from all users in exam mode.
-    Return a LMNUserModel data object.
-    """
-
-    ldap_filter = f"""(&
-                                (objectClass=user)
-                                (|
-                                    (sophomorixRole=examuser)
-                                )
-                            )"""
-
-    return ldap_filter
-
-@router.single(r'/users/exam/(?P<username>[\w\-]*)', models.LMNUserModel)
-def get_exam_user(username):
-    """
-    Get all details from a specific user in exam mode.
-    Return a LMNUserModel data object.
-    """
-
-    ldap_filter = f"""(&
-                                (|(cn={username})(cn={username}-exam))
-                                (objectClass=user)
-                                (|
-                                    (sophomorixRole=examuser)
-                                )
-                            )"""
-
-    return ldap_filter
-
-@router.single(r'/users/(?P<username>[\w\-]*)', models.LMNUserModel)
-def get_user(username):
-    """
-    Get all details from a specific user.
-    Return a LMNUserModel data object.
+    Get all details from a specific globalbinduser.
+    Return a list of LMNUserModel data object.
     """
 
     ldap_filter = f"""(&
                                 (cn={username})
                                 (objectClass=user)
                                 (|
-                                    (sophomorixRole=globaladministrator)
-                                    (sophomorixRole=schooladministrator)
-                                    (sophomorixRole=teacher)
-                                    (sophomorixRole=student)
-                                    (sophomorixRole=parent)
-                                    (sophomorixRole=staff)
+                                    (sophomorixRole=globalbinduser)
                                 )
                             )"""
 
     return ldap_filter
 
-@router.collection(r'/users/search/(?P<selection>\w*)/(?P<query>[\w\+]*)', models.LMNUserModel)
-def get_results_search_user(query='', selection=[]):
+@router.collection(r'/schoolbindusers', models.LMNUserModel)
+def get_all_schoolbindusers():
     """
-    Get all details from a search on a specific user login scheme and a
-    selection of roles.
+    Get all details from all schoolbindusers.
     Return a list of LMNUserModel data object.
-    """
-
-    role_filter = {
-        'all': """
-                (sophomorixRole=globaladministrator)
-                (sophomorixRole=schooladministrator)
-                (sophomorixRole=teacher)
-                (sophomorixRole=student)
-                (sophomorixRole=parent)
-                (sophomorixRole=staff)
-            """,
-        'admins': """
-                (sophomorixRole=globaladministrator)
-                (sophomorixRole=schooladministrator)
-            """,
-    }
-
-    for role in ['globaladministrator', 'schooladministrator', 'teacher', 'student', 'parent']:
-        role_filter[role] = f'(sophomorixRole={role})'
-
-    if query:
-        query = f"(|(sAMAccountName=*{query}*)(sn=*{query}*)(givenName=*{query}*))"
-
-    return f"""(&
-                                {query}
-                                (objectClass=user)
-                                (|
-                                    {role_filter[selection]}
-                                )
-                            )"""
-
-@router.collection(r'/rawusers', models.LMNRawUserModel)
-def get_all_raw_users():
-    """
-    Get all details from all users.
-    Return a list of LMNRawUserModel data object.
     """
 
     ldap_filter = f"""(&
                                 (objectClass=user)
                                 (|
-                                    (sophomorixRole=globaladministrator)
-                                    (sophomorixRole=schooladministrator)
-                                    (sophomorixRole=teacher)
-                                    (sophomorixRole=student)
-                                    (sophomorixRole=parent)
-                                    (sophomorixRole=staff)
+                                    (sophomorixRole=schoolbinduser)
+                                )
+                            )"""
+
+    return ldap_filter
+
+@router.single(r'/schoolbindusers/(?P<username>[\w\-]*)', models.LMNUserModel)
+def get_schoolbinduser(username):
+    """
+    Get all details from a specific schoolbinduser.
+    Return a list of LMNUserModel data object.
+    """
+
+    ldap_filter = f"""(&
+                                (cn={username})
+                                (objectClass=user)
+                                (|
+                                    (sophomorixRole=schoolbinduser)
                                 )
                             )"""
 
