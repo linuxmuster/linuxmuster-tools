@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.3.38) lmn73; urgency=medium
+
+  * [lmnfile] Fix semicolons in comments line. 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Wed, 25 Feb 2026 11:27:15 +0100
+
 linuxmuster-tools7 (7.3.37) lmn73; urgency=medium
 
   * [ldapreader] Remove webui permissions in rawuser response.
