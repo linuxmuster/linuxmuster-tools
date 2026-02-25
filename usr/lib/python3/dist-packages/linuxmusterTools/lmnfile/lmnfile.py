@@ -317,6 +317,8 @@ class CSVLoader(LMNFile):
                 first_field = elt[self.fieldnames[0]]
                 if first_field in ['', EMPTY_LINE_MARKER]:
                     f.write(first_field.replace(EMPTY_LINE_MARKER, '') + '\n')
+                elif first_field.startswith('#'):
+                    f.write(first_field + '\n')
                 else:
                     writer.writerow(elt)
         if not filecmp.cmp(tmp, self.file):
