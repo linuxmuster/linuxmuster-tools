@@ -13,6 +13,7 @@ class DomCert:
         self.notAfter = None
         self.notAfter_timestamp = None
         self.cert = None
+        self.issuer = None
 
         self._get_cert()
         self._get_limit()
@@ -28,6 +29,7 @@ class DomCert:
         s.settimeout(10)
         s.connect((self.hostname, self.port))
         self.cert = s.getpeercert()
+        self.issuer = self.cert["issuer"]
         s.close()
 
     def _get_limit(self):
