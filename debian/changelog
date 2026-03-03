@@ -1,3 +1,10 @@
+linuxmuster-tools7 (7.3.39) lmn73; urgency=medium
+
+  * [common] DomCert object to check certificates.
+  * [ldapwriter] Set device password hashes. 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Tue, 03 Mar 2026 16:54:34 +0100
+
 linuxmuster-tools7 (7.3.38) lmn73; urgency=medium
 
   * [lmnfile] Fix semicolons in comments line. 
