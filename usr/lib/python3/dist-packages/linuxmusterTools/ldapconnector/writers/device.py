@@ -1,4 +1,8 @@
 import logging
+import os
+import re
+import tempfile
+import subprocess
 from dataclasses import fields
 
 from ..ldap_writer import LdapWriter
@@ -97,6 +101,59 @@ class LMNDevice:
             self.new = True
             self.data =  {field.name:field.type() for field in fields(self.model) if field.init}
             self.data['cn'] = self.cn
+
+    def _set_hash_pwd(self, HashunicodePwd, HashsupplementalCredentials):
+        """
+        Directly set unicodePwd and supplementalCredentials for a device using
+        ldbmodify.
+
+        :param HashunicodePwd: Hashed unicodePwd
+        :type HashunicodePwd: basestring
+        :param HashsupplementalCredentials: Hashed supplementalCredentials
+        :type HashsupplementalCredentials: basestring
+        """
+
+
+        _, ldif_path = tempfile.mkstemp(prefix=f'{self.cn}.', suffix='.device.ldif', dir='/tmp/lmntool')
+
+        # Check hashes to avoid injection
+        BASE64_CHARS = re.compile(r'^[A-Za-z0-9+/=]*$')
+
+        if re.match(BASE64_CHARS, HashunicodePwd) is None:
+            raise Exception(f"{HashunicodePwd} is not a valid hash.")
+
+        if re.match(BASE64_CHARS, HashsupplementalCredentials) is None:
+            raise Exception(f"{HashsupplementalCredentials} is not a valid hash.")
+
+        with open(ldif_path, 'w') as f:
+            f.write(f"""
+dn: {self.data['distinguishedName']}
+changetype: modify
+replace: unicodePwd
+unicodePwd:: {HashunicodePwd}
+replace: supplementalCredentials
+supplementalCredentials:: {HashsupplementalCredentials}
+-
+""")
+
+        cmd = [
+            "ldbmodify",
+            "--url=/var/lib/samba/private/sam.ldb",
+            "--nosync",
+            "--verbose",
+            "--controls=relax:0",
+            "--controls=local_oid:1.3.6.1.4.1.7165.4.3.7:0",    # LDB_CONTROL_AS_SYSTEM_OID
+            "--controls=local_oid:1.3.6.1.4.1.7165.4.3.12:0",   # DSDB_CONTROL_BYPASS_PASSWORD_HASH_OID
+            ldif_path
+        ]
+
+        try:
+            subprocess.run(cmd)
+        except subprocess.CalledProcessError as e:
+            os.unlink(ldif_path)
+            raise
+
+        os.unlink(ldif_path)
 
     def setattr(self, **kwargs):
         """
