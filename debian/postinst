@@ -62,6 +62,9 @@ case "$1" in
         mkdir -p /var/lib/lmntools/print
         mkdir -p /var/lib/lmntools/templates
 
+        # For temp ldif 
+        mkdir -p /tmp/lmntool
+
         # Removing deprecated scripts (lmntools v7.3.15)
         rm -f /usr/local/sbin/lmntools-class
         rm -f /usr/local/sbin/lmntools-student
