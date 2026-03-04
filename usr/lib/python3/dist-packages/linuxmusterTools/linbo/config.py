@@ -79,6 +79,7 @@ def last_sync(workstation, image):
     :rtype: datetime
     """
 
+
     statusfile = f'/var/log/linuxmuster/linbo/{workstation}_image.status'
     image_last_sync, diff_last_sync = '0','0'
     diff_image = image.replace('.qcow2', '.qdiff')
@@ -112,6 +113,8 @@ def read_config(group):
     :return: Config as list of dict
     :rtype: list of dict
     """
+
+
     path = os.path.join(LINBO_PATH, 'start.conf.'+group)
     osConfig = []
     if os.path.isfile(path):
@@ -141,6 +144,7 @@ def group_os(workstations):
     :return: Completed workstations dict with linbo informations
     :rtype: dict
     """
+
 
     for group in workstations.keys():
         workstations[group]['os'] = []
@@ -181,6 +185,7 @@ def list_workstations(school='default-school', groups=[]):
     :rtype: dict
     """
 
+
     devices_dict = {}
     devices_manager = Devices(school=school)
     devices = devices_manager.filter(groups=groups)
@@ -208,6 +213,7 @@ def last_sync_all(workstations):
     :return: Completed dict of workstations
     :rtype: dict
     """
+
 
     today = time.mktime(datetime.now().timetuple())
 

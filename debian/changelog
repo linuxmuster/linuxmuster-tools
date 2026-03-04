@@ -1,3 +1,10 @@
+linuxmuster-tools7 (7.3.40) lmn73; urgency=medium
+
+  * [common] Check tmp dir and harden security.
+  * [linbo] Fix read config. 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Wed, 04 Mar 2026 14:22:17 +0100
+
 linuxmuster-tools7 (7.3.39) lmn73; urgency=medium
 
   * [common] DomCert object to check certificates.
