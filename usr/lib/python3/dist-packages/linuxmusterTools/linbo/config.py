@@ -6,7 +6,6 @@ from datetime import datetime
 
 from .models import *
 from ..devices import Devices
-from ..lmnfile import LMNFile
 
 
 LINBO_PATH = '/srv/linbo'

@@ -1,9 +1,12 @@
 import logging
 import os
 import re
+import time
+import locale
 import tempfile
 import subprocess
 from dataclasses import fields
+from datetime import datetime
 
 from ..ldap_writer import LdapWriter
 from ..urls.ldaprouter import router
@@ -108,17 +111,47 @@ class LMNDevice:
 
         csvdetails = devices_list.get_hostname(self.cn)
         if csvdetails is not None:
-            self.data['csvdetails'] = devices_list.get_hostname(self.cn)
+            self.data['csvdetails'] = csvdetails
+            self.pxe = csvdetails.get('pxeFlag', None) == '1'
 
         if not self.data:
-            if self.data['csvdetails'] is not None:
+            if csvdetails is not None:
                 # TODO Check if not imported or regular (router)
-                self.pxe = self.data['csvdetails'].get('pxeFlag', None) == '1'
+                pass
             else:
                 logger.info(f"The device {self.cn} was not found in ldap.")
                 self.new = True
                 self.data =  {field.name:field.type() for field in fields(self.model) if field.init}
                 self.data['cn'] = self.cn
+
+    def last_sync(self, image):
+        if self.pxe:
+            statusfile = f'/var/log/linuxmuster/linbo/{self.cn}_image.status'
+            image_last_sync, diff_last_sync = '0','0'
+            diff_image = image.replace('.qcow2', '.qdiff')
+
+            if os.path.isfile(statusfile) and os.stat(statusfile).st_size != 0:
+                for line in open(statusfile, 'r').readlines():
+                    if image in line:
+                        image_last_sync = line.rstrip().split(' ')[0]
+                    if diff_image in line:
+                        diff_last_sync = line.strip().split(' ')[0]
+
+            last = max(image_last_sync, diff_last_sync)
+
+            if last == '0':
+                return False
+
+            ## Linbo locale is en_GB, not necessarily the server locale
+            saved = locale.setlocale(locale.LC_ALL)
+            locale.setlocale(locale.LC_ALL, 'C.UTF-8')
+            last = datetime.strptime(last, '%Y%m%d%H%M')
+            locale.setlocale(locale.LC_ALL, saved)
+
+            last = time.mktime(last.timetuple())
+            return last
+
+        return "Not a PXE device."
 
     def _set_hash_pwd(self, HashunicodePwd, HashsupplementalCredentials):
         """
