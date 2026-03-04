@@ -11,10 +11,12 @@ from ..models import LMNDeviceModel, LMNRoomModel
 from linuxmusterTools.common import Validator
 from linuxmusterTools.lmnconfig import LDAP_CONTEXT, SAMBA_REALM
 from linuxmusterTools.common.checks import NameChecker, check_tmp_dir
+from linuxmusterTools.devices import Devices
 
 
 name_checker = NameChecker()
 logger = logging.getLogger(__name__)
+devices_list = Devices()
 
 class LMNRoom:
 
@@ -80,6 +82,11 @@ class LMNRoom:
 class LMNDevice:
 
     def __init__(self, cn, school='default-school'):
+        """
+        This class can handle any device registered in Ldap. Not all devices in
+        the devices.csv are registered in Ldap (server, router, etc ... are not).
+        """
+
 
         if not name_checker.check_host_name(cn):
             raise Exception(f"{cn} is not a valid CN")
@@ -90,17 +97,28 @@ class LMNDevice:
         self.model = LMNDeviceModel
         self.data = {}
         self.new = False
+        self.pxe = False
         self.school = school
         self.load_data()
 
     def load_data(self):
         self.data = self.lr.get(f'/devices/{self.cn}', school=self.school)
 
+        devices_list.switch(self.school)
+
+        csvdetails = devices_list.get_hostname(self.cn)
+        if csvdetails is not None:
+            self.data['csvdetails'] = devices_list.get_hostname(self.cn)
+
         if not self.data:
-            logger.info(f"The device {self.cn} was not found in ldap.")
-            self.new = True
-            self.data =  {field.name:field.type() for field in fields(self.model) if field.init}
-            self.data['cn'] = self.cn
+            if self.data['csvdetails'] is not None:
+                # TODO Check if not imported or regular (router)
+                self.pxe = self.data['csvdetails'].get('pxeFlag', None) == '1'
+            else:
+                logger.info(f"The device {self.cn} was not found in ldap.")
+                self.new = True
+                self.data =  {field.name:field.type() for field in fields(self.model) if field.init}
+                self.data['cn'] = self.cn
 
     def _set_hash_pwd(self, HashunicodePwd, HashsupplementalCredentials):
         """
