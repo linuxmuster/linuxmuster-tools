@@ -10,7 +10,7 @@ from ..urls.ldaprouter import router
 from ..models import LMNDeviceModel, LMNRoomModel
 from linuxmusterTools.common import Validator
 from linuxmusterTools.lmnconfig import LDAP_CONTEXT, SAMBA_REALM
-from linuxmusterTools.common.checks import NameChecker
+from linuxmusterTools.common.checks import NameChecker, check_tmp_dir
 
 
 name_checker = NameChecker()
@@ -114,6 +114,7 @@ class LMNDevice:
         """
 
 
+        check_tmp_dir()
         _, ldif_path = tempfile.mkstemp(prefix=f'{self.cn}.', suffix='.device.ldif', dir='/tmp/lmntool')
 
         # Check hashes to avoid injection

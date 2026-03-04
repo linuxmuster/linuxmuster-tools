@@ -64,6 +64,7 @@ case "$1" in
 
         # For temp ldif 
         mkdir -p /tmp/lmntool
+        chmod 600 /tmp/lmntool
 
         # Removing deprecated scripts (lmntools v7.3.15)
         rm -f /usr/local/sbin/lmntools-class
