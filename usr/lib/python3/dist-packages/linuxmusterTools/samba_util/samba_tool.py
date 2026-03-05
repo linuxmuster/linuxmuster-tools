@@ -211,9 +211,9 @@ class DeviceManager:
         else:
             logger.warning(f'{SAMDB_PATH} not found, is linuxmuster installed ?')
 
-    def get_credentials(self, device_cn):
+    def get_credentials(self, device_cn, school='default-school'):
         result = self.samdb.search(
-            LDAP_CONTEXT,
+            f"OU={school},{LDAP_CONTEXT}",
             expression=f"sAMAccountName={device_cn.upper()}$",
             attrs=['unicodePwd', 'supplementalCredentials']
         )
@@ -227,7 +227,7 @@ class DeviceManager:
 
         return {}
 
-    def set_credentials(self, device_cn, HashunicodePwd, HashsupplementalCredentials):
+    def set_credentials(self, device_cn, HashunicodePwd, HashsupplementalCredentials, school='default-school'):
         """
         Directly set unicodePwd and supplementalCredentials for a device using
         ldbmodify.
@@ -248,7 +248,7 @@ class DeviceManager:
         if re.match(BASE64_CHARS, HashsupplementalCredentials) is None:
             raise Exception(f"{HashsupplementalCredentials} is not a valid hash.")
 
-        device_dn = lr.getval(f'/devices/{device_cn}', 'distinguishedName')
+        device_dn = lr.getval(f'/devices/{device_cn}', 'distinguishedName', school=school)
 
         if not device_dn:
             raise Exception(f"{device_cn} was not found in ldap.")
