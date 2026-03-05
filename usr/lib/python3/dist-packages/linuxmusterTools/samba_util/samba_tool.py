@@ -1,11 +1,15 @@
 import os
+import re
 import string
+import base64
 import random
 import logging
 import subprocess
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass
+
 from .drives import DriveManager
 from ..ldapconnector import LMNLdapReader as lr
+from ..lmnconfig import LDAP_CONTEXT
 
 
 logger = logging.getLogger(__name__)
@@ -189,4 +193,39 @@ class UserManager:
         except LdbError as e:
             logger.error(e.args[1])
             raise Exception(e.args[1])
+
+class DeviceManager:
+    """
+    Sample class to manage samba devices via samba-tool.
+    """
+
+
+    def __init__(self):
+        self.POST_HOOK_DIR = '/etc/linuxmuster/tools/hooks/user-manager'
+
+        if os.path.isfile(SAMDB_PATH):
+            try:
+                self.samdb = SamDB(url=SAMDB_PATH, session_info=system_session(),credentials=creds, lp=lp)
+            except Exception:
+                logger.error(f'Could not load {SAMDB_PATH}, is linuxmuster installed ?')
+        else:
+            logger.warning(f'{SAMDB_PATH} not found, is linuxmuster installed ?')
+
+    def get_credentials(self, device_cn):
+        result = self.samdb.search(
+            LDAP_CONTEXT,
+            expression=f"sAMAccountName={device_cn.upper()}$",
+            attrs=['unicodePwd', 'supplementalCredentials']
+        )
+
+        if result:
+            # More than one result should not happen
+            return {
+                'unicodePwd': base64.b64encode(result[0]['unicodePwd'][0]).decode(),
+                'supplementalCredentials': base64.b64encode(result[0]['supplementalCredentials'][0]).decode(),
+            }
+
+        return {}
+
+
 
