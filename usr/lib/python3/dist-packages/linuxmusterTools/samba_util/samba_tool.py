@@ -227,5 +227,43 @@ class DeviceManager:
 
         return {}
 
+    def set_credentials(self, device_cn, HashunicodePwd, HashsupplementalCredentials):
+        """
+        Directly set unicodePwd and supplementalCredentials for a device using
+        ldbmodify.
 
+        :param HashunicodePwd: Hashed unicodePwd
+        :type HashunicodePwd: basestring
+        :param HashsupplementalCredentials: Hashed supplementalCredentials
+        :type HashsupplementalCredentials: basestring
+        """
+
+
+        # Check hashes to avoid injection
+        BASE64_CHARS = re.compile(r'^[A-Za-z0-9+/=]*$')
+
+        if re.match(BASE64_CHARS, HashunicodePwd) is None:
+            raise Exception(f"{HashunicodePwd} is not a valid hash.")
+
+        if re.match(BASE64_CHARS, HashsupplementalCredentials) is None:
+            raise Exception(f"{HashsupplementalCredentials} is not a valid hash.")
+
+        device_dn = lr.getval(f'/devices/{device_cn}', 'distinguishedName')
+
+        if not device_dn:
+            raise Exception(f"{device_cn} was not found in ldap.")
+
+        ldif = f"""
+dn: {device_dn}
+changetype: modify
+replace: unicodePwd
+unicodePwd:: {HashunicodePwd}
+replace: supplementalCredentials
+supplementalCredentials:: {HashsupplementalCredentials}
+-
+"""
+        self.samdb.modify_ldif(
+            ldif,
+            controls=['relax:0', 'local_oid:1.3.6.1.4.1.7165.4.3.7:0', 'local_oid:1.3.6.1.4.1.7165.4.3.12:0']
+        )
 
