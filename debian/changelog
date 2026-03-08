@@ -1,3 +1,10 @@
+linuxmuster-tools7 (7.3.41) lmn73; urgency=medium
+
+  * [linbo] Get last sync datetime for a device with pxe boot.
+  * [samba-util] Use native ldb to get and set credentials for devices. 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sun, 08 Mar 2026 21:15:28 +0100
+
 linuxmuster-tools7 (7.3.40) lmn73; urgency=medium
 
   * [common] Check tmp dir and harden security.
