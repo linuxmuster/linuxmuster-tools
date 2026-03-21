@@ -2,8 +2,6 @@ from .render import LatexRenderer
 from .templates import *
 
 
-templates = LatexTemplates().templates
-
 def print_schoolclass_list(schoolclass, caller, school='default_school', template="schoolclass-DE-32-template.tex"):
     """
     Print a list of students from a specific schoolclass.
@@ -12,6 +10,7 @@ def print_schoolclass_list(schoolclass, caller, school='default_school', templat
     :return: PDF path
     """
 
+    templates = LatexTemplates().templates
 
     if template not in templates:
         raise Exception(f"Can not find the template {template}!")
