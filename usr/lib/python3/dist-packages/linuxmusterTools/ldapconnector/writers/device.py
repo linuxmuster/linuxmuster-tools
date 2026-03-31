@@ -7,7 +7,7 @@ from datetime import datetime
 
 from ..ldap_writer import LdapWriter
 from ..urls.ldaprouter import router
-from ..models import LMNDeviceModel, LMNRoomModel
+from ..models import LMNDeviceModel, LMNRoomModel, LMNGroupModel
 from linuxmusterTools.common import Validator
 from linuxmusterTools.lmnconfig import LDAP_CONTEXT, SAMBA_REALM
 from linuxmusterTools.common.checks import NameChecker, check_tmp_dir
@@ -81,7 +81,7 @@ class LMNRoom:
 
 class LMNDevice:
 
-    def __init__(self, cn, school='default-school'):
+    def __init__(self, cn, school='default-school', printer=False):
         """
         This class can handle any device registered in Ldap. Not all devices in
         the devices.csv are registered in Ldap (server, router, etc ... are not).
@@ -94,7 +94,10 @@ class LMNDevice:
         self.cn = cn
         self.lw = LdapWriter()
         self.lr = router
-        self.model = LMNDeviceModel
+        if printer:
+            self.model = LMNGroupModel
+        else:
+            self.model = LMNDeviceModel
         self.data = {}
         self.new = False
         self.pxe = False
@@ -341,3 +344,82 @@ class LMNDevice:
     #             logger.warning(f"Attribute {attr} not found in LMNRoom details")
     #
     #     self.lw._add_group(group_dn, ldif)
+
+class LMNPrinter(LMNDevice):
+
+    def __init__(self, cn, school='default-school'):
+        super().__init__(cn, school = school, printer=True)
+        if self.data.get('sophomorixType', None) != 'printer':
+            raise Exception(f'{cn} is not a valid printer.')
+
+    def load_data(self):
+        self.data = self.lr.get(f'/printers/{self.cn}', school=self.school)
+
+        devices_list.switch(self.school)
+
+        csvdetails = devices_list.get_hostname(self.cn)
+        if csvdetails is not None:
+            self.data['csvdetails'] = csvdetails
+            self.pxe = csvdetails.get('pxeFlag', None) == '1'
+
+        if not self.data:
+            if csvdetails is not None:
+                # TODO Check if not imported or regular (router)
+                pass
+            else:
+                logger.info(f"The device {self.cn} was not found in ldap.")
+                self.new = True
+                self.data =  {field.name:field.type() for field in fields(self.model) if field.init}
+                self.data['cn'] = self.cn
+
+    def remove_member(self, user):
+        user_dn = self.lr.getval(f'/users/{user}', 'dn')
+
+        if not user_dn:
+            logger.info(f"The user {user} was not found in ldap.")
+            raise Exception(f"The object {user} was not found in ldap.")
+
+        try:
+            members = self.data['member']
+            if user_dn in members:
+                members.remove(user_dn)
+            else:
+                logging.info(f"{user} is not a member of schoolclass {self.cn}")
+                return
+            self.lw._setattr(self, data={'member': members})
+            self.load_data()
+        except ValueError as e:
+            logger.warning(f"Could not remove member {user_dn} from {self.cn}: {str(e)}")
+
+    def remove_all_members(self):
+        try:
+            self.lw._setattr(self, data={'member': []})
+            self.load_data()
+        except ValueError as e:
+            logger.warning(f"Could not remove all members from {self.cn}: {str(e)}")
+
+    def add_member(self, user):
+        user_dn = self.lr.getval(f'/users/{user}', 'dn')
+
+        if not user_dn:
+            logger.info(f"The user {user} was not found in ldap.")
+            raise Exception(f"The user {user} was not found in ldap.")
+
+        try:
+            members = self.data['member']
+            members.append(user_dn)
+            self.lw._setattr(self, data={'member': members})
+            self.load_data()
+        except Exception as e:
+            logger.warning(f"Could not append member {user_dn} to {self.cn}: {str(e)}")
+
+    def add_members(self, userlist):
+        """
+        Shortcut to add all members from a given list
+
+        :param userlist: List of valid cn
+        """
+
+
+        for user in userlist:
+            self.add_member(user)
