@@ -33,7 +33,7 @@ class LinboTorrent:
         """
         try:
             result = subprocess.run(
-                ["sudo", TORRENT_BIN, "status"],
+                [TORRENT_BIN, "status"],
                 capture_output=True, text=True, timeout=10,
             )
             sessions = []
@@ -61,7 +61,7 @@ class LinboTorrent:
         Returns:
             {success, message}
         """
-        cmd = ["sudo", TORRENT_BIN, "start"]
+        cmd = [TORRENT_BIN, "start"]
         if image:
             cmd.append(self._validate_image(image))
 
@@ -80,7 +80,7 @@ class LinboTorrent:
         Returns:
             {success, message}
         """
-        cmd = ["sudo", TORRENT_BIN, "stop"]
+        cmd = [TORRENT_BIN, "stop"]
         if image:
             cmd.append(self._validate_image(image))
 

@@ -8,17 +8,28 @@ and atomic directory swap on completion.
 import hashlib
 import logging
 import os
-import re
 import shutil
 from datetime import datetime, timezone
 from pathlib import Path
-from urllib.request import Request, urlopen
 from urllib.error import URLError
+from urllib.request import Request, urlopen
 
 logger = logging.getLogger(__name__)
 
 IMAGES_DIR = Path(os.environ.get("LINBO_DIR", "/srv/linbo")) / "images"
 CHUNK_SIZE = 10 * 1024 * 1024  # 10 MB
+
+
+def _file_md5(path: Path) -> str:
+    """Return the MD5 of a file without loading it fully into memory."""
+    md5_hash = hashlib.md5()
+    with path.open("rb") as handle:
+        while True:
+            chunk = handle.read(CHUNK_SIZE)
+            if not chunk:
+                break
+            md5_hash.update(chunk)
+    return md5_hash.hexdigest()
 
 
 class LinboImageSync:
@@ -125,17 +136,7 @@ class LinboImageSync:
                             on_progress(received, total)
 
             duration = (datetime.now(timezone.utc) - start).total_seconds()
-
-            # Hash the complete file (not just new bytes) for correct
-            # verification after resumed downloads
-            md5_hash = hashlib.md5()
-            with open(target_file, "rb") as f:
-                while True:
-                    block = f.read(CHUNK_SIZE)
-                    if not block:
-                        break
-                    md5_hash.update(block)
-            actual_md5 = md5_hash.hexdigest()
+            actual_md5 = _file_md5(target_file)
 
             # Verify MD5
             if expected_md5 and actual_md5 != expected_md5:
@@ -272,7 +273,12 @@ def receive_upload_chunk(
     staging_dir.mkdir(parents=True, exist_ok=True)
     file_path = staging_dir / filename
 
-    if offset is not None and offset > 0 and file_path.exists():
+    if offset is not None and offset > 0:
+        if not file_path.exists():
+            raise ValueError("Cannot resume upload without an existing staged file")
+        current_size = file_path.stat().st_size
+        if current_size != offset:
+            raise ValueError(f"Offset mismatch: expected {current_size}, got {offset}")
         with open(file_path, "r+b") as f:
             f.seek(offset)
             f.write(data)
@@ -367,115 +373,3 @@ def cancel_upload(images_dir: Path, image_name: str) -> dict:
         shutil.rmtree(str(staging_dir))
         return {"cleaned": True}
     return {"cleaned": False, "detail": "No staging directory found"}
-
-
-# =============================================================================
-# Filesystem scanning
-# =============================================================================
-
-
-def parse_info_file(info_path) -> dict:
-    """Parse a .info sidecar file into a dict of key=value pairs."""
-    result = {}
-    try:
-        p = Path(info_path) if not isinstance(info_path, Path) else info_path
-        for line in p.read_text(encoding="utf-8").splitlines():
-            match = re.match(r'^(\w+)="(.*)"', line)
-            if match:
-                result[match.group(1)] = match.group(2)
-    except OSError:
-        pass
-    return result
-
-
-def scan_images(images_dir: str | None = None) -> list[dict]:
-    """Scan images directory for QCOW2/QDIFF/CLOOP images with metadata.
-
-    Args:
-        images_dir: Override images directory (default: /srv/linbo/images)
-
-    Returns:
-        List of image dicts with name, size, md5, info, sidecars, files, updatedAt.
-        Skips backup directories and hidden directories.
-    """
-    images_path = Path(images_dir) if images_dir else IMAGES_DIR
-    images = []
-    if not images_path.is_dir():
-        return images
-
-    for subdir in sorted(images_path.iterdir()):
-        if not subdir.is_dir() or subdir.name.startswith("."):
-            continue
-
-        for img_file in sorted(subdir.iterdir()):
-            if img_file.suffix not in IMAGE_EXTS:
-                continue
-            if "backup" in str(img_file.relative_to(images_path)):
-                continue
-
-            stat = img_file.stat()
-            name = img_file.name
-            base = subdir.name
-            rel_path = f"images/{base}/{name}"
-
-            # Read .md5 sidecar
-            md5 = None
-            md5_path = img_file.with_suffix(img_file.suffix + ".md5")
-            try:
-                md5 = md5_path.read_text().strip().split()[0]
-            except OSError:
-                pass
-
-            # Read .info sidecar
-            info = parse_info_file(img_file.with_suffix(img_file.suffix + ".info"))
-
-            # Read .desc sidecar
-            desc = None
-            desc_path = img_file.with_suffix(img_file.suffix + ".desc")
-            try:
-                desc = desc_path.read_text(encoding="utf-8").strip()
-            except OSError:
-                pass
-
-            # List available sidecars
-            sidecars = []
-            for sc in [".md5", ".info", ".desc", ".torrent", ".macct", ".reg",
-                        ".prestart", ".postsync"]:
-                for candidate in [img_file.with_suffix(img_file.suffix + sc),
-                                   subdir / f"{base}{sc}"]:
-                    if candidate.is_file():
-                        sidecars.append(sc.lstrip("."))
-                        break
-
-            mtime = datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc)
-
-            # Build files list
-            files = [{"name": name, "size": stat.st_size, "type": "image"}]
-            for sc in sidecars:
-                sc_ext = f".{sc}"
-                for candidate in [img_file.with_suffix(img_file.suffix + sc_ext),
-                                   subdir / f"{base}{sc_ext}"]:
-                    if candidate.is_file():
-                        sc_stat = candidate.stat()
-                        files.append({
-                            "name": candidate.name,
-                            "size": sc_stat.st_size,
-                            "type": "sidecar",
-                        })
-                        break
-
-            images.append({
-                "name": name,
-                "filename": name,
-                "base": base,
-                "path": rel_path,
-                "size": stat.st_size,
-                "md5": md5,
-                "info": info if info else None,
-                "description": desc,
-                "sidecars": sidecars,
-                "files": files,
-                "updatedAt": mtime.isoformat(),
-            })
-
-    return images

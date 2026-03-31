@@ -27,7 +27,7 @@ class LinboMulticast:
         """
         try:
             result = subprocess.run(
-                ["sudo", MULTICAST_BIN, "status"],
+                [MULTICAST_BIN, "status"],
                 capture_output=True, text=True, timeout=10,
             )
             return self._parse_status(result.stdout)
@@ -50,7 +50,7 @@ class LinboMulticast:
         Returns:
             {success, message}
         """
-        cmd = ["sudo", MULTICAST_BIN, "start"]
+        cmd = [MULTICAST_BIN, "start"]
         if image:
             cmd.append(self._validate_image(image))
 
@@ -69,7 +69,7 @@ class LinboMulticast:
         Returns:
             {success, message}
         """
-        cmd = ["sudo", MULTICAST_BIN, "stop"]
+        cmd = [MULTICAST_BIN, "stop"]
         if image:
             cmd.append(self._validate_image(image))
 

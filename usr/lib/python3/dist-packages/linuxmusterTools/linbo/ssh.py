@@ -1,8 +1,8 @@
 """
 LINBO SSH Service — execute commands on LINBO clients via SSH.
 
-Uses paramiko for SSH connections. Key loading is lazy: the private key
-is loaded on first use, not at module import time.
+Uses the system ssh client. Key loading is lazy: the private key is loaded
+on first use, not at module import time.
 
 Default connection: root@host:2222 with RSA key from
 /etc/linuxmuster/linbo/ssh_host_rsa_key_client
@@ -11,6 +11,7 @@ Default connection: root@host:2222 with RSA key from
 import logging
 import os
 import re
+import subprocess
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
@@ -20,6 +21,7 @@ _KEY_PATH = os.environ.get(
     "LINBO_CLIENT_SSH_KEY",
     "/etc/linuxmuster/linbo/ssh_host_rsa_key_client",
 )
+_SSH_BIN = os.environ.get("LINBO_CLIENT_SSH_BIN", "ssh")
 _SSH_PORT = int(os.environ.get("LINBO_CLIENT_SSH_PORT", "2222"))
 _SSH_TIMEOUT = int(os.environ.get("SSH_TIMEOUT", "10"))
 _MAX_OUTPUT = 10 * 1024 * 1024  # 10 MB
@@ -62,52 +64,38 @@ def _get_private_key_path() -> str:
     )
 
 
-def _get_paramiko():
-    """Lazy import paramiko (not all environments have it)."""
-    try:
-        import paramiko
-        return paramiko
-    except ImportError:
-        raise ImportError(
-            "paramiko is required for SSH operations. Install with: pip install paramiko"
-        )
-
-
-def _connect(host: str, port: int | None = None, timeout: float | None = None):
-    """Create and return an authenticated SSH client.
-
-    Args:
-        host: Target hostname or IP
-        port: SSH port (default: LINBO_CLIENT_SSH_PORT or 2222)
-        timeout: Connection timeout in seconds
-
-    Returns:
-        Connected paramiko.SSHClient
-    """
-    paramiko = _get_paramiko()
-
+def _build_ssh_command(
+    host: str,
+    command: str,
+    port: int | None = None,
+    timeout: float | None = None,
+) -> list[str]:
+    """Build the ssh command used for remote execution."""
     if port is None:
         port = _SSH_PORT
     if timeout is None:
         timeout = _SSH_TIMEOUT
 
     key_path = _get_private_key_path()
+    connect_timeout = max(int(timeout), 1)
 
-    client = paramiko.SSHClient()
-    # LINBO clients use Dropbear with auto-generated keys — host key verification
-    # is not practical in this environment. Use WarningPolicy to log unknown keys
-    # rather than silently accepting (AutoAddPolicy).
-    client.set_missing_host_key_policy(paramiko.WarningPolicy())
-    client.connect(
-        hostname=host,
-        port=port,
-        username="root",
-        key_filename=key_path,
-        timeout=timeout,
-        banner_timeout=timeout,
-        auth_timeout=timeout,
-    )
-    return client
+    return [
+        _SSH_BIN,
+        "-i",
+        key_path,
+        "-p",
+        str(port),
+        "-o",
+        "BatchMode=yes",
+        "-o",
+        "StrictHostKeyChecking=no",
+        "-o",
+        "UserKnownHostsFile=/dev/null",
+        "-o",
+        f"ConnectTimeout={connect_timeout}",
+        f"root@{host}",
+        command,
+    ]
 
 
 def execute_command(
@@ -127,15 +115,21 @@ def execute_command(
     Returns:
         {stdout, stderr, code}
     """
-    client = _connect(host, port=port, timeout=timeout)
-    try:
-        _, stdout_ch, stderr_ch = client.exec_command(command, timeout=timeout or 30)
-        stdout = stdout_ch.read(_MAX_OUTPUT).decode("utf-8", errors="replace")
-        stderr = stderr_ch.read(_MAX_OUTPUT).decode("utf-8", errors="replace")
-        code = stdout_ch.channel.recv_exit_status()
-        return {"stdout": stdout, "stderr": stderr, "code": code}
-    finally:
-        client.close()
+    if timeout is None:
+        timeout = _SSH_TIMEOUT
+
+    result = subprocess.run(
+        _build_ssh_command(host, command, port=port, timeout=timeout),
+        capture_output=True,
+        text=True,
+        timeout=max(timeout, 1),
+    )
+
+    return {
+        "stdout": result.stdout[:_MAX_OUTPUT],
+        "stderr": result.stderr[:_MAX_OUTPUT],
+        "code": result.returncode,
+    }
 
 
 def execute_commands(

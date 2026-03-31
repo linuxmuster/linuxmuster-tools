@@ -26,16 +26,14 @@ def _get_server_ip() -> str:
 
     Raises RuntimeError if setup.ini is missing or has no serverip.
     """
-    try:
-        from linuxmusterTools.lmnfile import LMNFile
-        with LMNFile('/var/lib/linuxmuster/setup.ini', 'r') as setup:
-            data = setup.read()
-            ini = data.get('setup', {}) if isinstance(data, dict) else {}
-            ip = ini.get("serverip", "")
-            if ip:
-                return ip
-    except Exception:
-        pass
+    from linuxmusterTools.lmnfile import LMNFile
+
+    with LMNFile("/var/lib/linuxmuster/setup.ini", "r") as setup:
+        data = setup.read()
+    ini = data.get("setup", {}) if isinstance(data, dict) else {}
+    ip = ini.get("serverip", "")
+    if ip:
+        return ip
     raise RuntimeError(
         "Cannot determine server IP: /var/lib/linuxmuster/setup.ini "
         "missing or has no 'serverip' entry"

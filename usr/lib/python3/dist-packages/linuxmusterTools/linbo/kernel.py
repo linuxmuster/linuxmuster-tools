@@ -8,6 +8,7 @@ Persists state via JSON file, uses file-based locking for rebuilds.
 import json
 import logging
 import os
+import shutil
 import subprocess
 import tempfile
 from pathlib import Path
@@ -175,13 +176,18 @@ class LinboKernelManager:
         rebuild_result = None
         if rebuild:
             rebuild_result = self.trigger_rebuild(variant)
+            return {
+                "success": rebuild_result.get("success", False),
+                "state": self.read_state(),
+                "rebuild": rebuild_result,
+            }
 
         return {"success": True, "state": state, "rebuild": rebuild_result}
 
     def trigger_rebuild(self, variant: str) -> dict:
         """Trigger linbofs64 rebuild via update-linbofs.
 
-        Runs sudo /usr/sbin/update-linbofs with a 5-minute timeout.
+        Runs /usr/sbin/update-linbofs with a 5-minute timeout.
         Tracks state as running → completed/failed.
 
         Args:
@@ -190,8 +196,6 @@ class LinboKernelManager:
         Returns:
             {success, output} on success, {success, error} on failure
         """
-        from datetime import datetime, timezone
-
         script_path = os.environ.get("UPDATE_LINBOFS_SCRIPT", "/usr/sbin/update-linbofs")
 
         # Acquire file-based lock
@@ -210,9 +214,12 @@ class LinboKernelManager:
                 "LINBO_DIR": LINBO_DIR,
                 "CONFIG_DIR": CONFIG_DIR,
             }
+            cmd = [script_path]
+            if os.getuid() != 0 and shutil.which("fakeroot"):
+                cmd.insert(0, "fakeroot")
 
             result = subprocess.run(
-                ["sudo", script_path],
+                cmd,
                 capture_output=True,
                 text=True,
                 timeout=300,
