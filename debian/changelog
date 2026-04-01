@@ -1,3 +1,10 @@
+linuxmuster-tools7 (7.3.42) lmn73; urgency=medium
+
+  * Remove LaTeX  templates from bootstrap to avoid lmnapi boot problems.
+  * [ldapwriter] LMNPrinter class to join/quit printer groups. 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Thu, 02 Apr 2026 00:00:50 +0200
+
 linuxmuster-tools7 (7.3.41) lmn73; urgency=medium
 
   * [linbo] Get last sync datetime for a device with pxe boot.
