@@ -2,9 +2,12 @@ import os
 import shutil
 import subprocess
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
+from pathlib import Path
+import re
 
 from ..lmnfile import LMNFile
+from ._validation import check_linbo_image_name
 
 
 logger = logging.getLogger(__name__)
@@ -528,3 +531,98 @@ class LinboImageManager:
                 imageGroup.backups[date].save_extras(data)
             else:
                 imageGroup.base.save_extras(data)
+
+
+_IMAGE_EXTS = {".qcow2", ".qdiff", ".cloop"}
+_IMAGE_SIDECARS = [".md5", ".info", ".desc", ".torrent", ".macct", ".reg", ".prestart", ".postsync"]
+
+
+def parse_info_file(info_path) -> dict:
+    """Parse a .info sidecar file into a dict of key=value pairs."""
+    result = {}
+    try:
+        path_obj = Path(info_path)
+        for line in path_obj.read_text(encoding="utf-8").splitlines():
+            match = re.match(r'^(\w+)="(.*)"', line)
+            if match:
+                result[match.group(1)] = match.group(2)
+    except OSError:
+        pass
+    return result
+
+
+def _resolve_sidecar_candidates(image_file: Path, base_name: str, sidecar_ext: str) -> list[Path]:
+    return [
+        image_file.with_suffix(image_file.suffix + sidecar_ext),
+        image_file.parent / f"{base_name}{sidecar_ext}",
+    ]
+
+
+def scan_images(images_dir: str = LINBO_PATH) -> list[dict]:
+    """Scan LINBO image directories for image-manifest data."""
+    images_path = Path(images_dir)
+    images = []
+    if not images_path.is_dir():
+        return images
+
+    for subdir in sorted(images_path.iterdir()):
+        if not subdir.is_dir() or subdir.name.startswith("."):
+            continue
+        if not check_linbo_image_name(subdir.name):
+            continue
+
+        for image_file in sorted(subdir.iterdir()):
+            if image_file.suffix not in _IMAGE_EXTS or not image_file.is_file():
+                continue
+            if "backups" in image_file.parts:
+                continue
+
+            stat = image_file.stat()
+            base_name = subdir.name
+            filename = image_file.name
+            rel_path = f"images/{base_name}/{filename}"
+
+            md5 = None
+            try:
+                md5 = image_file.with_suffix(image_file.suffix + ".md5").read_text(encoding="utf-8").strip().split()[0]
+            except OSError:
+                pass
+
+            info = parse_info_file(image_file.with_suffix(image_file.suffix + ".info"))
+
+            description = None
+            try:
+                description = image_file.with_suffix(image_file.suffix + ".desc").read_text(encoding="utf-8").strip()
+            except OSError:
+                pass
+
+            sidecars = []
+            files = [{"name": filename, "size": stat.st_size, "type": "image"}]
+            for sidecar_ext in _IMAGE_SIDECARS:
+                for candidate in _resolve_sidecar_candidates(image_file, base_name, sidecar_ext):
+                    if not candidate.is_file():
+                        continue
+                    sidecars.append(sidecar_ext.lstrip("."))
+                    sidecar_stat = candidate.stat()
+                    files.append({
+                        "name": candidate.name,
+                        "size": sidecar_stat.st_size,
+                        "type": "sidecar",
+                    })
+                    break
+
+            images.append({
+                "name": filename,
+                "filename": filename,
+                "base": base_name,
+                "path": rel_path,
+                "size": stat.st_size,
+                "md5": md5,
+                "info": info if info else None,
+                "description": description,
+                "sidecars": sidecars,
+                "files": files,
+                "updatedAt": datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc).isoformat(),
+            })
+
+    return images

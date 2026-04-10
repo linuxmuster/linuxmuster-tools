@@ -1,41 +1,58 @@
-import os
+import hashlib
 import locale
+import logging
+import os
 import time
-from glob import glob
 from datetime import datetime
+from pathlib import Path
 
 from .models import *
+from ._validation import check_linbo_conf_name
+from .hosts import get_mtime
 from ..devices import Devices
 
 
 LINBO_PATH = '/srv/linbo'
+logger = logging.getLogger(__name__)
+
+
+def _validate_safe_name(name: str) -> str:
+    """Validate a LINBO-safe config name and return it unchanged."""
+    if not isinstance(name, str) or not name:
+        raise ValueError('LINBO config name must not be empty')
+    if not check_linbo_conf_name(name):
+        raise ValueError(f'Unsafe LINBO config name: {name}')
+    return name
 
 class LinboConfigManager:
 
-    def __init__(self, school='default-school'):
+    def __init__(self, school='default-school', linbo_dir=LINBO_PATH):
         self.school = school
+        self.linbo_dir = Path(linbo_dir)
         self.linbo_configs = {}
 
         self.load_linbo_config()
 
     def load_linbo_config(self):
-        for config in glob('/srv/linbo/start.conf.*'):
-            if not os.path.islink(config):
-                group = config.replace('/srv/linbo/start.conf.', '')
+        self.linbo_configs = {}
+        for config in sorted(self.linbo_dir.glob('start.conf.*')):
+            if not config.is_symlink():
+                group = config.name.removeprefix('start.conf.')
                 try:
                     self.linbo_configs[group] = self.read_linbo_config(config)
                 except TypeError as e:
-                    logging.error(f"Failed to load {config}: {e}")
+                    logger.error(f"Failed to load {config}: {e}")
 
     def read_linbo_config(self, config):
-        if not os.path.isfile(config):
+        config = Path(config)
+        if not config.is_file():
             raise FileNotFoundError(f'Linbo config file not found: {config}.')
 
-        with open(config, 'r') as f:
-            kwargs = {'config': config}
+        with config.open('r', encoding='utf-8') as f:
+            kwargs = {'config': str(config)}
             current_model = ''
 
-            lc = LinboConfig(path=config, LINBO=None, Partitions=[], OS=[])
+            lc = LinboConfig(path=str(config), LINBO=None, Partitions=[], OS=[])
 
             for line in f:
                 line = line.split('#')[0].strip()
@@ -62,6 +79,51 @@ class LinboConfigManager:
 
     def linbo_groups(self):
         return list(self.linbo_configs.keys())
+
+    def list_startconf_ids(self) -> list[str]:
+        """Return sorted start.conf IDs from the LINBO directory."""
+        ids = []
+        for conf_path in sorted(self.linbo_dir.glob('start.conf.*')):
+            if conf_path.is_symlink():
+                continue
+            group_id = conf_path.name.removeprefix('start.conf.')
+            if group_id and check_linbo_conf_name(group_id):
+                ids.append(group_id)
+        return ids
+
+    def get_raw_startconfs(self, ids: list[str]) -> list[dict]:
+        """Return raw start.conf contents, hashes, and mtimes for the requested IDs."""
+        results = []
+        for group_id in ids:
+            try:
+                safe_id = _validate_safe_name(group_id)
+            except ValueError:
+                continue
+
+            conf_path = self.linbo_dir / f'start.conf.{safe_id}'
+            if not conf_path.is_file():
+                continue
+
+            try:
+                content = conf_path.read_text(encoding='utf-8')
+            except OSError:
+                continue
+
+            mtime = get_mtime(conf_path)
+            results.append({
+                'id': safe_id,
+                'content': content,
+                'hash': hashlib.sha256(content.encode()).hexdigest(),
+                'updatedAt': mtime.isoformat() if mtime else None,
+            })
+
+        return results
+
+    def get_startconf_mtime(self, group_id: str):
+        """Return the mtime of a specific start.conf file, or None if missing."""
+        safe_id = _validate_safe_name(group_id)
+        conf_path = self.linbo_dir / f'start.conf.{safe_id}'
+        return get_mtime(conf_path)
 
 ## The following functions need to be rewritten
 ## Still used in lmncli
