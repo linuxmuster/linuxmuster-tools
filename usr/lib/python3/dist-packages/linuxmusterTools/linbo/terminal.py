@@ -83,7 +83,7 @@ class LinboTerminalManager:
             ValueError: If host_ip is not a valid IPv4 address
             RuntimeError: If max sessions reached
         """
-        if not host_ip or not name_checker.check_ip(host_ip):
+        if not host_ip or not name_checker.check_ip_name(host_ip):
             raise ValueError(f"Invalid IP address: {host_ip}")
         if not user_id or not isinstance(user_id, str):
             raise ValueError("user_id must be a non-empty string")
