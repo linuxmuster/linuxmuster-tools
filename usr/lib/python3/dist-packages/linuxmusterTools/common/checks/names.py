@@ -46,13 +46,12 @@ class NameChecker:
         return False
 
     def normalize_mac(self, mac):
-        # TODO: all upper ?
         if self.check_mac1_name(mac):
-            return mac
+            return mac.upper()
         elif self.check_mac2_name(mac):
-            return mac.replace("-", ":")
+            return mac.replace("-", ":").upper()
         elif self.check_mac3_name(mac):
-            return ":".join(re.findall(r"..", mac))
+            return ":".join(re.findall(r"..", mac)).upper()
         else:
             # logger.warning(f"Mac addresse {mac} does not correspond to any valid mac address.")
             return None
