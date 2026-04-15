@@ -14,6 +14,10 @@ from pathlib import Path
 from urllib.error import URLError
 from urllib.request import Request, urlopen
 
+from linuxmusterTools.common.checks import NameChecker
+
+
+name_checker = NameChecker()
 logger = logging.getLogger(__name__)
 
 IMAGES_DIR = Path(os.environ.get("LINBO_DIR", "/srv/linbo")) / "images"
@@ -74,8 +78,7 @@ class LinboImageSync:
             raise ValueError("Image name must not be empty")
         if "/" in name or "\\" in name or ".." in name or "\0" in name:
             raise ValueError(f"Unsafe image name: {name}")
-        from ._validation import check_linbo_image_name
-        if not check_linbo_image_name(name):
+        if not name_checker.check_linbo_image_name(name):
             raise ValueError(f"Invalid image name characters: {name}")
         return name
 

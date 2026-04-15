@@ -11,8 +11,10 @@ import os
 import uuid
 from datetime import datetime, timezone
 
-from ._validation import check_ip
+from linuxmusterTools.common.checks import NameChecker
 
+
+name_checker = NameChecker()
 logger = logging.getLogger(__name__)
 
 MAX_SESSIONS = int(os.environ.get("TERMINAL_MAX_SESSIONS", "10"))
@@ -81,7 +83,7 @@ class LinboTerminalManager:
             ValueError: If host_ip is not a valid IPv4 address
             RuntimeError: If max sessions reached
         """
-        if not host_ip or not check_ip(host_ip):
+        if not host_ip or not name_checker.check_ip(host_ip):
             raise ValueError(f"Invalid IP address: {host_ip}")
         if not user_id or not isinstance(user_id, str):
             raise ValueError("user_id must be a non-empty string")

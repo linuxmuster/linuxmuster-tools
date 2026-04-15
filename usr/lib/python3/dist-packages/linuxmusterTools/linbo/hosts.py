@@ -9,16 +9,11 @@ import logging
 from datetime import datetime, timezone
 from pathlib import Path
 
-from ._validation import check_ip, normalize_mac
+from linuxmusterTools.common.checks import NameChecker
 
+
+name_checker = NameChecker()
 logger = logging.getLogger(__name__)
-
-
-def validate_school(school: str) -> bool:
-    """Validate school name to prevent path traversal."""
-    from ._validation import check_linbo_conf_name
-    return check_linbo_conf_name(school)
-
 
 def get_mtime(path: Path) -> datetime | None:
     """Return file mtime as UTC datetime, or None if missing."""
@@ -52,6 +47,8 @@ class LinboHostProvider:
 
         Raises FileNotFoundError if devices.csv does not exist.
         """
+
+
         csv_path = devices_csv_path(self.school)
         text = csv_path.read_text(encoding="utf-8")
         mtime = get_mtime(csv_path)
@@ -69,12 +66,12 @@ class LinboHostProvider:
             while len(fields) < 15:
                 fields.append("")
 
-            mac = normalize_mac(fields[3])
+            mac = name_checker.normalize_mac(fields[3])
             if mac is None:
                 continue
 
             raw_ip = fields[4].strip()
-            ip = raw_ip if raw_ip and check_ip(raw_ip) else None
+            ip = raw_ip if raw_ip and name_checker.check_ip_name(raw_ip) else None
             config = fields[2].strip()
 
             try:

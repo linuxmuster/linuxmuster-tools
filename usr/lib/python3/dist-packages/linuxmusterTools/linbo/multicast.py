@@ -8,8 +8,10 @@ import logging
 import subprocess
 from pathlib import Path
 
-from ._validation import check_linbo_image_name
+from linuxmusterTools.common.checks import NameChecker
 
+
+name_checker = NameChecker()
 logger = logging.getLogger(__name__)
 
 MULTICAST_BIN = "/usr/sbin/linbo-multicast"
@@ -37,7 +39,7 @@ class LinboMulticast:
 
     @staticmethod
     def _validate_image(image: str) -> str:
-        if not check_linbo_image_name(image):
+        if not name_checker.check_linbo_image_name(image):
             raise ValueError(f"Unsafe image name: {image}")
         return image
 
