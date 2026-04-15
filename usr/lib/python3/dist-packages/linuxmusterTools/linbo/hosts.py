@@ -9,7 +9,7 @@ import logging
 from datetime import datetime, timezone
 from pathlib import Path
 
-from ._validation import check_mac, check_ip, normalize_mac
+from ._validation import check_ip, normalize_mac
 
 logger = logging.getLogger(__name__)
 

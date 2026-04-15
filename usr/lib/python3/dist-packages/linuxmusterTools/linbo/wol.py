@@ -9,20 +9,8 @@ import os
 import re
 import socket
 
-from ._validation import check_mac
 
 logger = logging.getLogger(__name__)
-
-
-def is_valid_mac(mac: str) -> bool:
-    """Validate MAC address format (XX:XX:XX:XX:XX:XX or XX-XX-XX-XX-XX-XX)."""
-    return check_mac(mac)
-
-
-def normalize_mac(mac: str) -> str:
-    """Normalize MAC to lowercase hex string (for WoL packet construction)."""
-    return re.sub(r"[:\-]", "", mac).lower()
-
 
 def create_magic_packet(mac_address: str) -> bytes:
     """Create IEEE 802.3 Wake-on-LAN magic packet.
@@ -38,6 +26,8 @@ def create_magic_packet(mac_address: str) -> bytes:
     Raises:
         ValueError: If MAC address is invalid
     """
+
+
     mac = re.sub(r"[:\-]", "", mac_address)
     if len(mac) != 12 or not re.match(r"^[0-9a-fA-F]+$", mac):
         raise ValueError(f"Invalid MAC address: {mac_address}")
@@ -63,6 +53,8 @@ def send_wol(
     Returns:
         Dict with macAddress, packetsSent, broadcastAddress, port
     """
+
+
     if broadcast is None:
         broadcast = os.environ.get("WOL_BROADCAST_ADDRESS", "255.255.255.255")
 

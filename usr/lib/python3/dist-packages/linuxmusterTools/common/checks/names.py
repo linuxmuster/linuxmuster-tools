@@ -46,6 +46,11 @@ class NameChecker:
         return False
 
     def normalize_mac(self, mac):
+        """
+        Return a mac address in the colon-format  AA:BB:CC:DD:EE:FF
+        """
+
+
         if self.check_mac1_name(mac):
             return mac.upper()
         elif self.check_mac2_name(mac):
