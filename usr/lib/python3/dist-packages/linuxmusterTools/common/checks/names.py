@@ -40,6 +40,10 @@ class NameChecker:
         if not isinstance(string, str) or not string:
             return False
 
+        # Avoid path transversal
+        if "/" in string or "\\" in string or "\0" in string or ".." in string:
+            return False
+
         pattern = NAME_RULES.get(name_type, None)
         if pattern:
             return re.match(pattern, string) is not None
