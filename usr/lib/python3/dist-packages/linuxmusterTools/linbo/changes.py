@@ -9,19 +9,19 @@ import logging
 import time
 from datetime import datetime, timezone
 
-from .hosts import LinboHostProvider, devices_csv_path, get_mtime
+from linuxmusterTools.devices import Devices
 from .config import LinboConfigManager
 from .grub import LinboGrubReader
 
-logger = logging.getLogger(__name__)
 
+logger = logging.getLogger(__name__)
 
 class LinboChangeTracker:
     """Cursor-based change detection using filesystem mtimes."""
 
     def __init__(self, school: str = "default-school"):
         self.school = school
-        self.host_provider = LinboHostProvider(school)
+        self.device_mgr = Devices(school=school)
         self.config_manager = LinboConfigManager()
         self.grub_reader = LinboGrubReader()
 
@@ -46,10 +46,13 @@ class LinboChangeTracker:
             else None
         )
 
-        # Parse all known entities
-        all_hosts, _ = self.host_provider.parse_devices_csv()
-        school_groups = {h["hostgroup"] for h in all_hosts}
-        all_host_macs = [h["mac"] for h in all_hosts]
+        # Reload devices list
+        self.device_mgr.load()
+
+        school_groups = self.devices_mgr.groups
+        all_hosts_macs = self.devices_mgr.macs
+
+        # Parse ids
         all_startconf_ids = [
             id for id in self.config_manager.list_startconf_ids()
             if id in school_groups
@@ -60,19 +63,19 @@ class LinboChangeTracker:
         ]
 
         # Detect host changes via devices.csv mtime
-        devices_mtime = get_mtime(devices_csv_path(self.school))
+        devices_csv_mtime = self.device_mgr.csv_mtime
         hosts_changed_macs: list[str] = []
         deleted_hosts: list[str] = []
         dhcp_changed = False
 
         devices_modified = (
             cursor_dt is None
-            or devices_mtime is None
-            or (devices_mtime > cursor_dt)
+            or devices_csv_mtime is None
+            or (devices_csv_mtime > cursor_dt)
         )
 
         if devices_modified:
-            hosts_changed_macs = list(all_host_macs)
+            hosts_changed_macs = list(all_hosts_macs)
             dhcp_changed = True
 
         # Check start.conf files
@@ -100,7 +103,7 @@ class LinboChangeTracker:
             "dhcpChanged": dhcp_changed,
             "deletedHosts": deleted_hosts,
             "deletedStartConfs": deleted_startconfs,
-            "allHostMacs": all_host_macs,
+            "allHostMacs": all_hosts_macs,
             "allStartConfIds": all_startconf_ids,
             "allConfigIds": all_config_ids,
         }

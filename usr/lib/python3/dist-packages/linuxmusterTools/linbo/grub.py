@@ -9,7 +9,8 @@ import logging
 from datetime import datetime, timezone
 from pathlib import Path
 
-from .hosts import get_mtime
+from ..common.timestamps import get_utc_mtime
+
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +48,7 @@ class LinboGrubReader:
             except OSError:
                 continue
 
-            mtime = get_mtime(cfg_path)
+            mtime = get_utc_mtime(cfg_path)
             results.append({
                 "id": group_id,
                 "content": content,
@@ -71,7 +72,7 @@ class LinboGrubReader:
         if main_cfg.is_file():
             try:
                 content = main_cfg.read_text(encoding="utf-8")
-                mtime = get_mtime(main_cfg)
+                mtime = get_utc_mtime(main_cfg)
                 configs.append({
                     "id": "grub",
                     "filename": "grub.cfg",
@@ -90,7 +91,7 @@ class LinboGrubReader:
                 continue
             try:
                 content = p.read_text(encoding="utf-8")
-                mtime = get_mtime(p)
+                mtime = get_utc_mtime(p)
                 configs.append({
                     "id": group,
                     "filename": f"{group}.cfg",
@@ -105,4 +106,4 @@ class LinboGrubReader:
     def get_cfg_mtime(self, group_id: str) -> datetime | None:
         """Return mtime for a specific GRUB config file."""
         cfg_path = self.grub_dir / f"{group_id}.cfg"
-        return get_mtime(cfg_path)
+        return get_utc_mtime(cfg_path)

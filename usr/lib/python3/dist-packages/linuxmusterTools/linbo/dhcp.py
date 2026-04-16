@@ -11,7 +11,9 @@ import re
 from datetime import datetime, timezone
 from pathlib import Path
 
-from .hosts import get_mtime
+from linuxmusterTools.lmnfile import LMNFile
+from ..common.timestamps import get_utc_mtime
+
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +28,7 @@ def _get_server_ip() -> str:
 
     Raises RuntimeError if setup.ini is missing or has no serverip.
     """
-    from linuxmusterTools.lmnfile import LMNFile
+
 
     with LMNFile("/var/lib/linuxmuster/setup.ini", "r") as setup:
         data = setup.read()
@@ -43,6 +45,7 @@ def _get_server_ip() -> str:
 class LinboDhcpExporter:
     """Generate and read DHCP configurations."""
 
+
     def generate_dnsmasq_proxy(
         self,
         hosts: list[dict],
@@ -57,6 +60,8 @@ class LinboDhcpExporter:
         Returns:
             The complete dnsmasq configuration as a string.
         """
+
+
         if server_ip is None:
             server_ip = _get_server_ip()
 
@@ -123,6 +128,8 @@ class LinboDhcpExporter:
         subnets.conf is shared (not per-school).
         devices/{school}.conf is per-school.
         """
+
+
         devices_path = DHCP_DEVICES_DIR / f"{school}.conf"
 
         subnets = ""
@@ -141,8 +148,8 @@ class LinboDhcpExporter:
         else:
             logger.info("No DHCP devices config for school %s at %s", school, devices_path)
 
-        subnets_mtime = get_mtime(DHCP_SUBNETS_PATH)
-        devices_mtime = get_mtime(devices_path)
+        subnets_mtime = get_utc_mtime(DHCP_SUBNETS_PATH)
+        devices_mtime = get_utc_mtime(devices_path)
 
         return {
             "school": school,
@@ -155,4 +162,6 @@ class LinboDhcpExporter:
     @staticmethod
     def content_etag(content: str) -> str:
         """Generate ETag for content string."""
+
+
         return hashlib.md5(content.encode()).hexdigest()
