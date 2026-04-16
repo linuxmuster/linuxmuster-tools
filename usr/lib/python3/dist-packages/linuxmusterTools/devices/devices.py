@@ -87,7 +87,7 @@ class Devices:
                 return device
         return None
 
-    def get_hosts_per_macs(self, macs=[]):
+    def get_hosts_by_macs(self, macs=[]):
         return self.filter(macs)
 
     def get_client(self, hostname, groups=[]):
