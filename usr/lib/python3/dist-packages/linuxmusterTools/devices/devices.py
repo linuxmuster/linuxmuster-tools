@@ -32,6 +32,13 @@ class Devices:
         with LMNFile(self.path, 'r') as devices_csv:
             for device in devices_csv.read():
                 if not device['room'].startswith('#'):
+                    # TODO: special cases for linbo docker
+                    device['hostgroup'] = device['group']
+                    del device['group']
+                    device['school'] = self.school
+                    device['mac'] = name_checker.normalize_mac(device['mac'])
+                    device['pxeEnabled'] = self._check_pxe_flag(device)
+
                     self.devices.append(device)
 
         self.groups = list(set([d['group'] for d in self.devices if d.get('group', False)]))
@@ -40,6 +47,17 @@ class Devices:
         self.rooms = list(set([d['room'] for d in self.devices if d.get('room', False)]))
         self.clients = self.filter(roles=CLIENT_ROLES)
         self.csv_mtime = get_utc_mtime(Path(self.path)) # check if I can replace all paths with Path instances
+
+    @staticmethod
+    def _check_pxe_flag(device):
+        pxeflag = device['pxeFlag'].strip()
+        try:
+            # If pxeflag is not provided, should be 0
+            int_pxeflag = int(pxeflag) if pxeflag else 0
+        except ValueError:
+            int_pxeflag = 0
+
+        return int_pxeflag > 0 and device['hostgroup'].lower() != "nopxe"
 
     def filter(self, roles=[], groups=[], macs=[]):
         """
