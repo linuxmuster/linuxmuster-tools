@@ -35,6 +35,8 @@ class Devices:
                     self.devices.append(device)
 
         self.groups = list(set([d['group'] for d in self.devices if d.get('group', False)]))
+        self.macs = list(set([d['mac'] for d in self.devices if d.get('mac', False)]))
+        self.ips = list(set([d['ip'] for d in self.devices if d.get('ip', False)]))
         self.rooms = list(set([d['room'] for d in self.devices if d.get('room', False)]))
         self.clients = self.filter(roles=CLIENT_ROLES)
         self.csv_mtime = get_utc_mtime(Path(self.path)) # check if I can replace all paths with Path instances
