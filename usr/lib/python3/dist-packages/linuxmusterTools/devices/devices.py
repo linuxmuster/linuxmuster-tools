@@ -1,5 +1,8 @@
+from pathlib import Path
+
 from ..lmnfile import LMNFile
 from ..common.checks import NameChecker
+from ..common.timestamps import get_utc_mtime
 from ..lmnconfig import SophomorixIni
 
 sophomorix_ini = SophomorixIni()
@@ -34,6 +37,7 @@ class Devices:
         self.groups = list(set([d['group'] for d in self.devices if d.get('group', False)]))
         self.rooms = list(set([d['room'] for d in self.devices if d.get('room', False)]))
         self.clients = self.filter(roles=CLIENT_ROLES)
+        self.csv_mtime = get_utc_mtime(Path(self.path)) # check if I can replace all paths with Path instances
 
     def filter(self, roles=[], groups=[]):
         if roles and groups:
