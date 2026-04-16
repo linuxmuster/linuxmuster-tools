@@ -41,23 +41,39 @@ class Devices:
         self.clients = self.filter(roles=CLIENT_ROLES)
         self.csv_mtime = get_utc_mtime(Path(self.path)) # check if I can replace all paths with Path instances
 
-    def filter(self, roles=[], groups=[]):
+    def filter(self, roles=[], groups=[], macs=[]):
+        """
+        Filter the devices list per attributes.
+        The filters roles and groups can be combined, but the filter macs must
+        be used alone.
+        """
+
+
         if roles and groups:
             return [device for device in self.devices if device['sophomorixRole'] in roles and device['group'] in groups]
         elif roles:
             return [device for device in self.devices if device['sophomorixRole'] in roles]
         elif groups:
             return [device for device in self.devices if device['group'] in groups]
+        elif macs:
+            macs_normalized = [name_checker.normalize_mac(mac) for mac in macs]
+            return [
+                device
+                for device in self.devices
+                if name_checker.normalize_mac(['mac']) in macs_normalized]
         return self.devices
 
-    def get_hostname(self, hostname, roles=[], groups=[]):
+    def get_host(self, hostname, roles=[], groups=[]):
         for device in self.filter(roles, groups):
             if device['hostname'] == hostname:
                 return device
         return None
 
+    def get_hosts_per_macs(self, macs=[]):
+        return self.filter(macs)
+
     def get_client(self, hostname, groups=[]):
-        return self.get_hostname(hostname, roles=CLIENT_ROLES, groups=groups)
+        return self.get_host(hostname, roles=CLIENT_ROLES, groups=groups)
 
     def get_clients(self, groups=[]):
         return self.filter(roles=CLIENT_ROLES, groups=groups)

@@ -109,7 +109,7 @@ class LMNDevice:
 
         devices_list.switch(self.school)
 
-        csvdetails = devices_list.get_hostname(self.cn)
+        csvdetails = devices_list.get_host(self.cn)
         if csvdetails is not None:
             self.data['csvdetails'] = csvdetails
             self.pxe = csvdetails.get('pxeFlag', None) == '1'
@@ -357,7 +357,7 @@ class LMNPrinter(LMNDevice):
 
         devices_list.switch(self.school)
 
-        csvdetails = devices_list.get_hostname(self.cn)
+        csvdetails = devices_list.get_host(self.cn)
         if csvdetails is not None:
             self.data['csvdetails'] = csvdetails
             self.pxe = csvdetails.get('pxeFlag', None) == '1'
