@@ -39,8 +39,6 @@ class LinboConfigManager:
                 except TypeError as e:
                     logger.error(f"Failed to load {config}: {e}")
 
-        self.linbo_configs_ids = list(self.linbo_configs.keys())
-
     def parse_linbo_startconf(self, config):
         """
         Parse a start.conf file to a LinboConfig object.
