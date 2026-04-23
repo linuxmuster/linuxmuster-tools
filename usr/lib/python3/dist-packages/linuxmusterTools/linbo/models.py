@@ -1,7 +1,27 @@
 import inspect
 import logging
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 
+
+### Images files
+
+@dataclass
+class ImageInfo:
+    """
+    Object to handle info file of a linbo image.
+    """
+
+
+    timestamp: str
+    image: str
+    imagesize: str
+    partition: str
+    partitionsize: str
+
+    def asdict(self):
+        return asdict(self)
+
+### start.conf files
 
 @dataclass
 class Partition:
