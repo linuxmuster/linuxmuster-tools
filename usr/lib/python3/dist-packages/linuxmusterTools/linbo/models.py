@@ -5,6 +5,11 @@ from dataclasses import dataclass
 
 @dataclass
 class Partition:
+    """
+    Object to handle a partition stanza in a start.conf file.
+    """
+
+
     Bootable: bool
     Dev: str
     FSType: str
@@ -28,6 +33,11 @@ class Partition:
 
 @dataclass
 class OS:
+    """
+    Object to handle a OS stanza in a start.conf file.
+    """
+
+
     Append: str
     BaseImage: str
     DefaultAction: str
@@ -59,6 +69,12 @@ class OS:
 
 @dataclass
 class Linbo:
+    """
+    Class top handle the first stanza of a start.conf. file.
+    Cache and Group are mandatory.
+    """
+
+
     Cache: str
     Group: str
     AutoFormat: bool = False
@@ -87,6 +103,11 @@ class Linbo:
 
 @dataclass
 class LinboConfig:
+    """
+    Full object for a start.conf file.
+    """
+
+
     LINBO: Linbo
     Partitions: list
     path: str

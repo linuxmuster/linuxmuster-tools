@@ -42,9 +42,7 @@ class LinboConfigManager:
     def parse_linbo_startconf(self, config):
         """
         Parse a start.conf file to a LinboConfig object.
-        TODO:
-         - duplicate in lmnfile reader
-         - problem mit Cache entries
+        TODO: duplicate in lmnfile reader
         """
 
 
