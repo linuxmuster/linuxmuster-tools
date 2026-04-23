@@ -5,6 +5,7 @@ import logging
 from datetime import datetime
 
 from ..lmnfile import LMNFile
+from .models import ImageInfo
 
 
 logger = logging.getLogger(__name__)
@@ -72,16 +73,17 @@ class LinboImage:
             self.date = timestamp2date(self.timestamp)
         else:
             self.path = os.path.join(LINBO_PATH, self.name)
-            self.timestamp = self.get_timestamp()
+            self.parse_info_file()
+            self.timestamp = self.info_file.timestamp
             self.date = timestamp2date(self.timestamp)
 
         self.size = os.stat(os.path.join(self.path, self.image)).st_size
-        self.extras = {}
+        self.extras = {} # TODO rename to raw extras
         self.get_extra()
 
     def get_extra(self):
         """
-        Load extra editables config files for the image.
+        Load raw content of extra editables config files.
         """
 
         for extra in EXTRA_IMAGE_FILES:
@@ -107,17 +109,19 @@ class LinboImage:
             else:
                 self.extras[extra] = None
 
-    def get_timestamp(self):
+    def parse_info_file(self):
         info_path = os.path.join(self.path, f"{self.image}.info")
+        attributes = {}
         if os.path.isfile(info_path):
             with open(info_path, 'r') as info:
                 for line in info:
-                    if 'timestamp' in line:
+                    if '=' in line:
                         # Support timestamp=2021..
                         # and timestamp="2021..."
-                        return line.strip().split('=')[1].strip('"')
-        logger.warning(f"Can not find timestamp for {self.image}, using current time as timestamp !")
-        return datetime.now().strftime(TIMESTAMP_FMT)
+                        k, v = line.strip().split('=')
+                        v = v.strip('"')
+                        attributes[k] = v
+        self.info_file = ImageInfo(**attributes)
 
     def delete_files(self):
         """
