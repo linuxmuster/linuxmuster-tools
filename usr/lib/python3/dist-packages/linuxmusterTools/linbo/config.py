@@ -22,8 +22,8 @@ class LinboConfigManager:
 
         self.load_linbo_config()
 
-    def load_linbo_config(self):
-        for config in glob('/srv/linbo/start.conf.*'):
+    def load_linbo_startconfs(self):
+        for config in sorted(glob('/srv/linbo/start.conf.*')):
             if not os.path.islink(config):
                 group = config.replace('/srv/linbo/start.conf.', '')
 
@@ -32,13 +32,21 @@ class LinboConfigManager:
                     continue
 
                 try:
-                    self.linbo_configs[group] = self.read_linbo_config(config)
+                    self.linbo_configs[group] = self.parse_linbo_startconf(config)
                 except TypeError as e:
                     logger.error(f"Failed to load {config}: {e}")
 
         self.linbo_configs_ids = list(self.linbo_configs.keys())
 
-    def read_linbo_config(self, config):
+    def parse_linbo_startconf(self, config):
+        """
+        Parse a start.conf file to a LinboConfig object.
+        TODO:
+         - duplicate in lmnfile reader
+         - problem mit Cache entries
+        """
+
+
         if not os.path.isfile(config):
             raise FileNotFoundError(f'Linbo config file not found: {config}.')
 
