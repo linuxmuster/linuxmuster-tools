@@ -1,14 +1,18 @@
 import os
 import locale
 import time
+import logging
 from glob import glob
 from datetime import datetime
 
 from .models import *
 from ..devices import Devices
+from ..common.checks import NameChecker
 
 
 LINBO_PATH = '/srv/linbo'
+logger = logging.getLogger(__name__)
+name_checker = NameChecker()
 
 class LinboConfigManager:
 
@@ -22,10 +26,17 @@ class LinboConfigManager:
         for config in glob('/srv/linbo/start.conf.*'):
             if not os.path.islink(config):
                 group = config.replace('/srv/linbo/start.conf.', '')
+
+                if not name_checker.check_linbo_conf_name(group):
+                    logger.warning(f"Invalid config name, this file will be ignored: {config}")
+                    continue
+
                 try:
                     self.linbo_configs[group] = self.read_linbo_config(config)
                 except TypeError as e:
-                    logging.error(f"Failed to load {config}: {e}")
+                    logger.error(f"Failed to load {config}: {e}")
+
+        self.linbo_configs_ids = list(self.linbo_configs.keys())
 
     def read_linbo_config(self, config):
         if not os.path.isfile(config):
