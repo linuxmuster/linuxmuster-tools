@@ -12,6 +12,7 @@ from .linbofs import *
 from .grub_generator import *
 from .grub  import *
 from .dhcp import *
+from .changes import *
 
 ## WIP
 

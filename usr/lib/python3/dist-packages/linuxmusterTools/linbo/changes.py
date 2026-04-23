@@ -21,7 +21,7 @@ class LinboChangeTracker:
 
     def __init__(self, school: str = "default-school"):
         self.school = school
-        self.device_mgr = Devices(school=school)
+        self.devices_mgr = Devices(school=school)
         self.config_manager = LinboConfigManager()
         self.grub_reader = LinboGrubReader()
 
@@ -47,14 +47,14 @@ class LinboChangeTracker:
         )
 
         # Reload devices list
-        self.device_mgr.load()
+        self.devices_mgr.load()
 
         school_groups = self.devices_mgr.groups
         all_hosts_macs = self.devices_mgr.macs
 
         # Parse ids
         all_startconf_ids = [
-            id for id in self.config_manager.list_startconf_ids()
+            id for id in self.config_manager.linbo_groups()
             if id in school_groups
         ]
         all_config_ids = [
@@ -63,7 +63,7 @@ class LinboChangeTracker:
         ]
 
         # Detect host changes via devices.csv mtime
-        devices_csv_mtime = self.device_mgr.csv_mtime
+        devices_csv_mtime = self.devices_mgr.csv_mtime
         hosts_changed_macs: list[str] = []
         deleted_hosts: list[str] = []
         dhcp_changed = False

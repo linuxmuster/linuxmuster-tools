@@ -23,7 +23,7 @@ class LinboConfigManager:
         self.school = school
         self.linbo_configs = {}
 
-        self.load_linbo_config()
+        self.load_linbo_startconfs()
 
     def load_linbo_startconfs(self):
         for config in sorted(glob('/srv/linbo/start.conf.*')):
