@@ -2,12 +2,15 @@ import os
 import locale
 import time
 import logging
+from pathlib import Path
+import hashlib
 from glob import glob
 from datetime import datetime
 
 from .models import *
 from ..devices import Devices
 from ..common.checks import NameChecker
+from ..common.timestamps import get_utc_mtime
 
 
 LINBO_PATH = '/srv/linbo'
@@ -78,6 +81,37 @@ class LinboConfigManager:
                     kwargs[k.strip()] = v
 
             return lc
+
+    def load_raw_startconfs(self, group_ids: list[str]) -> list[dict]:
+        """
+        Return raw start.conf contents, hashes, and mtimes for the requested IDs.
+        """
+
+        results = []
+        for group_id in group_ids:
+            if not name_checker.check_linbo_conf_name(group_id):
+                continue
+
+            conf_path = Path(LINBO_PATH) / f'start.conf.{group_id}'
+
+            if not os.path.isfile(f"/srv/linbo/start.conf.{group_id}"):
+                logger.warning(f"Startconf file start.conf.{group_id} not found.")
+                continue
+
+            try:
+                content = conf_path.read_text(encoding='utf-8')
+            except OSError:
+                continue
+
+            mtime = get_utc_mtime(conf_path)
+
+            results.append({
+                'id': group_id,
+                'content': content,
+                'hash': hashlib.sha256(content.encode()).hexdigest(),
+                'updatedAt': mtime.isoformat() if mtime else None,
+            })
+        return results
 
     def linbo_groups(self):
         return list(self.linbo_configs.keys())
