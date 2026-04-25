@@ -2,7 +2,7 @@ import os
 import shutil
 import subprocess
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 
 from ..lmnfile import LMNFile
 from .models import ImageInfo
@@ -16,11 +16,13 @@ DATE_UI_FMT = '%d/%m/%Y %H:%M'
 
 
 # Filenames like ubuntu.qcow2.desc
-EXTRA_IMAGE_FILES = ['desc', 'info',  'vdi']
-EXTRA_NONEDITABLE_IMAGE_FILES = ['torrent', 'macct']
+EXTRA_IMAGE_FILES = ['desc', 'info', 'vdi']
+EXTRA_NONEDITABLE_IMAGE_FILES = ['torrent', 'macct', 'md5']
 
 # Filenames like ubuntu.reg
 EXTRA_COMMON_FILES = ['reg', 'postsync', 'prestart']
+
+ALL_FILES_EXT = EXTRA_IMAGE_FILES + EXTRA_NONEDITABLE_IMAGE_FILES + EXTRA_COMMON_FILES
 
 EXTRA_PERMISSIONS_MAPPING = {
     'desc': 0o664,
@@ -532,3 +534,63 @@ class LinboImageManager:
                 imageGroup.backups[date].save_extras(data)
             else:
                 imageGroup.base.save_extras(data)
+
+    def get_images_infos(self):
+        """
+        Export all necessary images informations for Linbo Docker project
+        """
+
+
+        images_list = []
+        for name, image_group in self.groups.items():
+            base_image = image_group.base
+
+            files = [{
+                "name": base_image.image,
+                "size": base_image.info_file.imagesize,
+                "type": "image"
+            }]
+            files_ext = []
+
+            md5_content = None
+            image_path = f"{base_image.path}/{base_image.image}"
+            print(image_path)
+            updated = os.stat(image_path).st_mtime
+
+            for ext in ALL_FILES_EXT:
+                print(ext)
+                if ext in EXTRA_COMMON_FILES:
+                    ext_name = f"{name}.{ext}"
+                else:
+                    ext_name = f"{base_image.image}.{ext}"
+
+                file_path = f"{LINBO_PATH}/{name}/{ext_name}"
+
+                if os.path.isfile(file_path):
+                    size = os.stat(file_path).st_size
+                    files_ext.append(ext)
+                    files.append({
+                        "name": ext_name,
+                        "size": size,
+                        "type": "extra_file"
+                    })
+
+                    if ext == "md5":
+                        with open(file_path, "r", encoding="utf-8") as f:
+                            md5_content = f.read().strip().split()[0]
+
+            images_list.append({
+                "name": base_image.image,
+                "filename": base_image.image,
+                "base": name,
+                "path": f"images/{name}/{base_image.image}",
+                "size": base_image.info_file.imagesize,
+                "md5": md5_content,
+                "info": base_image.info_file.asdict(),
+                "description": base_image.extras['desc'],
+                "extra_files": files_ext,
+                "files": files,
+                "updatedAt": datetime.fromtimestamp(updated, tz=timezone.utc).isoformat(),
+            })
+
+        return images_list
