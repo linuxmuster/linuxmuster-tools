@@ -554,11 +554,9 @@ class LinboImageManager:
 
             md5_content = None
             image_path = f"{base_image.path}/{base_image.image}"
-            print(image_path)
             updated = os.stat(image_path).st_mtime
 
             for ext in ALL_FILES_EXT:
-                print(ext)
                 if ext in EXTRA_COMMON_FILES:
                     ext_name = f"{name}.{ext}"
                 else:
