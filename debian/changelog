@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.4.1) lmn74; urgency=medium
+
+  * New package for 7.4.
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sat, 25 Apr 2026 18:09:43 +0200
+
 linuxmuster-tools7 (7.3.43) lmn73; urgency=medium
 
   * Merge Linbo tools for Linbo Docker (@amoalani)  
