@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.3.43) lmn73; urgency=medium
+
+  * Merge Linbo tools for Linbo Docker (@amoalani)  
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sat, 25 Apr 2026 17:45:45 +0200
+
 linuxmuster-tools7 (7.3.42) lmn73; urgency=medium
 
   * Remove LaTeX  templates from bootstrap to avoid lmnapi boot problems.
