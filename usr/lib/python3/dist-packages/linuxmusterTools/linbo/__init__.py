@@ -4,15 +4,16 @@ from .command import *
 
 # Experimental for linbo docker
 
-from .wol import *
-from .host_status import *
 from .boot_logs import *
-from .ssh import *
-from .linbofs import *
-from .grub_generator import *
-from .grub  import *
-from .dhcp import *
 from .changes import *
+from .dhcp import *
+from .grub  import *
+from .grub_generator import *
+from .host_status import *
+from .image_sync import *
+from .linbofs import *
+from .ssh import *
+from .wol import *
 
 ## WIP
 
@@ -24,7 +25,6 @@ from .changes import *
 #from .drivers import *
 #from .kernel import *
 #from .wlan import *
-#from .image_sync import *
 #from .linbo_update import *
 
 

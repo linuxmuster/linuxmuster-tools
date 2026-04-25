@@ -37,17 +37,22 @@ def _file_md5(path: Path) -> str:
 
 
 class LinboImageSync:
-    """Download and verify LINBO images from a remote server."""
+    """
+    Download and verify LINBO images from a remote server.
+    """
 
     def __init__(self, images_dir: str | None = None):
         self.images_dir = Path(images_dir) if images_dir else IMAGES_DIR
 
     def compare_manifests(self, local_images: list[dict], remote_images: list[dict]) -> dict:
-        """Compare local and remote image lists.
+        """
+        Compare local and remote image lists.
 
         Returns:
             {toDownload, toDelete, upToDate} — lists of image names
         """
+
+
         local_map = {img["name"]: img for img in local_images}
         remote_map = {img["name"]: img for img in remote_images}
 
@@ -71,17 +76,6 @@ class LinboImageSync:
             "upToDate": up_to_date,
         }
 
-    @staticmethod
-    def _validate_image_name(name: str) -> str:
-        """Validate image name for path safety."""
-        if not name or not isinstance(name, str):
-            raise ValueError("Image name must not be empty")
-        if "/" in name or "\\" in name or ".." in name or "\0" in name:
-            raise ValueError(f"Unsafe image name: {name}")
-        if not name_checker.check_linbo_image_name(name):
-            raise ValueError(f"Invalid image name characters: {name}")
-        return name
-
     def download_image(
         self,
         url: str,
@@ -90,7 +84,8 @@ class LinboImageSync:
         headers: dict | None = None,
         on_progress=None,
     ) -> dict:
-        """Download an image file with resume support.
+        """
+        Download an image file with resume support.
 
         Args:
             url: Full URL to the image file
@@ -102,7 +97,9 @@ class LinboImageSync:
         Returns:
             {success, path, size, md5, duration}
         """
-        image_name = self._validate_image_name(image_name)
+
+
+        image_name = name_checker.check_linbo_image_name(image_name)
         base = image_name.rsplit(".", 1)[0] if "." in image_name else image_name
         target_dir = self.images_dir / base
         incoming_dir = self.images_dir / ".incoming" / base
@@ -189,8 +186,12 @@ class LinboImageSync:
             }
 
     def delete_image(self, image_name: str) -> bool:
-        """Delete an image and its directory."""
-        image_name = self._validate_image_name(image_name)
+        """
+        Delete an image and its directory.
+        TODO: should use LinboImageManager
+        """
+
+        image_name = name_checker.check_linbo_image_name(image_name)
         base = image_name.rsplit(".", 1)[0] if "." in image_name else image_name
         target_dir = self.images_dir / base
         if target_dir.is_dir():
@@ -208,25 +209,16 @@ IMAGE_EXTS = {".qcow2", ".qdiff", ".cloop"}
 INCOMING_DIR_NAME = ".incoming"
 
 
-def validate_image_path(name: str) -> None:
-    """Validate an image or filename for path safety.
-
-    Raises ValueError if unsafe.
-    """
-    if not name or not isinstance(name, str):
-        raise ValueError("Name must not be empty")
-    if "/" in name or "\\" in name or ".." in name or "\0" in name:
-        raise ValueError(f"Unsafe path component: {name}")
-
-
 def resolve_image_file(images_dir: Path, image_name: str, filename: str) -> Path:
     """Resolve and validate an image file path.
 
     Returns the absolute Path if valid and file exists.
     Raises ValueError for invalid paths, FileNotFoundError if missing.
     """
-    validate_image_path(image_name)
-    validate_image_path(filename)
+
+
+    name_checker.check_linbo_image_name(image_name)
+    name_checker.check_linbo_image_name(filename)
 
     file_path = (images_dir / image_name / filename).resolve()
     if not file_path.is_relative_to(images_dir.resolve()):
@@ -241,6 +233,8 @@ def get_image_file_info(file_path: Path) -> dict:
 
     Returns {size, mtime_ts, etag, last_modified}.
     """
+
+
     stat = file_path.stat()
     etag = hashlib.md5(
         f"{file_path}:{stat.st_mtime}:{stat.st_size}".encode()
@@ -269,8 +263,10 @@ def receive_upload_chunk(
 
     Returns {received, offset}.
     """
-    validate_image_path(image_name)
-    validate_image_path(filename)
+
+
+    name_checker.check_linbo_image_name(image_name)
+    name_checker.check_linbo_image_name(filename)
 
     staging_dir = images_dir / INCOMING_DIR_NAME / image_name
     staging_dir.mkdir(parents=True, exist_ok=True)
@@ -296,8 +292,10 @@ def get_upload_status(images_dir: Path, image_name: str, filename: str) -> dict:
 
     Returns {bytesReceived, complete}.
     """
-    validate_image_path(image_name)
-    validate_image_path(filename)
+
+
+    name_checker.check_linbo_image_name(image_name)
+    name_checker.check_linbo_image_name(filename)
 
     file_path = images_dir / INCOMING_DIR_NAME / image_name / filename
     if not file_path.is_file():
@@ -314,7 +312,9 @@ def finalize_upload(images_dir: Path, image_name: str) -> dict:
     Returns {finalized, files, backup}.
     Raises FileNotFoundError if no staged files exist.
     """
-    validate_image_path(image_name)
+
+
+    name_checker.check_linbo_image_name(image_name)
 
     staging_dir = images_dir / INCOMING_DIR_NAME / image_name
     if not staging_dir.is_dir():
@@ -369,7 +369,9 @@ def cancel_upload(images_dir: Path, image_name: str) -> dict:
 
     Returns {cleaned, detail?}.
     """
-    validate_image_path(image_name)
+
+
+    name_checker.check_linbo_image_name(image_name)
 
     staging_dir = images_dir / INCOMING_DIR_NAME / image_name
     if staging_dir.is_dir():
