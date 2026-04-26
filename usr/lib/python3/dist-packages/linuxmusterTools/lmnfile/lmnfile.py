@@ -285,7 +285,10 @@ class CSVLoader(LMNFile):
 
                 if not headers_found and HEADER_MARKER in line:
                     # Only the first HEADERS marker will be used
-                    self.fieldnames = line.replace(HEADER_MARKER, "").split(self.delimiter)
+                    self.fieldnames = [
+                        field.strip()
+                        for field in line.replace(HEADER_MARKER, "").split(self.delimiter)
+                    ]
                     headers_found = True
                     continue
 
