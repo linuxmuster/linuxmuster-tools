@@ -110,9 +110,10 @@ class LMNFile(metaclass=abc.ABCMeta):
                 self.fieldnames = fieldnames
 
             # Check BOM for sophomorix-check
-            with open(self.file, 'rb') as f:
-                if f.read(3).startswith(BOM_MARKER):
-                    self.has_BOM = True
+            if os.path.isfile(self.file):
+                with open(self.file, 'rb') as f:
+                    if f.read(3).startswith(BOM_MARKER):
+                        self.has_BOM = True
 
     @classmethod
     def hasExtension(cls, ext):
@@ -156,7 +157,7 @@ class LMNFile(metaclass=abc.ABCMeta):
             backups.pop(0)
 
         backup_path = folder + '/.' + name + '.bak.' + str(int(time.time()))
-        with open(backup_path, 'w') as backup, open(self.file, 'r', encoding=self.encoding) as f:
+        with open(backup_path, 'w', encoding=self.encoding) as backup, open(self.file, 'r', encoding=self.encoding) as f:
             f.seek(0)
             backup.write(f.read())
 
@@ -181,9 +182,6 @@ class LMNFile(metaclass=abc.ABCMeta):
         """
 
 
-        if not os.path.isfile(self.file):
-            raise FileNotFoundError(f'File {self.file} not found.')
-
         allowed_path = False
         for rootpath in ALLOWED_PATHS:
             if rootpath in self.file:
@@ -203,6 +201,9 @@ class LMNFile(metaclass=abc.ABCMeta):
         """
 
 
+        if not os.path.isfile(self.file):
+            logger.debug(f'Detected encoding for {self.file} : no file, using utf-8')
+            return 'utf-8'
         loader = magic.Magic(mime_encoding=True)
         encoding = loader.from_file(self.file)
         if 'ascii' in encoding or encoding == "binary":
