@@ -33,8 +33,6 @@ class Devices:
             for device in devices_csv.read():
                 if not device['room'].startswith('#'):
                     # TODO: special cases for linbo docker
-                    device['hostgroup'] = device['group']
-                    del device['group']
                     device['school'] = self.school
                     device['mac'] = name_checker.normalize_mac(device['mac'])
                     device['pxeEnabled'] = self._check_pxe_flag(device)
@@ -57,7 +55,7 @@ class Devices:
         except ValueError:
             int_pxeflag = 0
 
-        return int_pxeflag > 0 and device['hostgroup'].lower() != "nopxe"
+        return int_pxeflag > 0 and device['group'].lower() != "nopxe"
 
     def filter(self, roles=[], groups=[], macs=[]):
         """

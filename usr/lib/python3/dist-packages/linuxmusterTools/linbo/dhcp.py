@@ -54,7 +54,7 @@ class LinboDhcpExporter:
         """Generate dnsmasq proxy-DHCP config from host list.
 
         Args:
-            hosts: List of host dicts with 'pxeEnabled', 'mac', 'hostgroup'
+            hosts: List of host dicts with 'pxeEnabled', 'mac', 'group'
             server_ip: TFTP/boot server IP (auto-detected from setup.ini if None)
 
         Returns:
@@ -104,11 +104,11 @@ class LinboDhcpExporter:
         if pxe_hosts:
             config_groups: dict[str, list[dict]] = {}
             for h in pxe_hosts:
-                config_groups.setdefault(h["hostgroup"], []).append(h)
+                config_groups.setdefault(h["group"], []).append(h)
 
             lines.append("# Host config assignments")
             for h in pxe_hosts:
-                tag = _TAG_RE.sub("_", h["hostgroup"])
+                tag = _TAG_RE.sub("_", h["group"])
                 lines.append(f"dhcp-host={h['mac']},set:{tag}")
             lines.append("")
 

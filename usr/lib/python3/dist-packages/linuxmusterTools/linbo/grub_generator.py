@@ -162,6 +162,6 @@ def build_kernel_options(raw_options: str, server: str, config_id: str) -> str:
     """Build clean kernel options string with server and group injected."""
     kopts = re.sub(r"\bserver=\S+", "", raw_options)
     kopts = re.sub(r"\bgroup=\S+", "", kopts)
-    kopts = re.sub(r"\bhostgroup=\S+", "", kopts)
+    kopts = re.sub(r"\bgroup=\S+", "", kopts)
     kopts = re.sub(r"\s+", " ", kopts).strip()
-    return f"{kopts} server={server} group={config_id} hostgroup={config_id}".strip()
+    return f"{kopts} server={server} group={config_id} group={config_id}".strip()
