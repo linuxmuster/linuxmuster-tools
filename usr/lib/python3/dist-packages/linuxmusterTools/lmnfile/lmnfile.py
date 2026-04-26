@@ -317,7 +317,7 @@ class CSVLoader(LMNFile):
         with open(tmp, 'w', encoding=self.encoding) as f:
             writer = csv.DictWriter(
                 f,
-                delimiter=';',
+                delimiter = self.delimiter,
                 fieldnames = self.fieldnames,
                 lineterminator = '\n'
             )
