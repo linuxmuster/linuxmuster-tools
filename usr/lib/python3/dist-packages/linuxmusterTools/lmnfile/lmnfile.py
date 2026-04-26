@@ -44,6 +44,7 @@ ALLOWED_PATHS = [
 
 EMPTY_LINE_MARKER = '###EMPTY#LINE'
 HEADER_MARKER = '#HEADERS#'
+BOM_MARKER = b'\xef\xbb\xbf'
 
 
 def convertBool(boolean):
@@ -95,6 +96,7 @@ class LMNFile(metaclass=abc.ABCMeta):
         self.comments = []
         self.check_allowed_path()
         self.delimiter = delimiter
+        self.has_BOM = False
 
         if self.file.endswith('.csv'):
             # Fieldnames aliases for some common CSV files
@@ -109,7 +111,8 @@ class LMNFile(metaclass=abc.ABCMeta):
 
             # Check BOM for sophomorix-check
             with open(self.file, 'rb') as f:
-                self.has_BOM = True if f.read(3).startswith(b'\xef\xbb\xbf') else False
+                if f.read(3).startswith(BOM_MARKER):
+                    self.has_BOM = True
 
     @classmethod
     def hasExtension(cls, ext):
