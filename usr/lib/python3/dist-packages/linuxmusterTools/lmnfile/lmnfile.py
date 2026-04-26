@@ -310,7 +310,7 @@ class CSVLoader(LMNFile):
                 with open(self.file, 'w', encoding='utf-8') as f:
                     f.write(content)
             else:
-                logging.info(f"Can not fix BOM with encoding: {self.encoding}")
+                logger.info(f"Can not fix BOM with encoding: {self.encoding}")
 
     def write(self, data):
         tmp = self.file + '_tmp'
