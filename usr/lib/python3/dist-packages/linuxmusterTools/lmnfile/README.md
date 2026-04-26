@@ -1,58 +1,205 @@
-# LMNFile
+# lmnfile
 
-`LMNFile` is a common interface to open, parse and write some common confgurations files on a linuxmuster.net's server.
+A unified Python file handler for all configuration file formats used in [linuxmuster.net](https://www.linuxmuster.net).
 
-It's possible to open:
-  * `yaml` files, like the configuration file of the Webui
-  * Linbo's `start.conf` files
-  * `csv` files, like e.g. the teachers' list. For these common `csv` files, the fieldnames are automatically set
-  * the common Linbo files: .desc, .reg, .postsync, .info, .macct, .prestart (those are not parsed)
-  * .ini and .conf files.
+`lmnfile` provides a single entry point — `LMNFile` — that automatically selects the right parser based on the file extension. All handlers implement the context manager protocol and share a common backup mechanism.
 
-`LMNFile` can be used in `with` statements, supporting read/write modes, in plaintext or binary.
+---
+
+## Supported formats
+
+| Extension(s) | Handler | Description |
+|---|---|---|
+| `.yml`, `.vdi` | `YAMLLoader` | YAML configuration files |
+| `.csv` | `CSVLoader` | Semicolon-delimited CSV files (sophomorix-compatible) |
+| `.ini`, `.conf` | `ConfigLoader` | INI-style configuration files |
+| `start.conf` | `StartConfLoader` | Linbo start configuration files |
+| `.desc`, `.reg`, `.postsync`, `.info`, `.macct`, `.prestart` | `LinboLoader` | Linbo image metadata files (plain text) |
+
+---
+
+## Requirements
+
+- Python 3.8+
+- [`python-magic`](https://pypi.org/project/python-magic/)
+- [`PyYAML`](https://pypi.org/project/PyYAML/)
+- [`configobj`](https://pypi.org/project/configobj/)
+
+---
+
+## Usage
+
+All handlers are accessed through the same `LMNFile` factory class, used as a context manager.
+
+```python
+from linuxmusterTools.lmnfile import LMNFile
+
+with LMNFile('/path/to/file.yml', 'r') as f:
+    data = f.read()
+```
+
+### Parameters
+
+```python
+LMNFile(file, mode, delimiter=';', fieldnames=None)
+```
+
+| Parameter | Type | Description |
+|---|---|---|
+| `file` | `str` | Absolute path to the file |
+| `mode` | `str` | Open mode: `'r'` (read), `'w'` (write), `'r+'` (read+write) |
+| `delimiter` | `str` | Delimiter for CSV files (default: `';'`) |
+| `fieldnames` | `list[str]` | Column names for CSV files without a header row |
+
+---
 
 ## Examples
 
-### Linbo start.conf file
+### YAML
 
-```Console
->>> from linuxmusterTools.lmnfile import LMNFile
->>> with LMNFile('/srv/linbo/start.conf.101', 'r') as f:
-...     data = f.data
-... 
->>> data
-{'config': {'LINBO': {'SystemType': 'efi64', 'KernelOptions': 'irqpoll dhcpretry=25 forcegrub', 'Cache': '/dev/sda4', 'Server': '10.0.0.1', 'Group': '101', 'RootTimeout': '600', 'Autopartition': False, 'AutoFormat': False, 'AutoInitCache': False, 'DownloadType': 'torrent', 'BackgroundFontColor': 'white', 'ConsoleFontColorStdout': 'white', 'ConsoleFontColorStderr': 'red'}}, 'partitions': [{'Dev': '/dev/sda1', 'Label': 'efi', 'Size': '200M', 'Id': 'ef', 'FSType': 'vfat', 'Bootable': True}, {'Dev': '/dev/sda2', 'Label': 'ubuntu', 'Size': '35G', 'Id': '83', 'FSType': 'ext4', 'Bootable': True}, {'Dev': '/dev/sda3', 'Label': 'data', 'Size': '35G', 'Id': '83', 'FSType': 'ext4', 'Bootable': False}, {'Dev': '/dev/sda4', 'Label': 'cache', 'Size': '', 'Id': '83', 'FSType': 'ext4', 'Bootable': False}], 'os': [{'Name': 'Ubuntu Mate', 'Version': 'Focal', 'Description': 'Ubuntu Mate', 'IconName': 'ubuntu.png', 'Image': '', 'BaseImage': 'focal.qcow2', 'Boot': '/dev/sda2', 'Root': '/dev/sda2', 'Kernel': '/boot/vmlinuz', 'Initrd': '/boot/initrd.img', 'Append': 'ro splash', 'StartEnabled': True, 'SyncEnabled': True, 'NewEnabled': True, 'Hidden': True, 'Autostart': False, 'AutostartTimeout': '15', 'DefaultAction': 'start'}, {'Name': 'Data', 'Version': '', 'Description': 'Data', 'IconName': 'ubuntu.png', 'Image': '', 'BaseImage': 'data.qcow2', 'Boot': '/dev/sda3', 'Root': '/dev/sda3', 'Kernel': 'vmlinuz', 'Initrd': 'initrd.img', 'Append': 'ro splash', 'StartEnabled': False, 'SyncEnabled': True, 'NewEnabled': False, 'Hidden': True, 'Autostart': False, 'AutostartTimeout': '15', 'DefaultAction': 'sync'}]}
+```python
+with LMNFile('/etc/linuxmuster/api/config.yml', 'r') as f:
+    config = f.read()
+    # config is a dict
+
+with LMNFile('/etc/linuxmuster/api/config.yml', 'r') as f:
+    data = f.read()
+    data['key'] = 'value'
+    f.write(data)
 ```
 
-### devices.csv
+> When running as root, `YAMLLoader` automatically creates the file if it does not exist and sets permissions to `0o600`.
 
-```Console
->>> from linuxmusterTools.lmnfile import LMNFile
->>> with LMNFile('/etc/linuxmuster/sophomorix/default-school/devices.csv', 'r') as f:
-...     data = f.data
-... 
->>> with LMNFile('/etc/linuxmuster/sophomorix/default-school/devices.csv', 'r') as f:
-...     data = f.data
-... 
->>> for device in data:
-...     if device['room'] == 'pxclient':
-...             print(device)
-... 
-{'room': 'pxclient', 'hostname': 'client2453457', 'group': 'test_linbo43', 'mac': '3a:98:3e:68:9e:c9', 'ip': '10.0.0.108', 'officeKey': '', 'windowsKey': '', 'dhcpOptions': '', 'sophomorixRole': 'staffcomputer', 'lmnReserved10': '', 'pxeFlag': '1', 'lmnReserved12': '', 'lmnReserved13': '', 'lmnReserved14': '', 'sophomorixComment': '', 'options': ''}
-{'room': 'pxclient', 'hostname': 'client245345', 'group': 'test_linbo43', 'mac': '3a:97:3e:68:9e:c9', 'ip': '10.0.0.107', 'officeKey': '', 'windowsKey': '', 'dhcpOptions': '', 'sophomorixRole': 'staffcomputer', 'lmnReserved10': '', 'pxeFlag': '1', 'lmnReserved12': '', 'lmnReserved13': '', 'lmnReserved14': '', 'sophomorixComment': '', 'options': ''}
-{'room': 'pxclient', 'hostname': 'client3', 'group': 'lz', 'mac': '31:fb:96:33:fd:96', 'ip': '10.0.0.102', 'officeKey': '', 'windowsKey': '', 'dhcpOptions': '', 'sophomorixRole': 'staffcomputer', 'lmnReserved10': '', 'pxeFlag': '1', 'lmnReserved12': '', 'lmnReserved13': '', 'lmnReserved14': '', 'sophomorixComment': '', 'options': ''}
+### CSV
+
+```python
+with LMNFile('/etc/linuxmuster/sophomorix/default-school/devices.csv', 'r') as f:
+    rows = f.read()
+    # rows is a list of dicts, one per line
+
+with LMNFile('/etc/linuxmuster/sophomorix/default-school/devices.csv', 'r') as f:
+    rows = f.read()
+    rows[0]['room'] = 'server'
+    f.write(rows)
 ```
 
-### holidays.yml
+Field names for standard linuxmuster CSV files (`devices`, `students`, `teachers`, `staff`, `parents`, `extrastudents`, `extraclasses`, `subnets`) are detected automatically from the filename.
 
-```Console
->>> from linuxmusterTools.lmnfile import LMNFile
->>> with LMNFile('/etc/linuxmuster/sophomorix/default-school/holidays.yml', 'r') as f:
-...     data = f.data
-... 
->>> data
-{'automn': {'end': '01.11.2021', 'start': '25.10.2021'}, 'hiver': {'end': '04.02.2022', 'start': '31.01.2022'}, 'noël': {'end': '10.01.2022', 'start': '20.12.2021'}, 'pentecôte': {'end': '15.06.2022', 'start': '01.06.2022'}}
->>> data['automn']['start'] = '26.10.2021' # New start date
->>> with LMNFile('/etc/linuxmuster/sophomorix/default-school/holidays.yml', 'w') as f:
-...     f.write(data) # Saving to file
+For other CSV files, pass `fieldnames` explicitly:
+
+```python
+with LMNFile('/path/to/custom.csv', 'r', fieldnames=['col1', 'col2']) as f:
+    rows = f.read()
 ```
+
+#### CSV special features
+
+- **BOM**: UTF-8 BOM is detected and removed automatically for sophomorix compatibility.
+- **Inline header**: A CSV file can declare its own field names with a special marker line:
+  ```
+  #HEADERS#col1;col2;col3
+  ```
+- **Empty lines and comments**: Lines starting with `#` and empty lines are preserved on write.
+
+### INI / Config
+
+```python
+with LMNFile('/var/lib/linuxmuster/setup.ini', 'r') as f:
+    config = f.read()
+    # config is a nested dict: config[section][key]
+    print(config['setup']['schoolname'])
+
+with LMNFile('/var/lib/linuxmuster/setup.ini', 'r') as f:
+    config = f.read()
+    config['setup']['schoolname'] = 'My School'
+    f.write(config)
+```
+
+String values are automatically converted on read:
+- `'yes'` → `True`
+- `'no'` → `False`
+- Digit strings → `int`
+
+And converted back on write.
+
+### Linbo start.conf
+
+```python
+with LMNFile('/srv/linbo/start.conf', 'r') as f:
+    data = f.read()
+    # data = {
+    #   'config': {'LINBO': {...}, 'GUI': {...}, ...},
+    #   'partitions': [{...}, ...],
+    #   'os': [{...}, ...]
+    # }
+
+with LMNFile('/srv/linbo/start.conf', 'r') as f:
+    data = f.read()
+    data['config']['LINBO']['Server'] = '10.0.0.1'
+    f.write(data)
+```
+
+### Linbo metadata files
+
+```python
+with LMNFile('/srv/linbo/ubuntu.desc', 'r') as f:
+    content = f.read()     # returns the raw file object
+    text = content.read()
+```
+
+---
+
+## Security
+
+Access is restricted to a whitelist of allowed paths:
+
+```
+/etc/linuxmuster/api/config.yml
+/etc/linuxmuster/webui/config.yml
+/etc/linuxmuster/sophomorix/
+/srv/linbo
+/etc/linuxmuster/subnets.csv
+/etc/linuxmuster/holidays.yml
+/var/lib/linuxmuster/setup.ini
+/tmp/setup.ini
+/usr/lib/linuxmuster-webui/plugins
+```
+
+Any path outside this list, or containing `..`, raises `IOError: Access refused.`
+
+---
+
+## Backup
+
+Before overwriting a file, `lmnfile` automatically creates a timestamped backup:
+
+```
+/path/to/.filename.bak.<unix_timestamp>
+```
+
+- Only the **10 most recent** backups are kept; older ones are deleted automatically.
+- Backup files inherit the **permissions** of the original file.
+- No backup is created if the file content has not changed.
+
+---
+
+## Predefined CSV field names
+
+The following CSV filenames are recognised automatically (matched against `/etc/linuxmuster/`):
+
+| Filename | Fields |
+|---|---|
+| `devices.csv` | `room`, `hostname`, `group`, `mac`, `ip`, `officeKey`, `windowsKey`, `dhcpOptions`, `sophomorixRole`, `lmnReserved10`, `pxeFlag`, `lmnReserved12–14`, `sophomorixComment`, `options` |
+| `students.csv` | `class`, `last_name`, `first_name`, `birthday`, `id` |
+| `teachers.csv` | `class`, `last_name`, `first_name`, `birthday`, `login`, `password`, `usertoken`, `quota`, `mailquota`, `reserved`, `extra01`–`extra20` |
+| `staff.csv` | `class`, `last_name`, `first_name`, `birthday`, `id` |
+| `parents.csv` | `class`, `last_name`, `first_name`, `birthday`, `id`, `students_ref` |
+| `extrastudents.csv` | `class`, `last_name`, `first_name`, `birthday`, `login`, `reserved` |
+| `extraclasses.csv` | `course`, `base_name`, `count`, `birthday`, `gecos`, `password`, `removal_date` |
+| `subnets.csv` | `network`, `routerIp`, `beginRange`, `endRange`, `nameServer`, `nextServer`, `setupFlag` |
+
+---
+
+## File encoding
+
+The encoding of each file is detected automatically using `libmagic`. ASCII and binary files are treated as UTF-8. If the file does not yet exist, UTF-8 is assumed.
