@@ -180,6 +180,10 @@ class LMNFile(metaclass=abc.ABCMeta):
         :rtype: bool
         """
 
+
+        if not os.path.isfile(self.file):
+            raise FileNotFoundError(f'File {self.file} not found.')
+
         allowed_path = False
         for rootpath in ALLOWED_PATHS:
             if rootpath in self.file:
