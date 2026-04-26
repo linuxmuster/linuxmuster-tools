@@ -432,6 +432,8 @@ class StartConfLoader(LMNFile):
         for partition in data['os']:
             content += '[OS]\n'
             for k, v in partition.items():
+                if k[0] == '_':
+                    continue
                 content += f'{k} = {convertBool(v)}\n'
             content += '\n'
 
