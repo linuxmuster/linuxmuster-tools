@@ -76,7 +76,7 @@ class Devices:
             return [
                 device
                 for device in self.devices
-                if name_checker.normalize_mac(['mac']) in macs_normalized]
+                if name_checker.normalize_mac(device['mac']) in macs_normalized]
         return self.devices
 
     def get_host(self, hostname, roles=[], groups=[]):
