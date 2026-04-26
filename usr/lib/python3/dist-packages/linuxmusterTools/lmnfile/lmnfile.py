@@ -378,6 +378,8 @@ class ConfigLoader(LMNFile):
 
 class StartConfLoader(LMNFile):
 
+    extensions = []  # handled by filename check in __new__, not by extension
+
     def __enter__(self):
         self.opened = open(self.file, 'r', encoding=self.encoding)
         # TODO: use new parser in linbo module
