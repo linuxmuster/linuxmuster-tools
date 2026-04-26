@@ -202,9 +202,7 @@ class LMNFile(metaclass=abc.ABCMeta):
         :rtype: string
         """
 
-        if not os.path.isfile(self.file):
-            logger.debug(f'Detected encoding for {self.file} : no file, using utf-8')
-            return 'utf-8'
+
         loader = magic.Magic(mime_encoding=True)
         encoding = loader.from_file(self.file)
         if 'ascii' in encoding or encoding == "binary":
@@ -382,33 +380,32 @@ class ConfigLoader(LMNFile):
 class StartConfLoader(LMNFile):
 
     def __enter__(self):
-        if os.path.isfile(self.file):
-            self.opened = open(self.file, 'r', encoding=self.encoding)
-            # TODO: use new parser in linbo module
-            if 'r' in self.mode or '+' in self.mode:
-                self.data = {
-                    'config': {},
-                    'partitions': [],
-                    'os': [],
-                }
-                for line in self.opened:
-                    line = line.split('#')[0].strip()
+        self.opened = open(self.file, 'r', encoding=self.encoding)
+        # TODO: use new parser in linbo module
+        if 'r' in self.mode or '+' in self.mode:
+            self.data = {
+                'config': {},
+                'partitions': [],
+                'os': [],
+            }
+            for line in self.opened:
+                line = line.split('#')[0].strip()
 
-                    if line.startswith('['):
-                        section = {}
-                        section_name = line.strip('[]')
-                        if section_name == 'Partition':
-                            self.data['partitions'].append(section)
-                        elif section_name == 'OS':
-                            self.data['os'].append(section)
-                        else:
-                            self.data['config'][section_name] = section
-                    elif '=' in line:
-                        k, v = line.split('=', 1)
-                        v = v.strip()
-                        if v in ['yes', 'no']:
-                            v = v == 'yes'
-                        section[k.strip()] = v
+                if line.startswith('['):
+                    section = {}
+                    section_name = line.strip('[]')
+                    if section_name == 'Partition':
+                        self.data['partitions'].append(section)
+                    elif section_name == 'OS':
+                        self.data['os'].append(section)
+                    else:
+                        self.data['config'][section_name] = section
+                elif '=' in line:
+                    k, v = line.split('=', 1)
+                    v = v.strip()
+                    if v in ['yes', 'no']:
+                        v = v == 'yes'
+                    section[k.strip()] = v
         return self
 
     def __exit__(self, *args):
