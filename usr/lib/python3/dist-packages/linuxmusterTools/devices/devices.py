@@ -33,8 +33,6 @@ class Devices:
             for device in devices_csv.read():
                 if not device['room'].startswith('#'):
                     # TODO: special cases for linbo docker
-                    device['hostgroup'] = device['group']
-                    del device['group']
                     device['school'] = self.school
                     device['mac'] = name_checker.normalize_mac(device['mac'])
                     device['pxeEnabled'] = self._check_pxe_flag(device)
@@ -57,7 +55,7 @@ class Devices:
         except ValueError:
             int_pxeflag = 0
 
-        return int_pxeflag > 0 and device['hostgroup'].lower() != "nopxe"
+        return int_pxeflag > 0 and device['group'].lower() != "nopxe"
 
     def filter(self, roles=[], groups=[], macs=[]):
         """
@@ -78,7 +76,7 @@ class Devices:
             return [
                 device
                 for device in self.devices
-                if name_checker.normalize_mac(['mac']) in macs_normalized]
+                if name_checker.normalize_mac(device['mac']) in macs_normalized]
         return self.devices
 
     def get_host(self, hostname, roles=[], groups=[]):
@@ -88,7 +86,7 @@ class Devices:
         return None
 
     def get_hosts_by_macs(self, macs=[]):
-        return self.filter(macs)
+        return self.filter(macs=macs)
 
     def get_client(self, hostname, groups=[]):
         return self.get_host(hostname, roles=CLIENT_ROLES, groups=groups)
