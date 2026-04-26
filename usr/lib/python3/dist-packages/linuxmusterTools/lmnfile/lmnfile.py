@@ -156,9 +156,9 @@ class LMNFile(metaclass=abc.ABCMeta):
             backups.pop(0)
 
         backup_path = folder + '/.' + name + '.bak.' + str(int(time.time()))
-        with open(backup_path, 'w') as f:
-            self.opened.seek(0)
-            f.write(self.opened.read())
+        with open(backup_path, 'w') as backup, open(self.file, 'r', encoding=self.encoding) as f:
+            f.seek(0)
+            backup.write(f.read())
 
         # Set same permissions as original file
         perms = os.stat(self.file).st_mode
@@ -371,10 +371,8 @@ class ConfigLoader(LMNFile):
                     value = 'yes' if value is True else value
                     value = 'no' if value is False else value
                     self.data[section][key] = value
-        if self.opened.closed:
-           self.opened = open(self.file, 'r', encoding=self.encoding)
+
         self.backup()
-        self.opened.close()
         self.data.write()
 
 class StartConfLoader(LMNFile):
