@@ -154,6 +154,7 @@ class LMNFile(metaclass=abc.ABCMeta):
 
         backup_path = folder + '/.' + name + '.bak.' + str(int(time.time()))
         with open(backup_path, 'w') as f:
+            self.opened.seek(0)
             f.write(self.opened.read())
 
         # Set same permissions as original file
