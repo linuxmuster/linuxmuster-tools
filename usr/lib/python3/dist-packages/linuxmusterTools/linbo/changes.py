@@ -7,17 +7,22 @@ determine which hosts, start.confs, and configs have changed.
 
 import logging
 import time
+from pathlib import Path
 from datetime import datetime, timezone
 
 from linuxmusterTools.devices import Devices
 from .config import LinboConfigManager
 from .grub import LinboGrubReader
+from ..common.timestamps import get_utc_mtime
 
 
 logger = logging.getLogger(__name__)
 
 class LinboChangeTracker:
-    """Cursor-based change detection using filesystem mtimes."""
+    """
+    Cursor-based change detection using filesystem mtimes.
+    """
+
 
     def __init__(self, school: str = "default-school"):
         self.school = school
@@ -36,6 +41,8 @@ class LinboChangeTracker:
             configsChanged, dhcpChanged, deletedHosts, deletedStartConfs,
             allHostMacs, allStartConfIds, allConfigIds.
         """
+
+
         try:
             cursor_ts = int(since_cursor) if since_cursor else 0
         except ValueError:
@@ -82,7 +89,8 @@ class LinboChangeTracker:
         startconfs_changed: list[str] = []
         deleted_startconfs: list[str] = []
         for group in all_startconf_ids:
-            mtime = self.config_manager.get_startconf_mtime(group)
+            startconf_path = Path(f'/srv/linbo/start.conf.{group}')
+            mtime = get_utc_mtime(startconf_path)
             if cursor_dt is None or (mtime and mtime > cursor_dt):
                 startconfs_changed.append(group)
 
