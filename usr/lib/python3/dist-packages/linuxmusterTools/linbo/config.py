@@ -30,6 +30,10 @@ class LinboConfigManager:
             if not os.path.islink(config):
                 group = config.replace('/srv/linbo/start.conf.', '')
 
+                ## Maybe is the ignore list incomplete
+                if any(s in group for s in ('.bak', '.bkp', '.tmp')) or group.endswith('~'):
+                    continue
+
                 if not name_checker.check_linbo_conf_name(group):
                     logger.warning(f"Invalid config name, this file will be ignored: {config}")
                     continue
