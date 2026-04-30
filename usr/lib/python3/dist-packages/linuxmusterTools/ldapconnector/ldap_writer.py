@@ -41,7 +41,7 @@ class LdapWriter:
         valid_fields = {field.name:field.type() for field in fields(lmnobject.model) if field.init}
 
         for attr, new_val in data.items():
-            if not new_val and new_val != False:
+            if new_val is None or new_val == "" or new_val == []:
                 continue
 
             if attr in valid_fields:
