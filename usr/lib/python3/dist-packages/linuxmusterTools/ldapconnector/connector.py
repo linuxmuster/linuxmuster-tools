@@ -88,8 +88,9 @@ class LdapConnector:
             logger.error(str(e))
             raise Exception(f'Ldap server down: {str(e)}')
         except ldap.LDAPError as e:
-            logger.error(e.get('desc', "Unknown ldap error"))
-            raise Exception(f"Other ldap error: {e.get('desc', "Unknown ldap error")}")
+            desc = e.args[0].get('desc', str(e)) if e.args else str(e)
+            logger.error(desc)
+            raise Exception(f"Other ldap error: {desc}")
 
         return conn, searchdn
 
