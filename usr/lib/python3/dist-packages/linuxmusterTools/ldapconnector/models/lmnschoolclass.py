@@ -53,7 +53,7 @@ class LMNSchoolClassModel(LMNModel):
         response = {}
 
         for student in self.sophomorixMembers:
-            lmnuser = lr.get(f'/users/{student}', asdict=False)
+            lmnuser = lr.get(f'/users/{student}', as_dict=False)
             response[student] = {
                 'firstPassword': lmnuser.sophomorixFirstPassword,
                 'firstPasswordStillSet': lmnuser.test_first_password(),
@@ -64,6 +64,6 @@ class LMNSchoolClassModel(LMNModel):
         path = f"/var/lib/lmntools/print/{self.cn}_liste.csv"
         with open(path, 'w') as f:
             for idx,student in enumerate(self.sophomorixMembers):
-                lmnuser = lr.get(f'/users/{student}', asdict=False)
+                lmnuser = lr.get(f'/users/{student}', as_dict=False)
                 f.write(f"{idx+1};{lmnuser.sn};{lmnuser.givenName}\n")
         return path

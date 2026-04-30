@@ -36,7 +36,7 @@ class LMNUser:
             logger.info(f"The user {self.cn} was not found in ldap.")
 
             if self.school == 'global':
-                logging.warning("Please provide a valid school name other than 'global', it's not possible to handle this new user.")
+                logger.warning("Please provide a valid school name other than 'global', it's not possible to handle this new user.")
 
             self.new = True
             self.data =  {field.name:field.type() for field in fields(self.model) if field.init}
@@ -57,7 +57,7 @@ class LMNUser:
             self.lw._setattr(self, **kwargs)
             self.load_data()
         else:
-            logging.warning('This object does not exist in Ldap, please create it first using the method .create()')
+            logger.warning('This object does not exist in Ldap, please create it first using the method .create()')
 
     def delattr(self, **kwargs):
         """
@@ -70,7 +70,7 @@ class LMNUser:
             self.lw._delattr(self, **kwargs)
             self.load_data()
         else:
-            logging.warning('This object does not exist in Ldap, please create it first using the method .create()')
+            logger.warning('This object does not exist in Ldap, please create it first using the method .create()')
 
     def getattr(self, attr):
         """
@@ -88,13 +88,13 @@ class LMNUser:
 
         if not self.new:
             if not name_checker.check_login_name(new_cn):
-                logging.warning(f"{new_cn} contains not allowed characters, please check it again.")
+                logger.warning(f"{new_cn} contains not allowed characters, please check it again.")
             else:
                 self.lw._rename(self.data['distinguishedName'], new_cn)
                 self.cn = new_cn
                 self.load_data()
         else:
-            logging.warning('This object does not exist in Ldap, please create it first using the method .create()')
+            logger.warning('This object does not exist in Ldap, please create it first using the method .create()')
 
     def delete(self):
         """
@@ -105,7 +105,7 @@ class LMNUser:
             self.lw._del(self.data['distinguishedName'])
             self.load_data() # Will load an empty User
         else:
-            logging.warning('This object does not exist in Ldap, please create it first using the method .create()')
+            logger.warning('This object does not exist in Ldap, please create it first using the method .create()')
 
     def get_children(self):
         memberships = [m for m in self.data['memberOf'] if 'Student-Parents' in m]
@@ -141,9 +141,9 @@ class LMNUser:
                 self.lw._move(self.data['distinguishedName'], dst_ou)
                 self.load_data()
             except Exception as e:
-                logging.error(str(e))
+                logger.error(str(e))
         else:
-            logging.warning('This object does not exist in Ldap, please create it first using the method .create()')
+            logger.warning('This object does not exist in Ldap, please create it first using the method .create()')
 
     def _create(self, dst_ou):
         """
@@ -162,7 +162,7 @@ class LMNUser:
                 raise Exception("Can not create an entry without a valid OU.")
 
             if not name_checker.check_login_name(self.cn):
-                logging.warning(f"{self.cn} contains not allowed characters, please check it again.")
+                logger.warning(f"{self.cn} contains not allowed characters, please check it again.")
             else:
                 # Check OU ?
                 try:
@@ -180,9 +180,9 @@ class LMNUser:
                     self.new = False
                     self.load_data()
                 except Exception as e:
-                    logging.warning(str(e))
+                    logger.warning(str(e))
         else:
-            logging.warning(f"This object already exists in Ldap, it's not possible to create it!")
+            logger.warning(f"This object already exists in Ldap, it's not possible to create it!")
 
     def create(self):
         raise NotImplementedError
@@ -557,7 +557,7 @@ class LMNParentsGroup(LMNGroupCommon):
         if not self.data:
             # This kind of group must always be provided in Ldap, so if it's not
             # existing, it must be automatically created.
-            logging.info(f"The group {self.cn}-parents was not found in ldap, creating it!")
+            logger.info(f"The group {self.cn}-parents was not found in ldap, creating it!")
 
             # TODO: Check the following attributes:
             domain = ','.join(self.student['dn'].split(',')[3:])

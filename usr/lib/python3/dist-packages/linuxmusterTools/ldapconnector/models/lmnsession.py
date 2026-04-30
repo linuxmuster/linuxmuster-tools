@@ -13,7 +13,7 @@ class LMNSessionModel:
         response = {}
 
         for member in self.members:
-            lmnuser = lr.get(f'/users/{member}', asdict=False)
+            lmnuser = lr.get(f'/users/{member}', as_dict=False)
             response[member] = {
                 'firstPassword': lmnuser.sophomorixFirstPassword,
                 'firstPasswordStillSet': lmnuser.test_first_password(),

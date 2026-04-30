@@ -14,7 +14,7 @@ class LdapReader:
     def __init__(self):
         self.lc = LdapConnector()
 
-    def _create_result_object(self, result, objectclass, asdict=True, school='', attributes=[], dn_filter='', custom_config={}):
+    def _create_result_object(self, result, objectclass, as_dict=True, school='', attributes=[], dn_filter='', custom_config={}):
         """
         Formatting one ldap result object into a dict or a LMN model object.
         """
@@ -35,7 +35,7 @@ class LdapReader:
                     if field.init:
                         value = raw_data.get(field.name, field.type())
                         data[field.name] = self._filter_value(field, value)
-                if asdict:
+                if as_dict:
                     if objectclass.__name__ in ['LMNUserModel', 'LMNRawUserModel']:
                         model_dict = asdict(objectclass(**data, custom_fields_config=custom_config))
                     else:
@@ -50,7 +50,7 @@ class LdapReader:
                 else:
                         return objectclass(**data)
 
-        if asdict:
+        if as_dict:
             return {}
 
         # Creating empty object with default values
@@ -86,7 +86,7 @@ class LdapReader:
 
         to_handle = results[0]
 
-        if len(results) > 1:
+        if len(results) > 0:
             # Only taking the first entry so warn the user
             logger.warning("Multiple entries found in LDAP, but only giving the first one as expected.")
 
@@ -134,7 +134,7 @@ class LdapReader:
                 # Avoid empty dicts
                 response.append(formatted_obj)
         if sortkey is not None:
-            if asdict:
+            if as_dict:
                 return sorted(response, key=lambda d: _check_schoolclass_number(d.get(sortkey, None)))
             else:
                 return sorted(response, key=lambda d: _check_schoolclass_number(getattr(d, sortkey)))

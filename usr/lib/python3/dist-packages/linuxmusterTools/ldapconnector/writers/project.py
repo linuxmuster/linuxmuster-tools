@@ -22,7 +22,7 @@ class LMNProject(LMNGroupCommon):
 
         if not self.data:
             self.new = True
-            logging.info(f"The project {self.cn} was not found in ldap.")
+            logger.info(f"The project {self.cn} was not found in ldap.")
 
             prefix = "p_"
             if self.school != "default-school":
@@ -30,7 +30,7 @@ class LMNProject(LMNGroupCommon):
 
             dn = f"CN={prefix}{self.cn},OU=Projects,OU={self.school},{LDAP_CONTEXT}"
 
-            logging.info(f"His DN would be {dn}. You can create it with the method .create.")
+            logger.info(f"His DN would be {dn}. You can create it with the method .create.")
 
             self.data = {
                 'description': self.cn,

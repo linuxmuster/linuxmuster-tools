@@ -39,7 +39,7 @@ class LMNSchoolclassGroup(LMNGroupCommon):
         if not self.data:
             # This kind of group must always be provided in Ldap, so if it's not
             # existing, it must be automatically created.
-            logging.info(f"The group {self.cn} was not found in ldap, creating it!")
+            logger.info(f"The group {self.cn} was not found in ldap, creating it!")
 
             # TODO: Check the following attributes:
             dn = self.schoolclass_data['dn'].replace(

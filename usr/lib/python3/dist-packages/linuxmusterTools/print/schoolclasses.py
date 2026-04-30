@@ -24,7 +24,7 @@ def print_schoolclass_list(schoolclass, caller, school='default_school', templat
         raise Exception(f"Schoolclass {schoolclass} not found or empty!")
 
     for student in students:
-        details = lr.get(f'/users/{student}', asdict=False)
+        details = lr.get(f'/users/{student}', as_dict=False)
         data.append({'lastname':details.sn, 'firstname':details.givenName})
 
     data_sorted = sorted(data, key=lambda item: item['lastname']+item['firstname'])

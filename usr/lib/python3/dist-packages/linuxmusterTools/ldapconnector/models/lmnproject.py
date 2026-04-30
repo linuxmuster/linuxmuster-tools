@@ -74,7 +74,7 @@ class LMNProjectModel(LMNModel):
         This is not called as post init because of nested projects. So it's necessary to call this method
         afterwards:
 
-        p = lr.get('/projects/p_test', asdict=False)
+        p = lr.get('/projects/p_test', as_dict=False)
         p.get_all_members()
         """
 

@@ -80,7 +80,7 @@ class LMNGroupCommon:
             if user_dn in members:
                 members.remove(user_dn)
             else:
-                logging.info(f"{user} is not a member of schoolclass {self.cn}")
+                logger.info(f"{user} is not a member of schoolclass {self.cn}")
                 return
             self.lw._setattr(self, data={'member': members})
             self.load_data()

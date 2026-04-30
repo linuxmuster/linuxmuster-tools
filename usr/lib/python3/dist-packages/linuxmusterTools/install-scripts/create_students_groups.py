@@ -10,7 +10,7 @@ if not os.path.isfile('/etc/linuxmuster/webui/config.yml'):
 else:
     try:
         # Checking groups like 7a-teachers, 7a-parents, 7a-students
-        for c in lr.get('/schoolclasses', asdict=False):
+        for c in lr.get('/schoolclasses', as_dict=False):
             lprint.info(f"Checking students groups from schoolclass {c.cn}")
             l = LMNSchoolclass(c.cn, school=c.sophomorixSchoolname)
             l.fill_group_members()
