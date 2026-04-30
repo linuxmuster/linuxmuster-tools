@@ -125,7 +125,7 @@ class LdapConnector:
             if result[0] is not None:
                 results.append(result)
         
-        conn.unbind()
+        conn.unbind_s()
 
         return results
 
