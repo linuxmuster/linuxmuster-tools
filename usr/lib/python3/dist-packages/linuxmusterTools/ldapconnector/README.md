@@ -33,7 +33,7 @@ When getting many objects, you can use the parameter `sortkey`:
 If a response contains many items, you get a list of dict, but with the boolean parameter `dict`, you can switch to a dataclass object:
 
 ```Console
->>> lr.get('/schools', dict=False)
+>>> lr.get('/schools', asdict=False)
 [LMNSchool(ou='default-school', distinguishedName='OU=default-school,OU=SCHOOLS,DC=linuxmuster,DC=lan')]
 ```
 

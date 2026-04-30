@@ -66,7 +66,7 @@ class LMNLdapRouter:
         else:
             raise Exception(f"Attribute {attribute} should be a string.")
 
-        results = self.get(url, attributes=attrs, dict=dict, **kwargs)
+        results = self.get(url, attributes=attrs, asdict=dict, **kwargs)
 
         if isinstance(results, list):
             # results is a collection
@@ -74,23 +74,23 @@ class LMNLdapRouter:
         else:
             return results.get(attribute, None)
 
-    def getvalues(self, url, attributes, dict=True, **kwargs):
+    def getvalues(self, url, attributes, asdict=True, **kwargs):
 
         if isinstance(attributes, list):
             attrs = attributes
         else:
             raise Exception(f"Attributes {attributes} should be a list of valid attributes.")
 
-        results = self.get(url, attributes=attrs, dict=dict, **kwargs)
+        results = self.get(url, attributes=attrs, asdict=dict, **kwargs)
 
         if isinstance(results, list):
             # results is a collection
-            if dict:
+            if asdict:
                 return [{attr: result.get(attr, None) for attr in attrs} for result in results]
             else:
                 return [{attr: getattr(result, attr, None) for attr in attrs} for result in results]
         else:
-            if dict:
+            if asdict:
                 return {attr: results.get(attr, None) for attr in attrs}
             else:
                 return {attr: getattr(results, attr, None) for attr in attrs}
@@ -131,7 +131,7 @@ class LMNLdapRouter:
             now = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
             csvfile = f'/tmp/export_csv_{obj_type}_{now}.csv'
 
-        data = self.get(url, attributes=attributes, dict=True, **kwargs)
+        data = self.get(url, attributes=attributes, asdict=True, **kwargs)
         if not isinstance(data, list):
             data = [data]
 
