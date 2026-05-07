@@ -1,3 +1,4 @@
+from collections import deque
 from dataclasses import dataclass, field
 from ..urls import router as lr
 from .common import LMNModel
@@ -88,13 +89,13 @@ class LMNProjectModel(LMNModel):
             if 'person' in details["objectClass"]:
                 members.add(details['cn'])
 
-        to_scan = self.sophomorixMemberGroups
-        already_scanned = []
+        to_scan = deque(self.sophomorixMemberGroups)
+        already_scanned = set()
 
         while to_scan:
-            group = to_scan[0]
+            group = to_scan.popleft()
             if group not in already_scanned:
-                already_scanned.append(group)
+                already_scanned.add(group)
 
                 # I assume a group is a project or a schoolclass
                 if group.startswith('p_'):
@@ -111,18 +112,16 @@ class LMNProjectModel(LMNModel):
 
                 members = members.union(group_members)
 
-            to_scan = to_scan[1:]
-
         self.membersCount = len(members)
         self.all_members = list(members)
 
-        to_scan = self.sophomorixAdminGroups
-        already_scanned = []
+        to_scan = deque(self.sophomorixAdminGroups)
+        already_scanned = set()
 
         while to_scan:
-            group = to_scan[0]
+            group = to_scan.popleft()
             if group not in already_scanned:
-                already_scanned.append(group)
+                already_scanned.add(group)
 
                 # I assume a group is a project or a schoolclass
                 if group.startswith('p_'):
@@ -138,8 +137,6 @@ class LMNProjectModel(LMNModel):
                     group_members = set(lr.get(f'/schoolclasses/{group}').get('sophomorixMembers', []))
 
                 admins = admins.union(group_members)
-
-            to_scan = to_scan[1:]
 
         self.adminsCount = len(admins)
         self.all_admins = list(admins)

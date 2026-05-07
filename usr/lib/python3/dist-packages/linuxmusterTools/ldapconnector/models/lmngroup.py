@@ -1,4 +1,6 @@
 from dataclasses import dataclass, field
+from collections import deque
+
 from ..urls import router as lr
 from .common import LMNModel
 
@@ -71,7 +73,7 @@ class LMNGroupModel(LMNModel):
         """
 
         members = set()
-        to_scan = []
+        to_scan = deque()
 
         for dn in self.member:
             details = lr.get(f'/dn/{dn}')
@@ -80,12 +82,12 @@ class LMNGroupModel(LMNModel):
             elif 'group' in details["objectClass"]:
                 to_scan.append(details['cn'])
 
-        already_scanned = []
+        already_scanned = set()
 
         while to_scan:
-            group = to_scan[0]
+            group = to_scan.popleft()
             if group not in already_scanned:
-                already_scanned.append(group)
+                already_scanned.add(group)
 
                 # I assume a group is a project or a schoolclass
                 if group.startswith('p_'):
@@ -101,8 +103,6 @@ class LMNGroupModel(LMNModel):
                     group_members = set(lr.get(f'/schoolclasses/{group}').get('sophomorixMembers', []))
 
                 members = members.union(group_members)
-
-            to_scan = to_scan[1:]
 
         self.membersCount = len(members)
         self.all_members = list(members)
