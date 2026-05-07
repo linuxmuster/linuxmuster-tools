@@ -136,3 +136,25 @@ def get_all_raw_users():
 
     return ldap_filter
 
+
+@router.single(r'/rawusers/(?P<username>[\w\-]*)', models.LMNRawUserModel)
+def get_raw_user(username):
+    """
+    Get all details from a specific user.
+    Return a LMNRawUserModel data object.
+    """
+
+    ldap_filter = f"""(&
+                                (cn={username})
+                                (objectClass=user)
+                                (|
+                                    (sophomorixRole=globaladministrator)
+                                    (sophomorixRole=schooladministrator)
+                                    (sophomorixRole=teacher)
+                                    (sophomorixRole=student)
+                                    (sophomorixRole=parent)
+                                    (sophomorixRole=staff)
+                                )
+                            )"""
+
+    return ldap_filter
