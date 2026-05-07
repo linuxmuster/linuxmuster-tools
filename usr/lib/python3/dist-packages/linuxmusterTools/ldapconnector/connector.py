@@ -1,5 +1,6 @@
 import os
 import logging
+import threading
 import ldap
 
 from ..lmnfile import LMNFile
@@ -12,12 +13,13 @@ except ImportError as e:
     webui_import = False
 
 logger = logging.getLogger(__name__)
+local_thread = threading.local()
 
 class LdapConnector:
 
     def _connect(self):
         """
-        Choose the right credentials, depending if the this module is imported in linuxmuster-webui7 or used directly on
+        Choose the right credentials, depending if this module is imported in linuxmuster-webui7 or used directly on
         the server, and the perform a connection to the ldap server.
 
         :param webui: True only if using the _get method from the webui (no changes possible from the webui)
@@ -27,7 +29,7 @@ class LdapConnector:
         """
 
 
-        ## AUTH via GSSAPI for linuxmuster-client7, actually not used
+        ## TODO: AUTH via GSSAPI for linuxmuster-client7, actually not used
         # if not os.path.isfile('/etc/linuxmuster/webui/config.yml'):
         #     # Using it from linuxclient
         #     # Trying to auth via GSSAPI
@@ -94,6 +96,20 @@ class LdapConnector:
 
         return conn, searchdn
 
+    def _get_conn(self):
+        """
+        Return a thread-local LDAP connection, creating or reconnecting as needed.
+        """
+
+
+        if not getattr(local_thread, 'conn', None):
+            local_thread.conn, local_thread.searchdn = self._connect()
+        return local_thread.conn, local_thread.searchdn
+
+    def _reconnect(self):
+        local_thread.conn = None
+        return self._get_conn()
+
     def _get(self, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn=''):
         """
         Connect to ldap and perform a search.
@@ -108,7 +124,8 @@ class LdapConnector:
         :rtype: dict
         """
 
-        conn, _searchdn = self._connect()
+
+        conn, _searchdn = self._get_conn()
 
         searchdn = f"{subdn}{_searchdn}"
 
@@ -118,14 +135,16 @@ class LdapConnector:
             # Searchdn is maybe wrong, returning empty response
             logger.warning(f"Searchdn {searchdn} is maybe wrong")
             return []
+        except ldap.LDAPError:
+            conn, _searchdn = self._reconnect()
+            searchdn = f"{subdn}{_searchdn}"
+            response = conn.search_s(searchdn, scope, ldap_filter)
 
         # Filter non-interesting values
         results = []
         for result in response:
             if result[0] is not None:
                 results.append(result)
-        
-        conn.unbind_s()
 
         return results
 
@@ -140,10 +159,13 @@ class LdapConnector:
         """
 
 
-        conn, _ = self._connect()
-        # Here the ldif is a list of 3-Tuples (MOD_*, attr, value)
-        conn.modify_s(dn, ldif)
-        conn.unbind_s()
+        conn, _ = self._get_conn()
+        try:
+            # Here the ldif is a list of 3-Tuples (MOD_*, attr, value)
+            conn.modify_s(dn, ldif)
+        except ldap.SERVER_DOWN:
+            conn, _ = self._reconnect()
+            conn.modify_s(dn, ldif)
 
     def _add(self, dn, ldif=[]):
         """
@@ -156,10 +178,13 @@ class LdapConnector:
         """
 
 
-        conn, _ = self._connect()
-        # Here the ldif can only be a list of 2-Tuples (attr,value)
-        conn.add_s(dn, ldif)
-        conn.unbind_s()
+        conn, _ = self._get_conn()
+        try:
+            # Here the ldif can only be a list of 2-Tuples (attr,value)
+            conn.add_s(dn, ldif)
+        except ldap.SERVER_DOWN:
+            conn, _ = self._reconnect()
+            conn.add_s(dn, ldif)
 
     def _add_ou(self, dn):
         """
@@ -197,10 +222,12 @@ class LdapConnector:
         """
 
 
-        conn, _ = self._connect()
-
-        conn.rename_s(old_dn, f"CN={new_cn}")
-        conn.unbind_s()
+        conn, _ = self._get_conn()
+        try:
+            conn.rename_s(old_dn, f"CN={new_cn}")
+        except ldap.SERVER_DOWN:
+            conn, _ = self._reconnect()
+            conn.rename_s(old_dn, f"CN={new_cn}")
 
     def _move(self, old_dn, new_ou):
         """
@@ -213,10 +240,12 @@ class LdapConnector:
         """
 
 
-        conn, _ = self._connect()
-
-        conn.rename_s(old_dn, old_dn.split(',')[0], new_ou)
-        conn.unbind_s()
+        conn, _ = self._get_conn()
+        try:
+            conn.rename_s(old_dn, old_dn.split(',')[0], new_ou)
+        except ldap.SERVER_DOWN:
+            conn, _ = self._reconnect()
+            conn.rename_s(old_dn, old_dn.split(',')[0], new_ou)
 
     def _del(self, dn):
         """
@@ -227,6 +256,9 @@ class LdapConnector:
         """
 
 
-        conn, _ = self._connect()
-        conn.delete_s(dn)
-        conn.unbind_s()
+        conn, _ = self._get_conn()
+        try:
+            conn.delete_s(dn)
+        except ldap.SERVER_DOWN:
+            conn, _ = self._reconnect()
+            conn.delete_s(dn)
