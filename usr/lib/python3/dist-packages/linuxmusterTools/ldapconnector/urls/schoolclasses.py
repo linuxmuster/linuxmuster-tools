@@ -1,3 +1,4 @@
+import ldap.filter
 import linuxmusterTools.ldapconnector.models as models
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router
 
@@ -9,6 +10,7 @@ def get_schoolclass(schoolclass):
     Return a LMNSchoolClassModel data object
     """
 
+    schoolclass = ldap.filter.escape_filter_chars(schoolclass)
     return f"""(&(cn={schoolclass})(objectClass=group)(sophomorixType=adminclass))"""
 
 @router.collection(r'/schoolclasses/(?P<schoolclass>[a-z0-9\-_]*)/students', models.LMNUserModel)
@@ -18,6 +20,7 @@ def get_all_students_from_schoolclass(schoolclass):
     Return a list of LMNUserModel data objects.
     """
 
+    schoolclass = ldap.filter.escape_filter_chars(schoolclass)
     return f"""(&
                                 (objectClass=user)
                                 (sophomorixAdminClass={schoolclass})
@@ -40,6 +43,7 @@ def get_results_search_schoolclasses(query):
     Return a list of LMNSchoolClassModel data objects.
     """
 
+    query = ldap.filter.escape_filter_chars(query)
     return f"""(&(objectClass=group)(sophomorixType=adminclass)(cn=*{query}*))"""
 
 @router.collection(r'/empty_schoolclasses', models.LMNSchoolClassModel)
@@ -60,6 +64,7 @@ def get_extraclass(schoolclass):
     Return a LMNSchoolClassModel data object
     """
 
+    schoolclass = ldap.filter.escape_filter_chars(schoolclass)
     return f"""(&(cn={schoolclass})(objectClass=group)(sophomorixType=extraclass))"""
 
 @router.collection(r'/extraclasses', models.LMNSchoolClassModel)

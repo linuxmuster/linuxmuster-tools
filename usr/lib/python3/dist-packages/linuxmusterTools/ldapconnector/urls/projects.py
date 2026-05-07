@@ -1,3 +1,4 @@
+import ldap.filter
 import linuxmusterTools.ldapconnector.models as models
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router
 
@@ -9,6 +10,7 @@ def get_project(project):
     Return a LMNProjectModel data object
     """
 
+    project = ldap.filter.escape_filter_chars(project)
     return f"""(&(cn={project})(objectClass=group)(sophomorixType=project))"""
 
 @router.collection(r'/projects', models.LMNProjectModel)

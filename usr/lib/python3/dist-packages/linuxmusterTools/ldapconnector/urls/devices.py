@@ -1,3 +1,4 @@
+import ldap.filter
 import linuxmusterTools.ldapconnector.models as models
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router, SCHOOL_MARKER
 
@@ -21,6 +22,7 @@ def get_device(name):
     Return a LMNDeviceModel data object.
     """
 
+    name = ldap.filter.escape_filter_chars(name)
     ldap_filter = f"""(&(cn={name})(objectClass=computer))"""
 
     return ldap_filter
@@ -34,9 +36,12 @@ def get_results_search_device(query, selection=[]):
     """
 
 
+    query = ldap.filter.escape_filter_chars(query)
     # TODO: role filtering through selection variable must be ameliorated
     if selection == 'all':
         selection = '*'
+    else:
+        selection = ldap.filter.escape_filter_chars(selection)
 
     return f"""(&(cn=*{query}*)(objectClass=computer)(sophomorixRole={selection}))"""
 
@@ -56,6 +61,7 @@ def get_room(name):
     """
 
 
+    name = ldap.filter.escape_filter_chars(name)
     return f"""(&(cn={name})(objectClass=group))"""
 
 @router.collection(r'/empty_rooms', models.LMNRoomModel, subdn=f'OU=Devices,OU={SCHOOL_MARKER},OU=SCHOOLS,')

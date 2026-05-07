@@ -1,3 +1,4 @@
+import ldap.filter
 import linuxmusterTools.ldapconnector.models as models
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router
 
@@ -9,6 +10,7 @@ def get_all_from_role(role='teacher'):
     Return a list of LMNUserModel data objects.
     """
 
+    role = ldap.filter.escape_filter_chars(role)
     return f"(&(objectClass=user)(sophomorixRole={role}))"
 
 @router.collection(r'/rawroles/(?P<role>.*)', models.LMNRawUserModel)
@@ -18,4 +20,5 @@ def get_all_raw_from_role(role='teacher'):
     Return a list of LMNRawUserModel data objects.
     """
 
+    role = ldap.filter.escape_filter_chars(role)
     return f"(&(objectClass=user)(sophomorixRole={role}))"

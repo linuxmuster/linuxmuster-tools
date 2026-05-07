@@ -1,3 +1,4 @@
+import ldap.filter
 import linuxmusterTools.ldapconnector.models as models
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router
 
@@ -105,6 +106,7 @@ def get_results_search_user(query='', selection=[]):
         role_filter[role] = f'(sophomorixRole={role})'
 
     if query:
+        query = ldap.filter.escape_filter_chars(query)
         query = f"(|(sAMAccountName=*{query}*)(sn=*{query}*)(givenName=*{query}*))"
 
     return f"""(&
@@ -168,7 +170,7 @@ def get_batch_raw_users(usernames):
 
 
     cn_list = usernames.split(',')
-    selector = ''.join([f"(cn={cn})" for cn in cn_list])
+    selector = ''.join([f"(cn={ldap.filter.escape_filter_chars(cn)})" for cn in cn_list])
 
     ldap_filter = f"""(&
                                 (|{selector})
@@ -195,7 +197,7 @@ def get_batch_users(usernames):
 
 
     cn_list = usernames.split(',')
-    selector = ''.join([f"(cn={cn})" for cn in cn_list])
+    selector = ''.join([f"(cn={ldap.filter.escape_filter_chars(cn)})" for cn in cn_list])
 
     ldap_filter = f"""(&
                                 (|{selector})

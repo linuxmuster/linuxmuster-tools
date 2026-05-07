@@ -1,3 +1,4 @@
+import ldap.filter
 import linuxmusterTools.ldapconnector.models as models
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router
 
@@ -8,6 +9,7 @@ def get_from_dn(dn):
     Search for a specific dn and retrieve a common LMNObjectModel from it.
     """
 
+    dn = ldap.filter.escape_filter_chars(dn)
     ldap_filter = f"""(distinguishedName={dn})"""
 
     return ldap_filter

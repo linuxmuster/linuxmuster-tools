@@ -1,3 +1,4 @@
+import ldap.filter
 import linuxmusterTools.ldapconnector.models as models
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router
 
@@ -18,4 +19,5 @@ def get_specific_school(school):
     Return a LMNSchoolModel data object
     """
 
+    school = ldap.filter.escape_filter_chars(school)
     return f"""(&(objectClass=organizationalUnit)(name={school}))"""
