@@ -184,3 +184,30 @@ def get_batch_raw_users(usernames):
                             )"""
 
     return ldap_filter
+
+@router.collection(r'/batch_users/(?P<usernames>[\w\-,]*)', models.LMNUserModel)
+def get_batch_users(usernames):
+    """
+    Get all details from specific users: usernames should be a comma-separated
+    list of valid sAMAccountNames.
+    Return a list of LMNRawUserModel data object.
+    """
+
+
+    cn_list = usernames.split(',')
+    selector = ''.join([f"(cn={cn})" for cn in cn_list])
+
+    ldap_filter = f"""(&
+                                (|{selector})
+                                (objectClass=user)
+                                (|
+                                    (sophomorixRole=globaladministrator)
+                                    (sophomorixRole=schooladministrator)
+                                    (sophomorixRole=teacher)
+                                    (sophomorixRole=student)
+                                    (sophomorixRole=parent)
+                                    (sophomorixRole=staff)
+                                )
+                            )"""
+
+    return ldap_filter
