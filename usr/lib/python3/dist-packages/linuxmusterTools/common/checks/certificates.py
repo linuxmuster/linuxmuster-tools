@@ -34,7 +34,7 @@ class DomCert:
     def _get_limit(self):
         self.notAfter = self.cert['notAfter']
         self.notAfter_timestamp = datetime.strptime(self.notAfter,"%b %d %H:%M:%S %Y GMT")
-        self.valid = (self.notAfter_timestamp - datetime.now()).days > 0
+        self.valid = (self.notAfter_timestamp - datetime.utcnow()).days > 0
 
     def isvalid(self):
         self.load()
@@ -43,6 +43,6 @@ class DomCert:
     def expires(self):
         self.load()
         if self.valid:
-            return f"{(self.notAfter_timestamp - datetime.now()).days} days ({self.notAfter})"
+            return f"{(self.notAfter_timestamp - datetime.utcnow()).days} days ({self.notAfter})"
 
         return f"Expired since {self.notAfter}"
