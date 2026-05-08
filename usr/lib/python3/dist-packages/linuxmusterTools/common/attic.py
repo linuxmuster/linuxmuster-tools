@@ -86,20 +86,36 @@ def get_attic_status(user):
         start = datetime.datetime.strptime(details['sophomorixTolerationDate'], '%Y%m%d%H%M%S.%fZ')
         result['start'] = start.strftime("%d %b %Y %H:%M:%S")
         result['status'] = "tolerated"
-        result['end'] = (start + datetime.timedelta(days=int(role_config['TOLERATION_TIME']))).strftime("%d %b %Y %H:%M:%S")
+        try:
+            result['end'] = (start + datetime.timedelta(days=int(role_config['TOLERATION_TIME']))).strftime("%d %b %Y %H:%M:%S")
+        except KeyError as e:
+            # TOLERATION_TIME not found
+            result['end'] = "not found"
     elif status == "D" or status == "L":
         # Status Deactivated or Locked
         start = datetime.datetime.strptime(details['sophomorixDeactivationDate'], '%Y%m%d%H%M%S.%fZ')
         result['start'] = start.strftime("%d %b %Y %H:%M:%S")
         result['status'] = "deactivated"
-        result['end'] = (start + datetime.timedelta(days=int(role_config['DEACTIVATION_TIME']))).strftime("%d %b %Y %H:%M:%S")
+        try:
+            result['end'] = (start + datetime.timedelta(days=int(role_config['DEACTIVATION_TIME']))).strftime("%d %b %Y %H:%M:%S")
+        except KeyError as e:
+            # DEACTIVATION_TIME not found
+            result['end'] = "not found"
     elif status == "R" or status == "K":
         # Status Removable or Killable
         # Same start and end time
         start = datetime.datetime.strptime(details['sophomorixDeactivationDate'], '%Y%m%d%H%M%S.%fZ')
-        result['start'] = (start + datetime.timedelta(days=int(role_config['DEACTIVATION_TIME']))).strftime("%d %b %Y %H:%M:%S")
+        try:
+            result['start'] = (start + datetime.timedelta(days=int(role_config['DEACTIVATION_TIME']))).strftime("%d %b %Y %H:%M:%S")
+        except KeyError as e:
+            # DEACTIVATION_TIME not found
+            result['start'] = "not found"
         result['status'] = "killable"
-        result['end'] = (start + datetime.timedelta(days=int(role_config['DEACTIVATION_TIME']))).strftime("%d %b %Y %H:%M:%S")
+        try:
+            result['end'] = (start + datetime.timedelta(days=int(role_config['DEACTIVATION_TIME']))).strftime("%d %b %Y %H:%M:%S")
+        except KeyError as e:
+            # DEACTIVATION_TIME not found
+            result['end'] = "not found"
 
     return result
 
