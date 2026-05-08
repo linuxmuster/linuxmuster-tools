@@ -25,12 +25,11 @@ class DomCert:
 
 
         ctx = ssl.create_default_context()
-        s = ctx.wrap_socket(socket.socket(), server_hostname=self.hostname)
-        s.settimeout(10)
-        s.connect((self.hostname, self.port))
-        self.cert = s.getpeercert()
-        self.issuer = self.cert["issuer"]
-        s.close()
+        with ctx.wrap_socket(socket.socket(), server_hostname=self.hostname) as s:
+            s.settimeout(10)
+            s.connect((self.hostname, self.port))
+            self.cert = s.getpeercert()
+            self.issuer = self.cert["issuer"]
 
     def _get_limit(self):
         self.notAfter = self.cert['notAfter']
