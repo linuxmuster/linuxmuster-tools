@@ -26,20 +26,17 @@ def get_killdate(user):
 
     try:
         # Same log path for all schools
-        killlog = open("/var/log/sophomorix/userlog/user-kill.log", "r")
-        for line in reversed(list(killlog)):
-            if f'::{user}::' in line:
-                details = line.split('::')
-                killdate = convert_sophomorix_time(details[2])
-                school = details[3]
-                killlog.close()
-                return killdate, school
+        with open("/var/log/sophomorix/userlog/user-kill.log", "r") as killlog:
+            for line in reversed(list(killlog)):
+                if f'::{user}::' in line:
+                    details = line.split('::')
+                    killdate = convert_sophomorix_time(details[2])
+                    school = details[3]
+                    return killdate, school
     except Exception as e:
-        killlog.close()
         logger.warning(str(e))
         return None, None
 
-    killlog.close()
 
     return None, None
 
