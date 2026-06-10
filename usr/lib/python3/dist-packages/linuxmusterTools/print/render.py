@@ -27,7 +27,7 @@ class LatexRenderer:
         tmp_vars = {}
         for key, value in self.vars.items():
             tmp_vars[key] = value.replace("_", "\\_")
-        self.vars = tmp_vars
+        self.vars_sanitized = tmp_vars
 
     def _clean(self):
         for ext in [".log", ".aux", ".toc", ".dvi", ".ps", ".pre", ".thm", ".pyg"]:
@@ -56,7 +56,7 @@ class LatexRenderer:
                 if count*i != len(self.data)
             ]
 
-            self.out = self.template.render(datablocks=datablocks, **self.vars)
+            self.out = self.template.render(datablocks=datablocks, **self.vars_sanitized)
         except Exception as e:
             raise
 
