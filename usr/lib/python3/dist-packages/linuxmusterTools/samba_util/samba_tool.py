@@ -126,7 +126,7 @@ class GroupManager:
         :type members: list
         """
 
-        self.samdb.add_remove_group_members(groupname=f"{self.school_prefix}{group}", members=members, add_members_operation=False)
+        self.samdb.add_remove_group_members(f"{self.school_prefix}{group}", members=members, add_members_operation=False)
         self._run_post_hook('remove', group, members)
 
     def add_members(self, group, members):
@@ -142,7 +142,7 @@ class GroupManager:
 
         for member in members:
             try:
-                self.samdb.add_remove_group_members(groupname=f"{self.school_prefix}{group}", members=[member], add_members_operation=True)
+                self.samdb.add_remove_group_members(f"{self.school_prefix}{group}", members=[member], add_members_operation=True)
             except Exception as e:
                 if "(68," in str(e):
                     # Attribute member already exists for target GUID ... already in group, passing error
@@ -214,6 +214,7 @@ class DeviceManager:
     def get_credentials(self, device_cn, school='default-school'):
         result = self.samdb.search(
             f"OU={school},{LDAP_CONTEXT}",
+            ldb.SCOPE_SUBTREE,
             expression=f"sAMAccountName={device_cn.upper()}$",
             attrs=['unicodePwd', 'supplementalCredentials']
         )
