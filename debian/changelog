@@ -1,3 +1,12 @@
+linuxmuster-tools7 (7.4.3) lmn74; urgency=medium
+
+  * A lot of little fixs (shadowing vars, file opening, error catchs, etc...)
+  * [ldapconnector] Pool of ldap connections and implicit reconnect
+  * [print] Fix special chars in passwords paths
+  * [samba-util] Fix samdb parameters for new samba
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Tue, 16 Jun 2026 17:07:41 +0200
+
 linuxmuster-tools7 (7.4.2) lmn74; urgency=medium
 
   * Little fixs for Linbo Docker project.  
