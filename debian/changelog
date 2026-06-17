@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.4.4) lmn74; urgency=medium
+
+  * Fix wrong asdict var. 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Wed, 17 Jun 2026 09:21:33 +0200
+
 linuxmuster-tools7 (7.4.3) lmn74; urgency=medium
 
   * A lot of little fixs (shadowing vars, file opening, error catchs, etc...)
