@@ -8,7 +8,7 @@ class LMNModel:
     Common parent class to gather common methods.
     """
 
-    def asdict(self):
+    def as_dict(self):
         return asdict(self)
 
     def asjson(self):
