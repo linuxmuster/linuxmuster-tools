@@ -134,7 +134,7 @@ class LdapReader:
                 # Avoid empty dicts
                 response.append(formatted_obj)
         if sortkey is not None:
-            if as_dict:
+            if kwargs.get('as_dict', True):
                 return sorted(response, key=lambda d: _check_schoolclass_number(d.get(sortkey, None)))
             else:
                 return sorted(response, key=lambda d: _check_schoolclass_number(getattr(d, sortkey)))
