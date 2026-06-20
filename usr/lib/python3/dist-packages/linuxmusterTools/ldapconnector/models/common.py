@@ -11,8 +11,8 @@ class LMNModel:
     def as_dict(self):
         return asdict(self)
 
-    def asjson(self):
-        return json.dumps(self.asdict())
+    def as_json(self):
+        return json.dumps(self.as_dict())
 
     @staticmethod
     def split_dn(dn):

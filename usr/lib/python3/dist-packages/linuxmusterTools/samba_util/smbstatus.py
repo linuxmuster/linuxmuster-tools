@@ -21,7 +21,7 @@ class SMBConnection:
     username: str
     version: str
 
-    def asdict(self):
+    def as_dict(self):
         return asdict(self)
 
 users_regex = re.compile(

@@ -584,7 +584,7 @@ class LinboImageManager:
                 "path": f"images/{name}/{base_image.image}",
                 "size": base_image.info_file.imagesize,
                 "md5": md5_content,
-                "info": base_image.info_file.asdict(),
+                "info": base_image.info_file.as_dict(),
                 "description": base_image.extras['desc'],
                 "extra_files": files_ext,
                 "files": files,

@@ -18,7 +18,7 @@ class ImageInfo:
     partition: str
     partitionsize: str
 
-    def asdict(self):
+    def as_dict(self):
         return asdict(self)
 
 ### start.conf files
