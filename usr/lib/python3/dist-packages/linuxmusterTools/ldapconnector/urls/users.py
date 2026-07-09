@@ -40,7 +40,7 @@ def get_exam_users():
 
     return ldap_filter
 
-@router.single(r'/users/exam/(?P<username>[\w\-]*)', models.LMNUserModel)
+@router.single(r'/users/exam/(?P<username>[\w\-.]*)', models.LMNUserModel)
 def get_exam_user(username):
     """
     Get all details from a specific user in exam mode.
@@ -57,7 +57,7 @@ def get_exam_user(username):
 
     return ldap_filter
 
-@router.single(r'/users/(?P<username>[\w\-]*)', models.LMNUserModel)
+@router.single(r'/users/(?P<username>[\w\-.]*)', models.LMNUserModel)
 def get_user(username):
     """
     Get all details from a specific user.
@@ -138,7 +138,7 @@ def get_all_raw_users():
 
     return ldap_filter
 
-@router.single(r'/rawusers/(?P<username>[\w\-]*)', models.LMNRawUserModel)
+@router.single(r'/rawusers/(?P<username>[\w\-.]*)', models.LMNRawUserModel)
 def get_raw_user(username):
     """
     Get all details from a specific user.
@@ -160,7 +160,7 @@ def get_raw_user(username):
 
     return ldap_filter
 
-@router.collection(r'/batch_rawusers/(?P<usernames>[\w\-,]*)', models.LMNRawUserModel)
+@router.collection(r'/batch_rawusers/(?P<usernames>[\w\-,.]*)', models.LMNRawUserModel)
 def get_batch_raw_users(usernames):
     """
     Get all details from specific users: usernames should be a comma-separated
@@ -187,7 +187,7 @@ def get_batch_raw_users(usernames):
 
     return ldap_filter
 
-@router.collection(r'/batch_users/(?P<usernames>[\w\-,]*)', models.LMNUserModel)
+@router.collection(r'/batch_users/(?P<usernames>[\w\-,.]*)', models.LMNUserModel)
 def get_batch_users(usernames):
     """
     Get all details from specific users: usernames should be a comma-separated
