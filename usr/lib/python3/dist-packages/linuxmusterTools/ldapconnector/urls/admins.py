@@ -18,7 +18,7 @@ def get_all_globaladministrators():
 
     return ldap_filter
 
-@router.single(r'/globaladministrators/(?P<username>[\w\-]*)', models.LMNUserModel)
+@router.single(r'/globaladministrators/(?P<username>[\w\-.]*)', models.LMNUserModel)
 def get_globaladministrator(username):
     """
     Get all details from a specific globaladministrator.
@@ -51,7 +51,7 @@ def get_all_schooladministrators():
 
     return ldap_filter
 
-@router.single(r'/schooladministrators/(?P<username>[\w\-]*)', models.LMNUserModel)
+@router.single(r'/schooladministrators/(?P<username>[\w\-.]*)', models.LMNUserModel)
 def get_schooladministrator(username):
     """
     Get all details from a specific schooladministrator.

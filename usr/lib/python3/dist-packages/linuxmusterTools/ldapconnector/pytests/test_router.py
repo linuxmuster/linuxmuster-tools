@@ -14,6 +14,17 @@ class TestURLMatching:
         assert func.type == 'single'
         assert 'johndoe' in data.values()
 
+    def test_single_user_route_with_dot(self):
+        # Sophomorix may allow dots in usernames (e.g. firstname.lastname)
+        func, data = router._find_method('/users/peter.penis')
+        assert func.type == 'single'
+        assert data.get('username') == 'peter.penis'
+
+    def test_users_exam_collection_still_matches_with_dotted_user_route(self):
+        # The /users/exam collection must not be shadowed by the dotted user route
+        func, data = router._find_method('/users/exam')
+        assert func.type == 'collection'
+
     def test_user_search_route(self):
         func, data = router._find_method('/users/search/student/mueller')
         assert func.type == 'collection'

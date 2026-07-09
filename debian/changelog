@@ -1,6 +1,12 @@
+linuxmuster-tools7 (7.4.7) lmn74; urgency=medium
+
+  * Allow dots in usernames in the LDAP router URL patterns.
+
+ -- Lukas Spitznagel <lukas.spitznagel@netzint.de>  Fri, 26 Jun 2026 15:11:10 +0200
+
 linuxmuster-tools7 (7.4.6) lmn74; urgency=medium
 
-  * Add configobj as dependency. 
+  * Add configobj as dependency.
 
  -- Arnaud Kientz <arnaud@linuxmuster.net>  Sun, 28 Jun 2026 11:21:43 +0200
 
