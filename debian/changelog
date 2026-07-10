@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.3.46) lmn73; urgency=medium
+
+  * Endpoints for staff groups and members. 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Fri, 10 Jul 2026 08:48:36 +0200
+
 linuxmuster-tools7 (7.3.45) lmn73; urgency=medium
 
   * Add configobj as dependency. 
