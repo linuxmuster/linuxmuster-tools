@@ -534,7 +534,7 @@ class LMNParentsGroup(LMNGroupCommon):
         super().__init__(self.cn, school=school)
 
     def _check_ou(self):
-        # Check if the Student-Parents group exists
+        # Check if the Student-Parents OU exists
         if not 'Student-Parents' in self.lr.getval('/ou/parents', 'ou', school=self.school):
             domain = ','.join(self.student['dn'].split(',')[3:])
             new_ou = f"OU=Student-Parents,OU=Parents,{domain}"

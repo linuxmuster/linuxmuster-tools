@@ -32,24 +32,12 @@ class LMNGroupCommon:
         self.school = school
         self.new = False
         self.load_data()
-        self.BASE_OU = ""
 
     def load_data(self):
         self.data = self.lr.get(f'/units/{self.cn}', school=self.school)
 
         if not self.data:
             raise Exception(f"The group {self.cn} was not found in ldap.")
-
-    def ensure_ou(self):
-        if not self.BASE_OU:
-            print('No base OU given, cannot check if the base OU exists.')
-            return
-
-        school_details = self.lr.get(f'/schools/{self.school}')
-        if not school_details:
-            raise Exception(f"School {self.school} was not found in ldap ! Failed to check {self.BASE_OU}")
-
-        self.lw._add_ou(self.BASE_OU)
 
     def setattr(self, **kwargs):
         """
@@ -159,8 +147,16 @@ class LMNGroup(LMNGroupCommon):
 
     def __init__(self, cn, school='default-school'):
         super().__init__(cn, school=school)
-        self.BASE_OU = f"OU=LMNGroups,OU={self.school},{LDAP_CONTEXT}"
-        self.ensure_ou()
+        self._check_ou()
+
+    def _check_ou(self):
+        school_details = self.lr.get(f'/schools/{self.school}')
+        BASE_OU = f"OU=LMNGroups,OU={self.school},{LDAP_CONTEXT}"
+        if not school_details:
+            raise Exception(f"School {self.school} was not found in ldap ! Failed to check {BASE_OU}")
+
+        if not BASE_OU in self.lr.getval('/ou', 'dn', school=self.school):
+            self.lw._add_ou(BASE_OU)
 
     def load_data(self):
         # This request may return groups in OU=Projects or OU=LMNGroups !
