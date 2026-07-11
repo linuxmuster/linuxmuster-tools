@@ -45,7 +45,9 @@ class LMNGroupModel(LMNModel):
     sophomorixIntrinsicMulti5: list
     sophomorixMailAlias: bool
     sophomorixMailList: bool
+    sophomorixMailQuota: list
     sophomorixMembers: list
+    sophomorixQuota: list
     sophomorixRole: str
     sophomorixSchoolname: str
     sophomorixSchoolPrefix: str
