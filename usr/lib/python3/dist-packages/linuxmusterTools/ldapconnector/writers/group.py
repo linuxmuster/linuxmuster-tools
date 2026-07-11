@@ -4,6 +4,7 @@ from ..ldap_writer import LdapWriter
 from ..urls.ldaprouter import router
 from linuxmusterTools.common import lprint, spinner
 from linuxmusterTools.common.checks import NameChecker
+from linuxmusterTools.lmnconfig import LDAP_CONTEXT
 from ..models import LMNGroupModel
 
 
@@ -31,12 +32,24 @@ class LMNGroupCommon:
         self.school = school
         self.new = False
         self.load_data()
+        self.BASE_OU = ""
 
     def load_data(self):
         self.data = self.lr.get(f'/units/{self.cn}', school=self.school)
 
         if not self.data:
             raise Exception(f"The group {self.cn} was not found in ldap.")
+
+    def ensure_ou(self):
+        if not self.BASE_OU:
+            print('No base OU given, cannot check if the base OU exists.')
+            return
+
+        school_details = self.lr.get(f'/schools/{self.school}')
+        if not school_details:
+            raise Exception(f"School {self.school} was not found in ldap ! Failed to check {self.BASE_OU}")
+
+        self.lw._add_ou(self.BASE_OU)
 
     def setattr(self, **kwargs):
         """
@@ -67,6 +80,14 @@ class LMNGroupCommon:
 
 
         return self.data.get(attr, None)
+
+    def delete(self):
+        """
+        Delete the object directly in Ldap.
+        """
+
+
+        self.lw._del(self.data['distinguishedName'])
 
     def remove_member(self, user):
         user_dn = self.lr.getval(f'/users/{user}', 'dn')
@@ -138,9 +159,45 @@ class LMNGroup(LMNGroupCommon):
 
     def __init__(self, cn, school='default-school'):
         super().__init__(cn, school=school)
+        self.BASE_OU = f"OU=LMNGroups,OU={self.school},{LDAP_CONTEXT}"
+        self.ensure_ou()
 
     def load_data(self):
+        # This request may return groups in OU=Projects or OU=LMNGroups !
         self.data = self.lr.get(f'/groups/{self.cn}', school=self.school)
 
         if not self.data:
-            raise Exception(f"The group {self.cn} was not found in ldap.")
+            self.new = True
+            logger.info(f"The group {self.cn} was not found in ldap.")
+
+            dn = f"CN={self.cn},OU=LMNGroups,OU={self.school},{LDAP_CONTEXT}"
+
+            logger.info(f"His DN would be {dn}. You can create it with the method .create.")
+
+            self.data = {
+                'description': self.cn,
+                'displayName': self.cn,
+                'distinguishedName': dn,
+                'mail': [],
+                'member': [],
+                'name': self.cn,
+                'sAMAccountName': self.cn,
+                'sophomorixCreationDate': '',
+                'sophomorixHidden': False,
+                'sophomorixJoinable': False,
+                'sophomorixMailAlias': False,
+                'sophomorixMailList': False,
+                'sophomorixMailQuota': [],
+                'sophomorixQuota': [],
+                'sophomorixSchoolname': self.school,
+                'sophomorixStatus': '',
+                'sophomorixType': 'lmngroup',
+            }
+
+    def create(self):
+        if self.new:
+            self.lw._add_group(self, data=self.data)
+            self.new = False
+            self.load_data()
+        else:
+            print(f"Group {self.cn} already exists in LDAP.")
