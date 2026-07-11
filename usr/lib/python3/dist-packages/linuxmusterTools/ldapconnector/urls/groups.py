@@ -38,7 +38,10 @@ def get_all_groups():
     """
 
     ldap_filter = f"""(&
-                            (sophomorixType=sophomorix-group)
+                            (|
+                                (sophomorixType=sophomorix-group)
+                                (sophomorixType=lmngroup)
+                            )
                             (objectClass=group)
             )"""
 
@@ -53,7 +56,10 @@ def get_group(name=''):
 
     ldap_filter = f"""(&
                             (cn={name})
-                            (sophomorixType=sophomorix-group)
+                            (|
+                                (sophomorixType=sophomorix-group)
+                                (sophomorixType=lmngroup)
+                            )
                             (objectClass=group)
             )"""
 
