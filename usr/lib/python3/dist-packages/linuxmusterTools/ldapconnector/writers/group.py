@@ -178,6 +178,8 @@ class LMNGroup(LMNGroupCommon):
                 'member': [],
                 'name': self.cn,
                 'sAMAccountName': self.cn,
+                'sophomorixAddMailQuota': [],
+                'sophomorixAddQuota': [],
                 'sophomorixCreationDate': '',
                 'sophomorixHidden': False,
                 'sophomorixJoinable': False,

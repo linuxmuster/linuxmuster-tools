@@ -261,6 +261,7 @@ class TestGroupModelGetAllMembers:
             distinguishedName='CN=7a,OU=SCHOOLS,DC=test,DC=lan',
             mail=[], member=member_dns, memberOf=[], name='7a', objectClass=[],
             proxyAddresses=[], sAMAccountName='7a', sAMAccountType='',
+            sophomorixAddMailQuota=[], sophomorixAddQuota=[],
             sophomorixAdminClass='', sophomorixCreationDate='',
             sophomorixCustom1='', sophomorixCustom2='', sophomorixCustom3='',
             sophomorixCustom4='', sophomorixCustom5='',

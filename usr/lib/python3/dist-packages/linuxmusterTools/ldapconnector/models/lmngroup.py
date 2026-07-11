@@ -19,6 +19,8 @@ class LMNGroupModel(LMNModel):
     proxyAddresses: list
     sAMAccountName: str
     sAMAccountType: str
+    sophomorixAddMailQuota: list
+    sophomorixAddQuota: list
     sophomorixAdminClass: str
     sophomorixCreationDate: str
     sophomorixCustom1: str
