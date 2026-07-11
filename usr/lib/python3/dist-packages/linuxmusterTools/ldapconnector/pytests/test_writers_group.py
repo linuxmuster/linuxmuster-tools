@@ -1,8 +1,9 @@
 import pytest
 from unittest.mock import MagicMock
 
-from linuxmusterTools.ldapconnector.writers.group import LMNGroupCommon, LMNGroup
+from linuxmusterTools.ldapconnector.writers.group import LMNGroupCommon, LMNGroup, find_legacy_groups
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router
+from linuxmusterTools.lmnconfig import LDAP_CONTEXT
 
 
 GROUP_DN = 'CN=7a,OU=7a,OU=Students,OU=default-school,OU=SCHOOLS,DC=linuxmuster,DC=lan'
@@ -234,3 +235,42 @@ class TestLMNGroupDelete:
         g.delete()
         assert mock_connect.delete_s.called
         assert mock_connect.delete_s.call_args[0][0] == SOPHOMORIX_GROUP_DN
+
+
+class TestLMNGroupMigrate:
+
+    def test_migrate_moves_and_relabels_sophomorix_group(self, monkeypatch, mock_connect):
+        legacy_group = dict(SAMPLE_SOPHOMORIX_GROUP, member=[USER_DN])
+        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(legacy_group))
+        g = LMNGroup('robotics')
+        g.migrate()
+
+        assert mock_connect.rename_s.called
+        old_dn, new_rdn, new_ou = mock_connect.rename_s.call_args[0]
+        assert old_dn == SOPHOMORIX_GROUP_DN
+        assert new_rdn == 'CN=robotics'
+        assert new_ou == f"OU=LMNGroups,OU=default-school,{LDAP_CONTEXT}"
+        assert mock_connect.modify_s.called
+
+    def test_migrate_is_no_op_for_already_migrated_group(self, monkeypatch, mock_connect, capsys):
+        lmngroup_data = dict(SAMPLE_SOPHOMORIX_GROUP, sophomorixType='lmngroup')
+        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(lmngroup_data))
+        g = LMNGroup('robotics')
+        g.migrate()
+
+        output = capsys.readouterr().out
+        assert 'already a lmngroup' in output
+        assert not mock_connect.rename_s.called
+
+
+class TestFindLegacyGroups:
+
+    def test_find_legacy_groups_filters_sophomorix_type(self, monkeypatch, mock_connect):
+        groups = [
+            dict(SAMPLE_SOPHOMORIX_GROUP),
+            dict(SAMPLE_SOPHOMORIX_GROUP, cn='alreadymigrated', sophomorixType='lmngroup'),
+        ]
+        monkeypatch.setattr(router, 'get', lambda url, **kw: list(groups))
+
+        legacy = find_legacy_groups()
+        assert [g['cn'] for g in legacy] == ['robotics']

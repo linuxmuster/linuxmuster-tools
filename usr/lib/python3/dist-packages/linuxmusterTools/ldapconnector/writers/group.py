@@ -199,3 +199,33 @@ class LMNGroup(LMNGroupCommon):
             self.load_data()
         else:
             print(f"Group {self.cn} already exists in LDAP.")
+
+    def migrate(self):
+        """
+        Migrate a legacy sophomorix-group entry (living in OU=Projects) to OU=LMNGroups,
+        converting its sophomorixType to lmngroup.
+
+        A move only changes the entry's DN, not its attributes: the member list is
+        untouched, and memberOf on the members is a computed backlink that follows
+        automatically.
+        """
+
+        if self.new:
+            raise Exception(f"Group {self.cn} does not exist in ldap, nothing to migrate.")
+
+        if self.data['sophomorixType'] == 'lmngroup':
+            print(f"Group {self.cn} is already a lmngroup, nothing to migrate.")
+            return
+
+        new_ou = f"OU=LMNGroups,OU={self.school},{LDAP_CONTEXT}"
+        self.lw._move(self.data['distinguishedName'], new_ou)
+        self.setattr(data={'sophomorixType': 'lmngroup'})
+
+
+def find_legacy_groups(school='default-school'):
+    """
+    List groups still living in OU=Projects (sophomorixType=sophomorix-group),
+    not yet migrated to OU=LMNGroups.
+    """
+
+    return [group for group in router.get('/groups', school=school) if group['sophomorixType'] == 'sophomorix-group']
