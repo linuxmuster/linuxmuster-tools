@@ -275,7 +275,8 @@ class TestGroupModelGetAllMembers:
             sophomorixIntrinsicMulti3=[], sophomorixIntrinsicMulti4=[],
             sophomorixIntrinsicMulti5=[],
             sophomorixMailAlias=False, sophomorixMailList=False,
-            sophomorixMembers=[], sophomorixRole='',
+            sophomorixMailQuota=[], sophomorixMembers=[], sophomorixQuota=[],
+            sophomorixRole='',
             sophomorixSchoolname='default-school', sophomorixSchoolPrefix='---',
             sophomorixStatus='', sophomorixType='adminclass',
         )

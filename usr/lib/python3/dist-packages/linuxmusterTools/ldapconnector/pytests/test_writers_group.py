@@ -135,3 +135,101 @@ class TestLMNGroupCommonSetDelattr:
         g = LMNGroupCommon('7a')
         g.delattr(data={'sophomorixStatus': ''})
         assert mock_connect.modify_s.called
+
+
+class TestLMNGroupCommonDelete:
+
+    def test_delete_calls_ldap_delete(self, monkeypatch, mock_connect):
+        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_GROUP))
+        g = LMNGroupCommon('7a')
+        g.delete()
+        assert mock_connect.delete_s.called
+        assert mock_connect.delete_s.call_args[0][0] == GROUP_DN
+
+
+SOPHOMORIX_GROUP_DN = 'CN=robotics,OU=Groups,OU=default-school,OU=SCHOOLS,DC=linuxmuster,DC=lan'
+
+SAMPLE_SOPHOMORIX_GROUP = {
+    'cn': 'robotics', 'description': 'robotics', 'displayName': 'robotics',
+    'distinguishedName': SOPHOMORIX_GROUP_DN,
+    'mail': [], 'member': [], 'memberOf': [], 'name': 'robotics',
+    'objectClass': [], 'proxyAddresses': [], 'sAMAccountName': 'robotics',
+    'sAMAccountType': '', 'sophomorixAdminClass': '', 'sophomorixCreationDate': '',
+    'sophomorixCustom1': '', 'sophomorixCustom2': '', 'sophomorixCustom3': '',
+    'sophomorixCustom4': '', 'sophomorixCustom5': '',
+    'sophomorixCustomMulti1': [], 'sophomorixCustomMulti2': [],
+    'sophomorixCustomMulti3': [], 'sophomorixCustomMulti4': [],
+    'sophomorixCustomMulti5': [],
+    'sophomorixHidden': False, 'sophomorixJoinable': False,
+    'sophomorixIntrinsic1': '', 'sophomorixIntrinsic2': '',
+    'sophomorixIntrinsic3': '', 'sophomorixIntrinsic4': '',
+    'sophomorixIntrinsic5': '',
+    'sophomorixIntrinsicMulti1': [], 'sophomorixIntrinsicMulti2': [],
+    'sophomorixIntrinsicMulti3': [], 'sophomorixIntrinsicMulti4': [],
+    'sophomorixIntrinsicMulti5': [],
+    'sophomorixMailAlias': False, 'sophomorixMailList': False,
+    'sophomorixMailQuota': [], 'sophomorixMembers': [], 'sophomorixQuota': [],
+    'sophomorixRole': '',
+    'sophomorixSchoolname': 'default-school', 'sophomorixSchoolPrefix': '---',
+    'sophomorixStatus': '', 'sophomorixType': 'sophomorix-group',
+    'dn': SOPHOMORIX_GROUP_DN, 'all_members': [], 'membersCount': -1,
+}
+
+
+class TestLMNGroupInit:
+
+    def test_existing_group_new_is_false(self, monkeypatch, mock_connect):
+        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_SOPHOMORIX_GROUP))
+        g = LMNGroup('robotics')
+        assert g.new is False
+        assert g.data['cn'] == 'robotics'
+
+    def test_missing_group_new_is_true(self, monkeypatch, mock_connect):
+        fake_get = lambda url, **kw: [] if url.startswith('/ou') else ({} if url.startswith('/groups/') else {'cn': 'default-school'})
+        monkeypatch.setattr(router, 'get', fake_get)
+        g = LMNGroup('newgroup')
+        assert g.new is True
+
+    def test_missing_group_data_has_expected_dn(self, monkeypatch, mock_connect):
+        fake_get = lambda url, **kw: [] if url.startswith('/ou') else ({} if url.startswith('/groups/') else {'cn': 'default-school'})
+        monkeypatch.setattr(router, 'get', fake_get)
+        g = LMNGroup('newgroup')
+        assert 'CN=newgroup' in g.data['distinguishedName']
+        assert 'OU=LMNGroups' in g.data['distinguishedName']
+
+
+class TestLMNGroupCreate:
+
+    def test_create_calls_add_group_and_reloads(self, monkeypatch, mock_connect):
+        calls = {'n': 0}
+
+        def fake_get(url, **kw):
+            calls['n'] += 1
+            # Not found on init, found once created (reload after create()).
+            return {} if calls['n'] == 1 else dict(SAMPLE_SOPHOMORIX_GROUP)
+
+        monkeypatch.setattr(router, 'get', fake_get)
+        g = LMNGroup('robotics')
+        g.create()
+        assert mock_connect.add_s.called
+        assert g.new is False
+        assert g.data['cn'] == 'robotics'
+
+    def test_create_prints_warning_when_already_exists(self, monkeypatch, mock_connect, capsys):
+        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_SOPHOMORIX_GROUP))
+        g = LMNGroup('robotics')
+        mock_connect.add_s.reset_mock()
+        g.create()
+        output = capsys.readouterr().out
+        assert 'already exists' in output
+        assert not mock_connect.add_s.called
+
+
+class TestLMNGroupDelete:
+
+    def test_delete_calls_ldap_delete(self, monkeypatch, mock_connect):
+        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_SOPHOMORIX_GROUP))
+        g = LMNGroup('robotics')
+        g.delete()
+        assert mock_connect.delete_s.called
+        assert mock_connect.delete_s.call_args[0][0] == SOPHOMORIX_GROUP_DN
