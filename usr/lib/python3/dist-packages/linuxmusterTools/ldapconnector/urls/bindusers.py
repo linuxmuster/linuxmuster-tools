@@ -18,7 +18,7 @@ def get_all_globalbindusers():
 
     return ldap_filter
 
-@router.single(r'/globalbindusers/(?P<username>[\w\-]*)', models.LMNUserModel)
+@router.single(r'/globalbindusers/(?P<username>[\w\-.]*)', models.LMNUserModel)
 def get_globalbinduser(username):
     """
     Get all details from a specific globalbinduser.
@@ -51,7 +51,7 @@ def get_all_schoolbindusers():
 
     return ldap_filter
 
-@router.single(r'/schoolbindusers/(?P<username>[\w\-]*)', models.LMNUserModel)
+@router.single(r'/schoolbindusers/(?P<username>[\w\-.]*)', models.LMNUserModel)
 def get_schoolbinduser(username):
     """
     Get all details from a specific schoolbinduser.
