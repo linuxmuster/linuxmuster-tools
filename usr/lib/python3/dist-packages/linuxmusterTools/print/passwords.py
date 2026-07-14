@@ -3,13 +3,17 @@ from .templates import *
 from ..lmnconfig import SchoolConfig, SAMBA_WORKGROUP
 
 
-def print_passwords_list(schoolclass, caller, school='default-school', template="passwords-DE-1-template.tex"):
+def print_passwords_list(schoolclass, caller, school='default-school', large=False, template="passwords-DE-1-template.tex"):
     """
     Print the password letters/cards of the students from a specific schoolclass.
 
     :param caller: the user calling the process, for generating the filename
+    :param large: use the passwordslarge templates (bigger cards, 18 per page instead of 36)
     :return: PDF path
     """
+
+    if large and template.startswith("passwords-"):
+        template = template.replace("passwords-", "passwordslarge-", 1)
 
     templates = LatexTemplates().templates
 

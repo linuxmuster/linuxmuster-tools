@@ -72,8 +72,8 @@ class LatexRenderer:
 
         if self.template_obj.type == "schoolclass":
             output_file = f"{self.caller}-schoolclass-{self.vars['schoolclass']}.tex"
-        elif self.template_obj.type == "passwords":
-            output_file = f"{self.caller}-passwords-{self.vars['schoolclass']}.tex"
+        elif self.template_obj.type in ("passwords", "passwordslarge"):
+            output_file = f"{self.caller}-{self.template_obj.type}-{self.vars['schoolclass']}.tex"
 
         self.destination_file = os.path.join(OUTPUT_DIR, output_file)
 
