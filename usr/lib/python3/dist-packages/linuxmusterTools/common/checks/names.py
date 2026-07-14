@@ -13,7 +13,7 @@ NAME_RULES = {
     "session": re.compile(r"^[a-z0-9\+\-_]*$", re.IGNORECASE),
     "linbo_conf": re.compile(r"^[a-z0-9\+\-_\.]*$", re.IGNORECASE),
     "linbo_image": re.compile(r"^[a-zA-Z0-9_\-\.]+$"),
-    "login": re.compile(r"^[a-z0-9\-_]*$", re.IGNORECASE),
+    "login": re.compile(r"^[a-z0-9\-_\.]*$", re.IGNORECASE),
     "comment": re.compile(r"^[a-z0-9\-_ ]*", re.IGNORECASE), # sophomorixComment
     "alphanum": re.compile(r"^[a-z0-9]*$", re.IGNORECASE),   # config names
     "number": re.compile(r"^([0-9]*)$"),
