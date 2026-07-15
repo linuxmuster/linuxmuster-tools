@@ -1,3 +1,14 @@
+linuxmuster-tools7 (7.4.8) lmn74; urgency=medium
+
+  * [check] Allow dot in login
+  * [print] Possibility to print large cards (36 passwords on 2 pages).
+  * [print] Print passwords and convert sophomorix templates as jinja
+    templates.
+  * [ldapwriter] Add LMNGroups
+  * [subnets] New module to manage subnets and track changes (@hermanntoast)
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Wed, 15 Jul 2026 11:06:32 +0200
+
 linuxmuster-tools7 (7.4.7) lmn74; urgency=medium
 
   * Allow dots in usernames in the LDAP router URL patterns.
