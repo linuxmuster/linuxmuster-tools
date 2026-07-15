@@ -12,9 +12,9 @@ from datetime import datetime, timezone
 
 from linuxmusterTools.devices import Devices
 from .config import LinboConfigManager
+from .dhcp import DHCP_SUBNETS_PATH
 from .grub import LinboGrubReader
 from ..common.timestamps import get_utc_mtime
-from ..subnets import Subnets
 
 
 logger = logging.getLogger(__name__)
@@ -30,7 +30,6 @@ class LinboChangeTracker:
         self.devices_mgr = Devices(school=school)
         self.config_manager = LinboConfigManager()
         self.grub_reader = LinboGrubReader()
-        self.subnets_mgr = Subnets()
 
     def get_changes(self, since_cursor: str = "0") -> dict:
         """Compare filesystem state against cursor, return delta.
@@ -55,9 +54,8 @@ class LinboChangeTracker:
             else None
         )
 
-        # Reload devices list and subnets definition
+        # Reload devices list
         self.devices_mgr.load()
-        self.subnets_mgr.load()
 
         school_groups = self.devices_mgr.groups
         all_hosts_macs = self.devices_mgr.macs
@@ -83,11 +81,11 @@ class LinboChangeTracker:
             or (devices_csv_mtime > cursor_dt)
         )
 
-        subnets_csv_mtime = self.subnets_mgr.csv_mtime
+        subnets_conf_mtime = get_utc_mtime(DHCP_SUBNETS_PATH)
         subnets_modified = (
             cursor_dt is None
-            or subnets_csv_mtime is None
-            or (subnets_csv_mtime > cursor_dt)
+            or subnets_conf_mtime is None
+            or (subnets_conf_mtime > cursor_dt)
         )
 
         if devices_modified:
