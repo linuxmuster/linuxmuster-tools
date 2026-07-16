@@ -2,13 +2,16 @@ import os
 import locale
 import time
 import logging
+import filecmp
 from pathlib import Path
 import hashlib
 from glob import glob
 from datetime import datetime
 
 from .models import *
+from .grub import GRUB_DIR_DEFAULT
 from ..devices import Devices
+from ..lmnfile import LMNFile
 from ..common.checks import NameChecker
 from ..common.timestamps import get_utc_mtime
 
@@ -115,6 +118,60 @@ class LinboConfigManager:
 
     def linbo_groups(self):
         return list(self.linbo_configs.keys())
+
+    def write_raw_startconf(self, group_id: str, content: str) -> None:
+        """
+        Create or update a start.conf file from raw text content.
+
+        Writes the content verbatim (comments and formatting preserved),
+        unlike StartConfLoader.write() which rebuilds the file from parsed
+        sections and drops comments.
+        TODO: add a method to parse the content.
+        """
+
+        if not name_checker.check_linbo_conf_name(group_id):
+            raise ValueError(f"Invalid group id: {group_id}")
+
+        conf_path = os.path.join(LINBO_PATH, f'start.conf.{group_id}')
+        tmp_path = conf_path + '_tmp'
+
+        if os.path.isfile(conf_path):
+            with LMNFile(conf_path, 'w') as lmn_file:
+                with open(tmp_path, 'w', encoding=lmn_file.encoding) as f:
+                    f.write(content)
+
+                if not filecmp.cmp(tmp_path, conf_path):
+                    lmn_file.backup()
+                    os.rename(tmp_path, conf_path)
+                else:
+                    os.unlink(tmp_path)
+        else:
+            lmn_file = LMNFile(conf_path, 'w')
+            with open(tmp_path, 'w', encoding=lmn_file.encoding) as f:
+                f.write(content)
+            os.rename(tmp_path, conf_path)
+
+        os.chmod(conf_path, 0o755)
+
+    def delete_startconf(self, group_id: str) -> None:
+        """
+        Delete a start.conf file and its associated GRUB config.
+        """
+
+        if not name_checker.check_linbo_conf_name(group_id):
+            raise ValueError(f"Invalid group id: {group_id}")
+
+        conf_path = os.path.join(LINBO_PATH, f'start.conf.{group_id}')
+        if not os.path.isfile(conf_path):
+            raise FileNotFoundError(f"Startconf file start.conf.{group_id} not found.")
+
+        with LMNFile(conf_path, 'r') as f:
+            f.backup()
+        os.unlink(conf_path)
+
+        grub_cfg_path = os.path.join(GRUB_DIR_DEFAULT, f'{group_id}.cfg')
+        if os.path.isfile(grub_cfg_path):
+            os.unlink(grub_cfg_path)
 
 ## The following functions need to be rewritten
 ## Still used in lmncli
