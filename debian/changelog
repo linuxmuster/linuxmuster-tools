@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.4.9) lmn74; urgency=medium
+
+  * [linbo] Write and delete raw start.conf. 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Thu, 16 Jul 2026 22:35:54 +0200
+
 linuxmuster-tools7 (7.4.8) lmn74; urgency=medium
 
   * [check] Allow dot in login
