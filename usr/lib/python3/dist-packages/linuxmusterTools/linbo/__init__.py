@@ -7,6 +7,7 @@ from .command import *
 from .boot_logs import *
 from .changes import *
 from .dhcp import *
+from .drivers import *
 from .grub  import *
 from .grub_generator import *
 from .host_status import *
@@ -22,10 +23,8 @@ from .wol import *
 #from .torrent import *
 #from .terminal import *
 #from .firmware import *
-#from .drivers import *
 #from .kernel import *
 #from .wlan import *
 #from .linbo_update import *
-
 
 
