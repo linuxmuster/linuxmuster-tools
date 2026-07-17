@@ -27,7 +27,10 @@ on LINBO downloading `<image>.driverpostsync` together with the normal image
 companions and sourcing it after the regular postsync. Those mechanisms and
 the `linbo_patch_registry` helper are already part of LINBO 7.4.5, so driver
 profiles do not require an `update-linbofs` rebuild. Older installations need
-an independently packaged compatibility implementation.
+an independently packaged compatibility implementation. Image basenames used
+for driver assignments must not contain dots: LINBO 7.4 currently derives
+companion names inconsistently for names such as `windows.11.qcow2`. Use a
+basename such as `windows-11` instead.
 
 ```python
 from linuxmusterTools.linbo import LinboDriverManager
@@ -46,7 +49,19 @@ drivers.set_profile_image("lenovo-l14-gen5", "windows-11")
 `image.conf`. It deliberately does not upload or extract archives. Place
 already extracted driver payloads below
 `/srv/linbo/drivers/<profile>/` before assigning the profile, without replacing
-these metadata files. Archive ingestion belongs in the API or WebUI layer.
+these metadata files. `/srv/linbo/drivers` and all profile directories must be
+readable and traversable by the LINBO rsync identity (`nobody:nogroup` on a
+standard installation), and files must be readable by that identity. A
+profile must contain at least one `.inf`.
+The assignment preflight rejects symbolic links, special files, excessive
+payloads and names that collide on a case-insensitive Windows filesystem.
+Secure archive ingestion and persistent import jobs belong in a separate
+`linuxmuster-tools` follow-up; API and WebUI code should only transport and
+orchestrate that tools-layer operation.
+
+The removed experimental WIP implementation used `/var/lib/linbo/drivers`.
+Profiles stored there are not discovered automatically; migrate reviewed
+payload directories explicitly to `/srv/linbo/drivers` before assigning them.
 
 Several profiles may reference the same image. The generated
 `<image>.driverpostsync` selects matching profiles from the client's DMI data,
@@ -56,10 +71,11 @@ Existing companion hooks not owned by this manager are never overwritten.
 Images with assigned profiles must be unassigned before they can be renamed or
 deleted. Duplicating an image does not duplicate its profile assignments, and
 restoring an image backup keeps the hook derived from the current assignments.
-Image upload and remote-download ingestion never accept a transferred
-`.driverpostsync`; the server always derives that file locally from its current
-profile assignments. Authenticated image serving may still deliver the locally
-managed hook to a LINBO cache server.
+The generic image upload and remote-download helpers in `linuxmuster-tools`
+never accept a transferred `.driverpostsync`; the manager derives that file
+locally from its current profile assignments. Authenticated image serving may
+still deliver the locally managed hook to a LINBO cache server. Other LINBO
+transport paths are owned and secured by the `linuxmuster-linbo7` package.
 
 Fully automatic installation requires the golden image to contain the
 `LINBO-Driver-Install` scheduled task running as `SYSTEM` at startup and its

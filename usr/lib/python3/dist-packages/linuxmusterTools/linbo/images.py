@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from ..lmnfile import LMNFile
 from .driver_hooks import (
     LinboDriverHookManager as _LinboDriverHookManager,
+    validate_driver_image_name as _validate_driver_image_name,
     validate_image_name as _validate_image_name,
 )
 from .models import ImageInfo
@@ -47,8 +48,19 @@ def _ignore_duplicate_files(_directory, names):
     return [
         name
         for name in names
-        if name == "backups" or name.endswith(".driverpostsync")
+        if name in {"backup", "backups"} or name.endswith(".driverpostsync")
     ]
+
+
+def _regenerate_driverpostsync_if_supported(manager, image_name):
+    """Publish driver state only for names the LINBO runtime can resolve."""
+
+    try:
+        image_name = _validate_driver_image_name(image_name)
+    except ValueError:
+        return
+    manager.regenerate_postsync(image_name)
+
 
 def date2timestamp(date):
     return datetime.strptime(date, DATE_UI_FMT).strftime(TIMESTAMP_FMT)
@@ -462,7 +474,10 @@ class LinboImageManager:
                 self.groups[group].rename(new_name)
             self.groups[new_name] = LinboImageGroup(new_name)
             del self.groups[group]
-            self.driver_hook_manager.regenerate_postsync(new_name)
+            _regenerate_driverpostsync_if_supported(
+                self.driver_hook_manager,
+                new_name,
+            )
 
     def duplicate(self, group, new_name):
         """
@@ -502,7 +517,10 @@ class LinboImageManager:
 
             self.groups[new_name] = LinboImageGroup(new_name)
             self.groups[new_name].rename(new_name)
-            self.driver_hook_manager.regenerate_postsync(new_name)
+            _regenerate_driverpostsync_if_supported(
+                self.driver_hook_manager,
+                new_name,
+            )
 
     def restore(self, group, date):
         """
@@ -559,7 +577,10 @@ class LinboImageManager:
                     # Cleanup and reload
                     imageGroup.backups[date].delete()
                     self.groups[group].load()
-                self.driver_hook_manager.regenerate_postsync(group)
+                _regenerate_driverpostsync_if_supported(
+                    self.driver_hook_manager,
+                    group,
+                )
 
     def save_extras(self, group, data, timestamp=None, diff=False):
         """

@@ -38,6 +38,7 @@ from .driver_storage import (
     read_bytes_limited,
     require_profile_directory,
     require_regular_file,
+    validate_driver_payload,
     validate_profile_name,
 )
 
@@ -122,6 +123,18 @@ def validate_image_name(name: str) -> str:
     return trimmed
 
 
+def validate_driver_image_name(name: str) -> str:
+    """Validate an image basename supported by the LINBO driver hook runtime."""
+
+    image = validate_image_name(name)
+    if "." in image:
+        raise ValueError(
+            "Driver image basename must contain only [A-Za-z0-9_-]; dots are "
+            "not supported by the LINBO 7.4 driverpostsync runtime contract"
+        )
+    return image
+
+
 def _lexical_absolute(path: os.PathLike[str] | str) -> Path:
     """Return an absolute path without following symlinks."""
 
@@ -155,14 +168,25 @@ def _parse_image_conf(content: str) -> str:
 
 
 def _sorted_profiles(profiles: Iterable[str]) -> list[str]:
-    validated = {validate_profile_name(profile) for profile in profiles}
+    validated: set[str] = set()
+    windows_names: dict[str, str] = {}
+    for raw_profile in profiles:
+        profile = validate_profile_name(raw_profile)
+        collision_key = profile.casefold()
+        previous = windows_names.setdefault(collision_key, profile)
+        if previous != profile:
+            raise ValueError(
+                "Driver profile names collide on Windows: "
+                f"{previous!r} and {profile!r}"
+            )
+        validated.add(profile)
     return sorted(validated, key=lambda value: (value.casefold(), value))
 
 
 def render_driverpostsync(image_name: str, profiles: Iterable[str]) -> str:
     """Render the complete native hook or a cleanup tombstone."""
 
-    image = validate_image_name(image_name)
+    image = validate_driver_image_name(image_name)
     ordered_profiles = _sorted_profiles(profiles)
     if not ordered_profiles:
         return _TOMBSTONE_TEMPLATE.replace("@@IMAGE@@", image)
@@ -291,6 +315,7 @@ class LinboDriverHookManager:
                 f"Driver profile {profile_name!r} uses legacy match keys; "
                 "migrate it to canonical vendor/product keys before assignment"
             )
+        validate_driver_payload(directory)
         return directory
 
     def _read_optional_image_conf(
@@ -314,7 +339,7 @@ class LinboDriverHookManager:
         """Return a validated image assignment or ``None``."""
 
         _, image = self._read_optional_image_conf(profile_name)
-        return validate_image_name(image) if image is not None else None
+        return validate_driver_image_name(image) if image is not None else None
 
     def _scan_assignments(self) -> tuple[dict[str, str], list[dict[str, Any]]]:
         assignments: dict[str, str] = {}
@@ -359,7 +384,7 @@ class LinboDriverHookManager:
                 continue
 
             try:
-                image = validate_image_name(raw_image)
+                image = validate_driver_image_name(raw_image)
             except (OSError, UnicodeError, ValueError) as error:
                 failures.append(
                     {
@@ -402,7 +427,7 @@ class LinboDriverHookManager:
     def referencing_profiles(self, image_name: str) -> list[str]:
         """Return all valid profiles assigned to one image."""
 
-        image = validate_image_name(image_name)
+        image = validate_driver_image_name(image_name)
         assignments, failures = self._scan_assignments()
         self._require_complete_assignments(image, failures)
         return _sorted_profiles(
@@ -541,7 +566,7 @@ class LinboDriverHookManager:
             try:
                 if not entry.is_dir(follow_symlinks=False):
                     continue
-                image = validate_image_name(entry.name)
+                image = validate_driver_image_name(entry.name)
                 self._image_directory(image)
             except (OSError, ValueError):
                 continue
@@ -619,7 +644,7 @@ class LinboDriverHookManager:
         return tuple(managed)
 
     def _regenerate_unlocked(self, image_name: str) -> dict[str, Any]:
-        image = validate_image_name(image_name)
+        image = validate_driver_image_name(image_name)
         image_directory = self._image_directory(image)
         profiles = self.referencing_profiles(image)
         hook_path = image_directory / f"{image}.driverpostsync"
@@ -644,7 +669,7 @@ class LinboDriverHookManager:
         if raw_image is None:
             return None
         try:
-            return validate_image_name(raw_image)
+            return validate_driver_image_name(raw_image)
         except ValueError:
             return None
 
@@ -698,7 +723,7 @@ class LinboDriverHookManager:
         """Assign a profile to one image and update all affected hooks."""
 
         profile = validate_profile_name(profile_name)
-        image = validate_image_name(image_name)
+        image = validate_driver_image_name(image_name)
         with self._exclusive_lock():
             profile_directory = self._require_deployable_profile(profile)
             self._image_directory(image)
@@ -827,6 +852,8 @@ DRIVERPOSTSYNC_CACHE="/cache/linbo-driverprofiles/$DRIVERPOSTSYNC_IMAGE"
 DRIVERPOSTSYNC_MATCH_CACHE="$DRIVERPOSTSYNC_CACHE/.match"
 DRIVERPOSTSYNC_WINDOWS_ROOT="/mnt"
 DRIVERPOSTSYNC_TARGET="/mnt/Drivers/LINBO"
+DRIVERPOSTSYNC_BATCH_FILE="$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd"
+DRIVERPOSTSYNC_BATCH_TEMP=""
 DRIVERPOSTSYNC_TASK_FILE="$DRIVERPOSTSYNC_WINDOWS_ROOT/Windows/System32/Tasks/LINBO-Driver-Install"
 DRIVERPOSTSYNC_TASK_MARKER="$DRIVERPOSTSYNC_WINDOWS_ROOT/ProgramData/LINBO/Drivers/startup-task-ready"
 DRIVERPOSTSYNC_REGISTRY_FILE="/tmp/linbo-driver-install.$$.reg"
@@ -1144,7 +1171,7 @@ if [ "$DRIVERPOSTSYNC_INSTALL_READY" = "1" ]; then
 fi
 
 if [ "$DRIVERPOSTSYNC_INSTALL_READY" != "1" ]; then
-    if ! rm -f "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd"; then
+    if ! rm -f "$DRIVERPOSTSYNC_BATCH_FILE"; then
         echo "Warning: could not remove stale pnputil-install.cmd." | tee -a "$DRIVERPOSTSYNC_LOG"
     fi
 fi
@@ -1157,33 +1184,38 @@ fi
 
 DRIVERPOSTSYNC_BATCH_READY=0
 if [ "$INF_COUNT" -gt 0 ]; then
-    if printf '@echo off\r\n' > "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd" &&
-       printf 'setlocal EnableExtensions\r\n' >> "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd" &&
-       printf 'set "LINBO_LOG_DIR=%%ProgramData%%\\LINBO\\Drivers"\r\n' >> "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd" &&
-       printf 'if not exist "%%LINBO_LOG_DIR%%" mkdir "%%LINBO_LOG_DIR%%"\r\n' >> "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd" &&
-       printf 'set "LINBO_LOG=%%LINBO_LOG_DIR%%\\driver-install.log"\r\n' >> "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd" &&
-       printf '>>"%%LINBO_LOG%%" echo [%%DATE%% %%TIME%%] Starting LINBO driver installation.\r\n' >> "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd" &&
-       printf '"%%SystemRoot%%\\System32\\pnputil.exe" /add-driver C:\\Drivers\\LINBO\\*.inf /subdirs /install >>"%%LINBO_LOG%%" 2>&1\r\n' >> "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd" &&
-       printf 'set "LINBO_RC=%%ERRORLEVEL%%"\r\n' >> "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd" &&
-       printf 'if "%%LINBO_RC%%"=="0" goto success\r\n' >> "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd" &&
-       printf 'if "%%LINBO_RC%%"=="259" goto no_action\r\n' >> "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd" &&
-       printf 'if "%%LINBO_RC%%"=="1641" goto success\r\n' >> "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd" &&
-       printf 'if "%%LINBO_RC%%"=="3010" goto success\r\n' >> "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd" &&
-       printf '>>"%%LINBO_LOG%%" echo [%%DATE%% %%TIME%%] pnputil failed with exit code %%LINBO_RC%%; installer retained for retry.\r\n' >> "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd" &&
-       printf 'exit /b %%LINBO_RC%%\r\n' >> "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd" &&
-       printf ':no_action\r\n' >> "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd" &&
-       printf '>>"%%LINBO_LOG%%" echo [%%DATE%% %%TIME%%] pnputil completed with exit code 259: no matching device or a better/newer driver is already active.\r\n' >> "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd" &&
-       printf 'goto cleanup\r\n' >> "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd" &&
-       printf ':success\r\n' >> "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd" &&
-       printf '>>"%%LINBO_LOG%%" echo [%%DATE%% %%TIME%%] Driver installation succeeded with exit code %%LINBO_RC%%.\r\n' >> "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd" &&
-       printf ':cleanup\r\n' >> "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd" &&
-       printf 'del "%%~f0" >>"%%LINBO_LOG%%" 2>&1\r\n' >> "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd" &&
-       printf 'if exist "%%~f0" exit /b 1\r\n' >> "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd" &&
-       printf 'exit /b 0\r\n' >> "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd"; then
+    DRIVERPOSTSYNC_BATCH_TEMP=$(mktemp "$DRIVERPOSTSYNC_TARGET/.pnputil-install.cmd.tmp.XXXXXX" 2>/dev/null)
+    if [ -n "$DRIVERPOSTSYNC_BATCH_TEMP" ] &&
+       printf '@echo off\r\n' > "$DRIVERPOSTSYNC_BATCH_TEMP" &&
+       printf 'setlocal EnableExtensions\r\n' >> "$DRIVERPOSTSYNC_BATCH_TEMP" &&
+       printf 'set "LINBO_LOG_DIR=%%ProgramData%%\\LINBO\\Drivers"\r\n' >> "$DRIVERPOSTSYNC_BATCH_TEMP" &&
+       printf 'if not exist "%%LINBO_LOG_DIR%%" mkdir "%%LINBO_LOG_DIR%%"\r\n' >> "$DRIVERPOSTSYNC_BATCH_TEMP" &&
+       printf 'set "LINBO_LOG=%%LINBO_LOG_DIR%%\\driver-install.log"\r\n' >> "$DRIVERPOSTSYNC_BATCH_TEMP" &&
+       printf '>>"%%LINBO_LOG%%" echo [%%DATE%% %%TIME%%] Starting LINBO driver installation.\r\n' >> "$DRIVERPOSTSYNC_BATCH_TEMP" &&
+       printf '"%%SystemRoot%%\\System32\\pnputil.exe" /add-driver C:\\Drivers\\LINBO\\*.inf /subdirs /install >>"%%LINBO_LOG%%" 2>&1\r\n' >> "$DRIVERPOSTSYNC_BATCH_TEMP" &&
+       printf 'set "LINBO_RC=%%ERRORLEVEL%%"\r\n' >> "$DRIVERPOSTSYNC_BATCH_TEMP" &&
+       printf 'if "%%LINBO_RC%%"=="0" goto success\r\n' >> "$DRIVERPOSTSYNC_BATCH_TEMP" &&
+       printf 'if "%%LINBO_RC%%"=="259" goto no_action\r\n' >> "$DRIVERPOSTSYNC_BATCH_TEMP" &&
+       printf 'if "%%LINBO_RC%%"=="1641" goto success\r\n' >> "$DRIVERPOSTSYNC_BATCH_TEMP" &&
+       printf 'if "%%LINBO_RC%%"=="3010" goto success\r\n' >> "$DRIVERPOSTSYNC_BATCH_TEMP" &&
+       printf '>>"%%LINBO_LOG%%" echo [%%DATE%% %%TIME%%] pnputil failed with exit code %%LINBO_RC%%; installer retained for retry.\r\n' >> "$DRIVERPOSTSYNC_BATCH_TEMP" &&
+       printf 'exit /b %%LINBO_RC%%\r\n' >> "$DRIVERPOSTSYNC_BATCH_TEMP" &&
+       printf ':no_action\r\n' >> "$DRIVERPOSTSYNC_BATCH_TEMP" &&
+       printf '>>"%%LINBO_LOG%%" echo [%%DATE%% %%TIME%%] pnputil completed with exit code 259: no matching device or a better/newer driver is already active.\r\n' >> "$DRIVERPOSTSYNC_BATCH_TEMP" &&
+       printf 'goto cleanup\r\n' >> "$DRIVERPOSTSYNC_BATCH_TEMP" &&
+       printf ':success\r\n' >> "$DRIVERPOSTSYNC_BATCH_TEMP" &&
+       printf '>>"%%LINBO_LOG%%" echo [%%DATE%% %%TIME%%] Driver installation succeeded with exit code %%LINBO_RC%%.\r\n' >> "$DRIVERPOSTSYNC_BATCH_TEMP" &&
+       printf ':cleanup\r\n' >> "$DRIVERPOSTSYNC_BATCH_TEMP" &&
+       printf 'del "%%~f0" >>"%%LINBO_LOG%%" 2>&1\r\n' >> "$DRIVERPOSTSYNC_BATCH_TEMP" &&
+       printf 'if exist "%%~f0" exit /b 1\r\n' >> "$DRIVERPOSTSYNC_BATCH_TEMP" &&
+       printf 'exit /b 0\r\n' >> "$DRIVERPOSTSYNC_BATCH_TEMP" &&
+       mv "$DRIVERPOSTSYNC_BATCH_TEMP" "$DRIVERPOSTSYNC_BATCH_FILE"; then
+        DRIVERPOSTSYNC_BATCH_TEMP=""
         DRIVERPOSTSYNC_BATCH_READY=1
     else
         echo "Failed to create pnputil-install.cmd; installation disabled." | tee -a "$DRIVERPOSTSYNC_LOG"
-        rm -f "$DRIVERPOSTSYNC_TARGET/pnputil-install.cmd"
+        [ -z "$DRIVERPOSTSYNC_BATCH_TEMP" ] || rm -f "$DRIVERPOSTSYNC_BATCH_TEMP"
+        rm -f "$DRIVERPOSTSYNC_BATCH_FILE"
         DRIVERPOSTSYNC_INSTALL_READY=0
         DRIVERPOSTSYNC_RC=1
     fi
@@ -1347,5 +1379,6 @@ __all__ = [
     "LinboDriverHookManager",
     "validate_profile_name",
     "validate_image_name",
+    "validate_driver_image_name",
     "render_driverpostsync",
 ]

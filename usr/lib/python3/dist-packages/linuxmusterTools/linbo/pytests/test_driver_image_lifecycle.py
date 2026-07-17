@@ -51,6 +51,7 @@ def image_environment(tmp_path, monkeypatch):
         images_base=images_root,
     )
     drivers.create_profile("ModelA", "Fixture Systems", ["Model A"])
+    (drivers_root / "ModelA/driver.inf").write_bytes(b"driver fixture")
     images = images_module.LinboImageManager(
         driver_hook_manager=drivers.hook_manager,
     )
@@ -94,6 +95,23 @@ def test_invalid_target_name_does_not_mutate_image(
     assert hook.read_bytes() == original_hook
     assert sorted(path.name for path in hook.parent.iterdir()) == original_files
     assert not (images_root.parent / "escape").exists()
+
+
+@pytest.mark.parametrize("operation", ["rename", "duplicate"])
+def test_dotted_target_skips_unsupported_driver_hook_without_partial_failure(
+    image_environment,
+    operation,
+):
+    drivers, images, images_root = image_environment
+    drivers.set_profile_image("ModelA", "win11")
+    drivers.remove_profile_image("ModelA")
+
+    getattr(images, operation)("win11", "win11.copy")
+
+    target = images_root / "win11.copy"
+    assert (target / "win11.copy.qcow2").is_file()
+    assert list(target.glob("*.driverpostsync")) == []
+    assert (images_root / "win11").exists() is (operation == "duplicate")
 
 
 @pytest.mark.parametrize("operation", ["rename", "duplicate"])
@@ -166,6 +184,21 @@ def test_duplicate_does_not_copy_driverpostsync(image_environment):
         images_root / "win11/win11.driverpostsync"
     ).read_bytes()
     assert drivers.get_profile_image("ModelA") == "win11"
+
+
+def test_duplicate_does_not_copy_backup_directories(image_environment):
+    _drivers, images, images_root = image_environment
+    source = images_root / "win11"
+    for backup_dir in ("backup", "backups"):
+        directory = source / backup_dir / "202607170800"
+        directory.mkdir(parents=True)
+        (directory / "marker").write_text("do not copy\n", encoding="utf-8")
+
+    images.duplicate("win11", "win11-copy")
+
+    duplicate = images_root / "win11-copy"
+    assert not (duplicate / "backup").exists()
+    assert not (duplicate / "backups").exists()
 
 
 def test_restore_keeps_current_hook_and_discards_backup_hook(image_environment):

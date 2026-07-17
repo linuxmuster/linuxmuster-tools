@@ -16,6 +16,7 @@ from linuxmusterTools.linbo.driver_hooks import (
     DriverHookTransactionError,
     LinboDriverHookManager,
     render_driverpostsync,
+    validate_driver_image_name,
     validate_image_name,
     validate_profile_name,
 )
@@ -49,6 +50,7 @@ def make_profile(drivers_root: Path, name: str, image: str | None = None) -> Pat
     (profile_directory / "match.conf").write_text(
         "[match]\nvendor = Fixture\nproduct = *\n", encoding="utf-8"
     )
+    (profile_directory / "driver.inf").write_bytes(b"driver fixture")
     if image is not None:
         (profile_directory / "image.conf").write_text(
             f"# Image assignment for driver profile\nimage = {image}\n",
@@ -106,6 +108,8 @@ def test_multi_profile_hook_is_complete_sorted_executable_and_shell_valid(
     assert 'if "%%LINBO_RC%%"=="259" goto no_action' in content
     assert 'if "%%LINBO_RC%%"=="1641" goto success' in content
     assert 'if "%%LINBO_RC%%"=="3010" goto success' in content
+    assert 'mktemp "$DRIVERPOSTSYNC_TARGET/.pnputil-install.cmd.tmp.XXXXXX"' in content
+    assert 'mv "$DRIVERPOSTSYNC_BATCH_TEMP" "$DRIVERPOSTSYNC_BATCH_FILE"' in content
     assert "FOUND_PRODUCT=0" in content
     assert '[ "$FOUND_PRODUCT" != "1" ]' in content
     assert "no product restriction" not in content
@@ -158,7 +162,7 @@ def test_rendering_is_deterministic_and_deduplicates_profiles() -> None:
 
 def test_full_hook_matches_reviewed_golden_digest() -> None:
     rendered = render_driverpostsync(
-        "win11.24.04",
+        "win11",
         ["Zulu", "alpha", "Beta", "alpha"],
     )
     fixture = (
@@ -200,6 +204,40 @@ def test_assignment_move_and_removal_regenerate_all_affected_hooks(
     assert "driverpostsync tombstone" in hook_path(image_b).read_text(encoding="utf-8")
     assert_shell_syntax(hook_path(image_a))
     assert_shell_syntax(hook_path(image_b))
+
+
+def test_assignment_rejects_invalid_payload_before_writing_image_conf(
+    hook_environment: tuple[LinboDriverHookManager, Path, Path],
+) -> None:
+    manager, drivers_root, images_root = hook_environment
+    image = make_image(images_root, "win11")
+    profile = make_profile(drivers_root, "ModelA")
+    (profile / "driver.inf").unlink()
+
+    with pytest.raises(ValueError, match="contains no INF file"):
+        manager.set_profile_image("ModelA", "win11")
+
+    assert not (profile / "image.conf").exists()
+    assert not hook_path(image).exists()
+
+
+def test_assignment_rejects_case_insensitive_profile_collision_and_rolls_back(
+    hook_environment: tuple[LinboDriverHookManager, Path, Path],
+) -> None:
+    manager, drivers_root, images_root = hook_environment
+    image = make_image(images_root, "win11")
+    first = make_profile(drivers_root, "ModelA")
+    second = make_profile(drivers_root, "modela")
+
+    manager.set_profile_image("ModelA", "win11")
+    with pytest.raises(DriverHookTransactionError) as error:
+        manager.set_profile_image("modela", "win11")
+
+    assert "collide on Windows" in str(error.value.cause)
+    assert (first / "image.conf").is_file()
+    assert not (second / "image.conf").exists()
+    content = hook_path(image).read_text(encoding="utf-8")
+    assert 'DRIVERPOSTSYNC_PROFILES="ModelA"' in content
 
 
 def test_legacy_match_profile_must_be_migrated_before_direct_assignment(
@@ -451,6 +489,16 @@ def test_traversal_profile_image_and_hook_symlinks_are_rejected(
         with pytest.raises(ValueError):
             validate_image_name(invalid_image)
 
+    assert validate_driver_image_name("win11-24_04") == "win11-24_04"
+    assert validate_driver_image_name("_recovery-staged") == "_recovery-staged"
+    for invalid_driver_image in (
+        ".recovery",
+        "win11.",
+        "win11.24.04",
+    ):
+        with pytest.raises(ValueError, match="dots are not supported"):
+            validate_driver_image_name(invalid_driver_image)
+
     outside_profile = tmp_path / "outside-profile"
     outside_profile.mkdir()
     (outside_profile / "match.conf").write_text(
@@ -559,7 +607,6 @@ def test_list_available_images_returns_only_real_complete_qcow2_bases(
 
     assert manager.list_available_images() == [
         {"name": "Alpha", "filename": "Alpha.qcow2"},
-        {"name": "win.11", "filename": "win.11.qcow2"},
         {"name": "zeta", "filename": "zeta.qcow2"},
     ]
 

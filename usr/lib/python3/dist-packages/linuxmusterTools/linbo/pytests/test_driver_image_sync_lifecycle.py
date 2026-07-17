@@ -42,6 +42,7 @@ def sync_environment(tmp_path):
         images_base=images_root,
     )
     drivers.create_profile("ModelA", "Fixture Systems", ["Model A"])
+    (drivers_root / "ModelA/driver.inf").write_bytes(b"driver fixture")
     sync = LinboImageSync(
         images_dir=str(images_root),
         driver_hook_manager=drivers.hook_manager,

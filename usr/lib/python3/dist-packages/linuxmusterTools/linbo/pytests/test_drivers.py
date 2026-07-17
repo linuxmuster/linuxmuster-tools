@@ -76,6 +76,16 @@ def test_create_never_overwrites_existing_profile(tmp_path):
     assert manager.get_profile("Existing")["matchConf"]["vendor"] == "Original"
 
 
+def test_create_rejects_case_insensitive_windows_profile_collision(tmp_path):
+    manager = LinboDriverManager(tmp_path / "drivers")
+    manager.create_profile("ModelA", "Original", ["*"])
+
+    with pytest.raises(drivers_module.DriverProfileExistsError):
+        manager.create_profile("modela", "Other", ["*"])
+
+    assert manager.get_profile("ModelA")["matchConf"]["vendor"] == "Original"
+
+
 def test_invalid_create_input_leaves_no_profile(tmp_path):
     base = tmp_path / "drivers"
     manager = LinboDriverManager(base)
@@ -151,6 +161,7 @@ def test_assigning_legacy_profile_migrates_rule_before_hook_publication(tmp_path
         "[match]\nsys_vendor = LENOVO\nproduct_name = 21L4\n",
         encoding="utf-8",
     )
+    (profile / "driver.inf").write_bytes(b"driver fixture")
     (image / "win11.qcow2").write_bytes(b"qcow")
     manager = LinboDriverManager(drivers_base, images_base=images_base)
 
@@ -173,8 +184,8 @@ def test_invalid_image_does_not_mutate_legacy_match_rule(tmp_path):
     match_path.write_text(legacy, encoding="utf-8")
     manager = LinboDriverManager(drivers_base, images_base=tmp_path / "images")
 
-    with pytest.raises(ValueError, match=r"must not contain '\.\.'"):
-        manager.set_profile_image("Legacy", "bad..image")
+    with pytest.raises(ValueError, match="dots are not supported"):
+        manager.set_profile_image("Legacy", "bad.image")
 
     assert match_path.read_text(encoding="utf-8") == legacy
 
@@ -382,6 +393,7 @@ def test_assigned_profile_must_be_unassigned_before_delete(tmp_path):
         images_base=images_base,
     )
     manager.create_profile("Dell", "Dell Inc.", ["Latitude 5520"])
+    (drivers_base / "Dell/driver.inf").write_bytes(b"driver fixture")
 
     assert manager.list_available_images() == [
         {"name": "win11", "filename": "win11.qcow2"}
@@ -391,7 +403,9 @@ def test_assigned_profile_must_be_unassigned_before_delete(tmp_path):
         "image": "win11",
     }
     assert manager.get_profile("Dell")["image"] == "win11"
-    assert manager.get_profile("Dell")["files"] == []
+    assert manager.get_profile("Dell")["files"] == [
+        {"name": "driver.inf", "size": len(b"driver fixture")}
+    ]
 
     with pytest.raises(drivers_module.DriverProfileAssignedError) as error:
         manager.delete_profile("Dell")

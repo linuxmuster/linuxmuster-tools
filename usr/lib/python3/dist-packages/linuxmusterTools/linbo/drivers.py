@@ -22,7 +22,7 @@ from .driver_hooks import (
     DriverHookTransactionError,
     DriverImageAssignedError,
     LinboDriverHookManager,
-    validate_image_name,
+    validate_driver_image_name,
 )
 from .driver_inventory import (
     DEFAULT_SCHOOL,
@@ -78,6 +78,8 @@ DEFAULT_IMAGES_BASE = Path(
 )
 MATCH_CONF_FILENAME = "match.conf"
 IMAGE_CONF_FILENAME = "image.conf"
+
+
 class DriverInventoryNotFoundError(FileNotFoundError):
     """Raised when a host has no LINBO inventory in the selected school."""
 
@@ -359,7 +361,7 @@ class LinboDriverManager:
         """
 
         safe_name = validate_profile_name(name)
-        safe_image = validate_image_name(image)
+        safe_image = validate_driver_image_name(image)
         self._ensure_canonical_match(safe_name)
 
         return self.hook_manager.set_profile_image(safe_name, safe_image)
@@ -426,7 +428,12 @@ class LinboDriverManager:
 
         with mutation_lock(self.base):
             target = profile_path(self.base, safe_name)
-            if os.path.lexists(target):
+            with os.scandir(self.base) as entries:
+                windows_collision = any(
+                    entry.name.casefold() == safe_name.casefold()
+                    for entry in entries
+                )
+            if os.path.lexists(target) or windows_collision:
                 raise DriverProfileExistsError(safe_name)
             try:
                 target.mkdir(mode=0o755)

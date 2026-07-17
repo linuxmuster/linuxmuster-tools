@@ -39,6 +39,7 @@ def _run_generated_hook(
     *,
     profile_matches: dict[str, str],
     task_contract: tuple[str, str, str],
+    fail_batch_publish: bool = False,
 ) -> HookRuntimeResult:
     runtime = tmp_path / "runtime"
     mock_bin = runtime / "bin"
@@ -119,8 +120,22 @@ cp "$1" "$MOCK_REGISTRY_CAPTURE"
 printf 'mock registry import completed\n'
 """,
     )
+    if fail_batch_publish:
+        _write_executable(
+            mock_bin / "mv",
+            """#!/bin/sh
+set -eu
+for argument in "$@"; do
+    destination=$argument
+done
+case "$destination" in
+    */Drivers/LINBO/pnputil-install.cmd) exit 73 ;;
+esac
+exec /usr/bin/mv "$@"
+""",
+        )
 
-    rendered = render_driverpostsync("win11.runtime", profile_matches)
+    rendered = render_driverpostsync("win11-runtime", profile_matches)
     isolated = rendered.replace("/tmp", runtime_tmp.as_posix())
     isolated = isolated.replace("/cache", cache_root.as_posix())
     isolated = isolated.replace("/mnt", windows_root.as_posix())
@@ -130,7 +145,7 @@ printf 'mock registry import completed\n'
     isolated = isolated.replace(
         "/sys/class/dmi/id/product_name", product.as_posix()
     )
-    hook = runtime / "win11.runtime.driverpostsync"
+    hook = runtime / "win11-runtime.driverpostsync"
     _write_executable(hook, isolated)
 
     environment = os.environ.copy()
@@ -204,6 +219,12 @@ def test_generated_hook_runs_with_system_task_and_selects_matching_profile(
         result.windows_root / "Drivers/LINBO/ExactModel/ExactModel.inf"
     ).is_file()
     assert not (result.windows_root / "Drivers/LINBO/OtherVendor").exists()
+    batch = result.windows_root / "Drivers/LINBO/pnputil-install.cmd"
+    batch_content = batch.read_bytes()
+    assert batch_content.startswith(b"@echo off\r\n")
+    assert batch_content.endswith(b"exit /b 0\r\n")
+    assert b"\n" not in batch_content.replace(b"\r\n", b"")
+    assert not list(batch.parent.glob(".pnputil-install.cmd.tmp.*"))
 
 
 def test_generated_hook_rejects_malformed_match_conf_but_keeps_valid_match(
@@ -237,3 +258,28 @@ def test_generated_hook_rejects_malformed_match_conf_but_keeps_valid_match(
     assert (
         result.windows_root / "Drivers/LINBO/ValidModel/ValidModel.inf"
     ).is_file()
+
+
+def test_generated_hook_never_publishes_a_partial_batch(
+    tmp_path: Path,
+) -> None:
+    result = _run_generated_hook(
+        tmp_path,
+        profile_matches={
+            "ExactModel": (
+                "[match]\n"
+                "vendor = Fixture Systems\n"
+                "product = SchoolBook 14\n"
+            ),
+        },
+        task_contract=CANONICAL_TASK,
+        fail_batch_publish=True,
+    )
+
+    assert result.completed.returncode == 1
+    assert "Failed to create pnputil-install.cmd" in result.log
+    target = result.windows_root / "Drivers/LINBO"
+    assert not (target / "pnputil-install.cmd").exists()
+    assert not list(target.glob(".pnputil-install.cmd.tmp.*"))
+    assert '"!LinboDriverInstall"=-' in result.registry
+    assert "cmd.exe /d /s /c" not in result.registry
