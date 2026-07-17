@@ -22,6 +22,13 @@ The manager contains a dict of all groups in the attributes `groups`. Each group
 one DMI vendor and at least one product. Use `product = *` only when a profile
 is intentionally valid for every product of that vendor.
 
+This native integration targets `linuxmuster-linbo7` 7.4.5 or newer. It relies
+on LINBO downloading `<image>.driverpostsync` together with the normal image
+companions and sourcing it after the regular postsync. Those mechanisms and
+the `linbo_patch_registry` helper are already part of LINBO 7.4.5, so driver
+profiles do not require an `update-linbofs` rebuild. Older installations need
+an independently packaged compatibility implementation.
+
 ```python
 from linuxmusterTools.linbo import LinboDriverManager
 
@@ -49,6 +56,10 @@ Existing companion hooks not owned by this manager are never overwritten.
 Images with assigned profiles must be unassigned before they can be renamed or
 deleted. Duplicating an image does not duplicate its profile assignments, and
 restoring an image backup keeps the hook derived from the current assignments.
+Image upload and remote-download ingestion never accept a transferred
+`.driverpostsync`; the server always derives that file locally from its current
+profile assignments. Authenticated image serving may still deliver the locally
+managed hook to a LINBO cache server.
 
 Fully automatic installation requires the golden image to contain the
 `LINBO-Driver-Install` scheduled task running as `SYSTEM` at startup and its
@@ -58,7 +69,9 @@ Without it, the generated hook registers an administrative `RunOnce` fallback,
 which only runs after an administrator logs on.
 
 LINBO hardware inventories can also be queried by school and used to create a
-profile with the detected vendor and product:
+profile with the detected vendor and product. The inventory layer uses the
+existing school-aware `Devices(school)` provider as its authoritative host
+source; it does not implement a second `devices.csv` parser:
 
 ```python
 drivers.create_profile_from_inventory(

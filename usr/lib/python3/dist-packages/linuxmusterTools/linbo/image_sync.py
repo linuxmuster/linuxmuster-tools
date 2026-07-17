@@ -16,12 +16,79 @@ from urllib.request import Request, urlopen
 
 from linuxmusterTools.common.checks import NameChecker
 
+from .driver_hooks import (
+    LinboDriverHookManager as _LinboDriverHookManager,
+    validate_image_name as _validate_image_name,
+)
+
 
 name_checker = NameChecker()
 logger = logging.getLogger(__name__)
 
 IMAGES_DIR = Path(os.environ.get("LINBO_DIR", "/srv/linbo")) / "images"
 CHUNK_SIZE = 10 * 1024 * 1024  # 10 MB
+IMAGE_EXTS = {".qcow2", ".qdiff", ".cloop"}
+INCOMING_DIR_NAME = ".incoming"
+
+
+def _validate_image_filename(filename: str) -> str:
+    """Validate a generic LINBO image filename used for transport."""
+
+    if not name_checker.check_linbo_image_name(filename):
+        raise ValueError(f"Invalid LINBO image filename: {filename!r}")
+    return filename
+
+
+def _validate_upload_filename(filename: str) -> str:
+    """Reject generated hooks from all image-ingestion paths.
+
+    ``NameChecker`` returns a boolean; it never returns a sanitized name.
+    Per-image ``.driverpostsync`` files are generated locally from the current
+    profile assignments. They may be served to an authenticated cache server,
+    but must never enter a local upload or remote-download ingestion path.
+    """
+
+    filename = _validate_image_filename(filename)
+    if filename.endswith(".driverpostsync"):
+        raise ValueError("driverpostsync hooks cannot be transferred as image files")
+    return filename
+
+
+def _image_base_from_filename(filename: str) -> str:
+    """Return and validate the image-directory basename for ``filename``."""
+
+    checked = _validate_upload_filename(filename)
+    suffix = Path(checked).suffix.lower()
+    base = checked[: -len(suffix)] if suffix in IMAGE_EXTS else checked
+    return _validate_image_name(base)
+
+
+def _contains_driverpostsync(directory: Path) -> bool:
+    """Return whether a staging tree contains a companion hook name."""
+
+    for _root, directories, files in os.walk(directory, followlinks=False):
+        if any(name.endswith(".driverpostsync") for name in directories):
+            return True
+        if any(name.endswith(".driverpostsync") for name in files):
+            return True
+    return False
+
+
+def _image_content_lifecycle(
+    hook_manager: _LinboDriverHookManager,
+    image_name: str,
+):
+    """Serialize image ingestion with profile-assignment mutations.
+
+    The target directory is created by the caller before entering. Existing
+    companion hooks remain ownership-protected even while a missing or broken
+    canonical QCOW2 is being repaired.
+    """
+
+    return hook_manager.image_content_lifecycle(
+        image_name,
+        require_complete=False,
+    )
 
 
 def _file_md5(path: Path) -> str:
@@ -41,8 +108,15 @@ class LinboImageSync:
     Download and verify LINBO images from a remote server.
     """
 
-    def __init__(self, images_dir: str | None = None):
+    def __init__(
+        self,
+        images_dir: str | None = None,
+        driver_hook_manager: _LinboDriverHookManager | None = None,
+    ):
         self.images_dir = Path(images_dir) if images_dir else IMAGES_DIR
+        self.driver_hook_manager = driver_hook_manager or _LinboDriverHookManager(
+            images_root=self.images_dir,
+        )
 
     def compare_manifests(self, local_images: list[dict], remote_images: list[dict]) -> dict:
         """
@@ -99,8 +173,8 @@ class LinboImageSync:
         """
 
 
-        image_name = name_checker.check_linbo_image_name(image_name)
-        base = image_name.rsplit(".", 1)[0] if "." in image_name else image_name
+        image_name = _validate_upload_filename(image_name)
+        base = _image_base_from_filename(image_name)
         target_dir = self.images_dir / base
         incoming_dir = self.images_dir / ".incoming" / base
         incoming_dir.mkdir(parents=True, exist_ok=True)
@@ -148,20 +222,32 @@ class LinboImageSync:
                     "duration": duration,
                 }
 
-            # Backup existing image before overwriting
+            # Publish under the same assignment lock used by the native image
+            # lifecycle. Companion hooks are neither backed up nor replaced.
             target_dir.mkdir(parents=True, exist_ok=True)
             final_path = target_dir / image_name
-            if final_path.is_file():
-                timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M")
-                backup_dir = target_dir / "backup" / timestamp
-                backup_dir.mkdir(parents=True, exist_ok=True)
-                for existing in target_dir.iterdir():
-                    if existing.is_file():
-                        shutil.copy2(str(existing), str(backup_dir / existing.name))
-                logger.info("Backed up existing image to %s", backup_dir)
+            with _image_content_lifecycle(
+                self.driver_hook_manager,
+                base,
+            ):
+                if final_path.is_file():
+                    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M")
+                    backup_dir = target_dir / "backup" / timestamp
+                    backup_dir.mkdir(parents=True, exist_ok=True)
+                    for existing in target_dir.iterdir():
+                        if (
+                            existing.is_file()
+                            and not existing.name.endswith(".driverpostsync")
+                        ):
+                            shutil.copy2(
+                                str(existing),
+                                str(backup_dir / existing.name),
+                            )
+                    logger.info("Backed up existing image to %s", backup_dir)
 
-            # Move new image into place
-            shutil.move(str(target_file), str(final_path))
+                # The downloaded image is the final mutation for a new image,
+                # so it becomes assignable only after publication is complete.
+                shutil.move(str(target_file), str(final_path))
 
             # Cleanup incoming dir
             try:
@@ -187,15 +273,17 @@ class LinboImageSync:
 
     def delete_image(self, image_name: str) -> bool:
         """
-        Delete an image and its directory.
-        TODO: should use LinboImageManager
+        Delete an image and its directory through the native hook lifecycle.
         """
 
-        image_name = name_checker.check_linbo_image_name(image_name)
-        base = image_name.rsplit(".", 1)[0] if "." in image_name else image_name
+        base = _image_base_from_filename(image_name)
         target_dir = self.images_dir / base
         if target_dir.is_dir():
-            shutil.rmtree(str(target_dir))
+            # This holds the assignment lock for the entire removal, rejects
+            # assigned images and foreign hooks, and removes/restores managed
+            # tombstones transactionally on failure.
+            with self.driver_hook_manager.unassigned_image_lifecycle(base):
+                shutil.rmtree(str(target_dir))
             return True
         return False
 
@@ -203,10 +291,6 @@ class LinboImageSync:
 # =============================================================================
 # Image Serving (server-side: serve images TO caching servers)
 # =============================================================================
-
-
-IMAGE_EXTS = {".qcow2", ".qdiff", ".cloop"}
-INCOMING_DIR_NAME = ".incoming"
 
 
 def resolve_image_file(images_dir: Path, image_name: str, filename: str) -> Path:
@@ -217,8 +301,8 @@ def resolve_image_file(images_dir: Path, image_name: str, filename: str) -> Path
     """
 
 
-    name_checker.check_linbo_image_name(image_name)
-    name_checker.check_linbo_image_name(filename)
+    image_name = _validate_image_name(image_name)
+    filename = _validate_image_filename(filename)
 
     file_path = (images_dir / image_name / filename).resolve()
     if not file_path.is_relative_to(images_dir.resolve()):
@@ -265,8 +349,8 @@ def receive_upload_chunk(
     """
 
 
-    name_checker.check_linbo_image_name(image_name)
-    name_checker.check_linbo_image_name(filename)
+    image_name = _validate_image_name(image_name)
+    filename = _validate_upload_filename(filename)
 
     staging_dir = images_dir / INCOMING_DIR_NAME / image_name
     staging_dir.mkdir(parents=True, exist_ok=True)
@@ -294,8 +378,8 @@ def get_upload_status(images_dir: Path, image_name: str, filename: str) -> dict:
     """
 
 
-    name_checker.check_linbo_image_name(image_name)
-    name_checker.check_linbo_image_name(filename)
+    image_name = _validate_image_name(image_name)
+    filename = _validate_upload_filename(filename)
 
     file_path = images_dir / INCOMING_DIR_NAME / image_name / filename
     if not file_path.is_file():
@@ -303,7 +387,11 @@ def get_upload_status(images_dir: Path, image_name: str, filename: str) -> dict:
     return {"bytesReceived": file_path.stat().st_size, "complete": False}
 
 
-def finalize_upload(images_dir: Path, image_name: str) -> dict:
+def finalize_upload(
+    images_dir: Path,
+    image_name: str,
+    driver_hook_manager: _LinboDriverHookManager | None = None,
+) -> dict:
     """Move staged files to final directory with backup.
 
     Backs up existing image files to a timestamped subdirectory
@@ -314,39 +402,49 @@ def finalize_upload(images_dir: Path, image_name: str) -> dict:
     """
 
 
-    name_checker.check_linbo_image_name(image_name)
+    image_name = _validate_image_name(image_name)
 
     staging_dir = images_dir / INCOMING_DIR_NAME / image_name
     if not staging_dir.is_dir():
         raise FileNotFoundError("No staged files found")
+    if _contains_driverpostsync(staging_dir):
+        raise ValueError("Staged uploads must not contain driverpostsync hooks")
 
     target_dir = images_dir / image_name
     target_dir.mkdir(parents=True, exist_ok=True)
+    hook_manager = driver_hook_manager or _LinboDriverHookManager(
+        images_root=images_dir,
+    )
 
-    # Backup existing image files before overwriting
-    backup_dir = None
-    existing_images = [
-        f for f in target_dir.iterdir()
-        if f.is_file() and f.suffix in IMAGE_EXTS
-    ]
-    if existing_images:
-        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
-        backup_dir = target_dir / "backup" / timestamp
-        backup_dir.mkdir(parents=True, exist_ok=True)
+    with _image_content_lifecycle(hook_manager, image_name):
+        # Backup existing image files before overwriting. The generated
+        # companion hook represents live assignments, not image history.
+        backup_dir = None
+        existing_images = [
+            f for f in target_dir.iterdir()
+            if f.is_file() and f.suffix in IMAGE_EXTS
+        ]
+        if existing_images:
+            timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
+            backup_dir = target_dir / "backup" / timestamp
+            backup_dir.mkdir(parents=True, exist_ok=True)
 
-        for f in target_dir.iterdir():
-            if f.is_file():
-                try:
-                    shutil.copy2(str(f), str(backup_dir / f.name))
-                except OSError as e:
-                    logger.warning("Backup failed for %s: %s", f.name, e)
+            for f in target_dir.iterdir():
+                if f.is_file() and not f.name.endswith(".driverpostsync"):
+                    try:
+                        shutil.copy2(str(f), str(backup_dir / f.name))
+                    except OSError as e:
+                        logger.warning("Backup failed for %s: %s", f.name, e)
 
-        logger.info("Backed up existing image to %s", backup_dir)
+            logger.info("Backed up existing image to %s", backup_dir)
 
-    # Move staged files to target
-    moved = []
-    for f in staging_dir.iterdir():
-        if f.is_file():
+        # For an incomplete/new image move its canonical QCOW2 last. Native
+        # assignments cannot target it until every other staged file is live.
+        staged_files = [f for f in staging_dir.iterdir() if f.is_file()]
+        canonical_name = f"{image_name}.qcow2"
+        staged_files.sort(key=lambda path: path.name == canonical_name)
+        moved = []
+        for f in staged_files:
             target = target_dir / f.name
             shutil.move(str(f), str(target))
             moved.append(f.name)
@@ -371,7 +469,7 @@ def cancel_upload(images_dir: Path, image_name: str) -> dict:
     """
 
 
-    name_checker.check_linbo_image_name(image_name)
+    image_name = _validate_image_name(image_name)
 
     staging_dir = images_dir / INCOMING_DIR_NAME / image_name
     if staging_dir.is_dir():

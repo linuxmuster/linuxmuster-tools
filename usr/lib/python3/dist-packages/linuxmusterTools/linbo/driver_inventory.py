@@ -3,8 +3,7 @@
 LINBO writes one ``<hostname>_hwinfo.gz`` file per client below
 ``/var/log/linuxmuster/linbo``.  This module reads those files without invoking
 external commands and optionally joins the host metadata from Sophomorix'
-school-specific ``Devices`` provider. Explicit CSV paths remain available for
-isolated tests and migration tooling.
+school-specific ``Devices`` provider.
 
 The result dictionaries deliberately retain the existing camelCase field
 names. This keeps inventory consumers data-compatible while leaving HTTP
@@ -20,11 +19,13 @@ import logging
 import math
 import os
 import re
-import stat as stat_module
 import zlib
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
+
+from ..devices import Devices
+from .driver_storage import read_bytes_limited
 
 
 logger = logging.getLogger(__name__)
@@ -38,7 +39,6 @@ DEFAULT_STALE_HOURS = 7 * 24
 # exhausting the API process.
 MAX_COMPRESSED_BYTES = 8 * 1024 * 1024
 MAX_UNCOMPRESSED_BYTES = 32 * 1024 * 1024
-MAX_DEVICES_CSV_BYTES = 8 * 1024 * 1024
 READ_CHUNK_BYTES = 64 * 1024
 
 INVENTORY_FILE_RE = re.compile(
@@ -46,18 +46,20 @@ INVENTORY_FILE_RE = re.compile(
 )
 _SCHOOL_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,99}$")
 _DMI_TYPE_RE = re.compile(
-    r"^[ \t]*type[ \t]+0x([0-9a-f]+)\b.*$", re.IGNORECASE | re.MULTILINE
+    r"^[ \t]*type[ \t]+0x([0-9a-f]+)\b"
+    r"(?:[ \t]+\[[^\]\r\n]*\])?"
+    r"(?:[ \t]*:[ \t]*([0-9a-f]{2}(?:[ \t]+[0-9a-f]{2})*))?"
+    r"[ \t]*$",
+    re.IGNORECASE | re.MULTILINE,
 )
 _DMI_STRING_RE = re.compile(
-    r'^[ \t]*str([123]):[ \t]*"([^"\r\n]*)"[ \t]*$',
+    r'^[ \t]*str(\d+):[ \t]*"([^"\r\n]*)"[ \t]*$',
     re.IGNORECASE | re.MULTILINE,
 )
 _SUMMARY_BLOCK_HEADER_RE = re.compile(
     r"^(\d+):[ \t]+(\S+)[ \t]+([^:\r\n]+):[ \t]*(.*)$",
     re.IGNORECASE | re.MULTILINE,
 )
-
-_DEFAULT_CSV = object()
 
 
 def validate_school_name(school: str) -> str:
@@ -115,57 +117,21 @@ def _read_bounded_regular_file(
     path: os.PathLike[str] | str,
     max_bytes: int,
 ) -> tuple[bytes, os.stat_result]:
-    """Read a regular file without following its final symlink.
-
-    The size is checked both before and during the read, so a file growing
-    concurrently cannot bypass ``max_bytes``.  ``O_NOFOLLOW`` closes the race
-    between directory enumeration and opening an inventory file.
-    """
-
-    if not isinstance(max_bytes, int) or isinstance(max_bytes, bool) or max_bytes < 0:
-        raise ValueError("max_bytes must be a non-negative integer")
+    """Read through the shared storage primitive and map domain errors."""
 
     file_path = _lexical_absolute(path)
-    no_follow = getattr(os, "O_NOFOLLOW", 0)
-
-    # O_NOFOLLOW is available on the Linux targets.  Retain a fail-closed
-    # fallback for platforms that do not expose it, primarily for unit tests.
-    if not no_follow:
-        try:
-            if stat_module.S_ISLNK(os.lstat(file_path).st_mode):
-                raise OSError(errno.ELOOP, "Too many levels of symbolic links", str(file_path))
-        except FileNotFoundError:
-            raise
-
-    descriptor = os.open(file_path, os.O_RDONLY | no_follow)
     try:
-        file_stat = os.fstat(descriptor)
-        if not stat_module.S_ISREG(file_stat.st_mode):
+        return read_bytes_limited(file_path, max_bytes)
+    except OSError as error:
+        if error.errno == errno.EFBIG:
+            raise _size_error(file_path, max_bytes) from error
+        if error.errno == errno.EINVAL:
             raise InventoryFileError(
                 f"Not a regular file: {file_path.name}",
                 code="NOT_REGULAR_FILE",
                 path=file_path,
-            )
-        if file_stat.st_size > max_bytes:
-            raise _size_error(file_path, max_bytes)
-
-        chunks: list[bytes] = []
-        total = 0
-        while True:
-            # Read one byte beyond the remaining allowance so growth after the
-            # fstat cannot silently truncate the input.
-            chunk_size = min(READ_CHUNK_BYTES, max_bytes + 1 - total)
-            chunk = os.read(descriptor, chunk_size)
-            if not chunk:
-                break
-            total += len(chunk)
-            if total > max_bytes:
-                raise _size_error(file_path, max_bytes)
-            chunks.append(chunk)
-
-        return b"".join(chunks), file_stat
-    finally:
-        os.close(descriptor)
+            ) from error
+        raise
 
 
 def _gunzip_bounded(compressed: bytes, max_bytes: int) -> bytes:
@@ -225,14 +191,32 @@ def parse_dmi(text: str) -> dict[str, str | None] | None:
     end = type_blocks[target_index + 1].start() if target_index + 1 < len(type_blocks) else len(text)
     block = text[start:end]
 
+    # SMBIOS Type 1 stores string-table indexes at offsets 4, 5 and 6.  The
+    # indexes are not guaranteed to be 1, 2 and 3: index zero explicitly means
+    # "not specified", and later strings can contain the serial number or SKU.
+    raw_header = type_blocks[target_index].group(2)
+    if raw_header is None:
+        return None
+    try:
+        header = bytes.fromhex(raw_header)
+    except ValueError:
+        return None
+    if len(header) < 7 or header[0] != 0x01 or header[1] < 7:
+        return None
+
     strings: dict[int, str] = {}
     for match in _DMI_STRING_RE.finditer(block):
         strings[int(match.group(1))] = match.group(2).strip()
 
+    def indexed_string(index: int) -> str | None:
+        if index == 0:
+            return None
+        return strings.get(index) or None
+
     dmi: dict[str, str | None] = {
-        "vendor": strings.get(1) or None,
-        "product": strings.get(2) or None,
-        "version": strings.get(3) or None,
+        "vendor": indexed_string(header[4]),
+        "product": indexed_string(header[5]),
+        "version": indexed_string(header[6]),
     }
     return dmi if any(dmi.values()) else None
 
@@ -354,58 +338,6 @@ def parse_hardware_devices(text: str) -> list[dict[str, Any]]:
     return devices
 
 
-def _parse_semicolon_line(line: str) -> list[str]:
-    fields: list[str] = []
-    value: list[str] = []
-    quoted = False
-    index = 0
-
-    while index < len(line):
-        character = line[index]
-        if character == '"':
-            if quoted and index + 1 < len(line) and line[index + 1] == '"':
-                value.append('"')
-                index += 1
-            else:
-                quoted = not quoted
-        elif character == ";" and not quoted:
-            fields.append("".join(value).strip())
-            value = []
-        else:
-            value.append(character)
-        index += 1
-
-    fields.append("".join(value).strip())
-    return fields
-
-
-def parse_devices_csv(text: str) -> dict[str, dict[str, str | None]]:
-    """Parse Sophomorix devices.csv, keyed by lower-case hostname."""
-
-    devices: dict[str, dict[str, str | None]] = {}
-    for raw_line in text.removeprefix("\ufeff").splitlines():
-        line = raw_line.strip()
-        if not line or line.startswith("#"):
-            continue
-        fields = _parse_semicolon_line(line)
-        hostname = fields[1].strip() if len(fields) > 1 else ""
-        if not hostname:
-            continue
-
-        def value_at(position: int) -> str | None:
-            return fields[position] if len(fields) > position and fields[position] else None
-
-        mac = value_at(3)
-        devices[hostname.lower()] = {
-            "room": value_at(0),
-            "hostname": hostname,
-            "group": value_at(2),
-            "mac": mac.lower() if mac else None,
-            "ip": value_at(4),
-        }
-    return devices
-
-
 def _inventory_hostname(school: str, device_hostname: str) -> str:
     """Return the globally unique hostname used by LINBO log uploads."""
 
@@ -418,7 +350,7 @@ def _metadata_from_device_records(
     records: Any,
     school: str,
 ) -> dict[str, dict[str, str | None]]:
-    """Normalize upstream ``Devices(school).devices`` records.
+    """Normalize upstream ``Devices(school).get_clients()`` records.
 
     Secondary-school LINBO clients use ``<school>-<hostname>`` as their global
     DNS/log name while their school-local devices.csv entry retains only
@@ -450,12 +382,13 @@ def _metadata_from_device_records(
             normalized = value.strip()
             return normalized or None
 
-        mac = optional_text("mac")
         metadata[inventory_hostname.casefold()] = {
             "room": optional_text("room"),
             "hostname": device_hostname,
             "group": optional_text("group"),
-            "mac": mac.lower() if mac else None,
+            # ``Devices`` already applies NameChecker.normalize_mac().  Keep
+            # that canonical value unchanged instead of normalizing it again.
+            "mac": optional_text("mac"),
             "ip": optional_text("ip"),
             "school": school,
             "inventoryHostname": inventory_hostname,
@@ -469,10 +402,9 @@ def _load_school_device_metadata(
     """Load one school's native host records through linuxmuster-tools."""
 
     try:
-        from linuxmusterTools.devices import Devices
-
-        return _metadata_from_device_records(Devices(school=school).devices, school)
-    except (ImportError, OSError, ValueError) as error:
+        devices = Devices(school=school)
+        return _metadata_from_device_records(devices.get_clients(), school)
+    except (OSError, ValueError) as error:
         # Native school metadata is authoritative. Returning an empty mapping
         # makes the caller expose no cross-school inventories if it is missing.
         logger.warning(
@@ -480,22 +412,6 @@ def _load_school_device_metadata(
             school,
             error,
         )
-        return {}
-
-
-def _load_devices_csv(
-    csv_path: os.PathLike[str] | str | None,
-    max_bytes: int,
-) -> dict[str, dict[str, str | None]]:
-    if csv_path is None:
-        return {}
-    try:
-        data, _ = _read_bounded_regular_file(csv_path, max_bytes)
-        return parse_devices_csv(data.decode("utf-8", errors="replace"))
-    except FileNotFoundError:
-        return {}
-    except (OSError, UnicodeError) as error:
-        logger.warning("Could not read optional linuxmuster devices.csv %s: %s", csv_path, error)
         return {}
 
 
@@ -526,73 +442,25 @@ def _iso_from_milliseconds(value: int) -> str:
     )
 
 
-def list_server_hardware(
-    *,
-    hwinfo_dir: os.PathLike[str] | str | None = None,
-    devices_csv: os.PathLike[str] | str | None | object = _DEFAULT_CSV,
-    school: str = DEFAULT_SCHOOL,
-    stale_hours: float | str | None = None,
-    max_compressed_bytes: int = MAX_COMPRESSED_BYTES,
-    max_uncompressed_bytes: int = MAX_UNCOMPRESSED_BYTES,
-    max_devices_csv_bytes: int = MAX_DEVICES_CSV_BYTES,
-    include_devices: bool = True,
-    now: datetime | int | float | None = None,
-) -> list[dict[str, Any]]:
-    """List every readable server-side LINBO hardware inventory.
-
-    Corrupt, oversized, disappearing, or otherwise unreadable individual files
-    are logged and skipped.  One bad client therefore cannot break the full
-    inventory view.  By default the school-scoped native ``Devices`` provider
-    supplies authoritative host metadata and filters out other schools.
-    Passing ``devices_csv=None`` explicitly disables metadata and school
-    filtering for low-level diagnostics.
-    """
-
-    configured_school = validate_school_name(school)
-    configured_hwinfo_dir = _lexical_absolute(
-        hwinfo_dir or os.environ.get("LINBO_HWINFO_DIR") or DEFAULT_HWINFO_DIR
-    )
-    if devices_csv is _DEFAULT_CSV:
-        configured_devices_csv: os.PathLike[str] | str | None = None
-        native_school_scope = True
-    else:
-        configured_devices_csv = devices_csv  # type: ignore[assignment]
-        native_school_scope = False
-
-    configured_stale_hours = _non_negative_number(
-        stale_hours if stale_hours is not None else os.environ.get("HWINFO_STALE_HOURS"),
-        DEFAULT_STALE_HOURS,
-    )
-    now_ms = _now_milliseconds(now)
+def _inventory_files(
+    hwinfo_dir: Path,
+) -> list[tuple[str, Path]] | None:
+    """Return regular inventory files without following directory symlinks."""
 
     try:
-        with os.scandir(configured_hwinfo_dir) as directory:
+        with os.scandir(hwinfo_dir) as directory:
             entries = list(directory)
     except FileNotFoundError:
         return []
     except OSError as error:
         logger.warning(
             "Could not read LINBO server hardware inventory directory %s: %s",
-            configured_hwinfo_dir,
+            hwinfo_dir,
             error,
         )
-        return []
+        return None
 
-    if native_school_scope:
-        host_metadata = _load_school_device_metadata(configured_school)
-    elif configured_devices_csv is None:
-        host_metadata = {}
-    else:
-        parsed_csv = _load_devices_csv(
-            configured_devices_csv,
-            max_devices_csv_bytes,
-        )
-        host_metadata = _metadata_from_device_records(
-            parsed_csv.values(),
-            configured_school,
-        )
-    inventories: list[dict[str, Any]] = []
-
+    files: list[tuple[str, Path]] = []
     for entry in entries:
         try:
             if not entry.is_file(follow_symlinks=False):
@@ -600,46 +468,213 @@ def list_server_hardware(
         except OSError:
             continue
         filename_match = INVENTORY_FILE_RE.fullmatch(entry.name)
-        if not filename_match:
-            continue
+        if filename_match:
+            files.append((filename_match.group(1), hwinfo_dir / entry.name))
+    return files
 
-        hostname = filename_match.group(1)
+
+def _inventory_from_file(
+    file_path: Path,
+    *,
+    hostname: str,
+    metadata: Mapping[str, str | None],
+    school: str,
+    stale_hours: float,
+    now_ms: int,
+    max_compressed_bytes: int,
+    max_uncompressed_bytes: int,
+    include_devices: bool,
+) -> dict[str, Any]:
+    """Build one response record from exactly one safely opened hwinfo file."""
+
+    text, file_stat = read_server_hardware_file(
+        file_path,
+        max_compressed_bytes=max_compressed_bytes,
+        max_uncompressed_bytes=max_uncompressed_bytes,
+    )
+    captured_at_ms = int(file_stat.st_mtime * 1000)
+    age_ms = max(0, now_ms - captured_at_ms)
+    devices = parse_hardware_devices(text)
+
+    inventory: dict[str, Any] = {
+        "hostname": hostname,
+        "deviceHostname": metadata.get("hostname") or hostname,
+        "school": school,
+        "room": metadata.get("room"),
+        "group": metadata.get("group"),
+        "mac": metadata.get("mac"),
+        "ip": metadata.get("ip"),
+        "capturedAt": _iso_from_milliseconds(captured_at_ms),
+        "ageMs": age_ms,
+        "ageHours": age_ms / (60 * 60 * 1000),
+        "stale": age_ms > stale_hours * 60 * 60 * 1000,
+        "dmi": parse_dmi(text),
+        "deviceCount": len(devices),
+    }
+    if include_devices:
+        inventory["devices"] = devices
+    return inventory
+
+
+def _configured_stale_hours(value: float | str | None) -> float:
+    return _non_negative_number(
+        value if value is not None else os.environ.get("HWINFO_STALE_HOURS"),
+        DEFAULT_STALE_HOURS,
+    )
+
+
+def _configured_hwinfo_dir(path: os.PathLike[str] | str | None) -> Path:
+    return _lexical_absolute(
+        path or os.environ.get("LINBO_HWINFO_DIR") or DEFAULT_HWINFO_DIR
+    )
+
+
+def list_server_hardware(
+    *,
+    hwinfo_dir: os.PathLike[str] | str | None = None,
+    school: str = DEFAULT_SCHOOL,
+    stale_hours: float | str | None = None,
+    max_compressed_bytes: int = MAX_COMPRESSED_BYTES,
+    max_uncompressed_bytes: int = MAX_UNCOMPRESSED_BYTES,
+    include_devices: bool = True,
+    now: datetime | int | float | None = None,
+) -> list[dict[str, Any]]:
+    """List every readable server-side LINBO hardware inventory.
+
+    Corrupt, oversized, disappearing, or otherwise unreadable individual files
+    are logged and skipped.  One bad client therefore cannot break the full
+    inventory view. The school-scoped native ``Devices`` provider supplies
+    authoritative client metadata and filters out other schools.
+    """
+
+    configured_school = validate_school_name(school)
+    configured_hwinfo_dir = _configured_hwinfo_dir(hwinfo_dir)
+    configured_stale_hours = _configured_stale_hours(stale_hours)
+    now_ms = _now_milliseconds(now)
+    inventory_files = _inventory_files(configured_hwinfo_dir)
+    if not inventory_files:
+        return []
+
+    host_metadata = _load_school_device_metadata(configured_school)
+    if not host_metadata:
+        return []
+    inventories: list[dict[str, Any]] = []
+
+    for hostname, file_path in inventory_files:
         metadata = host_metadata.get(hostname.casefold(), {})
-        if native_school_scope and not metadata:
+        if not metadata:
             continue
-        file_path = configured_hwinfo_dir / entry.name
         try:
-            text, file_stat = read_server_hardware_file(
+            inventories.append(_inventory_from_file(
                 file_path,
+                hostname=hostname,
+                metadata=metadata,
+                school=configured_school,
+                stale_hours=configured_stale_hours,
+                now_ms=now_ms,
                 max_compressed_bytes=max_compressed_bytes,
                 max_uncompressed_bytes=max_uncompressed_bytes,
-            )
-            captured_at_ms = int(file_stat.st_mtime * 1000)
-            age_ms = max(0, now_ms - captured_at_ms)
-            devices = parse_hardware_devices(text)
-
-            inventory: dict[str, Any] = {
-                "hostname": hostname,
-                "deviceHostname": metadata.get("hostname") or hostname,
-                "school": configured_school,
-                "room": metadata.get("room"),
-                "group": metadata.get("group"),
-                "mac": metadata.get("mac"),
-                "ip": metadata.get("ip"),
-                "capturedAt": _iso_from_milliseconds(captured_at_ms),
-                "ageMs": age_ms,
-                "ageHours": age_ms / (60 * 60 * 1000),
-                "stale": age_ms > configured_stale_hours * 60 * 60 * 1000,
-                "dmi": parse_dmi(text),
-                "deviceCount": len(devices),
-            }
-            if include_devices:
-                inventory["devices"] = devices
-            inventories.append(inventory)
+                include_devices=include_devices,
+            ))
         except (OSError, EOFError, zlib.error) as error:
-            logger.warning("Skipping unreadable LINBO hardware inventory %s: %s", entry.name, error)
+            logger.warning(
+                "Skipping unreadable LINBO hardware inventory %s: %s",
+                file_path.name,
+                error,
+            )
 
     return sorted(inventories, key=lambda item: (item["hostname"].casefold(), item["hostname"]))
+
+
+def get_server_hardware(
+    hostname: str,
+    *,
+    hwinfo_dir: os.PathLike[str] | str | None = None,
+    school: str = DEFAULT_SCHOOL,
+    stale_hours: float | str | None = None,
+    max_compressed_bytes: int = MAX_COMPRESSED_BYTES,
+    max_uncompressed_bytes: int = MAX_UNCOMPRESSED_BYTES,
+    include_devices: bool = True,
+    now: datetime | int | float | None = None,
+) -> dict[str, Any] | None:
+    """Read one school client's inventory without parsing unrelated files."""
+
+    if not isinstance(hostname, str) or not hostname.strip():
+        raise ValueError("hostname must not be empty")
+    query = hostname.strip()
+    configured_school = validate_school_name(school)
+    host_metadata = _load_school_device_metadata(configured_school)
+
+    metadata: Mapping[str, str | None] | None = None
+    records = list(host_metadata.values())
+    for key in ("inventoryHostname", "hostname"):
+        metadata = next(
+            (record for record in records if record.get(key) == query),
+            None,
+        )
+        if metadata is not None:
+            break
+    if metadata is None:
+        folded_query = query.casefold()
+        for key in ("inventoryHostname", "hostname"):
+            metadata = next(
+                (
+                    record
+                    for record in records
+                    if isinstance(record.get(key), str)
+                    and record[key].casefold() == folded_query
+                ),
+                None,
+            )
+            if metadata is not None:
+                break
+    if metadata is None:
+        return None
+
+    inventory_hostname = metadata.get("inventoryHostname")
+    if not isinstance(inventory_hostname, str):
+        return None
+
+    inventory_files = _inventory_files(_configured_hwinfo_dir(hwinfo_dir))
+    if not inventory_files:
+        return None
+    selected = next(
+        (item for item in inventory_files if item[0] == inventory_hostname),
+        None,
+    )
+    if selected is None:
+        folded_inventory_hostname = inventory_hostname.casefold()
+        selected = next(
+            (
+                item
+                for item in sorted(inventory_files, key=lambda item: item[0])
+                if item[0].casefold() == folded_inventory_hostname
+            ),
+            None,
+        )
+    if selected is None:
+        return None
+
+    file_hostname, file_path = selected
+    try:
+        return _inventory_from_file(
+            file_path,
+            hostname=file_hostname,
+            metadata=metadata,
+            school=configured_school,
+            stale_hours=_configured_stale_hours(stale_hours),
+            now_ms=_now_milliseconds(now),
+            max_compressed_bytes=max_compressed_bytes,
+            max_uncompressed_bytes=max_uncompressed_bytes,
+            include_devices=include_devices,
+        )
+    except (OSError, EOFError, zlib.error) as error:
+        logger.warning(
+            "Skipping unreadable LINBO hardware inventory %s: %s",
+            file_path.name,
+            error,
+        )
+        return None
 
 
 __all__ = [
@@ -648,12 +683,11 @@ __all__ = [
     "DEFAULT_STALE_HOURS",
     "MAX_COMPRESSED_BYTES",
     "MAX_UNCOMPRESSED_BYTES",
-    "MAX_DEVICES_CSV_BYTES",
     "InventoryFileError",
     "validate_school_name",
     "parse_dmi",
     "parse_hardware_devices",
-    "parse_devices_csv",
     "read_server_hardware_file",
     "list_server_hardware",
+    "get_server_hardware",
 ]

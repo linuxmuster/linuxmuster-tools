@@ -7,6 +7,7 @@ Writes use a temporary file in the destination directory followed by
 
 from __future__ import annotations
 
+import errno
 import fcntl
 import os
 import re
@@ -30,6 +31,7 @@ __all__ = [
     "list_regular_files",
     "mutation_lock",
     "profile_path",
+    "read_bytes_limited",
     "read_text_limited",
     "require_profile_directory",
     "require_regular_file",
@@ -105,30 +107,68 @@ def require_regular_file(path: Path) -> Path:
     return path
 
 
-def read_text_limited(path: Path, max_bytes: int) -> str:
-    """Read a UTF-8 regular file while enforcing a byte limit."""
+def read_bytes_limited(
+    path: Path,
+    max_bytes: int,
+) -> tuple[bytes, os.stat_result]:
+    """Read a bounded regular file without following the final symlink.
+
+    The returned metadata comes from the opened descriptor, not from a
+    separate path lookup.  File-type, size, and symlink rejections use plain
+    ``OSError`` values so domain-specific callers can translate them into
+    their own public errors.
+    """
+
+    if (
+        not isinstance(max_bytes, int)
+        or isinstance(max_bytes, bool)
+        or max_bytes < 0
+    ):
+        raise ValueError("max_bytes must be a non-negative integer")
 
     file_path = Path(path)
     flags = os.O_RDONLY
     if hasattr(os, "O_CLOEXEC"):
         flags |= os.O_CLOEXEC
-    if hasattr(os, "O_NOFOLLOW"):
-        flags |= os.O_NOFOLLOW
+    no_follow = getattr(os, "O_NOFOLLOW", 0)
+    if no_follow:
+        flags |= no_follow
 
-    try:
-        file_fd = os.open(str(file_path), flags)
-    except FileNotFoundError:
-        raise FileNotFoundError(f"file not found: {file_path}") from None
-    except OSError as exc:
-        raise StorageSecurityError(f"cannot safely open file: {file_path}: {exc}") from exc
+    # Linux provides O_NOFOLLOW.  Keep a fail-closed fallback for platforms
+    # and unit tests that do not expose it.  Comparing the opened descriptor
+    # with the preceding lstat also detects a path replacement during open.
+    fallback_stat: os.stat_result | None = None
+    if not no_follow:
+        fallback_stat = os.lstat(file_path)
+        if stat.S_ISLNK(fallback_stat.st_mode):
+            raise OSError(
+                errno.ELOOP,
+                "Too many levels of symbolic links",
+                str(file_path),
+            )
+        if not stat.S_ISREG(fallback_stat.st_mode):
+            raise OSError(errno.EINVAL, "Not a regular file", str(file_path))
+
+    file_fd = os.open(str(file_path), flags)
 
     try:
         metadata = os.fstat(file_fd)
         if not stat.S_ISREG(metadata.st_mode):
-            raise StorageSecurityError(f"path is not a regular file: {file_path}")
+            raise OSError(errno.EINVAL, "Not a regular file", str(file_path))
+        if fallback_stat is not None and not os.path.samestat(
+            fallback_stat,
+            metadata,
+        ):
+            raise OSError(
+                errno.ELOOP,
+                "File changed while it was being opened",
+                str(file_path),
+            )
         if metadata.st_size > max_bytes:
-            raise ValueError(
-                f"file is too large: {metadata.st_size} bytes (max {max_bytes})"
+            raise OSError(
+                errno.EFBIG,
+                f"File exceeds {max_bytes} bytes",
+                str(file_path),
             )
 
         payload = bytearray()
@@ -138,12 +178,37 @@ def read_text_limited(path: Path, max_bytes: int) -> str:
                 break
             payload.extend(chunk)
         if len(payload) > max_bytes:
-            raise ValueError(
-                f"file is too large: more than {max_bytes} bytes (max {max_bytes})"
+            raise OSError(
+                errno.EFBIG,
+                f"File exceeds {max_bytes} bytes",
+                str(file_path),
             )
-        return bytes(payload).decode("utf-8")
+        return bytes(payload), metadata
     finally:
         os.close(file_fd)
+
+
+def read_text_limited(path: Path, max_bytes: int) -> str:
+    """Read a UTF-8 regular file while preserving storage error semantics."""
+
+    file_path = Path(path)
+    try:
+        payload, _ = read_bytes_limited(file_path, max_bytes)
+    except FileNotFoundError:
+        raise FileNotFoundError(f"file not found: {file_path}") from None
+    except OSError as exc:
+        if exc.errno == errno.EFBIG:
+            raise ValueError(
+                f"file is too large: more than {max_bytes} bytes (max {max_bytes})"
+            ) from exc
+        if exc.errno == errno.EINVAL:
+            raise StorageSecurityError(
+                f"path is not a regular file: {file_path}"
+            ) from exc
+        raise StorageSecurityError(
+            f"cannot safely open file: {file_path}: {exc}"
+        ) from exc
+    return payload.decode("utf-8")
 
 
 def fsync_directory(directory: Path) -> None:

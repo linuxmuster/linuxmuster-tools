@@ -49,7 +49,6 @@ def image_environment(tmp_path, monkeypatch):
     drivers = LinboDriverManager(
         drivers_root,
         images_base=images_root,
-        devices_csv=None,
     )
     drivers.create_profile("ModelA", "Fixture Systems", ["Model A"])
     images = images_module.LinboImageManager(

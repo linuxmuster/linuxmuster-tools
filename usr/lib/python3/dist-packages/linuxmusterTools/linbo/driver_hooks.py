@@ -21,7 +21,6 @@ for downstream packaging.
 
 from __future__ import annotations
 
-import errno
 import os
 import stat as stat_module
 from contextlib import contextmanager
@@ -32,9 +31,13 @@ from linuxmusterTools.common.checks import NameChecker
 
 from .driver_matching import MAX_MATCH_CONF_BYTES, parse_match_conf
 from .driver_storage import (
+    StorageSecurityError,
     atomic_write,
     file_lock,
     fsync_directory,
+    read_bytes_limited,
+    require_profile_directory,
+    require_regular_file,
     validate_profile_name,
 )
 
@@ -126,37 +129,10 @@ def _lexical_absolute(path: os.PathLike[str] | str) -> Path:
 
 
 def _read_regular_file(path: Path, max_bytes: int) -> bytes:
-    """Read one bounded regular file without following the final symlink."""
+    """Adapt the shared bounded reader to the hook byte-only contract."""
 
-    no_follow = getattr(os, "O_NOFOLLOW", 0)
-    if not no_follow:
-        try:
-            if stat_module.S_ISLNK(os.lstat(path).st_mode):
-                raise OSError(errno.ELOOP, "Too many levels of symbolic links", str(path))
-        except FileNotFoundError:
-            raise
-
-    descriptor = os.open(path, os.O_RDONLY | no_follow)
-    try:
-        file_stat = os.fstat(descriptor)
-        if not stat_module.S_ISREG(file_stat.st_mode):
-            raise OSError(errno.EINVAL, "Not a regular file", str(path))
-        if file_stat.st_size > max_bytes:
-            raise OSError(errno.EFBIG, f"File exceeds {max_bytes} bytes", str(path))
-
-        chunks: list[bytes] = []
-        total = 0
-        while True:
-            chunk = os.read(descriptor, min(64 * 1024, max_bytes + 1 - total))
-            if not chunk:
-                break
-            total += len(chunk)
-            if total > max_bytes:
-                raise OSError(errno.EFBIG, f"File exceeds {max_bytes} bytes", str(path))
-            chunks.append(chunk)
-        return b"".join(chunks)
-    finally:
-        os.close(descriptor)
+    content, _ = read_bytes_limited(path, max_bytes)
+    return content
 
 
 def _image_conf_content(image_name: str) -> str:
@@ -239,16 +215,14 @@ class LinboDriverHookManager:
 
     def _profile_content_directory(self, profile_name: str) -> Path:
         profile = validate_profile_name(profile_name)
-        directory = self.drivers_root / profile
         try:
-            directory_stat = os.lstat(directory)
+            return require_profile_directory(self.drivers_root, profile)
         except FileNotFoundError as error:
             raise FileNotFoundError(f"Driver profile not found: {profile}") from error
-        if stat_module.S_ISLNK(directory_stat.st_mode) or not stat_module.S_ISDIR(
-            directory_stat.st_mode
-        ):
-            raise ValueError(f"Driver profile is not a real directory: {profile}")
-        return directory
+        except StorageSecurityError as error:
+            raise ValueError(
+                f"Driver profile is not a real directory: {profile}"
+            ) from error
 
     def _profile_directory(self, profile_name: str) -> Path:
         profile = validate_profile_name(profile_name)
@@ -256,18 +230,18 @@ class LinboDriverHookManager:
 
         match_conf = directory / "match.conf"
         try:
-            match_stat = os.lstat(match_conf)
+            require_regular_file(match_conf)
         except FileNotFoundError as error:
             raise FileNotFoundError(
                 f"Driver profile has no match.conf: {profile}"
             ) from error
-        if stat_module.S_ISLNK(match_stat.st_mode) or not stat_module.S_ISREG(
-            match_stat.st_mode
-        ):
-            raise ValueError(f"Driver profile match.conf is not a regular file: {profile}")
+        except StorageSecurityError as error:
+            raise ValueError(
+                f"Driver profile match.conf is not a regular file: {profile}"
+            ) from error
         return directory
 
-    def _image_directory(self, image_name: str) -> Path:
+    def _image_content_directory(self, image_name: str) -> Path:
         image = validate_image_name(image_name)
         directory = self.images_root / image
         try:
@@ -278,6 +252,11 @@ class LinboDriverHookManager:
             directory_stat.st_mode
         ):
             raise ValueError(f"LINBO image is not a real directory: {image}")
+        return directory
+
+    def _image_directory(self, image_name: str) -> Path:
+        image = validate_image_name(image_name)
+        directory = self._image_content_directory(image)
 
         image_file = directory / f"{image}.qcow2"
         try:
@@ -436,12 +415,24 @@ class LinboDriverHookManager:
         self,
         image_name: str,
         additional_content_roots: Iterable[os.PathLike[str] | str] = (),
+        *,
+        require_complete: bool = True,
     ) -> Iterator[tuple[Path, ...]]:
-        """Serialize image content changes and classify companion hooks."""
+        """Serialize image content changes and classify companion hooks.
+
+        Generic image ingestion sets ``require_complete=False`` while it
+        atomically publishes or repairs the canonical QCOW2 file. This still
+        holds the assignment lock, validates the real image directory and
+        protects an existing companion hook. Normal image lifecycle callers
+        retain the stricter complete-image requirement.
+        """
 
         image = validate_image_name(image_name)
         with self._exclusive_lock():
-            image_directory = self._image_directory(image)
+            if require_complete:
+                image_directory = self._image_directory(image)
+            else:
+                image_directory = self._image_content_directory(image)
             paths = [image_directory / f"{image}.driverpostsync"]
             for raw_root in additional_content_roots:
                 content_root = _lexical_absolute(raw_root)

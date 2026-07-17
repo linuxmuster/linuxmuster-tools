@@ -12,9 +12,24 @@ from linuxmusterTools.linbo.drivers import LinboDriverManager
 
 def test_public_package_exports_driver_manager():
     import linuxmusterTools.linbo as linbo_package
-    from linuxmusterTools.linbo import LinboDriverManager as PublicDriverManager
+    from linuxmusterTools.linbo import (
+        DriverHookOwnershipError,
+        DriverHookTransactionError,
+        DriverImageAssignedError,
+        LinboDriverManager as PublicDriverManager,
+        StorageSecurityError as PublicStorageSecurityError,
+    )
+    from linuxmusterTools.linbo.driver_hooks import (
+        DriverHookOwnershipError as InternalOwnershipError,
+        DriverHookTransactionError as InternalTransactionError,
+        DriverImageAssignedError as InternalAssignedError,
+    )
 
     assert PublicDriverManager is LinboDriverManager
+    assert DriverHookOwnershipError is InternalOwnershipError
+    assert DriverHookTransactionError is InternalTransactionError
+    assert DriverImageAssignedError is InternalAssignedError
+    assert PublicStorageSecurityError is StorageSecurityError
     assert not hasattr(linbo_package, "LinboDriverHookManager")
     assert not hasattr(linbo_package, "validate_image_name")
 
@@ -397,70 +412,63 @@ def test_assigned_profile_must_be_unassigned_before_delete(tmp_path):
 
 
 def test_inventory_facade_forwards_constructor_and_call_parameters(tmp_path, monkeypatch):
-    calls = []
+    list_calls = []
+    get_calls = []
+    inventory = {
+        "hostname": "Client-A",
+        "dmi": {"vendor": "Dell", "product": "5520"},
+    }
 
     def fake_list_server_hardware(**kwargs):
-        calls.append(kwargs)
-        return [{"hostname": "Client-A", "dmi": {"vendor": "Dell", "product": "5520"}}]
+        list_calls.append(kwargs)
+        return [inventory]
+
+    def fake_get_server_hardware(hostname, **kwargs):
+        get_calls.append((hostname, kwargs))
+        return inventory
 
     monkeypatch.setattr(drivers_module, "list_server_hardware", fake_list_server_hardware)
+    monkeypatch.setattr(drivers_module, "get_server_hardware", fake_get_server_hardware)
     manager = drivers_module.LinboDriverManager(
         tmp_path / "drivers",
         hwinfo_dir=tmp_path / "hwinfo",
-        devices_csv=tmp_path / "devices.csv",
         stale_hours="12.5",
     )
 
     assert manager.list_inventory() == [
         {"hostname": "Client-A", "dmi": {"vendor": "Dell", "product": "5520"}}
     ]
-    assert calls[-1] == {
+    assert list_calls[-1] == {
         "hwinfo_dir": tmp_path / "hwinfo",
-        "devices_csv": tmp_path / "devices.csv",
         "school": "default-school",
         "stale_hours": "12.5",
         "include_devices": False,
     }
 
     assert manager.get_inventory("client-a", include_devices=True)["hostname"] == "Client-A"
-    assert calls[-1]["include_devices"] is True
+    assert get_calls[-1] == (
+        "client-a",
+        {
+            "hwinfo_dir": tmp_path / "hwinfo",
+            "school": "default-school",
+            "stale_hours": "12.5",
+            "include_devices": True,
+        },
+    )
 
 
-def test_inventory_facade_preserves_native_school_devices_default(
-    tmp_path,
-    monkeypatch,
-):
+def test_inventory_lookup_delegates_single_hostname(monkeypatch):
     calls = []
     monkeypatch.setattr(
         drivers_module,
-        "list_server_hardware",
-        lambda **kwargs: calls.append(kwargs) or [],
+        "get_server_hardware",
+        lambda hostname, **kwargs: calls.append((hostname, kwargs))
+        or {"hostname": "Client"},
     )
+    manager = drivers_module.LinboDriverManager()
 
-    manager = drivers_module.LinboDriverManager(
-        tmp_path / "drivers",
-        hwinfo_dir=tmp_path / "hwinfo",
-    )
-    manager.list_inventory()
-
-    assert "devices_csv" not in calls[-1]
-
-
-def test_inventory_lookup_is_case_insensitive_but_prefers_exact_case(monkeypatch):
-    inventories = [
-        {"hostname": "CLIENT", "marker": "upper"},
-        {"hostname": "Client", "marker": "mixed"},
-    ]
-    monkeypatch.setattr(
-        drivers_module,
-        "list_server_hardware",
-        lambda **_kwargs: inventories,
-    )
-    manager = drivers_module.LinboDriverManager(devices_csv=None)
-
-    assert manager.get_inventory("Client")["marker"] == "mixed"
-    assert manager.get_inventory("client")["marker"] == "upper"
-    assert manager.get_inventory("missing") is None
+    assert manager.get_inventory("client")["hostname"] == "Client"
+    assert calls[-1][0] == "client"
 
 
 def test_inventory_facade_forwards_school_and_accepts_school_local_hostname(
@@ -476,23 +484,20 @@ def test_inventory_facade_forwards_school_and_accepts_school_local_hostname(
     }
     monkeypatch.setattr(
         drivers_module,
-        "list_server_hardware",
-        lambda **kwargs: calls.append(kwargs) or [inventory],
+        "get_server_hardware",
+        lambda hostname, **kwargs: calls.append((hostname, kwargs)) or inventory,
     )
-    manager = drivers_module.LinboDriverManager(
-        tmp_path / "drivers",
-        devices_csv=None,
-    )
+    manager = drivers_module.LinboDriverManager(tmp_path / "drivers")
 
     assert manager.get_inventory("client-a", school="school-b") == inventory
-    assert calls[-1]["school"] == "school-b"
+    assert calls[-1][1]["school"] == "school-b"
 
     created = manager.create_profile_from_inventory(
         "Client-A",
         school="school-b",
     )
     assert created["matchConf"]["products"] == ["Latitude 5520"]
-    assert calls[-1]["school"] == "school-b"
+    assert calls[-1][1]["school"] == "school-b"
 
 
 def test_inventory_facade_rejects_unsafe_school_before_listing(tmp_path, monkeypatch):
@@ -536,10 +541,10 @@ def test_create_from_inventory_uses_hash_fallback_on_readable_slug_collision(
     }
     monkeypatch.setattr(
         drivers_module,
-        "list_server_hardware",
-        lambda **_kwargs: [inventory],
+        "get_server_hardware",
+        lambda _hostname, **_kwargs: inventory,
     )
-    manager = drivers_module.LinboDriverManager(tmp_path / "drivers", devices_csv=None)
+    manager = drivers_module.LinboDriverManager(tmp_path / "drivers")
     suggestions = manager.suggest_profile_names("Acme#", "Model +1")
     manager.create_profile(suggestions["preferred"], "Different", ["Hardware"])
 
@@ -555,13 +560,11 @@ def test_create_from_inventory_uses_hash_fallback_on_readable_slug_collision(
 def test_create_from_inventory_honors_explicit_profile_name(tmp_path, monkeypatch):
     monkeypatch.setattr(
         drivers_module,
-        "list_server_hardware",
-        lambda **_kwargs: [
-            {
-                "hostname": "Client-A",
-                "dmi": {"vendor": "Dell Inc.", "product": "Latitude 5520"},
-            }
-        ],
+        "get_server_hardware",
+        lambda _hostname, **_kwargs: {
+            "hostname": "Client-A",
+            "dmi": {"vendor": "Dell Inc.", "product": "Latitude 5520"},
+        },
     )
     manager = drivers_module.LinboDriverManager(tmp_path / "drivers")
 
@@ -579,8 +582,8 @@ def test_create_from_inventory_honors_explicit_profile_name(tmp_path, monkeypatc
 def test_create_from_inventory_rejects_missing_dmi_fields(tmp_path, monkeypatch, dmi):
     monkeypatch.setattr(
         drivers_module,
-        "list_server_hardware",
-        lambda **_kwargs: [{"hostname": "client", "dmi": dmi}],
+        "get_server_hardware",
+        lambda _hostname, **_kwargs: {"hostname": "client", "dmi": dmi},
     )
     manager = drivers_module.LinboDriverManager(tmp_path / "drivers")
 
@@ -593,8 +596,8 @@ def test_create_from_inventory_rejects_missing_dmi_fields(tmp_path, monkeypatch,
 def test_create_from_inventory_raises_when_host_is_unknown(tmp_path, monkeypatch):
     monkeypatch.setattr(
         drivers_module,
-        "list_server_hardware",
-        lambda **_kwargs: [],
+        "get_server_hardware",
+        lambda _hostname, **_kwargs: None,
     )
     manager = drivers_module.LinboDriverManager(tmp_path / "drivers")
 

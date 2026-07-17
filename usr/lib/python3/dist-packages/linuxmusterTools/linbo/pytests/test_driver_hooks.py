@@ -477,6 +477,25 @@ def test_traversal_profile_image_and_hook_symlinks_are_rejected(
     assert outside_hook.read_text(encoding="utf-8") == "do not replace"
 
 
+def test_profile_helpers_preserve_hook_facing_errors(
+    hook_environment: tuple[LinboDriverHookManager, Path, Path],
+    tmp_path: Path,
+) -> None:
+    manager, drivers_root, _ = hook_environment
+
+    with pytest.raises(FileNotFoundError, match="Driver profile not found: Missing"):
+        manager._profile_content_directory("Missing")
+
+    profile = make_profile(drivers_root, "ModelA")
+    outside = tmp_path / "outside-match.conf"
+    outside.write_text("[match]\nvendor = Outside\nproduct = *\n", encoding="utf-8")
+    (profile / "match.conf").unlink()
+    (profile / "match.conf").symlink_to(outside)
+
+    with pytest.raises(ValueError, match="match.conf is not a regular file"):
+        manager._profile_directory("ModelA")
+
+
 def test_symlinked_lock_file_is_never_followed(
     hook_environment: tuple[LinboDriverHookManager, Path, Path],
     tmp_path: Path,

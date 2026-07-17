@@ -1,3 +1,4 @@
+import errno
 import multiprocessing
 from pathlib import Path
 
@@ -10,6 +11,7 @@ from linuxmusterTools.linbo.driver_storage import (
     atomic_write_text,
     file_lock,
     list_regular_files,
+    read_bytes_limited,
     read_text_limited,
     validate_profile_name,
 )
@@ -116,6 +118,52 @@ def test_bounded_reader_rejects_oversized_file(tmp_path):
 
     with pytest.raises(ValueError, match="too large"):
         read_text_limited(target, 10)
+
+
+def test_bounded_binary_reader_returns_descriptor_metadata(tmp_path):
+    target = tmp_path / "payload.bin"
+    target.write_bytes(b"driver payload")
+
+    payload, metadata = read_bytes_limited(target, 1024)
+
+    assert payload == b"driver payload"
+    assert metadata.st_ino == target.stat().st_ino
+    assert metadata.st_size == len(payload)
+
+
+def test_bounded_binary_reader_uses_neutral_file_errors(tmp_path):
+    oversized = tmp_path / "oversized.bin"
+    oversized.write_bytes(b"xx")
+    linked = tmp_path / "linked.bin"
+    linked.symlink_to(oversized)
+
+    with pytest.raises(OSError) as not_regular:
+        read_bytes_limited(tmp_path, 1024)
+    assert not_regular.value.errno == errno.EINVAL
+
+    with pytest.raises(OSError) as too_large:
+        read_bytes_limited(oversized, 1)
+    assert too_large.value.errno == errno.EFBIG
+
+    with pytest.raises(OSError) as symlinked:
+        read_bytes_limited(linked, 1024)
+    assert symlinked.value.errno == errno.ELOOP
+
+
+def test_bounded_binary_reader_fallback_rejects_symlinks(
+    tmp_path,
+    monkeypatch,
+):
+    outside = tmp_path / "outside.bin"
+    outside.write_bytes(b"secret")
+    linked = tmp_path / "linked.bin"
+    linked.symlink_to(outside)
+    monkeypatch.setattr(storage.os, "O_NOFOLLOW", 0)
+
+    with pytest.raises(OSError) as error:
+        read_bytes_limited(linked, 1024)
+
+    assert error.value.errno == errno.ELOOP
 
 
 def test_bounded_reader_never_follows_a_symlink(tmp_path):

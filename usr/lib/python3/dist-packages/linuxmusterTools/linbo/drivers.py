@@ -15,8 +15,21 @@ import re
 from pathlib import Path
 from typing import Sequence
 
-from .driver_hooks import LinboDriverHookManager, validate_image_name
-from .driver_inventory import DEFAULT_SCHOOL, list_server_hardware, validate_school_name
+from .driver_hooks import (
+    DriverAssignmentScanError,
+    DriverHookError,
+    DriverHookOwnershipError,
+    DriverHookTransactionError,
+    DriverImageAssignedError,
+    LinboDriverHookManager,
+    validate_image_name,
+)
+from .driver_inventory import (
+    DEFAULT_SCHOOL,
+    get_server_hardware,
+    list_server_hardware,
+    validate_school_name,
+)
 from .driver_matching import (
     MAX_MATCH_CONF_BYTES,
     MatchConfigError,
@@ -25,6 +38,7 @@ from .driver_matching import (
     serialize_match_conf,
 )
 from .driver_storage import (
+    StorageSecurityError,
     atomic_write_text,
     delete_profile_directory,
     iter_profile_directories,
@@ -39,11 +53,17 @@ from .driver_storage import (
 
 
 __all__ = [
+    "DriverAssignmentScanError",
+    "DriverHookError",
+    "DriverHookOwnershipError",
+    "DriverHookTransactionError",
+    "DriverImageAssignedError",
     "DriverInventoryNotFoundError",
     "DriverProfileConflictError",
     "DriverProfileExistsError",
     "DriverProfileAssignedError",
     "LinboDriverManager",
+    "StorageSecurityError",
 ]
 
 
@@ -58,9 +78,6 @@ DEFAULT_IMAGES_BASE = Path(
 )
 MATCH_CONF_FILENAME = "match.conf"
 IMAGE_CONF_FILENAME = "image.conf"
-_DEFAULT_DEVICES_CSV_SETTING = object()
-
-
 class DriverInventoryNotFoundError(FileNotFoundError):
     """Raised when a host has no LINBO inventory in the selected school."""
 
@@ -103,7 +120,6 @@ class LinboDriverManager:
         *,
         images_base: str | Path | None = None,
         hwinfo_dir: str | Path | None = None,
-        devices_csv: str | Path | None | object = _DEFAULT_DEVICES_CSV_SETTING,
         stale_hours: float | str | None = None,
     ):
         self.base = Path(drivers_base) if drivers_base is not None else DEFAULT_DRIVERS_BASE
@@ -116,10 +132,6 @@ class LinboDriverManager:
             lock_path=self.base / ".driver-profiles.lock",
         )
         self.hwinfo_dir = Path(hwinfo_dir) if hwinfo_dir is not None else None
-        if devices_csv is _DEFAULT_DEVICES_CSV_SETTING:
-            self.devices_csv = _DEFAULT_DEVICES_CSV_SETTING
-        else:
-            self.devices_csv = Path(devices_csv) if devices_csv is not None else None
         self.stale_hours = stale_hours
 
     def list_inventory(
@@ -133,19 +145,11 @@ class LinboDriverManager:
         if not isinstance(include_devices, bool):
             raise ValueError("include_devices must be a boolean")
         safe_school = validate_school_name(school)
-        inventory_options = {
-            "hwinfo_dir": self.hwinfo_dir,
-            "school": safe_school,
-            "stale_hours": self.stale_hours,
-            "include_devices": include_devices,
-        }
-        # Omitting this keyword selects the native school-aware ``Devices``
-        # provider. An explicit ``None`` disables metadata and filtering for
-        # low-level diagnostics only.
-        if self.devices_csv is not _DEFAULT_DEVICES_CSV_SETTING:
-            inventory_options["devices_csv"] = self.devices_csv
         return list_server_hardware(
-            **inventory_options,
+            hwinfo_dir=self.hwinfo_dir,
+            school=safe_school,
+            stale_hours=self.stale_hours,
+            include_devices=include_devices,
         )
 
     def get_inventory(
@@ -157,27 +161,16 @@ class LinboDriverManager:
     ) -> dict | None:
         """Find one school-scoped inventory by hostname, case-insensitively."""
 
-        if not isinstance(hostname, str) or not hostname.strip():
-            raise ValueError("hostname must not be empty")
-        query = hostname.strip()
-        inventories = self.list_inventory(
+        if not isinstance(include_devices, bool):
+            raise ValueError("include_devices must be a boolean")
+        safe_school = validate_school_name(school)
+        return get_server_hardware(
+            hostname,
+            hwinfo_dir=self.hwinfo_dir,
+            school=safe_school,
+            stale_hours=self.stale_hours,
             include_devices=include_devices,
-            school=school,
         )
-
-        # Prefer exact global and school-local spellings; otherwise retain the
-        # inventory module's deterministic sort order for case-folded matches.
-        for key in ("hostname", "deviceHostname"):
-            for inventory in inventories:
-                if inventory.get(key) == query:
-                    return inventory
-        folded = query.casefold()
-        for key in ("hostname", "deviceHostname"):
-            for inventory in inventories:
-                candidate = inventory.get(key)
-                if isinstance(candidate, str) and candidate.casefold() == folded:
-                    return inventory
-        return None
 
     @staticmethod
     def suggest_profile_names(vendor: str, product: str) -> dict:
