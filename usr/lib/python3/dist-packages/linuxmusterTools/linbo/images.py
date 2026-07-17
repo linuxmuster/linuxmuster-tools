@@ -5,6 +5,10 @@ import logging
 from datetime import datetime, timezone
 
 from ..lmnfile import LMNFile
+from .driver_hooks import (
+    LinboDriverHookManager as _LinboDriverHookManager,
+    validate_image_name as _validate_image_name,
+)
 from .models import ImageInfo
 
 
@@ -35,6 +39,16 @@ EXTRA_PERMISSIONS_MAPPING = {
 }
 IMAGE = "qcow2"
 DIFF_IMAGE = "qdiff"
+
+
+def _ignore_duplicate_files(_directory, names):
+    """Do not clone backups or per-image companion hooks."""
+
+    return [
+        name
+        for name in names
+        if name == "backups" or name.endswith(".driverpostsync")
+    ]
 
 def date2timestamp(date):
     return datetime.strptime(date, DATE_UI_FMT).strftime(TIMESTAMP_FMT)
@@ -373,7 +387,10 @@ class LinboImageManager:
     """
 
 
-    def __init__(self):
+    def __init__(self, driver_hook_manager=None):
+        self.driver_hook_manager = driver_hook_manager or _LinboDriverHookManager(
+            images_root=LINBO_PATH,
+        )
         self.list()
 
     def list(self):
@@ -407,13 +424,22 @@ class LinboImageManager:
             if diff:
                 # Only delete a differential image
                 self.groups[group].diff_image.delete()
-            elif date in self.images[group].backups:
+            elif date in self.groups[group].backups:
                 # The object to delete is only a backup
-                self.groups[group].backups[date].delete()
-                self.groups[group].load()
+                backup = self.groups[group].backups[date]
+                with self.driver_hook_manager.image_content_lifecycle(
+                    group,
+                    [backup.path],
+                ) as managed_hooks:
+                    for hook_path in managed_hooks:
+                        if os.path.commonpath((str(hook_path), backup.path)) == backup.path:
+                            hook_path.unlink()
+                    backup.delete()
+                    self.groups[group].load()
             else:
                 # Then delete the whole group
-                self.groups[group].delete()
+                with self.driver_hook_manager.unassigned_image_lifecycle(group):
+                    self.groups[group].delete()
                 del self.groups[group]
 
     def rename(self, group, new_name):
@@ -426,10 +452,17 @@ class LinboImageManager:
         :type new_name: str
         """
 
+        new_name = _validate_image_name(new_name)
+        target = os.path.join(LINBO_PATH, new_name)
+        if os.path.lexists(target):
+            raise FileExistsError(f"Image target already exists: {new_name}")
+
         if group in self.groups:
-            self.groups[group].rename(new_name)
+            with self.driver_hook_manager.unassigned_image_lifecycle(group):
+                self.groups[group].rename(new_name)
             self.groups[new_name] = LinboImageGroup(new_name)
             del self.groups[group]
+            self.driver_hook_manager.regenerate_postsync(new_name)
 
     def duplicate(self, group, new_name):
         """
@@ -441,15 +474,20 @@ class LinboImageManager:
         :type new_name: str
         """
 
-        if os.path.isdir(os.path.join(LINBO_PATH, new_name)):
-            print(f"Directory {new_name} already exists")
-            return
+        new_name = _validate_image_name(new_name)
+        target = os.path.join(LINBO_PATH, new_name)
+        if os.path.lexists(target):
+            raise FileExistsError(f"Image target already exists: {new_name}")
 
         if group in self.groups:
+            # Refuse a foreign companion hook, but never hold the driver lock
+            # while copying a potentially large image.
+            with self.driver_hook_manager.image_content_lifecycle(group):
+                pass
             shutil.copytree(
                 os.path.join(LINBO_PATH, group),
                 os.path.join(LINBO_PATH, new_name),
-                ignore=lambda x,y: 'backups'
+                ignore=_ignore_duplicate_files,
             )
 
             old_prefix = f'{group}.'
@@ -464,6 +502,7 @@ class LinboImageManager:
 
             self.groups[new_name] = LinboImageGroup(new_name)
             self.groups[new_name].rename(new_name)
+            self.driver_hook_manager.regenerate_postsync(new_name)
 
     def restore(self, group, date):
         """
@@ -478,6 +517,7 @@ class LinboImageManager:
         if group in self.groups:
             imageGroup = self.groups[group]
             if date in imageGroup.backups:
+                selected_backup = imageGroup.backups[date].path
                 timestamp = datetime.now().strftime(TIMESTAMP_FMT)
                 new_backup_dir = os.path.join(
                     imageGroup.base.path,
@@ -488,24 +528,38 @@ class LinboImageManager:
                 if os.path.isdir(new_backup_dir):
                     print(f"Backup directory {new_backup_dir} already exists")
                     return
-                
-                os.mkdir(new_backup_dir)
 
-                # Move base image to backup/timestamp
-                for file in os.listdir(imageGroup.base.path):
-                    # Avoid copying backups dir in itself
-                    if os.path.isfile(os.path.join(imageGroup.base.path, file)):
-                        shutil.move(os.path.join(imageGroup.base.path, file),
-                                new_backup_dir)
+                with self.driver_hook_manager.image_content_lifecycle(
+                    group,
+                    [selected_backup],
+                ) as managed_hooks:
+                    for hook_path in managed_hooks:
+                        if os.path.commonpath(
+                            (str(hook_path), selected_backup)
+                        ) == selected_backup:
+                            hook_path.unlink()
+                    os.mkdir(new_backup_dir)
 
-                # Move backup to base image
-                for file in os.listdir(imageGroup.backups[date].path):
-                    shutil.move(os.path.join(imageGroup.backups[date].path, file),
-                                imageGroup.base.path)
+                    # A companion hook represents current assignments rather
+                    # than historical image contents. Keep the active hook in
+                    # place and never restore one from an old backup.
+                    for file in os.listdir(imageGroup.base.path):
+                        path = os.path.join(imageGroup.base.path, file)
+                        if file.endswith('.driverpostsync'):
+                            continue
+                        if os.path.isfile(path):
+                            shutil.move(path, new_backup_dir)
 
-                # Cleanup and reload
-                imageGroup.backups[date].delete()
-                self.groups[group].load()
+                    for file in os.listdir(imageGroup.backups[date].path):
+                        path = os.path.join(imageGroup.backups[date].path, file)
+                        if file.endswith('.driverpostsync'):
+                            continue
+                        shutil.move(path, imageGroup.base.path)
+
+                    # Cleanup and reload
+                    imageGroup.backups[date].delete()
+                    self.groups[group].load()
+                self.driver_hook_manager.regenerate_postsync(group)
 
     def save_extras(self, group, data, timestamp=None, diff=False):
         """
