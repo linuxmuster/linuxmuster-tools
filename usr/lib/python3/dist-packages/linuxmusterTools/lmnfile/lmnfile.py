@@ -22,15 +22,16 @@ logger = logging.getLogger(__name__)
 csv.field_size_limit(2**20)
 
 ALLOWED_PATHS = [
-    '/etc/linuxmuster/api/config.yml',             # Api settings
-    '/etc/linuxmuster/webui/config.yml',           # Webui settings
-    '/etc/linuxmuster/sophomorix/',                # school.conf or *.csv in lmn_settings, lmn_devices and lmn_users
-    '/srv/linbo',                                  # lmn_linbo for start.conf
-    '/etc/linuxmuster/subnets.csv',                # lmn_settings subnets configuration
-    '/etc/linuxmuster/holidays.yml',               # lmn_settings holidays configuration
-    '/var/lib/linuxmuster/setup.ini',              # lmn_settings
-    '/tmp/setup.ini',                              # setup wizard during install
-    '/usr/lib/linuxmuster-webui/plugins',          # lmn_permissions
+    '/etc/linuxmuster/api/config.yml',                  # Api settings
+    '/etc/linuxmuster/webui/config.yml',                # Webui settings
+    '/etc/linuxmuster/tools/password_constraints.yml',  # LMNTools password constraints settings
+    '/etc/linuxmuster/sophomorix/',                     # school.conf or *.csv in lmn_settings, lmn_devices and lmn_users
+    '/srv/linbo',                                       # lmn_linbo for start.conf
+    '/etc/linuxmuster/subnets.csv',                     # lmn_settings subnets configuration
+    '/etc/linuxmuster/holidays.yml',                    # lmn_settings holidays configuration
+    '/var/lib/linuxmuster/setup.ini',                   # lmn_settings
+    '/tmp/setup.ini',                                   # setup wizard during install
+    '/usr/lib/linuxmuster-webui/plugins',               # lmn_permissions
 ]
 
 EMPTY_LINE_MARKER = '###EMPTY#LINE'
