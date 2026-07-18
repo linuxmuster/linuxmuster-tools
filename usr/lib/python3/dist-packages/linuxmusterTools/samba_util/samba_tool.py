@@ -20,7 +20,7 @@ try:
     from samba.param import LoadParm
     from samba.samdb import SamDB
     from samba.netcmd.gpo import get_gpo_info
-    from ldb import LdbError
+    from ldb import LdbError, SCOPE_BASE
 
     lp = LoadParm()
     creds = Credentials()
@@ -29,6 +29,42 @@ except ImportError as e:
     logger.error(f"Samba doesn't seem to be installed, this module can not be used: {str(e)}")
 
 SAMDB_PATH = '/var/lib/samba/private/sam.ldb'
+
+# pwdProperties bit flag, see MS-ADTS 6.1.6.1 (DOMAIN_PASSWORD_COMPLEX)
+DOMAIN_PASSWORD_COMPLEX = 0x00000001
+
+@dataclass(frozen=True, slots=True)
+class DomainPasswordSettings:
+    min_pwd_length: int
+    complexity: bool
+
+class DomainPasswordSettingsManager:
+    """
+    Reads the domain-wide Samba AD password policy (minimum length,
+    complexity) directly via SamDB, equivalent to `samba-tool domain
+    passwordsettings show` but without shelling out to it.
+    """
+
+    def __init__(self):
+        if os.path.isfile(SAMDB_PATH):
+            try:
+                self.samdb = SamDB(url=SAMDB_PATH, session_info=system_session(), credentials=creds, lp=lp)
+            except Exception:
+                logger.error(f'Could not load {SAMDB_PATH}, is linuxmuster installed ?')
+        else:
+            logger.warning(f'{SAMDB_PATH} not found, is linuxmuster installed ?')
+
+    def get(self) -> DomainPasswordSettings:
+        base_dn = self.samdb.get_default_basedn()
+        result = self.samdb.search(
+            base_dn, scope=SCOPE_BASE, attrs=['minPwdLength', 'pwdProperties'],
+        )[0]
+        min_pwd_length = int(result['minPwdLength'][0])
+        pwd_properties = int(result['pwdProperties'][0])
+        return DomainPasswordSettings(
+            min_pwd_length=min_pwd_length,
+            complexity=bool(pwd_properties & DOMAIN_PASSWORD_COMPLEX),
+        )
 
 @dataclass
 class GPO:
