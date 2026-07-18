@@ -56,6 +56,37 @@ a school wanting "password may contain the username", so it's hardcoded as
 an always-on rule instead of exposed in the YAML — `{type: forbid_username}`
 in the config raises a `ValueError` telling you to remove it.
 
+### Known limitation — Fine-Grained Password Policies (PSO) are not accounted for
+
+`DomainPasswordSettingsManager.get()` only reads the domain-wide password
+policy (`minPwdLength`/`pwdProperties` on the domain root object). It has no
+notion of per-user or per-group **PSOs** (`msDS-PasswordSettings` objects,
+managed with `samba-tool domain passwordsettings pso ...`), which override
+the domain-wide policy for the users/groups they're applied to.
+
+If an admin creates a PSO for a specific role/group, the Samba floor computed
+here silently stops reflecting what Samba actually enforces for that
+population, in either direction:
+- **PSO stricter than the domain policy** → our floor is too weak: a
+  password validates here but Samba still rejects it at write time.
+- **PSO more permissive** → our floor is too strict: we reject a password
+  Samba would actually accept.
+
+The fix is to make the Samba read user-aware: each user object exposes a
+constructed attribute `msDS-ResultantPSO` (confirmed in this domain's schema
+— `systemFlags` includes `FLAG_ATTR_IS_CONSTRUCTED`) giving the
+already-precedence-resolved effective PSO for that user, if any (different
+attribute names than the domain-wide policy: `msDS-MinimumPasswordLength`,
+`msDS-PasswordComplexityEnabled`, etc.). `DomainPasswordSettingsManager`
+would need to take a username (or a representative group per role) and
+follow `msDS-ResultantPSO` before falling back to the domain-wide read.
+
+Not an issue today: no PSO exists on any known linuxmuster deployment or in
+this codebase (`samba-tool domain passwordsettings pso list` → none on this
+dev domain either) — but this becomes silently wrong the moment one is
+created. See the `TODO` on `DomainPasswordSettingsManager` in
+`samba_util/samba_tool.py`.
+
 ### Samba's out-of-the-box policy (`samba-tool domain passwordsettings set --help`)
 
 These are Samba's shipped defaults, i.e. what a freshly provisioned domain

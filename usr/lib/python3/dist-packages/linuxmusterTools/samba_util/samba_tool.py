@@ -43,6 +43,19 @@ class DomainPasswordSettingsManager:
     Reads the domain-wide Samba AD password policy (minimum length,
     complexity) directly via SamDB, equivalent to `samba-tool domain
     passwordsettings show` but without shelling out to it.
+
+    TODO: this only reads the domain-wide policy and ignores Fine-Grained
+    Password Policies (PSOs, `samba-tool domain passwordsettings pso ...`),
+    which override it for the users/groups they're applied to. If a PSO
+    exists for a given role/group, callers using `get()` as a floor will be
+    silently wrong (too weak if the PSO is stricter than the domain policy,
+    too strict if it's more permissive). Fixing this means taking a username
+    (or representative group) and reading that user's constructed attribute
+    `msDS-ResultantPSO` (confirmed present in the schema — `systemFlags`
+    includes `FLAG_ATTR_IS_CONSTRUCTED`) first, falling back to the
+    domain-wide read only if absent. Not an issue today: no PSO is used
+    anywhere in this codebase or known deployment. See
+    `linuxmusterTools/passwords/README.md` for the full writeup.
     """
 
     def __init__(self):
