@@ -20,7 +20,7 @@ try:
     from samba.param import LoadParm
     from samba.samdb import SamDB
     from samba.netcmd.gpo import get_gpo_info
-    from ldb import LdbError, SCOPE_BASE
+    from ldb import LdbError, SCOPE_BASE, Message, MessageElement, FLAG_MOD_REPLACE, Dn
 
     lp = LoadParm()
     creds = Credentials()
@@ -32,6 +32,24 @@ SAMDB_PATH = '/var/lib/samba/private/sam.ldb'
 
 # pwdProperties bit flag, see MS-ADTS 6.1.6.1 (DOMAIN_PASSWORD_COMPLEX)
 DOMAIN_PASSWORD_COMPLEX = 0x00000001
+
+# AD sentinel for maxPwdAge meaning "password never expires"
+NEVER_TIMESTAMP = -0x8000000000000000
+
+# minPwdAge/maxPwdAge are stored as negative 100ns ticks relative to now
+_TICKS_PER_DAY = 24 * 60 * 60 * 10 ** 7
+
+
+def _days_to_ticks(days):
+    return -int(days * _TICKS_PER_DAY)
+
+
+def _ticks_to_days(ticks):
+    ticks = int(ticks)
+    if ticks == NEVER_TIMESTAMP:
+        return 0
+    return int(-ticks / _TICKS_PER_DAY)
+
 
 @dataclass(frozen=True, slots=True)
 class DomainPasswordSettings:
@@ -78,6 +96,60 @@ class DomainPasswordSettingsManager:
             min_pwd_length=min_pwd_length,
             complexity=bool(pwd_properties & DOMAIN_PASSWORD_COMPLEX),
         )
+
+    def set(self, *, min_pwd_length=None, min_pwd_age=None, max_pwd_age=None, complexity=None):
+        """
+        Set the domain-wide password policy, mirroring `samba-tool domain
+        passwordsettings set`. Only the given fields are changed; history
+        length, lockout settings and PSOs are left untouched.
+        Use it very carefully!
+
+        :param min_pwd_length: minimum password length, 0-14
+        :param min_pwd_age: minimum password age in days, 0-998
+        :param max_pwd_age: maximum password age in days, 0-999 (0 = never expires)
+        :param complexity: enable/disable Samba's fixed complexity check
+        """
+
+        m = Message()
+        m.dn = Dn(self.samdb, str(self.samdb.get_default_basedn()))
+
+        if min_pwd_length is not None:
+            if not 0 <= min_pwd_length <= 14:
+                raise ValueError("min_pwd_length must be between 0 and 14")
+            m["minPwdLength"] = MessageElement(str(min_pwd_length), FLAG_MOD_REPLACE, "minPwdLength")
+
+        if min_pwd_age is not None:
+            if not 0 <= min_pwd_age <= 998:
+                raise ValueError("min_pwd_age must be between 0 and 998 days")
+            m["minPwdAge"] = MessageElement(str(_days_to_ticks(min_pwd_age)), FLAG_MOD_REPLACE, "minPwdAge")
+
+        if max_pwd_age is not None:
+            if not 0 <= max_pwd_age <= 999:
+                raise ValueError("max_pwd_age must be between 0 and 999 days")
+            ticks = NEVER_TIMESTAMP if max_pwd_age == 0 else _days_to_ticks(max_pwd_age)
+            m["maxPwdAge"] = MessageElement(str(ticks), FLAG_MOD_REPLACE, "maxPwdAge")
+
+        if complexity is not None:
+            current_props = int(self.samdb.get_pwdProperties())
+            if complexity:
+                new_props = current_props | DOMAIN_PASSWORD_COMPLEX
+            else:
+                new_props = current_props & ~DOMAIN_PASSWORD_COMPLEX
+            m["pwdProperties"] = MessageElement(str(new_props), FLAG_MOD_REPLACE, "pwdProperties")
+
+        if len(m) == 0:
+            raise ValueError("At least one setting must be provided")
+
+        if min_pwd_age is not None or max_pwd_age is not None:
+            effective_min_days = min_pwd_age if min_pwd_age is not None else _ticks_to_days(self.samdb.get_minPwdAge())
+            effective_max_days = max_pwd_age if max_pwd_age is not None else _ticks_to_days(self.samdb.get_maxPwdAge())
+            if effective_max_days != 0 and effective_min_days >= effective_max_days:
+                raise ValueError(
+                    f"max_pwd_age ({effective_max_days}) must be greater than "
+                    f"min_pwd_age ({effective_min_days})"
+                )
+
+        self.samdb.modify(m)
 
 @dataclass
 class GPO:
