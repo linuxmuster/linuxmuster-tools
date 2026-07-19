@@ -55,6 +55,8 @@ def _ticks_to_days(ticks):
 class DomainPasswordSettings:
     min_pwd_length: int
     complexity: bool
+    min_pwd_age: int
+    max_pwd_age: int
 
 class DomainPasswordSettingsManager:
     """
@@ -95,6 +97,8 @@ class DomainPasswordSettingsManager:
         return DomainPasswordSettings(
             min_pwd_length=min_pwd_length,
             complexity=bool(pwd_properties & DOMAIN_PASSWORD_COMPLEX),
+            min_pwd_age=_ticks_to_days(self.samdb.get_minPwdAge()),
+            max_pwd_age=_ticks_to_days(self.samdb.get_maxPwdAge()),
         )
 
     def set(self, *, min_pwd_length=None, min_pwd_age=None, max_pwd_age=None, complexity=None):

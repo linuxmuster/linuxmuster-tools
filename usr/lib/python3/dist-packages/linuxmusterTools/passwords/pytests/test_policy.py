@@ -69,7 +69,7 @@ def _weak_config_rule():
 
 def test_samba_floor_enforced_when_complexity_on():
     samba_policy = PasswordPolicy.from_samba(
-        DomainPasswordSettings(min_pwd_length=7, complexity=True)
+        DomainPasswordSettings(min_pwd_length=7, complexity=True, min_pwd_age=1, max_pwd_age=42)
     )
     merged = PasswordRules.merge((_weak_config_rule(),), samba_policy.rules)
     policy = PasswordPolicy(rules=merged)
@@ -86,7 +86,7 @@ def test_samba_floor_enforced_when_complexity_on():
 
 def test_no_classes_floor_when_complexity_off():
     samba_policy = PasswordPolicy.from_samba(
-        DomainPasswordSettings(min_pwd_length=7, complexity=False)
+        DomainPasswordSettings(min_pwd_length=7, complexity=False, min_pwd_age=1, max_pwd_age=42)
     )
     assert not any(isinstance(r, RequireClassesRule) for r in samba_policy.rules)
 
@@ -111,7 +111,7 @@ def test_provider_end_to_end_floor_via_config_file(tmp_path, monkeypatch):
 
     class FakeSambaManager:
         def get(self):
-            return DomainPasswordSettings(min_pwd_length=7, complexity=True)
+            return DomainPasswordSettings(min_pwd_length=7, complexity=True, min_pwd_age=1, max_pwd_age=42)
 
     monkeypatch.setattr(policy_module, "DomainPasswordSettingsManager", FakeSambaManager)
 

@@ -99,11 +99,21 @@ passwordsettings show` — they're commonly changed post-install.
 | `complexity` | `on` | Yes → `RequireClassesRule([lower, upper, digit, special], count=3)` (`ForbidUsernameRule` is always applied, independently of this flag) |
 | `min-pwd-length` | `7` | Yes → `MinLengthRule(7)` |
 | `history-length` | `24` | No — Samba-only, not a property of a single password |
-| `min-pwd-age` | `1` day | No — Samba-only |
-| `max-pwd-age` | `43` days | No — Samba-only |
+| `min-pwd-age` | `1` day | No — not a per-password rule this module validates, readable/settable via `DomainPasswordSettingsManager` (see below) |
+| `max-pwd-age` | `43` days | No — not a per-password rule this module validates, readable/settable via `DomainPasswordSettingsManager` (see below) |
 | `account-lockout-threshold` | `0` (never locks out) | No — Samba-only; this is the setting usually behind "Samba's policy is too permissive" |
 | `account-lockout-duration` | `30` min | No — Samba-only |
 | `reset-account-lockout-after` | `30` min | No — Samba-only |
+
+**`DomainPasswordSettingsManager.get()`/`.set()` also expose `min_pwd_age`/
+`max_pwd_age`** (domain-wide, in days), read/write directly via SamDB —
+`lmnapi` surfaces them for domain administration at `GET`/`POST
+/v1/samba/passwordpolicy`. This is unrelated to the rule resolution this
+module does: `PasswordPolicy.from_samba()` only ever translates
+`min_pwd_length`/`complexity` into rules, exactly as before — age settings
+aren't a property of a single password, so they stay out of
+`PasswordPolicy`/`PasswordPolicyProvider` entirely, they're just readable
+alongside the other two fields on the same `DomainPasswordSettings` object.
 
 ### Rule types
 
