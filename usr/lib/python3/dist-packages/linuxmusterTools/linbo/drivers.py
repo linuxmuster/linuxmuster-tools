@@ -31,6 +31,7 @@ DEFAULT_DRIVERS_BASE = Path(
     os.environ.get("DRIVERS_BASE", "/srv/linbo/drivers")
 )
 MATCH_CONF_FILENAME = "match.conf"
+IMAGE_CONF_FILENAME = "image.conf"
 MAX_MATCH_VALUE_LENGTH = 512
 MUTATION_LOCK_FILENAME = ".driver-profiles.lock"
 
