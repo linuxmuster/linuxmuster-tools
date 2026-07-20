@@ -98,6 +98,12 @@ class LdapWriter:
         for attr, new_val in data.items():
             if attr in valid_fields:
 
+                if new_val == '' or new_val == [] or new_val is None:
+                    raise ValueError(
+                        f"Empty value given for '{attr}' via setattr(); "
+                        f"use delattr() to clear an attribute."
+                    )
+
                 if isinstance(valid_fields[attr], list):
                     # Multi-value
                     if not add and lmnobject.data[attr]:
