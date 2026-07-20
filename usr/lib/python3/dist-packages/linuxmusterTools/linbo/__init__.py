@@ -9,6 +9,7 @@ from .changes import *
 from .dhcp import *
 from .grub  import *
 from .grub_generator import *
+from .hardware_inventory import *
 from .host_status import *
 from .image_sync import *
 from .linbofs import *
@@ -26,6 +27,5 @@ from .wol import *
 #from .kernel import *
 #from .wlan import *
 #from .linbo_update import *
-
 
 
