@@ -41,7 +41,7 @@ with LMNFile('/path/to/file.yml', 'r') as f:
 ### Parameters
 
 ```python
-LMNFile(file, mode, delimiter=';', fieldnames=None)
+LMNFile(file, mode, delimiter=';', fieldnames=None, convert_values=True)
 ```
 
 | Parameter | Type | Description |
@@ -50,6 +50,7 @@ LMNFile(file, mode, delimiter=';', fieldnames=None)
 | `mode` | `str` | Open mode: `'r'` (read), `'w'` (write), `'r+'` (read+write) |
 | `delimiter` | `str` | Delimiter for CSV files (default: `';'`) |
 | `fieldnames` | `list[str]` | Column names for CSV files without a header row |
+| `convert_values` | `bool` | Convert INI/conf values to Python types (default: `True`) |
 
 ---
 
@@ -121,6 +122,13 @@ String values are automatically converted on read:
 - Digit strings → `int`
 
 And converted back on write.
+
+Pass `convert_values=False` to preserve values such as `0012`, `yes` and `no`
+as strings when reading and writing.
+
+New INI/conf files created in write mode use permissions `0o600`. Replacing an
+existing file preserves its owner, group and permissions. Configuration
+symlinks stay intact while their resolved targets are updated atomically.
 
 ### Linbo start.conf
 

@@ -9,6 +9,8 @@ import abc
 import csv
 import magic
 import filecmp
+import stat
+import tempfile
 import time
 import yaml
 from configobj import ConfigObj
@@ -51,7 +53,9 @@ class LMNFile(metaclass=abc.ABCMeta):
     e.g. ini, csv, linbo config files.
     """
 
-    def __new__(cls, file, mode, delimiter=';', fieldnames=None):
+    def __new__(
+        cls, file, mode, delimiter=';', fieldnames=None, convert_values=True
+    ):
         """
         Parse the extension of the file and choose the right subclass to handle
         the file.
@@ -64,22 +68,32 @@ class LMNFile(metaclass=abc.ABCMeta):
         :type delimiter: string
         :param fieldnames: Useful for CSV files
         :type fieldnames: list of strings
+        :param convert_values: Convert ConfigLoader values to Python types
+        :type convert_values: bool
         """
 
         # Cannot filter start.conf with extension
         if file.split('/')[-1].startswith('start.conf') and os.path.splitext(file)[-1] != '.vdi':
             obj = object.__new__(StartConfLoader)
-            obj.__init__(file, mode, delimiter=delimiter, fieldnames=fieldnames)
+            obj.__init__(
+                file, mode, delimiter=delimiter, fieldnames=fieldnames,
+                convert_values=convert_values
+            )
             return obj
 
         ext = os.path.splitext(file)[-1]
         for child in cls.__subclasses__():
             if child.hasExtension(ext):
                 obj = object.__new__(child)
-                obj.__init__(file, mode, delimiter=delimiter, fieldnames=fieldnames)
+                obj.__init__(
+                    file, mode, delimiter=delimiter, fieldnames=fieldnames,
+                    convert_values=convert_values
+                )
                 return obj
 
-    def __init__(self, file, mode, delimiter=';', fieldnames=None):
+    def __init__(
+        self, file, mode, delimiter=';', fieldnames=None, convert_values=True
+    ):
         self.file = file
         self.opened = ''
         self.data = ''
@@ -88,6 +102,7 @@ class LMNFile(metaclass=abc.ABCMeta):
         self.comments = []
         self.check_allowed_path()
         self.delimiter = delimiter
+        self.convert_values = convert_values
         self.has_BOM = False
 
         if self.file.endswith('.csv'):
@@ -338,14 +353,22 @@ class ConfigLoader(LMNFile):
     extensions = ['.ini', '.conf']
 
     def __enter__(self):
-        self.opened = open(self.file, 'r', encoding=self.encoding)
-        if 'r' in self.mode or '+' in self.mode:
-            self.data = ConfigObj(
-                self.file, encoding='utf-8',
-                write_empty_values=True,
-                stringify=True,
-                list_values=False
-            )
+        if os.path.isfile(self.file):
+            self.opened = open(self.file, 'r', encoding=self.encoding)
+            source = self.file
+        elif 'w' in self.mode:
+            source = None
+        else:
+            raise FileNotFoundError(f'File {self.file} not found.')
+
+        self.data = ConfigObj(
+            source, encoding='utf-8',
+            write_empty_values=True,
+            stringify=True,
+            list_values=False
+        )
+        self.data.filename = self.file
+        if self.convert_values:
             for section, options in self.data.items():
                 for key, value in options.items():
                     value = int(value) if value.isdigit() else value
@@ -360,13 +383,38 @@ class ConfigLoader(LMNFile):
 
     def write(self, data):
         for section, options in data.items():
-                for key, value in options.items():
+            if section not in self.data:
+                self.data[section] = {}
+            for key, value in options.items():
+                if self.convert_values:
                     value = 'yes' if value is True else value
                     value = 'no' if value is False else value
-                    self.data[section][key] = value
+                self.data[section][key] = value
 
-        self.backup()
-        self.data.write()
+        # Replace the resolved target so an allowed configuration symlink keeps
+        # pointing to the same file instead of being replaced by a regular file.
+        target = os.path.realpath(self.file)
+        folder, name = os.path.split(target)
+        metadata = os.stat(target) if os.path.isfile(target) else None
+        fd, tmp = tempfile.mkstemp(prefix=f'.{name}.', suffix='.tmp', dir=folder)
+        try:
+            with os.fdopen(fd, 'wb') as f:
+                self.data.write(f)
+                f.flush()
+                os.fsync(f.fileno())
+
+            if metadata is not None:
+                # chown may clear setuid/setgid bits, so restore the complete
+                # permission mode afterwards.
+                os.chown(tmp, metadata.st_uid, metadata.st_gid)
+                os.chmod(tmp, stat.S_IMODE(metadata.st_mode))
+                self.backup()
+
+            os.replace(tmp, target)
+        except Exception:
+            if os.path.exists(tmp):
+                os.unlink(tmp)
+            raise
 
 class StartConfLoader(LMNFile):
 
