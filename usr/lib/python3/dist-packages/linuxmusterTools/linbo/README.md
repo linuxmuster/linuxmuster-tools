@@ -24,3 +24,37 @@ client records provided by `Devices`.
 
 The manager is read-only. It does not create driver profiles or modify LINBO
 images and can therefore be used independently by API and CLI consumers.
+
+## Windows driver profiles
+
+`LinboDriverManager` manages the metadata for hardware-specific Windows
+driver profiles below `/srv/linbo/drivers`. This first, deliberately small
+interface owns only profile directories and their `match.conf`; inventory,
+image assignments, postsync generation and driver imports are separate
+features.
+
+Each profile contains exactly one DMI vendor and one product substring:
+
+```ini
+[match]
+vendor = LENOVO
+product = 21L4
+```
+
+The values use the same case-sensitive semantics as LINBO: the vendor must
+match exactly and `product` must occur in the client's DMI product name. An
+explicit `*` can be used as a wildcard. A short product such as `21L4` can
+therefore cover multiple variants of the same hardware class.
+
+```python
+from linuxmusterTools.linbo import LinboDriverManager
+
+drivers = LinboDriverManager()
+drivers.create_profile("lenovo-21l4", "LENOVO", "21L4")
+drivers.update_match("lenovo-21l4", "LENOVO", "21L4S")
+```
+
+This creates `/srv/linbo/drivers/lenovo-21l4/match.conf`. Administrators may
+place an already prepared INF driver payload next to that file. Profile
+updates change only `match.conf` and leave those payload files untouched. This
+manager does not upload, extract, inspect or publish the payload yet.
