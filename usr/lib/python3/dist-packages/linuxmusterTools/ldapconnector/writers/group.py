@@ -155,7 +155,7 @@ class LMNGroup(LMNGroupCommon):
         if not school_details:
             raise Exception(f"School {self.school} was not found in ldap ! Failed to check {BASE_OU}")
 
-        if not BASE_OU in self.lr.getval('/ou', 'dn', school=self.school):
+        if not "LMNGroups" in self.lr.getval('/ou', 'ou', school=self.school):
             self.lw._add_ou(BASE_OU)
 
     def load_data(self):
