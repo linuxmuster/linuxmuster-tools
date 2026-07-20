@@ -1,10 +1,16 @@
 import os
 import shutil
+import stat
 import subprocess
 import logging
 from datetime import datetime, timezone
+from pathlib import Path
 
+from configobj import ConfigObjError
+
+from ..common.checks import NameChecker
 from ..lmnfile import LMNFile
+from .drivers import IMAGE_CONF_FILENAME, LinboDriverManager
 from .models import ImageInfo
 
 
@@ -35,6 +41,8 @@ EXTRA_PERMISSIONS_MAPPING = {
 }
 IMAGE = "qcow2"
 DIFF_IMAGE = "qdiff"
+
+name_checker = NameChecker()
 
 def date2timestamp(date):
     return datetime.strptime(date, DATE_UI_FMT).strftime(TIMESTAMP_FMT)
@@ -373,8 +381,68 @@ class LinboImageManager:
     """
 
 
-    def __init__(self):
+    def __init__(self, driver_manager=None):
+        self.driver_manager = driver_manager or LinboDriverManager()
         self.list()
+
+    @staticmethod
+    def _validated_driver_image(image):
+        """Return an image basename supported by the LINBO driver runtime."""
+
+        if (
+            not name_checker.check_linbo_image_name(image)
+            or "." in image
+            or len(image) > 100
+        ):
+            raise ValueError(
+                "Driver image names must contain only [A-Za-z0-9_-] and be "
+                "at most 100 characters long."
+            )
+        return image
+
+    def _read_profile_assignment(self, profile):
+        """Read one already validated profile's optional image assignment."""
+
+        path = Path(profile["path"]) / IMAGE_CONF_FILENAME
+        try:
+            metadata = path.lstat()
+        except FileNotFoundError:
+            return None
+        if stat.S_ISLNK(metadata.st_mode) or not stat.S_ISREG(metadata.st_mode):
+            raise ValueError(f"image.conf is not a regular file: {profile['name']}")
+
+        try:
+            with LMNFile(str(path), "r", convert_values=False) as image_file:
+                data = image_file.read()
+        except ConfigObjError as error:
+            raise ValueError(
+                f"Invalid image.conf for driver profile {profile['name']}: {error}"
+            ) from error
+
+        if set(data.keys()) != {"image"} or data.inline_comments.get("image"):
+            raise ValueError(
+                "image.conf must contain one canonical [image] section or "
+                "one legacy image value."
+            )
+
+        section = data["image"]
+        if isinstance(section, str):
+            # Read compatibility for the standalone/.deb format.
+            return self._validated_driver_image(section)
+
+        if not isinstance(section, dict) or set(section.keys()) != {"name"}:
+            raise ValueError("[image] must contain exactly one name.")
+        if section.inline_comments.get("name"):
+            raise ValueError("image.conf must not contain inline comments.")
+        return self._validated_driver_image(section["name"])
+
+    def get_driver_profile_image(self, profile_name):
+        """Return a profile's image assignment, if present."""
+
+        profile = self.driver_manager.get_profile(profile_name)
+        if profile is None:
+            raise FileNotFoundError(f"Driver profile not found: {profile_name}")
+        return self._read_profile_assignment(profile)
 
     def list(self):
         """
