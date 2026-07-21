@@ -178,6 +178,16 @@ def test_list_profiles_returns_only_complete_valid_profiles(tmp_path):
     assert [profile["name"] for profile in manager.list_profiles()] == ["valid"]
 
 
+def test_strict_profile_listing_reports_invalid_profiles(tmp_path):
+    base = tmp_path / "drivers"
+    manager = LinboDriverManager(base)
+    manager.create_profile("valid", "Dell", "Latitude")
+    (base / "incomplete").mkdir()
+
+    with pytest.raises(ValueError, match="has no match.conf"):
+        manager.list_profiles(strict=True)
+
+
 def test_scalar_match_value_is_reported_as_invalid_configuration(tmp_path):
     base = tmp_path / "drivers"
     profile = base / "scalar"

@@ -75,10 +75,14 @@ drivers = LinboDriverManager()
 images = LinboImageManager(driver_manager=drivers)
 images.assign_driver_profile("lenovo-21l4", "win11")
 images.get_driver_profile_image("lenovo-21l4")
+images.get_image_driver_profiles("win11")
+dispatcher = images.render_driverpostsync("win11")
 images.unassign_driver_profile("lenovo-21l4")
 ```
 
 The former standalone package's flat `image = win11` form remains readable for
-upgrades and is rewritten in the canonical form by the next assignment. These
-methods only persist or remove the profile metadata. They do not generate
-`.driverpostsync` files or deliver drivers to clients yet.
+upgrades and is rewritten in the canonical form by the next assignment.
+Assigned profile names can be resolved in deterministic order. The
+renderer returns the small `.driverpostsync` dispatcher expected by LINBO's
+static `linbo_driverpostsync` runtime. It does not write or replace any file;
+publishing the rendered content and delivering drivers remain separate steps.
