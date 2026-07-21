@@ -2,6 +2,7 @@ from .convert import *
 from .checks import *
 from .parsers import *
 from .color_shell import *
+from .exceptions import *
 
 Validator = NameChecker()
 lprint = PrintShell()
