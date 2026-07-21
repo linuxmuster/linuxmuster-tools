@@ -77,12 +77,18 @@ images.assign_driver_profile("lenovo-21l4", "win11")
 images.get_driver_profile_image("lenovo-21l4")
 images.get_image_driver_profiles("win11")
 dispatcher = images.render_driverpostsync("win11")
+hook = images.publish_driverpostsync("win11")
 images.unassign_driver_profile("lenovo-21l4")
+images.publish_driverpostsync("win11")
 ```
 
 The former standalone package's flat `image = win11` form remains readable for
 upgrades and is rewritten in the canonical form by the next assignment.
 Assigned profile names can be resolved in deterministic order. The
 renderer returns the small `.driverpostsync` dispatcher expected by LINBO's
-static `linbo_driverpostsync` runtime. It does not write or replace any file;
-publishing the rendered content and delivering drivers remain separate steps.
+static `linbo_driverpostsync` runtime. The publisher atomically writes that
+dispatcher into the image directory with LINBO's standard postsync mode. It
+refuses to replace symlinks, non-regular files or hooks without its exact
+managed header. The exact standalone v1.1.1 generator markers remain accepted
+for an in-place migration. Assignment changes and publishing remain explicit
+separate steps in this change.
