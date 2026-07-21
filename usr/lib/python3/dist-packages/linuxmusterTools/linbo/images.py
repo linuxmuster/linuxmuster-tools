@@ -499,8 +499,8 @@ class LinboImageManager:
         )
 
     @staticmethod
-    def _write_driverpostsync(path, content):
-        """Atomically replace one owned raw driverpostsync hook."""
+    def _validate_driverpostsync_target(path):
+        """Return existing hook metadata after validating its ownership."""
 
         image_directory = path.parent
         directory_metadata = image_directory.lstat()
@@ -547,6 +547,14 @@ class LinboImageManager:
                 raise PermissionError(
                     f"Refusing to overwrite unmanaged driverpostsync hook: {path}"
                 )
+        return target_metadata
+
+    @classmethod
+    def _write_driverpostsync(cls, path, content):
+        """Atomically replace one owned raw driverpostsync hook."""
+
+        image_directory = path.parent
+        target_metadata = cls._validate_driverpostsync_target(path)
 
         temporary = None
         try:
@@ -601,8 +609,67 @@ class LinboImageManager:
         with self.driver_manager._mutation():
             return str(self._regenerate_driverpostsync(image))
 
+    def _change_driver_assignment(self, profile, image):
+        """Change one assignment and publish every affected dispatcher."""
+
+        previous = self._read_profile_assignment(profile)
+        if previous is None and image is None:
+            return
+
+        affected = []
+        for candidate in (image, previous):
+            if candidate in self.groups and candidate not in affected:
+                affected.append(candidate)
+        for candidate in affected:
+            self.render_driverpostsync(candidate)
+            path = (
+                Path(self.groups[candidate].path)
+                / f"{candidate}.driverpostsync"
+            )
+            self._validate_driverpostsync_target(path)
+
+        assignment = Path(profile["path"]) / IMAGE_CONF_FILENAME
+        attempted = []
+        try:
+            if image is None:
+                assignment.unlink()
+            else:
+                self.driver_manager._write_profile_conf(
+                    assignment,
+                    "image",
+                    {"name": image},
+                )
+            for candidate in affected:
+                attempted.append(candidate)
+                self._regenerate_driverpostsync(candidate)
+        except Exception as error:
+            rollback_errors = []
+            try:
+                if previous is None:
+                    assignment.unlink(missing_ok=True)
+                else:
+                    self.driver_manager._write_profile_conf(
+                        assignment,
+                        "image",
+                        {"name": previous},
+                    )
+            except Exception as rollback_error:
+                rollback_errors.append(rollback_error)
+            for candidate in attempted:
+                try:
+                    self._regenerate_driverpostsync(candidate)
+                except Exception as rollback_error:
+                    rollback_errors.append(rollback_error)
+            if rollback_errors:
+                details = "; ".join(str(item) for item in rollback_errors)
+                raise RuntimeError(
+                    f"Driver assignment publication failed for {profile['name']} "
+                    f"({error}); rollback was incomplete: {details}"
+                ) from rollback_errors[0]
+            raise
+
     def assign_driver_profile(self, profile_name, image):
-        """Persist one driver's assignment to an existing LINBO image."""
+        """Assign a profile and publish all affected image dispatchers."""
 
         if not os.path.lexists(self.driver_manager.base):
             raise FileNotFoundError(
@@ -615,17 +682,11 @@ class LinboImageManager:
                     f"Driver profile not found: {profile_name}"
                 )
             image = self._require_driver_image(image)
-
-            self._read_profile_assignment(profile)
-            self.driver_manager._write_profile_conf(
-                Path(profile["path"]) / IMAGE_CONF_FILENAME,
-                "image",
-                {"name": image},
-            )
+            self._change_driver_assignment(profile, image)
         return {"profile": profile["name"], "image": image}
 
     def unassign_driver_profile(self, profile_name):
-        """Remove only a driver's optional image assignment."""
+        """Remove an assignment and publish the previous image dispatcher."""
 
         if not os.path.lexists(self.driver_manager.base):
             raise FileNotFoundError(
@@ -637,9 +698,7 @@ class LinboImageManager:
                 raise FileNotFoundError(
                     f"Driver profile not found: {profile_name}"
                 )
-            previous = self._read_profile_assignment(profile)
-            if previous is not None:
-                Path(profile["path"], IMAGE_CONF_FILENAME).unlink()
+            self._change_driver_assignment(profile, None)
         return {"profile": profile["name"], "image": None}
 
     def list(self):
