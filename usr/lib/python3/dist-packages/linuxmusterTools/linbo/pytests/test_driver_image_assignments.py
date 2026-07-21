@@ -1,3 +1,4 @@
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -282,3 +283,126 @@ def test_assignment_uses_existing_driver_mutation_lock(
 
     assert not _image_conf(profile).exists()
     assert outside.read_text() == "keep"
+
+
+def test_image_profiles_include_only_assignments_for_requested_image(
+    environment,
+):
+    drivers, images = environment
+    _known_image(images, "win11")
+    _known_image(images, "other")
+    assignments = {
+        "Zulu": "[image]\nname = win11\n",
+        "alpha": "image = win11\n",
+        "Beta": "[image]\nname = win11\n",
+        "other-model": "[image]\nname = other\n",
+        "unassigned": None,
+    }
+    for name, content in assignments.items():
+        profile = _profile(drivers, name)
+        if content is not None:
+            _image_conf(profile).write_text(content)
+
+    assert images.get_image_driver_profiles("win11") == [
+        "alpha",
+        "Beta",
+        "Zulu",
+    ]
+    assert images.get_image_driver_profiles("other") == ["other-model"]
+
+
+def test_image_profiles_require_an_existing_image(environment):
+    drivers, images = environment
+
+    with pytest.raises(FileNotFoundError, match="missing"):
+        images.get_image_driver_profiles("missing")
+
+    assert not drivers.base.exists()
+
+
+def test_invalid_profile_blocks_image_profile_resolution(environment):
+    drivers, images = environment
+    _known_image(images, "win11")
+    drivers.base.mkdir()
+    (drivers.base / "incomplete").mkdir()
+
+    with pytest.raises(ValueError, match="has no match.conf"):
+        images.get_image_driver_profiles("win11")
+
+
+def test_invalid_assignment_blocks_image_profile_resolution(environment):
+    drivers, images = environment
+    _known_image(images, "win11")
+    profile = _profile(drivers)
+    _image_conf(profile).write_text("[image]\nname = win11\nextra = value\n")
+
+    with pytest.raises(ValueError, match="exactly one name"):
+        images.get_image_driver_profiles("win11")
+
+
+def test_case_colliding_profile_names_are_rejected(environment):
+    drivers, images = environment
+    _known_image(images, "win11")
+    first = _profile(drivers, "Model")
+    _image_conf(first).write_text("[image]\nname = win11\n")
+    second = drivers.base / "model"
+    second.mkdir()
+    (second / "match.conf").write_text(
+        "[match]\nvendor = Vendor\nproduct = Product\n"
+    )
+    (second / "image.conf").write_text("[image]\nname = win11\n")
+
+    with pytest.raises(ValueError, match="differ only by case"):
+        images.get_image_driver_profiles("win11")
+
+
+def test_render_driverpostsync_matches_static_runtime_contract(environment):
+    drivers, images = environment
+    _known_image(images, "win11")
+    for name in ("Zulu", "alpha", "Beta"):
+        profile = _profile(drivers, name)
+        _image_conf(profile).write_text("[image]\nname = win11\n")
+
+    content = images.render_driverpostsync("win11")
+
+    assert content == (
+        "#!/bin/sh\n"
+        "# Managed-By: linuxmusterTools.linbo.driver_hooks v1\n"
+        "# Image: win11\n"
+        "# Profiles: alpha, Beta, Zulu\n\n"
+        "if ! command -v linbo_driverpostsync >/dev/null 2>&1; then\n"
+        '    echo "LINBO driver runtime is missing." >&2\n'
+        "    return 1\n"
+        "fi\n\n"
+        'linbo_driverpostsync "win11" "alpha" "Beta" "Zulu"\n'
+        "return $?\n"
+    )
+    assert subprocess.run(
+        ["/bin/sh", "-n"],
+        input=content,
+        text=True,
+        check=False,
+    ).returncode == 0
+
+
+def test_render_driverpostsync_without_profiles_is_a_cleanup_dispatcher(
+    environment,
+):
+    drivers, images = environment
+    _known_image(images, "win11")
+
+    content = images.render_driverpostsync("win11")
+
+    assert content == (
+        "#!/bin/sh\n"
+        "# Managed-By: linuxmusterTools.linbo.driver_hooks v1\n"
+        "# Image: win11\n"
+        "# Profiles: (none)\n\n"
+        "if ! command -v linbo_driverpostsync >/dev/null 2>&1; then\n"
+        '    echo "LINBO driver runtime is missing." >&2\n'
+        "    return 1\n"
+        "fi\n\n"
+        'linbo_driverpostsync "win11"\n'
+        "return $?\n"
+    )
+    assert not drivers.base.exists()

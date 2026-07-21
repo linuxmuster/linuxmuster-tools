@@ -181,8 +181,12 @@ class LinboDriverManager:
         if is_new:
             path.chmod(0o644)
 
-    def list_profiles(self):
-        """Return every complete, valid profile sorted by name."""
+    def list_profiles(self, *, strict=False):
+        """Return every complete, valid profile sorted by name.
+
+        Raise the first profile error instead of skipping it when ``strict``
+        is true.
+        """
 
         if not os.path.lexists(self.base):
             return []
@@ -195,6 +199,8 @@ class LinboDriverManager:
             try:
                 profile = self.get_profile(candidate.name)
             except (OSError, ValueError, ConfigObjError) as error:
+                if strict:
+                    raise
                 logger.warning(
                     "Ignoring invalid driver profile %s: %s",
                     candidate.name,

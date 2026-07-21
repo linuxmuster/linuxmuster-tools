@@ -41,6 +41,9 @@ EXTRA_PERMISSIONS_MAPPING = {
 }
 IMAGE = "qcow2"
 DIFF_IMAGE = "qdiff"
+DRIVERPOSTSYNC_MANAGED_HEADER = (
+    "# Managed-By: linuxmusterTools.linbo.driver_hooks v1"
+)
 
 name_checker = NameChecker()
 
@@ -400,6 +403,14 @@ class LinboImageManager:
             )
         return image
 
+    def _require_driver_image(self, image):
+        """Return a validated image name that is managed by LINBO."""
+
+        image = self._validated_driver_image(image)
+        if image not in self.groups:
+            raise FileNotFoundError(f"LINBO image not found: {image}")
+        return image
+
     def _read_profile_assignment(self, profile):
         """Read one already validated profile's optional image assignment."""
 
@@ -444,6 +455,45 @@ class LinboImageManager:
             raise FileNotFoundError(f"Driver profile not found: {profile_name}")
         return self._read_profile_assignment(profile)
 
+    def get_image_driver_profiles(self, image):
+        """Return the profiles assigned to an image in deterministic order."""
+
+        image = self._require_driver_image(image)
+        profiles = []
+        known_names = {}
+        for profile in self.driver_manager.list_profiles(strict=True):
+            name = profile["name"]
+            normalized = name.casefold()
+            previous = known_names.get(normalized)
+            if previous is not None and previous != name:
+                raise ValueError(
+                    "Driver profile names differ only by case: "
+                    f"{previous}, {name}"
+                )
+            known_names[normalized] = name
+            if self._read_profile_assignment(profile) == image:
+                profiles.append(name)
+        return sorted(profiles, key=lambda value: (value.casefold(), value))
+
+    def render_driverpostsync(self, image):
+        """Render the thin dispatcher for the static LINBO driver runtime."""
+
+        profiles = self.get_image_driver_profiles(image)
+        profile_comment = ", ".join(profiles) or "(none)"
+        arguments = "".join(f' "{profile}"' for profile in profiles)
+        return (
+            "#!/bin/sh\n"
+            f"{DRIVERPOSTSYNC_MANAGED_HEADER}\n"
+            f"# Image: {image}\n"
+            f"# Profiles: {profile_comment}\n\n"
+            "if ! command -v linbo_driverpostsync >/dev/null 2>&1; then\n"
+            '    echo "LINBO driver runtime is missing." >&2\n'
+            "    return 1\n"
+            "fi\n\n"
+            f'linbo_driverpostsync "{image}"{arguments}\n'
+            "return $?\n"
+        )
+
     def assign_driver_profile(self, profile_name, image):
         """Persist one driver's assignment to an existing LINBO image."""
 
@@ -457,9 +507,7 @@ class LinboImageManager:
                 raise FileNotFoundError(
                     f"Driver profile not found: {profile_name}"
                 )
-            image = self._validated_driver_image(image)
-            if image not in self.groups:
-                raise FileNotFoundError(f"LINBO image not found: {image}")
+            image = self._require_driver_image(image)
 
             self._read_profile_assignment(profile)
             self.driver_manager._write_profile_conf(
