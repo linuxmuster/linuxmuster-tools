@@ -31,6 +31,7 @@ DEFAULT_DRIVERS_BASE = Path(
     os.environ.get("DRIVERS_BASE", "/srv/linbo/drivers")
 )
 MATCH_CONF_FILENAME = "match.conf"
+IMAGE_CONF_FILENAME = "image.conf"
 MAX_MATCH_VALUE_LENGTH = 512
 MUTATION_LOCK_FILENAME = ".driver-profiles.lock"
 
@@ -155,18 +156,28 @@ class LinboDriverManager:
                 f"Driver profile base is not a real directory: {self.base}"
             )
 
+    @contextmanager
+    def _mutation(self):
+        """Serialize one driver profile metadata mutation."""
+
+        self._ensure_base_directory()
+        with _mutation_lock(self.base):
+            yield
+
     @staticmethod
-    def _write_match_conf(path, match):
+    def _write_profile_conf(path, section, values):
+        """Write one canonical profile configuration through LMNFile."""
+
         is_new = not os.path.lexists(path)
         with LMNFile(
             str(path),
             "w",
             convert_values=False,
-        ) as match_file:
-            data = match_file.read()
+        ) as profile_file:
+            data = profile_file.read()
             data.clear()
-            data["match"] = match
-            match_file.write(data)
+            data[section] = values
+            profile_file.write(data)
         if is_new:
             path.chmod(0o644)
 
@@ -270,9 +281,7 @@ class LinboDriverManager:
 
         safe_name = _validated_profile_name(name)
         match = _validated_match(vendor, product)
-        self._ensure_base_directory()
-
-        with _mutation_lock(self.base):
+        with self._mutation():
             with os.scandir(self.base) as entries:
                 collision = any(
                     entry.name.casefold() == safe_name.casefold()
@@ -291,8 +300,9 @@ class LinboDriverManager:
                 raise DriverProfileExistsError(safe_name) from error
 
             try:
-                self._write_match_conf(
+                self._write_profile_conf(
                     profile_path / MATCH_CONF_FILENAME,
+                    "match",
                     match,
                 )
             except Exception:
@@ -310,14 +320,14 @@ class LinboDriverManager:
         match = _validated_match(vendor, product)
         if not os.path.lexists(self.base):
             raise FileNotFoundError(f"Driver profile not found: {name}")
-        self._ensure_base_directory()
-        with _mutation_lock(self.base):
+        with self._mutation():
             profile = self.get_profile(name)
             if profile is None:
                 raise FileNotFoundError(f"Driver profile not found: {name}")
 
-            self._write_match_conf(
+            self._write_profile_conf(
                 Path(profile["path"]) / MATCH_CONF_FILENAME,
+                "match",
                 match,
             )
         return self.get_profile(profile["name"])
@@ -327,8 +337,7 @@ class LinboDriverManager:
 
         if not os.path.lexists(self.base):
             return False
-        self._ensure_base_directory()
-        with _mutation_lock(self.base):
+        with self._mutation():
             profile = self.get_profile(name)
             if profile is None:
                 return False
@@ -341,7 +350,7 @@ class LinboDriverManager:
         try:
             shutil.rmtree(quarantine)
         except Exception:
-            with _mutation_lock(self.base):
+            with self._mutation():
                 if not os.path.lexists(profile_path) and os.path.lexists(quarantine):
                     quarantine.rename(profile_path)
             raise

@@ -58,3 +58,27 @@ This creates `/srv/linbo/drivers/lenovo-21l4/match.conf`. Administrators may
 place an already prepared INF driver payload next to that file. Profile
 updates change only `match.conf` and leave those payload files untouched. This
 manager does not upload, extract, inspect or publish the payload yet.
+
+### Image assignments
+
+`LinboImageManager` manages an optional `image.conf` in each driver profile:
+
+```ini
+[image]
+name = win11
+```
+
+```python
+from linuxmusterTools.linbo import LinboDriverManager, LinboImageManager
+
+drivers = LinboDriverManager()
+images = LinboImageManager(driver_manager=drivers)
+images.assign_driver_profile("lenovo-21l4", "win11")
+images.get_driver_profile_image("lenovo-21l4")
+images.unassign_driver_profile("lenovo-21l4")
+```
+
+The former standalone package's flat `image = win11` form remains readable for
+upgrades and is rewritten in the canonical form by the next assignment. These
+methods only persist or remove the profile metadata. They do not generate
+`.driverpostsync` files or deliver drivers to clients yet.
