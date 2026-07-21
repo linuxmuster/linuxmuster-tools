@@ -444,6 +444,49 @@ class LinboImageManager:
             raise FileNotFoundError(f"Driver profile not found: {profile_name}")
         return self._read_profile_assignment(profile)
 
+    def assign_driver_profile(self, profile_name, image):
+        """Persist one driver's assignment to an existing LINBO image."""
+
+        if not os.path.lexists(self.driver_manager.base):
+            raise FileNotFoundError(
+                f"Driver profile not found: {profile_name}"
+            )
+        with self.driver_manager._mutation():
+            profile = self.driver_manager.get_profile(profile_name)
+            if profile is None:
+                raise FileNotFoundError(
+                    f"Driver profile not found: {profile_name}"
+                )
+            image = self._validated_driver_image(image)
+            if image not in self.groups:
+                raise FileNotFoundError(f"LINBO image not found: {image}")
+
+            self._read_profile_assignment(profile)
+            self.driver_manager._write_profile_conf(
+                Path(profile["path"]) / IMAGE_CONF_FILENAME,
+                "image",
+                {"name": image},
+            )
+        return {"profile": profile["name"], "image": image}
+
+    def unassign_driver_profile(self, profile_name):
+        """Remove only a driver's optional image assignment."""
+
+        if not os.path.lexists(self.driver_manager.base):
+            raise FileNotFoundError(
+                f"Driver profile not found: {profile_name}"
+            )
+        with self.driver_manager._mutation():
+            profile = self.driver_manager.get_profile(profile_name)
+            if profile is None:
+                raise FileNotFoundError(
+                    f"Driver profile not found: {profile_name}"
+                )
+            previous = self._read_profile_assignment(profile)
+            if previous is not None:
+                Path(profile["path"], IMAGE_CONF_FILENAME).unlink()
+        return {"profile": profile["name"], "image": None}
+
     def list(self):
         """
         Browse LINBO_PATH to discover all linbo images.
