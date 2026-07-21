@@ -4,6 +4,7 @@ from unittest.mock import MagicMock
 from linuxmusterTools.ldapconnector.writers.group import LMNGroupCommon, LMNGroup, find_legacy_groups
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router
 from linuxmusterTools.lmnconfig import LDAP_CONTEXT
+from linuxmusterTools.common import SchoolError
 
 
 GROUP_DN = 'CN=7a,OU=7a,OU=Students,OU=default-school,OU=SCHOOLS,DC=linuxmuster,DC=lan'
@@ -198,6 +199,17 @@ class TestLMNGroupInit:
         g = LMNGroup('newgroup')
         assert 'CN=newgroup' in g.data['distinguishedName']
         assert 'OU=LMNGroups' in g.data['distinguishedName']
+
+
+class TestLMNGroupGlobalSchoolGuard:
+
+    def test_raises_before_any_ldap_call(self, monkeypatch, mock_connect):
+        def fake_get(url, **kw):
+            raise AssertionError('LMNGroup must not touch ldap when school is "global"')
+
+        monkeypatch.setattr(router, 'get', fake_get)
+        with pytest.raises(SchoolError, match="school='global'"):
+            LMNGroup('robotics', school='global')
 
 
 class TestLMNGroupCreate:

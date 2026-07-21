@@ -2,7 +2,7 @@ import logging
 
 from ..ldap_writer import LdapWriter
 from ..urls.ldaprouter import router
-from linuxmusterTools.common import lprint, spinner
+from linuxmusterTools.common import lprint, spinner, SchoolError
 from linuxmusterTools.common.checks import NameChecker
 from linuxmusterTools.lmnconfig import LDAP_CONTEXT
 from ..models import LMNGroupModel
@@ -146,6 +146,11 @@ class LMNGroup(LMNGroupCommon):
     """
 
     def __init__(self, cn, school='default-school'):
+        if school == 'global':
+            raise SchoolError(
+                f"LMNGroup requires a specific school, got school='global' for group '{cn}'. "
+                "Sophomorix groups are always scoped to a single school."
+            )
         super().__init__(cn, school=school)
         self._check_ou()
 
