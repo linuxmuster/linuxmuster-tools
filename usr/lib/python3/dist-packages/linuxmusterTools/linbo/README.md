@@ -87,9 +87,7 @@ images.assign_driver_profile("lenovo-21l4", "win11")
 images.get_driver_profile_image("lenovo-21l4")
 images.get_image_driver_profiles("win11")
 dispatcher = images.render_driverpostsync("win11")
-hook = images.publish_driverpostsync("win11")
 images.unassign_driver_profile("lenovo-21l4")
-images.publish_driverpostsync("win11")
 ```
 
 These public manager methods resolve the named `LinboImageGroup` and delegate
@@ -103,5 +101,10 @@ static `linbo_driverpostsync` runtime. The publisher atomically writes that
 dispatcher into the image directory with LINBO's standard postsync mode. It
 refuses to replace symlinks, non-regular files or hooks without its exact
 managed header. The exact standalone v1.1.1 generator markers remain accepted
-for an in-place migration. Assignment changes and publishing remain explicit
-separate steps in this change.
+for an in-place migration. Assigning, moving or removing a profile publishes
+all affected dispatchers under the same mutation lock. If publication fails,
+the previous assignment is restored and the affected dispatchers are
+regenerated to match it.
+`publish_driverpostsync()` remains available as an explicit repair operation.
+Assigned profiles must be unassigned before their profile directory can be
+deleted, preventing a dispatcher from retaining a stale profile name.

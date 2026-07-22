@@ -377,6 +377,11 @@ class LinboDriverManager:
             if profile is None:
                 return False
             profile_path = Path(profile["path"])
+            if os.path.lexists(profile_path / IMAGE_CONF_FILENAME):
+                raise ValueError(
+                    f"Driver profile {profile['name']} is assigned; "
+                    "unassign it before deleting."
+                )
             quarantine = self.base / (
                 f".{profile['name']}.deleting-{uuid.uuid4().hex}"
             )
@@ -501,8 +506,8 @@ class WindowsDrivers:
         )
 
     @staticmethod
-    def _write_driverpostsync(path, content):
-        """Atomically replace one owned raw driverpostsync hook."""
+    def _validate_driverpostsync_target(path):
+        """Return existing hook metadata after validating its ownership."""
 
         image_directory = path.parent
         directory_metadata = image_directory.lstat()
@@ -549,6 +554,14 @@ class WindowsDrivers:
                 raise PermissionError(
                     f"Refusing to overwrite unmanaged driverpostsync hook: {path}"
                 )
+        return target_metadata
+
+    @classmethod
+    def _write_driverpostsync(cls, path, content):
+        """Atomically replace one owned raw driverpostsync hook."""
+
+        image_directory = path.parent
+        target_metadata = cls._validate_driverpostsync_target(path)
 
         temporary = None
         try:
@@ -587,14 +600,25 @@ class WindowsDrivers:
                 except FileNotFoundError:
                     pass
 
+    def _driverpostsync_path(self):
+        """Return this image group's driverpostsync hook path."""
+
+        return (
+            Path(self.image_group.path)
+            / f"{self.image_group.name}.driverpostsync"
+        )
+
+    def _preflight_driverpostsync(self):
+        """Validate this image's configuration and existing hook target."""
+
+        self.render_driverpostsync()
+        self._validate_driverpostsync_target(self._driverpostsync_path())
+
     def _regenerate_driverpostsync(self):
         """Render and publish this image's managed driverpostsync hook."""
 
         content = self.render_driverpostsync()
-        path = (
-            Path(self.image_group.path)
-            / f"{self.image_group.name}.driverpostsync"
-        )
+        path = self._driverpostsync_path()
         self._write_driverpostsync(path, content)
         return path
 
@@ -604,8 +628,85 @@ class WindowsDrivers:
         with self.driver_manager._mutation():
             return str(self._regenerate_driverpostsync())
 
-    def assign_profile(self, profile_name):
-        """Persist one driver profile's assignment to this image."""
+    @staticmethod
+    def _write_profile_assignment(driver_manager, profile, image):
+        """Set one assignment while the caller holds the mutation lock."""
+
+        path = Path(profile["path"]) / IMAGE_CONF_FILENAME
+        if image is None:
+            path.unlink(missing_ok=True)
+            return
+        driver_manager._write_profile_conf(
+            path,
+            "image",
+            {"name": _validated_driver_image(image)},
+        )
+
+    @classmethod
+    def _apply_assignment(
+        cls,
+        driver_manager,
+        profile,
+        previous_image,
+        image,
+        affected,
+    ):
+        """Change one assignment and publish every affected dispatcher."""
+
+        if previous_image is None and image is None:
+            return
+
+        assignment = Path(profile["path"]) / IMAGE_CONF_FILENAME
+        previous_metadata = (
+            assignment.lstat() if previous_image is not None else None
+        )
+        for windows_drivers in affected:
+            windows_drivers._preflight_driverpostsync()
+
+        attempted = []
+        try:
+            cls._write_profile_assignment(driver_manager, profile, image)
+            for windows_drivers in affected:
+                attempted.append(windows_drivers)
+                windows_drivers._regenerate_driverpostsync()
+        except Exception as error:
+            rollback_errors = []
+            try:
+                cls._write_profile_assignment(
+                    driver_manager,
+                    profile,
+                    previous_image,
+                )
+                if previous_metadata is not None:
+                    restored = assignment.stat()
+                    if (
+                        restored.st_uid != previous_metadata.st_uid
+                        or restored.st_gid != previous_metadata.st_gid
+                    ):
+                        os.chown(
+                            assignment,
+                            previous_metadata.st_uid,
+                            previous_metadata.st_gid,
+                        )
+                    assignment.chmod(stat.S_IMODE(previous_metadata.st_mode))
+            except Exception as rollback_error:
+                rollback_errors.append(rollback_error)
+            for windows_drivers in attempted:
+                try:
+                    windows_drivers._regenerate_driverpostsync()
+                except Exception as rollback_error:
+                    rollback_errors.append(rollback_error)
+            if rollback_errors:
+                details = "; ".join(str(item) for item in rollback_errors)
+                raise RuntimeError(
+                    "Driver assignment publication failed for "
+                    f"{profile['name']} ({error}); rollback was incomplete: "
+                    f"{details}"
+                ) from rollback_errors[0]
+            raise
+
+    def _change_own_assignment(self, profile_name, assigned):
+        """Change only this image group's assignment under one lock."""
 
         if not os.path.lexists(self.driver_manager.base):
             raise FileNotFoundError(
@@ -618,52 +719,36 @@ class WindowsDrivers:
                     f"Driver profile not found: {profile_name}"
                 )
             image = _validated_driver_image(self.image_group.name)
-
-            self._read_profile_assignment(profile)
-            self.driver_manager._write_profile_conf(
-                Path(profile["path"]) / IMAGE_CONF_FILENAME,
-                "image",
-                {"name": image},
-            )
-        return {"profile": profile["name"], "image": image}
-
-    @classmethod
-    def remove_profile_assignment(
-        cls,
-        driver_manager,
-        profile_name,
-        expected_image=None,
-    ):
-        """Remove one optional assignment, optionally checking its image."""
-
-        if not os.path.lexists(driver_manager.base):
-            raise FileNotFoundError(
-                f"Driver profile not found: {profile_name}"
-            )
-        with driver_manager._mutation():
-            profile = driver_manager.get_profile(profile_name)
-            if profile is None:
-                raise FileNotFoundError(
-                    f"Driver profile not found: {profile_name}"
-                )
-            previous = cls._read_profile_assignment(profile)
-            if (
-                expected_image is not None
-                and previous not in (None, expected_image)
-            ):
+            previous_image = self._read_profile_assignment(profile)
+            if previous_image not in (None, image):
+                if assigned:
+                    raise ValueError(
+                        f"Driver profile {profile['name']} is assigned to "
+                        f"{previous_image}; use LinboImageManager to move it."
+                    )
                 raise ValueError(
                     f"Driver profile {profile['name']} is assigned to "
-                    f"{previous}, not {expected_image}."
+                    f"{previous_image}, not {image}."
                 )
-            if previous is not None:
-                Path(profile["path"], IMAGE_CONF_FILENAME).unlink()
-        return {"profile": profile["name"], "image": None}
+            target_image = image if assigned else None
+            affected = [self] if assigned or previous_image is not None else []
+            self._apply_assignment(
+                self.driver_manager,
+                profile,
+                previous_image,
+                target_image,
+                affected,
+            )
+        return profile, target_image
+
+    def assign_profile(self, profile_name):
+        """Assign a profile to this image and publish its dispatcher."""
+
+        profile, image = self._change_own_assignment(profile_name, True)
+        return {"profile": profile["name"], "image": image}
 
     def unassign_profile(self, profile_name):
-        """Remove a driver profile's optional assignment to this image."""
+        """Remove this image's profile assignment and publish its hook."""
 
-        return self.remove_profile_assignment(
-            self.driver_manager,
-            profile_name,
-            expected_image=self.image_group.name,
-        )
+        profile, _ = self._change_own_assignment(profile_name, False)
+        return {"profile": profile["name"], "image": None}
