@@ -45,6 +45,25 @@ def _known_image(images, name):
     return path
 
 
+def _fail_regeneration_once(monkeypatch, images, target):
+    windows_drivers = images.groups[target].windows_drivers
+    original = windows_drivers._regenerate_driverpostsync
+    failed = False
+
+    def fail_once():
+        nonlocal failed
+        if not failed:
+            failed = True
+            raise OSError(f"{target} publication failed")
+        return original()
+
+    monkeypatch.setattr(
+        windows_drivers,
+        "_regenerate_driverpostsync",
+        fail_once,
+    )
+
+
 def test_manager_uses_injected_driver_manager(environment):
     drivers, images = environment
 
@@ -71,8 +90,8 @@ def test_image_groups_use_injected_driver_manager(environment):
 
 def test_image_group_owns_assignment_interface(environment):
     drivers, images = environment
-    profile = _profile(drivers)
-    _known_image(images, "win11")
+    _profile(drivers)
+    image_path = _known_image(images, "win11")
     group = images.groups["win11"]
 
     assert group.assign_driver_profile("model") == {
@@ -81,19 +100,27 @@ def test_image_group_owns_assignment_interface(environment):
     }
     assert images.get_driver_profile_image("model") == "win11"
     assert group.get_driver_profiles() == ["model"]
+    assert "# Profiles: model" in (
+        image_path / "win11.driverpostsync"
+    ).read_text()
     assert group.unassign_driver_profile("model") == {
         "profile": "model",
         "image": None,
     }
+    assert "# Profiles: (none)" in (
+        image_path / "win11.driverpostsync"
+    ).read_text()
 
 
-def test_image_group_does_not_remove_another_groups_assignment(environment):
+def test_image_group_does_not_change_another_groups_assignment(environment):
     drivers, images = environment
     profile = _profile(drivers)
     _known_image(images, "win11")
     _known_image(images, "ubuntu")
     images.groups["ubuntu"].assign_driver_profile("model")
 
+    with pytest.raises(ValueError, match="use LinboImageManager"):
+        images.groups["win11"].assign_driver_profile("model")
     with pytest.raises(ValueError, match="ubuntu, not win11"):
         images.groups["win11"].unassign_driver_profile("model")
 
@@ -324,6 +351,136 @@ def test_unassign_removes_only_assignment_and_is_idempotent(environment):
     assert not image_conf.exists()
     assert Path(profile["path"], "match.conf").exists()
     assert payload.read_bytes() == b"driver payload"
+
+
+def test_assignment_lifecycle_updates_old_and_new_dispatchers(environment):
+    drivers, images = environment
+    _profile(drivers)
+    old_path = _known_image(images, "old")
+    new_path = _known_image(images, "new")
+
+    images.assign_driver_profile("model", "old")
+    old_hook = old_path / "old.driverpostsync"
+    assert "# Profiles: model" in old_hook.read_text()
+    old_hook.write_text(
+        "#!/bin/sh\n"
+        "# Managed-By: linuxmusterTools.linbo.driver_hooks v1\n"
+        "outdated\n"
+    )
+    images.assign_driver_profile("model", "old")
+    assert old_hook.read_text() == images.render_driverpostsync("old")
+
+    images.assign_driver_profile("model", "new")
+    new_hook = new_path / "new.driverpostsync"
+    assert "# Profiles: (none)" in old_hook.read_text()
+    assert "# Profiles: model" in new_hook.read_text()
+
+    images.unassign_driver_profile("model")
+    assert "# Profiles: (none)" in new_hook.read_text()
+
+
+def test_assigned_profile_must_be_unassigned_before_deletion(environment):
+    drivers, images = environment
+    profile = _profile(drivers)
+    image_path = _known_image(images, "win11")
+    images.assign_driver_profile("model", "win11")
+
+    with pytest.raises(ValueError, match="unassign it before deleting"):
+        drivers.delete_profile("model")
+
+    assert Path(profile["path"]).is_dir()
+    images.unassign_driver_profile("model")
+    assert drivers.delete_profile("model") is True
+    assert "# Profiles: (none)" in (
+        image_path / "win11.driverpostsync"
+    ).read_text()
+
+
+@pytest.mark.parametrize("foreign_image", ["old", "new"])
+def test_move_refuses_foreign_hook_before_changing_assignment(
+    environment,
+    foreign_image,
+):
+    drivers, images = environment
+    profile = _profile(drivers)
+    old_path = _known_image(images, "old")
+    new_path = _known_image(images, "new")
+    images.assign_driver_profile("model", "old")
+    hook = {"old": old_path, "new": new_path}[foreign_image] / (
+        f"{foreign_image}.driverpostsync"
+    )
+    content = "#!/bin/sh\necho administrator hook\n"
+    hook.write_text(content)
+
+    with pytest.raises(PermissionError, match="unmanaged"):
+        images.assign_driver_profile("model", "new")
+
+    assert _image_conf(profile).read_text() == "[image]\nname = old\n"
+    assert hook.read_text() == content
+
+
+@pytest.mark.parametrize("failed_image", ["new", "old"])
+def test_move_publish_failure_restores_assignment_and_both_hooks(
+    environment,
+    monkeypatch,
+    failed_image,
+):
+    drivers, images = environment
+    profile = _profile(drivers)
+    old_path = _known_image(images, "old")
+    new_path = _known_image(images, "new")
+    images.assign_driver_profile("model", "old")
+    _fail_regeneration_once(monkeypatch, images, failed_image)
+
+    with pytest.raises(OSError, match=f"{failed_image} publication failed"):
+        images.assign_driver_profile("model", "new")
+
+    assert _image_conf(profile).read_text() == "[image]\nname = old\n"
+    assert "# Profiles: model" in (
+        old_path / "old.driverpostsync"
+    ).read_text()
+    assert "# Profiles: (none)" in (
+        new_path / "new.driverpostsync"
+    ).read_text()
+
+
+def test_first_assignment_publish_failure_removes_assignment(
+    environment,
+    monkeypatch,
+):
+    drivers, images = environment
+    profile = _profile(drivers)
+    image_path = _known_image(images, "win11")
+    _fail_regeneration_once(monkeypatch, images, "win11")
+
+    with pytest.raises(OSError, match="win11 publication failed"):
+        images.assign_driver_profile("model", "win11")
+
+    assert not _image_conf(profile).exists()
+    assert "# Profiles: (none)" in (
+        image_path / "win11.driverpostsync"
+    ).read_text()
+
+
+def test_unassign_publish_failure_restores_assignment_mode_and_hook(
+    environment,
+    monkeypatch,
+):
+    drivers, images = environment
+    profile = _profile(drivers)
+    image_path = _known_image(images, "win11")
+    images.assign_driver_profile("model", "win11")
+    _image_conf(profile).chmod(0o640)
+    _fail_regeneration_once(monkeypatch, images, "win11")
+
+    with pytest.raises(OSError, match="win11 publication failed"):
+        images.unassign_driver_profile("model")
+
+    assert _image_conf(profile).read_text() == "[image]\nname = win11\n"
+    assert _image_conf(profile).stat().st_mode & 0o777 == 0o640
+    assert "# Profiles: model" in (
+        image_path / "win11.driverpostsync"
+    ).read_text()
 
 
 def test_unassign_missing_profile_is_reported(environment):

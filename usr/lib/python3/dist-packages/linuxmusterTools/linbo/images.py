@@ -343,7 +343,7 @@ class LinboImageGroup:
         return self.windows_drivers.publish_driverpostsync()
 
     def assign_driver_profile(self, profile_name):
-        """Persist one driver profile's assignment to this image."""
+        """Assign one driver profile to this image."""
 
         return self.windows_drivers.assign_profile(profile_name)
 
@@ -462,28 +462,51 @@ class LinboImageManager:
 
         return self._require_driver_group(image).publish_driverpostsync()
 
-    def assign_driver_profile(self, profile_name, image):
-        """Assign a profile through its target image group."""
+    def _change_driver_assignment(self, profile_name, image, *, unassign=False):
+        """Change one assignment and coordinate all affected image groups."""
 
-        # Preserve the established public error order: profile before image.
         if not os.path.lexists(self.driver_manager.base):
             raise FileNotFoundError(
                 f"Driver profile not found: {profile_name}"
             )
-        if self.driver_manager.get_profile(profile_name) is None:
-            raise FileNotFoundError(
-                f"Driver profile not found: {profile_name}"
+        with self.driver_manager._mutation():
+            profile = self.driver_manager.get_profile(profile_name)
+            if profile is None:
+                raise FileNotFoundError(
+                    f"Driver profile not found: {profile_name}"
+                )
+            target = None if unassign else self._require_driver_group(image)
+            if target is not None:
+                image = target.name
+            else:
+                image = None
+            previous_image = _WindowsDrivers._read_profile_assignment(profile)
+            previous = self.groups.get(previous_image)
+            affected = []
+            for group in (target, previous):
+                if group is not None and group.windows_drivers not in affected:
+                    affected.append(group.windows_drivers)
+            _WindowsDrivers._apply_assignment(
+                self.driver_manager,
+                profile,
+                previous_image,
+                image,
+                affected,
             )
-        return self._require_driver_group(image).assign_driver_profile(
-            profile_name
-        )
+        return {"profile": profile["name"], "image": image}
+
+    def assign_driver_profile(self, profile_name, image):
+        """Assign a profile and publish all affected image dispatchers."""
+
+        return self._change_driver_assignment(profile_name, image)
 
     def unassign_driver_profile(self, profile_name):
-        """Remove a profile assignment through the image-group domain."""
+        """Remove an assignment and publish the previous image dispatcher."""
 
-        return _WindowsDrivers.remove_profile_assignment(
-            self.driver_manager,
+        return self._change_driver_assignment(
             profile_name,
+            None,
+            unassign=True,
         )
 
     def list(self):
