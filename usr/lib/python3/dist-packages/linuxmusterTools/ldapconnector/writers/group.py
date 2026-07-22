@@ -91,14 +91,17 @@ class LMNGroupCommon:
             else:
                 logger.info(f"{user} is not a member of schoolclass {self.cn}")
                 return
-            self.lw._setattr(self, data={'member': members})
+            if members:
+                self.lw._setattr(self, data={'member': members})
+            else:
+                self.lw._delattr(self, data={'member': None})
             self.load_data()
         except ValueError as e:
             logger.warning(f"Could not remove member {user_dn} from {self.cn}: {str(e)}")
 
     def remove_all_members(self):
         try:
-            self.lw._setattr(self, data={'member': []})
+            self.lw._delattr(self, data={'member': None})
             self.load_data()
         except ValueError as e:
             logger.warning(f"Could not remove all members from {self.cn}: {str(e)}")
