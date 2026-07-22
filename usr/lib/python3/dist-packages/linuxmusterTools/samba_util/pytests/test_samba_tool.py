@@ -471,23 +471,39 @@ def test_set_password_wraps_ldb_error():
 def test_device_manager_init_without_samdb_path(tmp_path, monkeypatch):
     monkeypatch.setattr(st, 'SAMDB_PATH', str(tmp_path / 'missing.ldb'))
     manager = DeviceManager()
-    assert not hasattr(manager, 'samdb')
+    assert manager.samdb is None
 
 
-def test_get_credentials_bug_ldb_module_not_imported():
-    """
-    Known bug: DeviceManager.get_credentials() references the bare name
-    `ldb.SCOPE_SUBTREE` (samba_tool.py ~line 349), but this module never
-    does `import ldb` — only `from ldb import LdbError, SCOPE_BASE, ...` at
-    the top. So `ldb` is not a defined name in samba_tool.py's namespace
-    and calling get_credentials() always raises NameError, regardless of
-    samdb state.
-    """
+def test_get_credentials_raises_runtime_error_without_samdb():
+    manager = DeviceManager.__new__(DeviceManager)
+    manager.samdb = None
+
+    with pytest.raises(RuntimeError, match="Cannot read device credentials"):
+        manager.get_credentials('pc01')
+
+
+def test_get_credentials_returns_encoded_hashes(monkeypatch):
+    manager = DeviceManager.__new__(DeviceManager)
+    raw = {
+        'unicodePwd': [b'\x00\x01'],
+        'supplementalCredentials': [b'\x02\x03'],
+    }
+    manager.samdb = type('FakeSamDB', (), {'search': lambda self, *a, **kw: [raw]})()
+
+    result = manager.get_credentials('pc01')
+
+    import base64
+    assert result == {
+        'unicodePwd': base64.b64encode(b'\x00\x01').decode(),
+        'supplementalCredentials': base64.b64encode(b'\x02\x03').decode(),
+    }
+
+
+def test_get_credentials_returns_empty_dict_when_device_not_found():
     manager = DeviceManager.__new__(DeviceManager)
     manager.samdb = type('FakeSamDB', (), {'search': lambda self, *a, **kw: []})()
 
-    with pytest.raises(NameError, match="ldb"):
-        manager.get_credentials('pc01')
+    assert manager.get_credentials('pc01') == {}
 
 
 def test_set_credentials_rejects_invalid_base64_hash():
