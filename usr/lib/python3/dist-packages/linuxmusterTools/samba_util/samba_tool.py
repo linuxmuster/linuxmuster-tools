@@ -20,7 +20,7 @@ try:
     from samba.param import LoadParm
     from samba.samdb import SamDB
     from samba.netcmd.gpo import get_gpo_info
-    from ldb import LdbError, SCOPE_BASE, Message, MessageElement, FLAG_MOD_REPLACE, Dn
+    from ldb import LdbError, SCOPE_BASE, SCOPE_SUBTREE, Message, MessageElement, FLAG_MOD_REPLACE, Dn
 
     lp = LoadParm()
     creds = Credentials()
@@ -346,7 +346,7 @@ class DeviceManager:
     def get_credentials(self, device_cn, school='default-school'):
         result = self.samdb.search(
             f"OU={school},{LDAP_CONTEXT}",
-            ldb.SCOPE_SUBTREE,
+            SCOPE_SUBTREE,
             expression=f"sAMAccountName={device_cn.upper()}$",
             attrs=['unicodePwd', 'supplementalCredentials']
         )
