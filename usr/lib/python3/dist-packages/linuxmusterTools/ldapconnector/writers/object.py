@@ -57,9 +57,14 @@ class LMNObject:
         try:
             members = details['member']
             members.remove(member_dn)
-            self.lw._setattr(details, data={'member': members})
         except ValueError as e:
             logger.warning(f"Could not remove member {member_dn} from {dn}: {str(e)}")
+            return
+
+        if members:
+            self.lw._setattr(details, data={'member': members})
+        else:
+            self.lw._delattr(details, data={'member': None})
 
     def add_member(self, dn, member_dn):
         details = self.lr.get(f'/dn/{dn}')

@@ -152,7 +152,10 @@ class LMNSchoolclass(LMNGroupCommon):
                 if ",OU=Teachers," not in member:
                     new_members.append(member)
 
-            self.lw._setattr(self, data={'member': new_members})
+            if new_members:
+                self.lw._setattr(self, data={'member': new_members})
+            else:
+                self.lw._delattr(self, data={'member': None})
             self.load_data()
             self.teachers_group.fill_members()
         except ValueError as e:
