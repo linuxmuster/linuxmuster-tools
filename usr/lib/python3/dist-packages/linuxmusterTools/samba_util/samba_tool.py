@@ -79,15 +79,22 @@ class DomainPasswordSettingsManager:
     """
 
     def __init__(self):
+        self.samdb = None
         if os.path.isfile(SAMDB_PATH):
             try:
                 self.samdb = SamDB(url=SAMDB_PATH, session_info=system_session(), credentials=creds, lp=lp)
             except Exception:
-                logger.error(f'Could not load {SAMDB_PATH}, is linuxmuster installed ?')
+                logger.error(f'Could not load {SAMDB_PATH}, is linuxmuster installed ? Are we running as root ?')
         else:
             logger.warning(f'{SAMDB_PATH} not found, is linuxmuster installed ?')
 
     def get(self) -> DomainPasswordSettings:
+        if self.samdb is None:
+            raise RuntimeError(
+                f'Cannot read domain password policy: {SAMDB_PATH} could not be opened. '
+                'This requires root (SamDB direct access) — call this from a still-privileged '
+                'context (e.g. before an Ajenti worker demotes) rather than a demoted worker.'
+            )
         base_dn = self.samdb.get_default_basedn()
         result = self.samdb.search(
             base_dn, scope=SCOPE_BASE, attrs=['minPwdLength', 'pwdProperties'],
