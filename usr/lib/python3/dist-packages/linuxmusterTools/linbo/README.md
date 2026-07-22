@@ -61,7 +61,17 @@ manager does not upload, extract, inspect or publish the payload yet.
 
 ### Image assignments
 
-`LinboImageManager` manages an optional `image.conf` in each driver profile:
+Each `LinboImageGroup` delegates its optional `image.conf` assignments and
+`.driverpostsync` dispatcher to a bound `WindowsDrivers` object.
+`LinboDriverManager` continues to own the image-independent profile
+directories and `match.conf`. Both metadata files remain physically stored
+with the profile; only their logical ownership differs:
+
+```text
+/srv/linbo/drivers/<profile>/match.conf
+/srv/linbo/drivers/<profile>/image.conf
+/srv/linbo/images/<image>/<image>.driverpostsync
+```
 
 ```ini
 [image]
@@ -81,6 +91,9 @@ hook = images.publish_driverpostsync("win11")
 images.unassign_driver_profile("lenovo-21l4")
 images.publish_driverpostsync("win11")
 ```
+
+These public manager methods resolve the named `LinboImageGroup` and delegate
+the image-specific work to its bound `WindowsDrivers` object.
 
 The former standalone package's flat `image = win11` form remains readable for
 upgrades and is rewritten in the canonical form by the next assignment.
