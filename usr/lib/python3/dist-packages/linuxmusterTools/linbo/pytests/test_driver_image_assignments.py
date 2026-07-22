@@ -1,12 +1,12 @@
 import subprocess
 from pathlib import Path
-from types import SimpleNamespace
 
 import pytest
 
+import linuxmusterTools.linbo.drivers as drivers_module
 import linuxmusterTools.linbo.images as images_module
-from linuxmusterTools.linbo.drivers import LinboDriverManager
-from linuxmusterTools.linbo.images import LinboImageManager
+from linuxmusterTools.linbo.drivers import LinboDriverManager, WindowsDrivers
+from linuxmusterTools.linbo.images import LinboImageGroup, LinboImageManager
 
 
 @pytest.fixture
@@ -29,7 +29,19 @@ def _image_conf(profile):
 def _known_image(images, name):
     path = Path(images_module.LINBO_PATH) / str(name)
     path.mkdir(exist_ok=True)
-    images.groups[name] = SimpleNamespace(path=str(path))
+    image_name = str(name)
+    (path / f"{image_name}.qcow2").touch()
+    (path / f"{image_name}.qcow2.info").write_text(
+        "timestamp=202607220000\n"
+        f"image={image_name}.qcow2\n"
+        "imagesize=0\n"
+        "partition=/dev/sda1\n"
+        "partitionsize=0\n"
+    )
+    images.list()
+    if name != image_name:
+        # Invalid non-string values are rejected before group delegation.
+        images.groups[name] = object()
     return path
 
 
@@ -37,6 +49,55 @@ def test_manager_uses_injected_driver_manager(environment):
     drivers, images = environment
 
     assert images.driver_manager is drivers
+
+
+def test_image_groups_use_injected_driver_manager(environment):
+    drivers, images = environment
+    _known_image(images, "win11")
+
+    assert isinstance(images.groups["win11"], LinboImageGroup)
+    assert images.groups["win11"].driver_manager is drivers
+    assert isinstance(images.groups["win11"].windows_drivers, WindowsDrivers)
+    assert images.groups["win11"].windows_drivers.driver_manager is drivers
+    assert (
+        images.groups["win11"].windows_drivers.image_group
+        is images.groups["win11"]
+    )
+
+    images.list()
+
+    assert images.groups["win11"].driver_manager is drivers
+
+
+def test_image_group_owns_assignment_interface(environment):
+    drivers, images = environment
+    profile = _profile(drivers)
+    _known_image(images, "win11")
+    group = images.groups["win11"]
+
+    assert group.assign_driver_profile("model") == {
+        "profile": "model",
+        "image": "win11",
+    }
+    assert images.get_driver_profile_image("model") == "win11"
+    assert group.get_driver_profiles() == ["model"]
+    assert group.unassign_driver_profile("model") == {
+        "profile": "model",
+        "image": None,
+    }
+
+
+def test_image_group_does_not_remove_another_groups_assignment(environment):
+    drivers, images = environment
+    profile = _profile(drivers)
+    _known_image(images, "win11")
+    _known_image(images, "ubuntu")
+    images.groups["ubuntu"].assign_driver_profile("model")
+
+    with pytest.raises(ValueError, match="ubuntu, not win11"):
+        images.groups["win11"].unassign_driver_profile("model")
+
+    assert _image_conf(profile).read_text() == "[image]\nname = ubuntu\n"
 
 
 def test_profile_without_assignment_returns_none(environment):
@@ -170,6 +231,10 @@ def test_reassign_preserves_mode_and_driver_payload(environment):
 
 def test_missing_profile_or_image_does_not_create_assignment(environment):
     drivers, images = environment
+
+    with pytest.raises(FileNotFoundError, match="Driver profile not found"):
+        images.assign_driver_profile("missing", "missing")
+
     _known_image(images, "win11")
 
     with pytest.raises(FileNotFoundError, match="missing"):
@@ -504,7 +569,15 @@ def test_publish_driverpostsync_refuses_symlinked_image_directory(
     outside.mkdir()
     image_path = Path(images_module.LINBO_PATH) / "win11"
     image_path.symlink_to(outside, target_is_directory=True)
-    images.groups["win11"] = SimpleNamespace(path=str(image_path))
+    (outside / "win11.qcow2").touch()
+    (outside / "win11.qcow2.info").write_text(
+        "timestamp=202607220000\n"
+        "image=win11.qcow2\n"
+        "imagesize=0\n"
+        "partition=/dev/sda1\n"
+        "partitionsize=0\n"
+    )
+    images.list()
 
     with pytest.raises(ValueError, match="not a real directory"):
         images.publish_driverpostsync("win11")
@@ -528,7 +601,7 @@ def test_publish_driverpostsync_replace_failure_keeps_old_hook(
     def fail_replace(*args, **kwargs):
         raise OSError("replace failed")
 
-    monkeypatch.setattr(images_module.os, "replace", fail_replace)
+    monkeypatch.setattr(drivers_module.os, "replace", fail_replace)
 
     with pytest.raises(OSError, match="replace failed"):
         images.publish_driverpostsync("win11")
