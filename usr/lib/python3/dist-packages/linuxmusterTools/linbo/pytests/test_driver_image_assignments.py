@@ -1,10 +1,12 @@
+import subprocess
 from pathlib import Path
 
 import pytest
 
+import linuxmusterTools.linbo.drivers as drivers_module
 import linuxmusterTools.linbo.images as images_module
-from linuxmusterTools.linbo.drivers import LinboDriverManager
-from linuxmusterTools.linbo.images import LinboImageManager
+from linuxmusterTools.linbo.drivers import LinboDriverManager, WindowsDrivers
+from linuxmusterTools.linbo.images import LinboImageGroup, LinboImageManager
 
 
 @pytest.fixture
@@ -25,13 +27,77 @@ def _image_conf(profile):
 
 
 def _known_image(images, name):
-    images.groups[name] = object()
+    path = Path(images_module.LINBO_PATH) / str(name)
+    path.mkdir(exist_ok=True)
+    image_name = str(name)
+    (path / f"{image_name}.qcow2").touch()
+    (path / f"{image_name}.qcow2.info").write_text(
+        "timestamp=202607220000\n"
+        f"image={image_name}.qcow2\n"
+        "imagesize=0\n"
+        "partition=/dev/sda1\n"
+        "partitionsize=0\n"
+    )
+    images.list()
+    if name != image_name:
+        # Invalid non-string values are rejected before group delegation.
+        images.groups[name] = object()
+    return path
 
 
 def test_manager_uses_injected_driver_manager(environment):
     drivers, images = environment
 
     assert images.driver_manager is drivers
+
+
+def test_image_groups_use_injected_driver_manager(environment):
+    drivers, images = environment
+    _known_image(images, "win11")
+
+    assert isinstance(images.groups["win11"], LinboImageGroup)
+    assert images.groups["win11"].driver_manager is drivers
+    assert isinstance(images.groups["win11"].windows_drivers, WindowsDrivers)
+    assert images.groups["win11"].windows_drivers.driver_manager is drivers
+    assert (
+        images.groups["win11"].windows_drivers.image_group
+        is images.groups["win11"]
+    )
+
+    images.list()
+
+    assert images.groups["win11"].driver_manager is drivers
+
+
+def test_image_group_owns_assignment_interface(environment):
+    drivers, images = environment
+    profile = _profile(drivers)
+    _known_image(images, "win11")
+    group = images.groups["win11"]
+
+    assert group.assign_driver_profile("model") == {
+        "profile": "model",
+        "image": "win11",
+    }
+    assert images.get_driver_profile_image("model") == "win11"
+    assert group.get_driver_profiles() == ["model"]
+    assert group.unassign_driver_profile("model") == {
+        "profile": "model",
+        "image": None,
+    }
+
+
+def test_image_group_does_not_remove_another_groups_assignment(environment):
+    drivers, images = environment
+    profile = _profile(drivers)
+    _known_image(images, "win11")
+    _known_image(images, "ubuntu")
+    images.groups["ubuntu"].assign_driver_profile("model")
+
+    with pytest.raises(ValueError, match="ubuntu, not win11"):
+        images.groups["win11"].unassign_driver_profile("model")
+
+    assert _image_conf(profile).read_text() == "[image]\nname = ubuntu\n"
 
 
 def test_profile_without_assignment_returns_none(environment):
@@ -165,6 +231,10 @@ def test_reassign_preserves_mode_and_driver_payload(environment):
 
 def test_missing_profile_or_image_does_not_create_assignment(environment):
     drivers, images = environment
+
+    with pytest.raises(FileNotFoundError, match="Driver profile not found"):
+        images.assign_driver_profile("missing", "missing")
+
     _known_image(images, "win11")
 
     with pytest.raises(FileNotFoundError, match="missing"):
@@ -281,4 +351,278 @@ def test_assignment_uses_existing_driver_mutation_lock(
         images.assign_driver_profile("model", "win11")
 
     assert not _image_conf(profile).exists()
+    assert outside.read_text() == "keep"
+
+
+def test_image_profiles_include_only_assignments_for_requested_image(
+    environment,
+):
+    drivers, images = environment
+    _known_image(images, "win11")
+    _known_image(images, "other")
+    assignments = {
+        "Zulu": "[image]\nname = win11\n",
+        "alpha": "image = win11\n",
+        "Beta": "[image]\nname = win11\n",
+        "other-model": "[image]\nname = other\n",
+        "unassigned": None,
+    }
+    for name, content in assignments.items():
+        profile = _profile(drivers, name)
+        if content is not None:
+            _image_conf(profile).write_text(content)
+
+    assert images.get_image_driver_profiles("win11") == [
+        "alpha",
+        "Beta",
+        "Zulu",
+    ]
+    assert images.get_image_driver_profiles("other") == ["other-model"]
+
+
+def test_image_profiles_require_an_existing_image(environment):
+    drivers, images = environment
+
+    with pytest.raises(FileNotFoundError, match="missing"):
+        images.get_image_driver_profiles("missing")
+
+    assert not drivers.base.exists()
+
+
+def test_invalid_profile_blocks_image_profile_resolution(environment):
+    drivers, images = environment
+    _known_image(images, "win11")
+    drivers.base.mkdir()
+    (drivers.base / "incomplete").mkdir()
+
+    with pytest.raises(ValueError, match="has no match.conf"):
+        images.get_image_driver_profiles("win11")
+
+
+def test_invalid_assignment_blocks_image_profile_resolution(environment):
+    drivers, images = environment
+    _known_image(images, "win11")
+    profile = _profile(drivers)
+    _image_conf(profile).write_text("[image]\nname = win11\nextra = value\n")
+
+    with pytest.raises(ValueError, match="exactly one name"):
+        images.get_image_driver_profiles("win11")
+
+
+def test_case_colliding_profile_names_are_rejected(environment):
+    drivers, images = environment
+    _known_image(images, "win11")
+    first = _profile(drivers, "Model")
+    _image_conf(first).write_text("[image]\nname = win11\n")
+    second = drivers.base / "model"
+    second.mkdir()
+    (second / "match.conf").write_text(
+        "[match]\nvendor = Vendor\nproduct = Product\n"
+    )
+    (second / "image.conf").write_text("[image]\nname = win11\n")
+
+    with pytest.raises(ValueError, match="differ only by case"):
+        images.get_image_driver_profiles("win11")
+
+
+def test_render_driverpostsync_matches_static_runtime_contract(environment):
+    drivers, images = environment
+    _known_image(images, "win11")
+    for name in ("Zulu", "alpha", "Beta"):
+        profile = _profile(drivers, name)
+        _image_conf(profile).write_text("[image]\nname = win11\n")
+
+    content = images.render_driverpostsync("win11")
+
+    assert content == (
+        "#!/bin/sh\n"
+        "# Managed-By: linuxmusterTools.linbo.driver_hooks v1\n"
+        "# Image: win11\n"
+        "# Profiles: alpha, Beta, Zulu\n\n"
+        "if ! command -v linbo_driverpostsync >/dev/null 2>&1; then\n"
+        '    echo "LINBO driver runtime is missing." >&2\n'
+        "    return 1\n"
+        "fi\n\n"
+        'linbo_driverpostsync "win11" "alpha" "Beta" "Zulu"\n'
+        "return $?\n"
+    )
+    assert subprocess.run(
+        ["/bin/sh", "-n"],
+        input=content,
+        text=True,
+        check=False,
+    ).returncode == 0
+
+
+def test_render_driverpostsync_without_profiles_is_a_cleanup_dispatcher(
+    environment,
+):
+    drivers, images = environment
+    _known_image(images, "win11")
+
+    content = images.render_driverpostsync("win11")
+
+    assert content == (
+        "#!/bin/sh\n"
+        "# Managed-By: linuxmusterTools.linbo.driver_hooks v1\n"
+        "# Image: win11\n"
+        "# Profiles: (none)\n\n"
+        "if ! command -v linbo_driverpostsync >/dev/null 2>&1; then\n"
+        '    echo "LINBO driver runtime is missing." >&2\n'
+        "    return 1\n"
+        "fi\n\n"
+        'linbo_driverpostsync "win11"\n'
+        "return $?\n"
+    )
+    assert not drivers.base.exists()
+
+
+def test_publish_driverpostsync_writes_rendered_hook(environment):
+    drivers, images = environment
+    image_path = _known_image(images, "win11")
+    profile = _profile(drivers)
+    _image_conf(profile).write_text("[image]\nname = win11\n")
+
+    result = images.publish_driverpostsync("win11")
+
+    hook = image_path / "win11.driverpostsync"
+    assert result == str(hook)
+    assert hook.read_text() == images.render_driverpostsync("win11")
+    assert hook.stat().st_mode & 0o777 == 0o664
+
+
+@pytest.mark.parametrize(
+    "content",
+    [
+        (
+            "#!/bin/sh\n"
+            "# Managed-By: linuxmusterTools.linbo.driver_hooks v1\n"
+            "old content\n"
+        ),
+        (
+            "#!/bin/sh\n"
+            "# =============================================================================\n"
+            "# Auto-generated driverpostsync script for image: win11\n"
+            "# Generated by LINBO Patchless — DO NOT EDIT MANUALLY\n"
+            "old content\n"
+        ),
+    ],
+)
+def test_publish_driverpostsync_replaces_owned_hook(environment, content):
+    _, images = environment
+    image_path = _known_image(images, "win11")
+    hook = image_path / "win11.driverpostsync"
+    hook.write_text(content)
+
+    images.publish_driverpostsync("win11")
+
+    assert hook.read_text() == images.render_driverpostsync("win11")
+
+
+@pytest.mark.parametrize(
+    "content",
+    [
+        "#!/bin/sh\necho administrator hook\n",
+        (
+            "#!/bin/sh\n"
+            "# Administrator hook\n"
+            "# Managed-By: linuxmusterTools.linbo.driver_hooks v1\n"
+        ),
+        (
+            "#!/bin/sh\n"
+            "# Auto-generated driverpostsync script for image: other\n"
+            "# Generated by LINBO Patchless — DO NOT EDIT MANUALLY\n"
+        ),
+    ],
+)
+def test_publish_driverpostsync_refuses_foreign_hook(environment, content):
+    _, images = environment
+    image_path = _known_image(images, "win11")
+    hook = image_path / "win11.driverpostsync"
+    hook.write_text(content)
+
+    with pytest.raises(PermissionError, match="unmanaged"):
+        images.publish_driverpostsync("win11")
+
+    assert hook.read_text() == content
+
+
+def test_publish_driverpostsync_refuses_hook_symlink(environment, tmp_path):
+    _, images = environment
+    image_path = _known_image(images, "win11")
+    outside = tmp_path / "outside.driverpostsync"
+    content = "#!/bin/sh\necho outside\n"
+    outside.write_text(content)
+    (image_path / "win11.driverpostsync").symlink_to(outside)
+
+    with pytest.raises(ValueError, match="not a regular file"):
+        images.publish_driverpostsync("win11")
+
+    assert outside.read_text() == content
+
+
+def test_publish_driverpostsync_refuses_symlinked_image_directory(
+    environment, tmp_path
+):
+    _, images = environment
+    outside = tmp_path / "outside-image"
+    outside.mkdir()
+    image_path = Path(images_module.LINBO_PATH) / "win11"
+    image_path.symlink_to(outside, target_is_directory=True)
+    (outside / "win11.qcow2").touch()
+    (outside / "win11.qcow2.info").write_text(
+        "timestamp=202607220000\n"
+        "image=win11.qcow2\n"
+        "imagesize=0\n"
+        "partition=/dev/sda1\n"
+        "partitionsize=0\n"
+    )
+    images.list()
+
+    with pytest.raises(ValueError, match="not a real directory"):
+        images.publish_driverpostsync("win11")
+
+    assert not (outside / "win11.driverpostsync").exists()
+
+
+def test_publish_driverpostsync_replace_failure_keeps_old_hook(
+    environment, monkeypatch
+):
+    _, images = environment
+    image_path = _known_image(images, "win11")
+    hook = image_path / "win11.driverpostsync"
+    content = (
+        "#!/bin/sh\n"
+        "# Managed-By: linuxmusterTools.linbo.driver_hooks v1\n"
+        "old content\n"
+    )
+    hook.write_text(content)
+
+    def fail_replace(*args, **kwargs):
+        raise OSError("replace failed")
+
+    monkeypatch.setattr(drivers_module.os, "replace", fail_replace)
+
+    with pytest.raises(OSError, match="replace failed"):
+        images.publish_driverpostsync("win11")
+
+    assert hook.read_text() == content
+    assert not list(image_path.glob(".win11.driverpostsync.*.tmp"))
+
+
+def test_publish_driverpostsync_uses_profile_mutation_lock(
+    environment, tmp_path
+):
+    drivers, images = environment
+    image_path = _known_image(images, "win11")
+    drivers._ensure_base_directory()
+    lock = drivers.base / ".driver-profiles.lock"
+    outside = tmp_path / "outside.lock"
+    outside.write_text("keep")
+    lock.symlink_to(outside)
+
+    with pytest.raises(OSError):
+        images.publish_driverpostsync("win11")
+
+    assert not (image_path / "win11.driverpostsync").exists()
     assert outside.read_text() == "keep"

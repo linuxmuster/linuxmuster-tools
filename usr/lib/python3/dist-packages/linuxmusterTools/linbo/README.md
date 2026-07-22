@@ -61,7 +61,17 @@ manager does not upload, extract, inspect or publish the payload yet.
 
 ### Image assignments
 
-`LinboImageManager` manages an optional `image.conf` in each driver profile:
+Each `LinboImageGroup` delegates its optional `image.conf` assignments and
+`.driverpostsync` dispatcher to a bound `WindowsDrivers` object.
+`LinboDriverManager` continues to own the image-independent profile
+directories and `match.conf`. Both metadata files remain physically stored
+with the profile; only their logical ownership differs:
+
+```text
+/srv/linbo/drivers/<profile>/match.conf
+/srv/linbo/drivers/<profile>/image.conf
+/srv/linbo/images/<image>/<image>.driverpostsync
+```
 
 ```ini
 [image]
@@ -75,10 +85,23 @@ drivers = LinboDriverManager()
 images = LinboImageManager(driver_manager=drivers)
 images.assign_driver_profile("lenovo-21l4", "win11")
 images.get_driver_profile_image("lenovo-21l4")
+images.get_image_driver_profiles("win11")
+dispatcher = images.render_driverpostsync("win11")
+hook = images.publish_driverpostsync("win11")
 images.unassign_driver_profile("lenovo-21l4")
+images.publish_driverpostsync("win11")
 ```
 
+These public manager methods resolve the named `LinboImageGroup` and delegate
+the image-specific work to its bound `WindowsDrivers` object.
+
 The former standalone package's flat `image = win11` form remains readable for
-upgrades and is rewritten in the canonical form by the next assignment. These
-methods only persist or remove the profile metadata. They do not generate
-`.driverpostsync` files or deliver drivers to clients yet.
+upgrades and is rewritten in the canonical form by the next assignment.
+Assigned profile names can be resolved in deterministic order. The
+renderer returns the small `.driverpostsync` dispatcher expected by LINBO's
+static `linbo_driverpostsync` runtime. The publisher atomically writes that
+dispatcher into the image directory with LINBO's standard postsync mode. It
+refuses to replace symlinks, non-regular files or hooks without its exact
+managed header. The exact standalone v1.1.1 generator markers remain accepted
+for an in-place migration. Assignment changes and publishing remain explicit
+separate steps in this change.

@@ -1,16 +1,18 @@
 import os
 import shutil
-import stat
 import subprocess
 import logging
 from datetime import datetime, timezone
-from pathlib import Path
 
-from configobj import ConfigObjError
-
-from ..common.checks import NameChecker
 from ..lmnfile import LMNFile
-from .drivers import IMAGE_CONF_FILENAME, LinboDriverManager
+# Keep the existing images-module constants importable after their owner moved.
+from .drivers import (
+    DRIVERPOSTSYNC_LEGACY_HEADER,
+    DRIVERPOSTSYNC_MANAGED_HEADER,
+    IMAGE_CONF_FILENAME,
+    LinboDriverManager,
+    WindowsDrivers as _WindowsDrivers,
+)
 from .models import ImageInfo
 
 
@@ -41,8 +43,6 @@ EXTRA_PERMISSIONS_MAPPING = {
 }
 IMAGE = "qcow2"
 DIFF_IMAGE = "qdiff"
-
-name_checker = NameChecker()
 
 def date2timestamp(date):
     return datetime.strptime(date, DATE_UI_FMT).strftime(TIMESTAMP_FMT)
@@ -278,10 +278,16 @@ class LinboImageGroup:
     Class to handle a basic LinboImage and all his backups.
     """
 
-    def __init__(self, name):
+    def __init__(self, name, driver_manager=None):
         self.name = name
         self.path = os.path.join(LINBO_PATH, self.name)
         self.backup_path = os.path.join(LINBO_PATH, self.name, 'backups')
+        self.driver_manager = (
+            driver_manager
+            if driver_manager is not None
+            else LinboDriverManager()
+        )
+        self.windows_drivers = _WindowsDrivers(self, self.driver_manager)
         self.load()
 
     def load(self):
@@ -320,6 +326,31 @@ class LinboImageGroup:
             self.diff_image = LinboImage(self.name, diff=True)
         else:
             self.diff_image = None
+
+    def get_driver_profiles(self):
+        """Return this image's assigned profiles in deterministic order."""
+
+        return self.windows_drivers.get_profiles()
+
+    def render_driverpostsync(self):
+        """Render this image's thin static-runtime dispatcher."""
+
+        return self.windows_drivers.render_driverpostsync()
+
+    def publish_driverpostsync(self):
+        """Publish this image's static-runtime dispatcher."""
+
+        return self.windows_drivers.publish_driverpostsync()
+
+    def assign_driver_profile(self, profile_name):
+        """Persist one driver profile's assignment to this image."""
+
+        return self.windows_drivers.assign_profile(profile_name)
+
+    def unassign_driver_profile(self, profile_name):
+        """Remove a driver profile's optional assignment to this image."""
+
+        return self.windows_drivers.unassign_profile(profile_name)
 
     def rename(self, new_name):
         """
@@ -382,110 +413,78 @@ class LinboImageManager:
 
 
     def __init__(self, driver_manager=None):
-        self.driver_manager = driver_manager or LinboDriverManager()
+        self.driver_manager = (
+            driver_manager
+            if driver_manager is not None
+            else LinboDriverManager()
+        )
         self.list()
 
-    @staticmethod
-    def _validated_driver_image(image):
-        """Return an image basename supported by the LINBO driver runtime."""
+    def _new_group(self, name):
+        """Create one image group with the shared driver profile manager."""
 
-        if (
-            not name_checker.check_linbo_image_name(image)
-            or "." in image
-            or len(image) > 100
-        ):
-            raise ValueError(
-                "Driver image names must contain only [A-Za-z0-9_-] and be "
-                "at most 100 characters long."
-            )
-        return image
+        return LinboImageGroup(
+            name,
+            driver_manager=self.driver_manager,
+        )
 
-    def _read_profile_assignment(self, profile):
-        """Read one already validated profile's optional image assignment."""
+    def _require_driver_group(self, image):
+        """Return one validated, existing LINBO image group."""
 
-        path = Path(profile["path"]) / IMAGE_CONF_FILENAME
+        image = _WindowsDrivers.validate_image(image)
         try:
-            metadata = path.lstat()
-        except FileNotFoundError:
-            return None
-        if stat.S_ISLNK(metadata.st_mode) or not stat.S_ISREG(metadata.st_mode):
-            raise ValueError(f"image.conf is not a regular file: {profile['name']}")
-
-        try:
-            with LMNFile(str(path), "r", convert_values=False) as image_file:
-                data = image_file.read()
-        except ConfigObjError as error:
-            raise ValueError(
-                f"Invalid image.conf for driver profile {profile['name']}: {error}"
+            return self.groups[image]
+        except KeyError as error:
+            raise FileNotFoundError(
+                f"LINBO image not found: {image}"
             ) from error
 
-        if set(data.keys()) != {"image"} or data.inline_comments.get("image"):
-            raise ValueError(
-                "image.conf must contain one canonical [image] section or "
-                "one legacy image value."
-            )
-
-        section = data["image"]
-        if isinstance(section, str):
-            # Read compatibility for the standalone/.deb format.
-            return self._validated_driver_image(section)
-
-        if not isinstance(section, dict) or set(section.keys()) != {"name"}:
-            raise ValueError("[image] must contain exactly one name.")
-        if section.inline_comments.get("name"):
-            raise ValueError("image.conf must not contain inline comments.")
-        return self._validated_driver_image(section["name"])
-
     def get_driver_profile_image(self, profile_name):
-        """Return a profile's image assignment, if present."""
+        """Return a profile assignment through the image-group domain."""
 
-        profile = self.driver_manager.get_profile(profile_name)
-        if profile is None:
-            raise FileNotFoundError(f"Driver profile not found: {profile_name}")
-        return self._read_profile_assignment(profile)
+        return _WindowsDrivers.get_profile_image(
+            self.driver_manager,
+            profile_name,
+        )
+
+    def get_image_driver_profiles(self, image):
+        """Return an image group's assigned profiles."""
+
+        return self._require_driver_group(image).get_driver_profiles()
+
+    def render_driverpostsync(self, image):
+        """Render an image group's static-runtime dispatcher."""
+
+        return self._require_driver_group(image).render_driverpostsync()
+
+    def publish_driverpostsync(self, image):
+        """Publish an image group's static-runtime dispatcher."""
+
+        return self._require_driver_group(image).publish_driverpostsync()
 
     def assign_driver_profile(self, profile_name, image):
-        """Persist one driver's assignment to an existing LINBO image."""
+        """Assign a profile through its target image group."""
 
+        # Preserve the established public error order: profile before image.
         if not os.path.lexists(self.driver_manager.base):
             raise FileNotFoundError(
                 f"Driver profile not found: {profile_name}"
             )
-        with self.driver_manager._mutation():
-            profile = self.driver_manager.get_profile(profile_name)
-            if profile is None:
-                raise FileNotFoundError(
-                    f"Driver profile not found: {profile_name}"
-                )
-            image = self._validated_driver_image(image)
-            if image not in self.groups:
-                raise FileNotFoundError(f"LINBO image not found: {image}")
-
-            self._read_profile_assignment(profile)
-            self.driver_manager._write_profile_conf(
-                Path(profile["path"]) / IMAGE_CONF_FILENAME,
-                "image",
-                {"name": image},
+        if self.driver_manager.get_profile(profile_name) is None:
+            raise FileNotFoundError(
+                f"Driver profile not found: {profile_name}"
             )
-        return {"profile": profile["name"], "image": image}
+        return self._require_driver_group(image).assign_driver_profile(
+            profile_name
+        )
 
     def unassign_driver_profile(self, profile_name):
-        """Remove only a driver's optional image assignment."""
+        """Remove a profile assignment through the image-group domain."""
 
-        if not os.path.lexists(self.driver_manager.base):
-            raise FileNotFoundError(
-                f"Driver profile not found: {profile_name}"
-            )
-        with self.driver_manager._mutation():
-            profile = self.driver_manager.get_profile(profile_name)
-            if profile is None:
-                raise FileNotFoundError(
-                    f"Driver profile not found: {profile_name}"
-                )
-            previous = self._read_profile_assignment(profile)
-            if previous is not None:
-                Path(profile["path"], IMAGE_CONF_FILENAME).unlink()
-        return {"profile": profile["name"], "image": None}
+        return _WindowsDrivers.remove_profile_assignment(
+            self.driver_manager,
+            profile_name,
+        )
 
     def list(self):
         """
@@ -499,7 +498,7 @@ class LinboImageManager:
             if os.path.isdir(os.path.join(LINBO_PATH, dir)):
                 for file in os.listdir(os.path.join(LINBO_PATH, dir)):
                     if file == f'{dir}.{IMAGE}':
-                        self.groups[dir] = LinboImageGroup(dir)
+                        self.groups[dir] = self._new_group(dir)
 
     def delete(self, group, date=0, diff=False):
         """
@@ -539,7 +538,7 @@ class LinboImageManager:
 
         if group in self.groups:
             self.groups[group].rename(new_name)
-            self.groups[new_name] = LinboImageGroup(new_name)
+            self.groups[new_name] = self._new_group(new_name)
             del self.groups[group]
 
     def duplicate(self, group, new_name):
@@ -573,7 +572,7 @@ class LinboImageManager:
                        os.path.join(LINBO_PATH, new_name, file.replace(old_prefix, new_prefix)),
                     )
 
-            self.groups[new_name] = LinboImageGroup(new_name)
+            self.groups[new_name] = self._new_group(new_name)
             self.groups[new_name].rename(new_name)
 
     def restore(self, group, date):
