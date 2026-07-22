@@ -1,4 +1,18 @@
-# Password constraint policies
+# passwords
+
+Resolves, per school and per role, the set of static composition rules a [linuxmuster.net](https://www.linuxmuster.net) password must satisfy — on top of Samba AD's own length/history/age/lockout enforcement.
+
+---
+
+## Requirements
+
+- Python 3.8+
+- [`PyYAML`](https://pypi.org/project/PyYAML/) (config file parsing, via `linuxmusterTools.lmnfile`)
+- A reachable Samba AD domain, read via `linuxmusterTools.samba_util.DomainPasswordSettingsManager` (`samba-tool domain passwordsettings show` equivalent) — used as the live policy when the config file is absent, and as a floor otherwise
+
+---
+
+## Overview
 
 `policy.py` resolves, per school and per role, the set of rules a
 password must satisfy. Resolution order: school-specific override in the YAML
@@ -10,6 +24,8 @@ Samba's own length/history/age/lockout enforcement still applies regardless
 of this module — it only covers static composition constraints (length,
 character classes, forbidden substrings), which is the one part Samba cannot
 express beyond its fixed on/off complexity flag.
+
+---
 
 ## Config file: `/etc/linuxmuster/tools/password_constraints.yml`
 
@@ -124,16 +140,19 @@ alongside the other two fields on the same `DomainPasswordSettings` object.
 
 `forbid_username` is intentionally not listed here — see above.
 
-## Example
+---
 
-```Python
->>> from linuxmusterTools.passwords import PasswordPolicyProvider
->>> provider = PasswordPolicyProvider()
->>> result = provider.validate("Sch00l!", role="teacher", school="abc", username="jdupont")
->>> result.ok
-False
->>> result.violations
-('at least 12 characters',)
->>> provider.get_policy("teacher", "abc").as_dict()
-{'source': 'config:abc/teacher+samba-floor', 'rules': ['at least 12 characters', 'at least 3 of: lower, upper, digit, special', "must not contain the account's username"]}
+## Usage
+
+```python
+from linuxmusterTools.passwords import PasswordPolicyProvider
+
+provider = PasswordPolicyProvider()
+result = provider.validate("Sch00l!", role="teacher", school="abc", username="jdupont")
+result.ok
+# False
+result.violations
+# ('at least 12 characters',)
+provider.get_policy("teacher", "abc").as_dict()
+# {'source': 'config:abc/teacher+samba-floor', 'rules': ['at least 12 characters', 'at least 3 of: lower, upper, digit, special', "must not contain the account's username"]}
 ```

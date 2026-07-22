@@ -1,3 +1,35 @@
+linuxmuster-tools7 (7.4.10) lmn74; urgency=medium
+
+  * [passwords] New password constraints module: policy provider, Samba
+    domain floor (min length/complexity/age), YAML config, webui editing,
+    tests and README.
+  * [samba_util] Throw a clear runtime error instead of a confusing
+    AttributeError when SamDB can't be opened (no root access).
+  * [samba_util] Fix missing SCOPE_SUBTREE import breaking
+    DeviceManager.get_credentials(). Closes #20.
+  * [ldapwriter] Fix silent failure when removing a group's last member or
+    emptying a group entirely (redirect to delattr instead of a swallowed
+    ValueError). Closes #21.
+  * [ldapwriter] Raise ValueError instead of silently no-op'ing when
+    setattr() is given an empty value.
+  * [ldapwriter] Add SchoolError exception; catch it when instantiating
+    LMNGroup with school='global'.
+  * [ldapwriter] Avoid lowercase mismatch on group/user lookups.
+  * [ldapconnector] Fix crash when /ou lookup returns an empty result.
+  * [linbo] Add LINBO hardware inventory reader (@amolani)
+  * [linbo] Add LINBO driver profile metadata management (@amolani)
+  * [linbo] Add read-only then writable LINBO driver image assignments
+    (@amolani)
+  * [linbo] Render and publish LINBO driver dispatchers (@amolani)
+  * [linbo] Delegate Windows drivers to LINBO image groups; synchronize
+    driver assignments and dispatchers (@amolani)
+  * [lmnfile] Make ConfigLoader writes atomic.
+  * [tests] Add test coverage for common, devices, lmnconfig, print,
+    quotas, samba_util, smbclient and subnets modules.
+  * Replace deprecated datetime.utcnow() usage.
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Wed, 22 Jul 2026 22:16:00 +0200
+
 linuxmuster-tools7 (7.4.9) lmn74; urgency=medium
 
   * [linbo] Write and delete raw start.conf. 

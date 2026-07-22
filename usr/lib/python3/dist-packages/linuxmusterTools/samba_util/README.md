@@ -1,43 +1,123 @@
-# Samba utilities
+# samba_util
 
-This module get some useful informations on a linuxmuster.net server.
-Actually, it provides: 
+Read and write access to the Samba 4 AD backend of a [linuxmuster.net](https://www.linuxmuster.net) server: domain password policy, GPOs and drive maps, DNS zone, group/user/device management, and `smbstatus` connections.
 
-- the GPOs in use, as a dataclass object,
-- DNS entries,
-- drives list,
-- smbstatus output,
+---
 
-## Examples of GPOS and drives
+## Requirements
 
-```Python
->>> from linuxmusterTools.samba_util import GPOManager
->>> mgr = GPOManager()
->>> mgr.gpos
-{'Default Domain Controllers Policy': GPO(dn='CN={6AC1786C-016F-11D2-945F-00C04FB984F9},CN=Policies,CN=System,DC=linuxmuster,DC=lan', gpo='{6AC1786C-016F-11D2-945F-00C04FB984F9}', name='Default Domain Controllers Policy', path='\\\\linuxmuster.lan\\sysvol\\linuxmuster.lan\\Policies\\{6AC1786C-016F-11D2-945F-00C04FB984F9}', unix_path='/var/lib/samba/sysvol/linuxmuster.lan/Policies/{6AC1786C-016F-11D2-945F-00C04FB984F9}'), 'Default Domain Policy': GPO(dn='CN={31B2F340-016D-11D2-945F-00C04FB984F9},CN=Policies,CN=System,DC=linuxmuster,DC=lan', gpo='{31B2F340-016D-11D2-945F-00C04FB984F9}', name='Default Domain Policy', path='\\\\linuxmuster.lan\\sysvol\\linuxmuster.lan\\Policies\\{31B2F340-016D-11D2-945F-00C04FB984F9}', unix_path='/var/lib/samba/sysvol/linuxmuster.lan/Policies/{31B2F340-016D-11D2-945F-00C04FB984F9}'), 'sophomorix:school:default-school': GPO(dn='CN={D8D248A8-A5BA-4209-882D-E15969E3B856},CN=Policies,CN=System,DC=linuxmuster,DC=lan', gpo='{D8D248A8-A5BA-4209-882D-E15969E3B856}', name='sophomorix:school:default-school', path='\\\\linuxmuster.lan\\sysvol\\linuxmuster.lan\\Policies\\{D8D248A8-A5BA-4209-882D-E15969E3B856}', unix_path='/var/lib/samba/sysvol/linuxmuster.lan/Policies/{D8D248A8-A5BA-4209-882D-E15969E3B856}')}
->>> # UNIX PATH OF A GIVEN POLICY
->>> mgr.gpos['sophomorix:school:default-school'].unix_path
-'/var/lib/samba/sysvol/linuxmuster.lan/Policies/{D8D248A8-A5BA-4209-882D-E15969E3B856}'
->>> # DRIVES OF A GIVEN POLICY
->>> mgr.gpos['sophomorix:school:default-school'].drivemgr.drives
-[Drive(disabled=False, filters={}, label='Programs', letter='K', properties={'useLetter': True, 'letter': 'K', 'label': 'Programs', 'path': '\\\\lmn\\default-school\\program'}, userLetter=True, id='program'), Drive(disabled=False, filters={}, label='Projects', letter='P', properties={'useLetter': True, 'letter': 'P', 'label': 'Projects', 'path': '\\\\lmn\\default-school\\share\\projects'}, userLetter=True, id='projects'), Drive(disabled=False, filters={'teachers': {'bool': 'AND', 'negation': False}}, label='Student-bla', letter='B', properties={'useLetter': True, 'letter': 'B', 'label': 'Student-bla', 'path': '\\\\lmn\\default-school\\students'}, userLetter=True, id='students'), Drive(disabled=False, filters={}, label='Shares', letter='T', properties={'useLetter': True, 'letter': 'T', 'label': 'Shares', 'path': '\\\\lmn\\default-school\\share'}, userLetter=True, id='share'), Drive(disabled=True, filters={}, label='ISO', letter='F', properties={'useLetter': False, 'letter': 'F', 'label': 'ISO', 'path': '\\\\lmn\\default-school\\iso'}, userLetter=False, id='iso')]
+- Python 3.8+
+- Samba's own `samba` Python bindings (`samba.auth`, `samba.credentials`, `samba.samdb`, `samba.netcmd.gpo`, `ldb`) — only available on a provisioned linuxmuster.net server
+- [`pexpect`](https://pypi.org/project/pexpect/) (used by `SambaToolDNS` to drive `samba-tool dns`)
+- Read access to `/var/lib/samba/private/sam.ldb` and `/etc/linuxmuster/.secret/administrator` — most classes require root
+
+---
+
+## Domain password policy — `DomainPasswordSettingsManager`
+
+Reads and writes the domain-wide Samba AD password policy (minimum length, complexity, min/max password age) directly via `SamDB`, equivalent to `samba-tool domain passwordsettings show`/`set` without shelling out.
+
+```python
+from linuxmusterTools.samba_util import DomainPasswordSettingsManager
+
+mgr = DomainPasswordSettingsManager()
+settings = mgr.get()
+# DomainPasswordSettings(min_pwd_length=7, complexity=True, min_pwd_age=1, max_pwd_age=43)
+
+mgr.set(min_pwd_length=10, complexity=True)
 ```
 
-## Examples of DNS entries
+Only the domain-wide policy is read — Fine-Grained Password Policies (PSOs) are not accounted for. See [`passwords/README.md`](../passwords/README.md) for the full writeup of this limitation and how it interacts with `PasswordPolicyProvider`.
 
-```Python
->>> from linuxmusterTools.samba_util import SambaToolDNS
->>> SambaToolDNS().list()
-{'root': [{'host': '', 'type': 'SOA', 'value': 'serial=123, refresh=900, retry=600, expire=86400, minttl=3600, ns=lmn.linuxmuster.lan., email=hostmaster.linuxmuster.lan.', 'flags': '600000f0', 'serial': '123', 'ttl': '3600'}, {'host': '', 'type': 'NS', 'value': 'lmn.linuxmuster.lan.', 'flags': '600000f0', 'serial': '110', 'ttl': '900'}, {'host': '', 'type': 'A', 'value': '10.0.0.1', 'flags': '600000f0', 'serial': '110', 'ttl': '900'}], 'sub': [{'host': 'bla', 'type': 'A', 'value': '8.8.8.9', 'flags': 'f0', 'serial': '100', 'ttl': '900'}, {'host': 'mail', 'type': 'A', 'value': '10.0.0.3', 'flags': 'f0', 'serial': '2', 'ttl': '900'}, {'host': 'test', 'type': 'A', 'value': '10.0.1.1', 'flags': 'f0', 'serial': '54', 'ttl': '900'}, {'host': 'test', 'type': 'A', 'value': '1.1.1.1', 'flags': 'f0', 'serial': '57', 'ttl': '900'}, {'host': 'test2', 'type': 'A', 'value': '1.1.1.1', 'flags': 'f0', 'serial': '122', 'ttl': '900'}]}
+---
+
+## GPOs and drive maps — `GPOManager`
+
+```python
+from linuxmusterTools.samba_util import GPOManager
+
+mgr = GPOManager()
+mgr.gpos
+# {'Default Domain Policy': GPO(dn='...', gpo='{31B2F340-...}', name='Default Domain Policy',
+#                                path='\\\\linuxmuster.lan\\sysvol\\...', unix_path='/var/lib/samba/sysvol/...',
+#                                drivemgr=<DriveManager>), ...}
+
+mgr.gpos['Default Domain Policy'].unix_path
+mgr.gpos['Default Domain Policy'].drivemgr.drives
+# [Drive(disabled=False, filters={}, label='Programs', letter='K', ...), ...]
 ```
 
-## Example of SMBStatus
+Each `GPO` bundles a `DriveManager`, which parses that policy's `Drives.xml` into `Drive` dataclass instances.
 
-```Python
->>> from linuxmusterTools.samba_util import smbstatus
->>> conn = smbstatus.SMBConnections()
->>> print(conn.users)
-{'kiar': SMBConnection(encryption='-', ip=None, ip4='10.0.0.1:38402', ip6=None, group='users', machine='10.0.0.1', pid='2942516', protocol='SMB3_11', signing='AES-128-GMAC', username='LINUXMUSTER\\kiar', version='', hostname='lmn')}
->>> conn.get_machines()
->>> print(conn.machines)
+---
+
+## Group, user and device management
+
+```python
+from linuxmusterTools.samba_util import GroupManager, UserManager, DeviceManager
+
+groups = GroupManager(school='default-school')
+groups.list()                              # {sophomorixType: [cn, ...], ...}
+groups.add_members('7b', ['jdupont'])
+groups.remove_members('7b', ['jdupont'])
 ```
+
+`GroupManager` runs every script in `/etc/linuxmuster/tools/hooks/group-manager/` after each membership change.
+
+```python
+users = UserManager()
+users.set_password('jdupont', 'N3wP@ssw0rd')
+
+devices = DeviceManager()
+creds = devices.get_credentials('client01')       # base64-encoded unicodePwd / supplementalCredentials
+devices.set_credentials('client01', hash_pwd_b64, hash_supplemental_b64)
+```
+
+---
+
+## DNS — `SambaToolDNS`
+
+```python
+from linuxmusterTools.samba_util import SambaToolDNS
+
+dns = SambaToolDNS()
+dns.list()
+# {'root': [{'host': '', 'type': 'SOA', 'value': '...'}, ...],
+#  'sub':  [{'host': 'mail', 'type': 'A', 'value': '10.0.0.3'}, ...]}
+
+dns.add({'host': 'test', 'type': 'A', 'value': '10.0.1.1'})
+dns.update({'host': 'test', 'type': 'A', 'value': '10.0.1.1'}, {'host': 'test', 'type': 'A', 'value': '10.0.1.2'})
+dns.delete('test', 'A', '10.0.1.2')
+```
+
+`list()` drives `samba-tool dns query` and filters out entries belonging to known linuxmuster devices (from `devices.csv`), since that list would otherwise be too long to be useful.
+
+---
+
+## SMB connections — `smbstatus`
+
+```python
+from linuxmusterTools.samba_util import smbstatus
+
+conn = smbstatus.SMBConnections()
+conn.users
+# {'kiar': SMBConnection(username='LINUXMUSTER\\kiar', ip4='10.0.0.1:38402', machine='10.0.0.1',
+#                         protocol='SMB3_11', signing='AES-128-GMAC', ...)}
+conn.get_machines()
+conn.machines
+```
+
+---
+
+## Authentication logs — `samba_util.log`
+
+Not re-exported from `samba_util/__init__.py`; import it directly from the submodule.
+
+```python
+from linuxmusterTools.samba_util import log
+
+log.last_login('jdupont')             # sorted list of {'user', 'datetime', 'ip'}, most recent first
+log.last_login('jdupont', include_gz=True)   # also scan rotated, gzipped logs
+```
+
+Requires Samba's `auth_audit` (or `general`) log level set to at least `3` in `smb.conf` — `check_audit_level()` returns `False` and logs an error otherwise.
