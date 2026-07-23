@@ -314,6 +314,27 @@ class TestLMNGroupMigrate:
         assert new_ou == f"OU=LMNGroups,OU=default-school,{LDAP_CONTEXT}"
         assert mock_connect.modify_s.called
 
+    def test_migrate_relabels_the_post_move_dn_not_the_stale_one(self, monkeypatch, mock_connect):
+        # Simulates the dn actually changing once the group has been moved:
+        # the sophomorixType relabel must target the NEW dn, not the one
+        # captured in self.data before _move() ran (which no longer exists
+        # once the rename has gone through).
+        old_data = dict(SAMPLE_SOPHOMORIX_GROUP, member=[USER_DN])
+        new_dn = f"CN=robotics,OU=LMNGroups,OU=default-school,{LDAP_CONTEXT}"
+        new_data = dict(old_data, distinguishedName=new_dn, sophomorixType='lmngroup')
+
+        calls = {'n': 0}
+        def fake_get(url, **kw):
+            calls['n'] += 1
+            return dict(old_data) if calls['n'] == 1 else dict(new_data)
+
+        monkeypatch.setattr(router, 'get', fake_get)
+        g = LMNGroup('robotics')
+        g.migrate()
+
+        modify_dn = mock_connect.modify_s.call_args[0][0]
+        assert modify_dn == new_dn
+
     def test_migrate_is_no_op_for_already_migrated_group(self, monkeypatch, mock_connect, capsys):
         lmngroup_data = dict(SAMPLE_SOPHOMORIX_GROUP, sophomorixType='lmngroup')
         monkeypatch.setattr(router, 'get', lambda url, **kw: dict(lmngroup_data))

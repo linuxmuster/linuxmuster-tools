@@ -242,6 +242,7 @@ class LMNGroup(LMNGroupCommon):
 
         new_ou = f"OU=LMNGroups,OU={self.school},{LDAP_CONTEXT}"
         self.lw._move(self.data['distinguishedName'], new_ou)
+        self.load_data()
         self.setattr(data={'sophomorixType': 'lmngroup'})
 
 
