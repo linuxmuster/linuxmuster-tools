@@ -123,24 +123,39 @@ class LMNGroupCommon:
 
     def add_members(self, userlist):
         """
-        Shortcut to add all members from a given list
+        Shortcut to add all members from a given list. One invalid cn
+        doesn't abort the rest of the batch: it's skipped and reported.
 
         :param userlist: List of valid cn
+        :return: list of (user, error message) tuples for entries that
+        could not be added
         """
 
-
+        failures = []
         for user in userlist:
-            self.add_member(user)
+            try:
+                self.add_member(user)
+            except Exception as e:
+                failures.append((user, str(e)))
+        return failures
 
     def remove_members(self, userlist):
         """
-        Shortcut to remove all members from a given list
+        Shortcut to remove all members from a given list. One invalid cn
+        doesn't abort the rest of the batch: it's skipped and reported.
 
         :param userlist: List of valid cn
+        :return: list of (user, error message) tuples for entries that
+        could not be removed
         """
 
+        failures = []
         for user in userlist:
-            self.remove_member(user)
+            try:
+                self.remove_member(user)
+            except Exception as e:
+                failures.append((user, str(e)))
+        return failures
 
 
 class LMNGroup(LMNGroupCommon):

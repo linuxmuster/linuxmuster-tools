@@ -134,16 +134,18 @@ class LMNSchoolclass(LMNGroupCommon):
         self.fill_group_members()
 
     def add_members(self, userlist):
-        super().add_members(userlist)
+        failures = super().add_members(userlist)
         self.fill_group_members()
+        return failures
 
     def remove_member(self, user):
         super().remove_member(user)
         self.fill_group_members()
 
     def remove_members(self, userlist):
-        super().remove_members(userlist)
+        failures = super().remove_members(userlist)
         self.fill_group_members()
+        return failures
 
     def remove_all_teachers(self):
         try:

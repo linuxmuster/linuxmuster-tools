@@ -84,6 +84,34 @@ class TestLMNGroupCommonAddMember:
             g.add_member('nonexistent')
 
 
+class TestLMNGroupCommonAddMembers:
+
+    def test_valid_members_are_added_despite_invalid_ones_in_the_batch(self, monkeypatch, mock_connect):
+        dns = {
+            'janedoe': 'CN=janedoe,OU=7a,OU=Students,OU=default-school,OU=SCHOOLS,DC=linuxmuster,DC=lan',
+            'bobdoe': 'CN=bobdoe,OU=7a,OU=Students,OU=default-school,OU=SCHOOLS,DC=linuxmuster,DC=lan',
+        }
+        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_GROUP))
+        monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: dns.get(url.rsplit('/', 1)[-1]))
+
+        g = LMNGroupCommon('7a')
+        failures = g.add_members(['ghost1', 'janedoe', 'ghost2', 'bobdoe'])
+
+        assert [f[0] for f in failures] == ['ghost1', 'ghost2']
+        assert all('was not found in ldap' in message for _, message in failures)
+        # janedoe and bobdoe were both still applied despite the invalid entries.
+        assert mock_connect.modify_s.call_count == 2
+
+    def test_all_valid_members_returns_no_failures(self, monkeypatch, mock_connect):
+        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_GROUP))
+        monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: USER_DN)
+
+        g = LMNGroupCommon('7a')
+        failures = g.add_members(['janedoe', 'bobdoe'])
+
+        assert failures == []
+
+
 class TestLMNGroupCommonRemoveMember:
 
     def test_remove_member_calls_ldap_modify(self, monkeypatch, mock_connect):
@@ -112,6 +140,28 @@ class TestLMNGroupCommonRemoveMember:
         g = LMNGroupCommon('7a')
         with pytest.raises(Exception, match='was not found in ldap'):
             g.remove_member('ghost')
+
+
+class TestLMNGroupCommonRemoveMembers:
+
+    def test_valid_members_are_removed_despite_invalid_ones_in_the_batch(self, monkeypatch, mock_connect):
+        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_GROUP))
+        monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: USER_DN if url.endswith('/johndoe') else None)
+
+        g = LMNGroupCommon('7a')
+        failures = g.remove_members(['ghost', 'johndoe'])
+
+        assert failures == [('ghost', 'The object ghost was not found in ldap.')]
+        assert mock_connect.modify_s.called
+
+    def test_all_valid_members_returns_no_failures(self, monkeypatch, mock_connect):
+        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_GROUP))
+        monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: USER_DN)
+
+        g = LMNGroupCommon('7a')
+        failures = g.remove_members(['johndoe'])
+
+        assert failures == []
 
 
 class TestLMNGroupCommonRemoveAllMembers:
