@@ -14,19 +14,73 @@ from ..lmnconfig import LDAP_CONTEXT
 
 logger = logging.getLogger(__name__)
 
-try:
-    from samba.auth import system_session
-    from samba.credentials import Credentials
-    from samba.param import LoadParm
-    from samba.samdb import SamDB
-    from samba.netcmd.gpo import get_gpo_info
-    from ldb import LdbError, SCOPE_BASE, SCOPE_SUBTREE, Message, MessageElement, FLAG_MOD_REPLACE, Dn
+system_session = None
+Credentials = None
+LoadParm = None
+SamDB = None
+get_gpo_info = None
+LdbError = None
+SCOPE_BASE = None
+SCOPE_SUBTREE = None
+Message = None
+MessageElement = None
+FLAG_MOD_REPLACE = None
+Dn = None
+lp = None
+creds = None
 
-    lp = LoadParm()
-    creds = Credentials()
-    creds.guess(lp)
-except ImportError as e:
-    logger.error(f"Samba doesn't seem to be installed, this module can not be used: {str(e)}")
+
+def _load_samba_bindings():
+    """
+    Import Samba's Python bindings and build the shared lp/creds session on
+    first use, instead of at module import time.
+
+    Only SamDB is checked before overwriting: it's the one name test doubles
+    patch (see samba_util/pytests/test_samba_tool.py), and this makes the
+    load order-independent — whichever class gets instantiated first (in
+    production or in a test that patched SamDB beforehand) still ends up
+    with a working system_session/creds/lp, without clobbering a test's
+    SamDB double once it's already been set.
+    """
+
+    global system_session, Credentials, LoadParm, SamDB, get_gpo_info
+    global LdbError, SCOPE_BASE, SCOPE_SUBTREE, Message, MessageElement, FLAG_MOD_REPLACE, Dn
+    global lp, creds
+
+    if lp is not None:
+        return
+
+    try:
+        from samba.auth import system_session as _system_session
+        from samba.credentials import Credentials as _Credentials
+        from samba.param import LoadParm as _LoadParm
+        from samba.samdb import SamDB as _SamDB
+        from samba.netcmd.gpo import get_gpo_info as _get_gpo_info
+        from ldb import (
+            LdbError as _LdbError, SCOPE_BASE as _SCOPE_BASE, SCOPE_SUBTREE as _SCOPE_SUBTREE,
+            Message as _Message, MessageElement as _MessageElement,
+            FLAG_MOD_REPLACE as _FLAG_MOD_REPLACE, Dn as _Dn,
+        )
+
+        system_session = _system_session
+        Credentials = _Credentials
+        LoadParm = _LoadParm
+        get_gpo_info = _get_gpo_info
+        LdbError = _LdbError
+        SCOPE_BASE = _SCOPE_BASE
+        SCOPE_SUBTREE = _SCOPE_SUBTREE
+        Message = _Message
+        MessageElement = _MessageElement
+        FLAG_MOD_REPLACE = _FLAG_MOD_REPLACE
+        Dn = _Dn
+        if SamDB is None:
+            SamDB = _SamDB
+
+        lp = LoadParm()
+        creds = Credentials()
+        creds.guess(lp)
+    except ImportError as e:
+        logger.error(f"Samba doesn't seem to be installed, this module can not be used: {str(e)}")
 
 SAMDB_PATH = '/var/lib/samba/private/sam.ldb'
 
@@ -79,6 +133,7 @@ class DomainPasswordSettingsManager:
     """
 
     def __init__(self):
+        _load_samba_bindings()
         self.samdb = None
         if os.path.isfile(SAMDB_PATH):
             try:
@@ -177,6 +232,7 @@ class GPOManager:
     """
 
     def __init__(self):
+        _load_samba_bindings()
 
         gpos_infos = {}
 
@@ -208,6 +264,7 @@ class GroupManager:
     """
 
     def __init__(self, school='default-school'):
+        _load_samba_bindings()
         self.POST_HOOK_DIR = '/etc/linuxmuster/tools/hooks/group-manager'
         self.school = school
         self.school_prefix = "" if self.school == 'default-school' else f"{school}-"
@@ -288,6 +345,7 @@ class UserManager:
     """
 
     def __init__(self):
+        _load_samba_bindings()
         self.POST_HOOK_DIR = '/etc/linuxmuster/tools/hooks/user-manager'
 
         if os.path.isfile(SAMDB_PATH):
@@ -333,6 +391,7 @@ class DeviceManager:
 
 
     def __init__(self):
+        _load_samba_bindings()
         self.POST_HOOK_DIR = '/etc/linuxmuster/tools/hooks/user-manager'
         self.samdb = None
 
