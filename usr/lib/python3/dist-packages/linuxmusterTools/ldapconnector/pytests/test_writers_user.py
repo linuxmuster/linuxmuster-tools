@@ -1,5 +1,6 @@
 import pytest
 
+from linuxmusterTools.ldapconnector.writers import user as user_module
 from linuxmusterTools.ldapconnector.writers.user import (
     LMNUser, LMNStudent, LMNTeacher, LMNStaff, LMNSchoolAdmin, LMNGlobalAdmin,
 )
@@ -142,6 +143,42 @@ class TestLMNUserDelete:
         u = LMNUser('newuser')
         u.delete()
         assert not mock_connect.delete_s.called
+
+
+class TestLMNUserTestFirstPassword:
+
+    def test_returns_check_password_result(self, monkeypatch, mock_connect):
+        data = dict(SAMPLE_USER, sophomorixFirstPassword='Muster!1')
+        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(data))
+        calls = {}
+
+        def fake_check_password(dn, password):
+            calls['dn'] = dn
+            calls['password'] = password
+            return True
+
+        monkeypatch.setattr(user_module, 'check_password', fake_check_password)
+        u = LMNUser('johndoe')
+        assert u.test_first_password() is True
+        assert calls == {'dn': USER_DN, 'password': 'Muster!1'}
+
+    def test_returns_false_on_invalid_credentials(self, monkeypatch, mock_connect):
+        data = dict(SAMPLE_USER, sophomorixFirstPassword='wrong')
+        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(data))
+        monkeypatch.setattr(user_module, 'check_password', lambda dn, password: False)
+        u = LMNUser('johndoe')
+        assert u.test_first_password() is False
+
+    def test_propagates_check_password_exception(self, monkeypatch, mock_connect):
+        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_USER))
+
+        def raising_check_password(dn, password):
+            raise RuntimeError('ldap unreachable')
+
+        monkeypatch.setattr(user_module, 'check_password', raising_check_password)
+        u = LMNUser('johndoe')
+        with pytest.raises(RuntimeError, match='ldap unreachable'):
+            u.test_first_password()
 
 
 class TestRoleChecks:
