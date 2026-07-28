@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field, InitVar
-import ldap
 from ..urls import router as lr
-from .common import LMNModel
+from .common import LMNModel, check_password
 from .lmnusermixin import LMNUserMixin
 
 from linuxmusterTools.common import WEBUI_IMPORT
@@ -141,24 +140,8 @@ class LMNUserModel(LMNUserMixin, LMNModel):
 
         self.isAdmin = "administrator" in self.sophomorixRole
 
-    def test_password(self, password=''):
-        if not self.dn:
-            return False
-
-        l = ldap.initialize("ldaps://localhost:636/")
-        l.set_option(ldap.OPT_REFERRALS, 0)
-        l.set_option(ldap.OPT_RESTART, ldap.OPT_ON)
-        l.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_ALLOW)
-        l.protocol_version = ldap.VERSION3
-
-        try:
-            l.bind_s(self.dn, password)
-            return True
-        except ldap.INVALID_CREDENTIALS:
-            return False
-
     def test_first_password(self):
         if self.sophomorixFirstPassword:
-            return self.test_password(self.sophomorixFirstPassword)
+            return check_password(self.dn, self.sophomorixFirstPassword)
         return 'Insufficient permissions to read first password from LDAP.'
 

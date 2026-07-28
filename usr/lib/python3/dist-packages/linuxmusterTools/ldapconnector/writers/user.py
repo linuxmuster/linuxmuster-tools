@@ -5,7 +5,7 @@ from ..ldap_writer import LdapWriter
 from ..urls.ldaprouter import router
 from linuxmusterTools.common import lprint, spinner
 from linuxmusterTools.common.checks import NameChecker
-from ..models import LMNUserModel
+from ..models import LMNUserModel, check_password
 from .group import LMNGroupCommon
 from .schoolclass import LMNSchoolclass
 
@@ -183,6 +183,12 @@ class LMNUser:
                     logger.warning(str(e))
         else:
             logger.warning(f"This object already exists in Ldap, it's not possible to create it!")
+
+    def test_first_password(self):
+        try:
+            return check_password(self.data['distinguishedName'], self.data['sophomorixFirstPassword'])
+        except Exception as e:
+            raise
 
     def create(self):
         raise NotImplementedError

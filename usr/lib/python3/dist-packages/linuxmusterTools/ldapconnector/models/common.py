@@ -1,6 +1,22 @@
+import ldap
 import json
 from dataclasses import dataclass, asdict
 
+def check_password(dn, password=''):
+    if not dn:
+        return False
+
+    l = ldap.initialize("ldaps://localhost:636/")
+    l.set_option(ldap.OPT_REFERRALS, 0)
+    l.set_option(ldap.OPT_RESTART, ldap.OPT_ON)
+    l.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_ALLOW)
+    l.protocol_version = ldap.VERSION3
+
+    try:
+        l.bind_s(dn, password)
+        return True
+    except ldap.INVALID_CREDENTIALS:
+        return False
 
 @dataclass
 class LMNModel:
