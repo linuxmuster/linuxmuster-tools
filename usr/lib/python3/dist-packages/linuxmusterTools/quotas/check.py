@@ -3,9 +3,7 @@ import pwd
 import re
 import logging
 import subprocess
-import smbclient
 from datetime import datetime
-from smbprotocol.exceptions import SMBAuthenticationError
 
 from ..samba_util import SAMBA_WORKGROUP, SAMBA_DOMAIN, SAMBA_NETBIOS, DFS, SHARES_LIST
 from ..ldapconnector import LMNLdapReader as lr
@@ -13,6 +11,28 @@ from ..common import format_size
 
 
 logger = logging.getLogger(__name__)
+
+smbclient = None
+SMBAuthenticationError = None
+
+
+def _load_smb_bindings():
+    """
+    Import smbclient/smbprotocol on first use only, instead of at module
+    import time: this pulls in spnego/gssapi/cryptography (~60ms in
+    practice), and only the samba_root_tree()/samba_dir_size() family below
+    actually needs it.
+    """
+
+    global smbclient, SMBAuthenticationError
+    if smbclient is not None:
+        return
+
+    import smbclient as _smbclient
+    from smbprotocol.exceptions import SMBAuthenticationError as _SMBAuthenticationError
+
+    smbclient = _smbclient
+    SMBAuthenticationError = _SMBAuthenticationError
 
 def timestamp2date(t):
     return datetime.fromtimestamp(t).strftime("%Y-%m-%dT%H:%M:%S")
@@ -26,6 +46,8 @@ def _get_recursive_dir_properties(path):
     :return: Files, subfolders, and their size, last modified date.
     :rtype: dict
     """
+
+    _load_smb_bindings()
 
     properties = {
             'name': path.split('/')[-1],
@@ -73,6 +95,8 @@ def samba_root_tree(user):
     :rtype: dict
     """
 
+    _load_smb_bindings()
+
     try:
         school = lr.getval(f'/users/{user}', 'sophomorixSchoolname')
         path = f'//{SAMBA_NETBIOS}/{school}'
@@ -85,6 +109,8 @@ def samba_root_tree(user):
         return None
 
 def _samba_dir_size(user, path=None):
+    _load_smb_bindings()
+
     if not path:
         # Scanning from root share
         school = lr.getval(f'/users/{user}', 'sophomorixSchoolname')

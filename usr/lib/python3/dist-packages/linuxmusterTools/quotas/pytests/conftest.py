@@ -37,6 +37,11 @@ if 'smbprotocol' not in sys.modules:
 
 import linuxmusterTools.quotas.check as check_module
 
+# check.py now imports smbclient/smbprotocol lazily (only the functions that
+# actually need them call _load_smb_bindings()), so force it once here,
+# before any test monkeypatches check_module.smbclient's attributes.
+check_module._load_smb_bindings()
+
 
 @pytest.fixture
 def check():
