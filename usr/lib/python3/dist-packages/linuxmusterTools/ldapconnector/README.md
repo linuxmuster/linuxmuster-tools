@@ -235,14 +235,20 @@ obj.getattr('mail')                             # read one attribute
 obj.delete()                                    # delete the entry
 ```
 
-### Password check
+### Password management
 
 ```python
 user = LMNUser('johndoe')
-user.test_first_password()   # True / False
+user.test_first_password()               # True / False
+
+user.set_actual_password('N3wP@ssw0rd')  # sets the current password (unicodePwd) only
+user.set_first_password('N3wP@ssw0rd')   # sets sophomorixFirstPassword *and* the current password
+user.set_random_first_password()         # generates a policy-compliant password, returns it
 ```
 
-Performs a real LDAP bind against `user.dn` using the stored `sophomorixFirstPassword`, to check whether the user is still using their initial password. It does not read or modify `unicodePwd`. Raises if the bind itself cannot be attempted (e.g. LDAP unreachable) rather than returning `False`.
+`test_first_password()` performs a real LDAP bind against `user.dn` using the stored `sophomorixFirstPassword`, to check whether the user is still using their initial password. It does not read or modify `unicodePwd`. Raises if the bind itself cannot be attempted (e.g. LDAP unreachable) rather than returning `False`.
+
+`set_actual_password()`/`set_first_password()`/`set_random_first_password()` write the account's real password directly via Samba's `SamDB` (`unicodePwd`), bypassing `sophomorix-passwd`/`smbpasswd` entirely — no password ever transits through a subprocess argv or a shell pipe. This requires root (opens `/var/lib/samba/private/sam.ldb`): call these from an already-privileged process (e.g. lmnapi), never from a demoted webui worker. `set_random_first_password()` resolves the applicable policy via [`passwords.PasswordPolicyProvider`](../passwords/README.md) (domain policy + per-school/role config) and generates a password exactly at that policy's minimum length — there's no length argument, the policy is the only source of truth for it. Raises `RuntimeError` if no candidate satisfies the policy after 100 attempts.
 
 ### Group management
 

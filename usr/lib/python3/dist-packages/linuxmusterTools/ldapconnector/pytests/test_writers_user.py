@@ -1,5 +1,9 @@
+import ldb
 import pytest
 
+import linuxmusterTools.passwords as passwords_module
+import linuxmusterTools.samba_util.samba_tool as samba_tool_module
+from linuxmusterTools.passwords import MinLengthRule
 from linuxmusterTools.ldapconnector.writers import user as user_module
 from linuxmusterTools.ldapconnector.writers.user import (
     LMNUser, LMNStudent, LMNTeacher, LMNStaff, LMNSchoolAdmin, LMNGlobalAdmin,
@@ -179,6 +183,130 @@ class TestLMNUserTestFirstPassword:
         u = LMNUser('johndoe')
         with pytest.raises(RuntimeError, match='ldap unreachable'):
             u.test_first_password()
+
+
+class TestLMNUserSetActualPassword:
+
+    def test_calls_samdb_setpassword(self, monkeypatch, mock_connect, tmp_path):
+        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_USER))
+        samdb_path = tmp_path / 'sam.ldb'
+        samdb_path.write_text('not a real db')
+        calls = []
+        fake_samdb = type('FakeSamDB', (), {
+            'setpassword': lambda self, dn, password: calls.append((dn, password)),
+        })()
+        monkeypatch.setattr(samba_tool_module, 'load_samba_bindings', lambda: None)
+        monkeypatch.setattr(samba_tool_module, 'SAMDB_PATH', str(samdb_path))
+        monkeypatch.setattr(samba_tool_module, 'SamDB', lambda **kw: fake_samdb)
+        monkeypatch.setattr(samba_tool_module, 'system_session', lambda: None)
+        monkeypatch.setattr(samba_tool_module, 'creds', None)
+        monkeypatch.setattr(samba_tool_module, 'lp', None)
+
+        u = LMNUser('johndoe')
+        u.set_actual_password('N3wP@ss!')
+
+        assert calls == [('samaccountname=johndoe', 'N3wP@ss!')]
+
+    def test_raises_when_samdb_path_missing(self, monkeypatch, mock_connect, tmp_path):
+        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_USER))
+        monkeypatch.setattr(samba_tool_module, 'load_samba_bindings', lambda: None)
+        monkeypatch.setattr(samba_tool_module, 'SAMDB_PATH', str(tmp_path / 'missing.ldb'))
+
+        u = LMNUser('johndoe')
+        with pytest.raises(RuntimeError, match='could not be opened'):
+            u.set_actual_password('N3wP@ss!')
+
+    def test_wraps_ldb_error(self, monkeypatch, mock_connect, tmp_path):
+        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_USER))
+        samdb_path = tmp_path / 'sam.ldb'
+        samdb_path.write_text('not a real db')
+
+        def raise_ldb_error(self, dn, password):
+            raise ldb.LdbError(1, 'Password does not meet complexity requirements')
+
+        fake_samdb = type('FakeSamDB', (), {'setpassword': raise_ldb_error})()
+        monkeypatch.setattr(samba_tool_module, 'load_samba_bindings', lambda: None)
+        monkeypatch.setattr(samba_tool_module, 'SAMDB_PATH', str(samdb_path))
+        monkeypatch.setattr(samba_tool_module, 'SamDB', lambda **kw: fake_samdb)
+        monkeypatch.setattr(samba_tool_module, 'system_session', lambda: None)
+        monkeypatch.setattr(samba_tool_module, 'creds', None)
+        monkeypatch.setattr(samba_tool_module, 'lp', None)
+        monkeypatch.setattr(samba_tool_module, 'LdbError', ldb.LdbError)
+
+        u = LMNUser('johndoe')
+        with pytest.raises(Exception, match='complexity requirements'):
+            u.set_actual_password('weak')
+
+
+class TestLMNUserSetFirstPassword:
+
+    def test_writes_first_password_attribute_and_current_password(self, monkeypatch, mock_connect):
+        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_USER))
+        u = LMNUser('johndoe')
+        calls = []
+        monkeypatch.setattr(u, 'set_actual_password', lambda password: calls.append(password))
+
+        u.set_first_password('N3wFirstP@ss!')
+
+        assert mock_connect.modify_s.called
+        assert calls == ['N3wFirstP@ss!']
+
+
+class TestLMNUserSetRandomFirstPassword:
+
+    def test_generates_password_at_policy_minimum_length_and_applies_it(self, monkeypatch, mock_connect):
+        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_USER))
+        u = LMNUser('johndoe')
+        set_first_calls = []
+        monkeypatch.setattr(u, 'set_first_password', lambda password: set_first_calls.append(password))
+
+        fake_policy = type('FakePolicy', (), {
+            'rules': (MinLengthRule(length=8),),
+            'validate': lambda self, password, username=None: type('Result', (), {'ok': True})(),
+        })()
+        fake_provider = type('FakeProvider', (), {
+            'get_policy': lambda self, role, school='default-school': fake_policy,
+        })()
+        monkeypatch.setattr(passwords_module, 'PasswordPolicyProvider', lambda: fake_provider)
+
+        generated = u.set_random_first_password()
+
+        assert len(generated) == 8
+        assert set_first_calls == [generated]
+
+    def test_falls_back_to_default_length_when_policy_has_no_min_length_rule(self, monkeypatch, mock_connect):
+        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_USER))
+        u = LMNUser('johndoe')
+        monkeypatch.setattr(u, 'set_first_password', lambda password: None)
+
+        fake_policy = type('FakePolicy', (), {
+            'rules': (),
+            'validate': lambda self, password, username=None: type('Result', (), {'ok': True})(),
+        })()
+        fake_provider = type('FakeProvider', (), {
+            'get_policy': lambda self, role, school='default-school': fake_policy,
+        })()
+        monkeypatch.setattr(passwords_module, 'PasswordPolicyProvider', lambda: fake_provider)
+
+        generated = u.set_random_first_password()
+
+        assert len(generated) == 8
+
+    def test_raises_when_no_candidate_satisfies_policy(self, monkeypatch, mock_connect):
+        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_USER))
+        u = LMNUser('johndoe')
+
+        fake_policy = type('FakePolicy', (), {
+            'rules': (),
+            'validate': lambda self, password, username=None: type('Result', (), {'ok': False})(),
+        })()
+        fake_provider = type('FakeProvider', (), {
+            'get_policy': lambda self, role, school='default-school': fake_policy,
+        })()
+        monkeypatch.setattr(passwords_module, 'PasswordPolicyProvider', lambda: fake_provider)
+
+        with pytest.raises(RuntimeError, match='100 attempts'):
+            u.set_random_first_password()
 
 
 class TestRoleChecks:

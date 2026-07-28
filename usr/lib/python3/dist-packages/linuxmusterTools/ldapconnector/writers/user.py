@@ -1,3 +1,6 @@
+import os
+import string
+import secrets
 import logging
 from dataclasses import fields
 
@@ -189,6 +192,66 @@ class LMNUser:
             return check_password(self.data['distinguishedName'], self.data['sophomorixFirstPassword'])
         except Exception as e:
             raise
+
+    def set_actual_password(self, password):
+        """
+        Set the account's current password (unicodePwd) directly via SamDB,
+        bypassing sophomorix-passwd/smbpasswd entirely. Requires root (opens
+        /var/lib/samba/private/sam.ldb).
+        """
+
+        from linuxmusterTools.samba_util import samba_tool
+
+        samba_tool.load_samba_bindings()
+        if not os.path.isfile(samba_tool.SAMDB_PATH):
+            raise RuntimeError(
+                f'Cannot set password: {samba_tool.SAMDB_PATH} could not be opened. '
+                'This requires root (SamDB direct access) — call this from a still-privileged '
+                'context (e.g. before an Ajenti worker demotes) rather than a demoted worker.'
+            )
+
+        samdb = samba_tool.SamDB(
+            url=samba_tool.SAMDB_PATH, session_info=samba_tool.system_session(),
+            credentials=samba_tool.creds, lp=samba_tool.lp,
+        )
+        try:
+            samdb.setpassword(f"samaccountname={self.cn}", password)
+        except samba_tool.LdbError as e:
+            logger.error(e.args[1])
+            raise Exception(e.args[1])
+
+    def set_first_password(self, password):
+        """
+        Set the given password as both sophomorixFirstPassword and the
+        account's current password.
+        """
+
+        self.setattr(data={'sophomorixFirstPassword': password})
+        self.set_actual_password(password)
+
+    def set_random_first_password(self):
+        """
+        Generate a random password satisfying the resolved password policy
+        for this user's role/school, then set it as first + current password.
+        Length is entirely determined by that policy's minimum length.
+
+        :return: the generated password
+        """
+
+        from linuxmusterTools.passwords import MinLengthRule, PasswordPolicyProvider
+
+        provider = PasswordPolicyProvider()
+        policy = provider.get_policy(self.data.get('sophomorixRole', ''), school=self.school)
+        length = max((r.length for r in policy.rules if isinstance(r, MinLengthRule)), default=8)
+
+        charlist = string.ascii_letters + string.digits + "!@#$%&*+-?"
+        for _ in range(100):
+            candidate = ''.join(secrets.choice(charlist) for _ in range(length))
+            if policy.validate(candidate, username=self.cn).ok:
+                self.set_first_password(candidate)
+                return candidate
+
+        raise RuntimeError('Could not generate a password satisfying the current policy after 100 attempts.')
 
     def create(self):
         raise NotImplementedError
