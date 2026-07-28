@@ -1,7 +1,6 @@
 import base64
 import dataclasses
 
-import ldb
 import pytest
 
 import linuxmusterTools.samba_util.samba_tool as st
@@ -10,7 +9,6 @@ from linuxmusterTools.samba_util.samba_tool import (
     DomainPasswordSettingsManager,
     GPOManager,
     GroupManager,
-    UserManager,
     DeviceManager,
     GPO,
     _days_to_ticks,
@@ -400,70 +398,6 @@ def test_group_manager_add_members_swallows_unrelated_errors_too():
     # Does not raise, even though the failure has nothing to do with the
     # "member already exists" case the `if` was meant to special-case.
     manager.add_members('9a', ['jdupont'])
-
-
-# --- UserManager -------------------------------------------------------------
-
-def test_user_manager_init_without_samdb_path(tmp_path, monkeypatch):
-    monkeypatch.setattr(st, 'SAMDB_PATH', str(tmp_path / 'missing.ldb'))
-    manager = UserManager()
-    assert not hasattr(manager, 'samdb')
-
-
-@pytest.mark.parametrize('password, expected_weak', [
-    ('short1A', False),   # 7 chars, upper+lower+digit -> considered strong
-    ('alllower1', True),  # no uppercase
-    ('ALLUPPER1', True),  # no lowercase
-    ('Ab', True),         # too short
-])
-def test_check_password_strength(password, expected_weak):
-    manager = UserManager.__new__(UserManager)
-    assert manager._check_password_strength(password) is expected_weak
-
-
-def test_generate_password_is_actually_always_weak():
-    """
-    Known bug: `_check_password_strength()` returns True when the password
-    is WEAK (`re.match(...) is None`), yet `_generate_password()`'s loop is
-    `while not password_check: ... password_check =
-    self._check_password_strength(password)`. That inverts the intended
-    behavior: the loop keeps re-rolling as long as it draws a *strong*
-    password (password_check False -> `not False` True -> loop again) and
-    stops the instant it draws a *weak* one (password_check True -> `not
-    True` False -> exit), returning that weak password. Empirically this is
-    the deterministic outcome, not a rare corner case (reproduced 200/200
-    times locally) -- so `_generate_password()` reliably violates its own
-    documented complexity contract.
-    """
-    manager = UserManager.__new__(UserManager)
-    for _ in range(20):
-        password = manager._generate_password()
-        assert len(password) == 8
-        assert manager._check_password_strength(password) is True
-
-
-def test_set_password_success():
-    calls = []
-    manager = UserManager.__new__(UserManager)
-    manager.samdb = type('FakeSamDB', (), {
-        'setpassword': lambda self, dn, password: calls.append((dn, password)),
-    })()
-
-    manager.set_password('jdupont', 'S3curePass!')
-
-    assert calls == [('samaccountname=jdupont', 'S3curePass!')]
-
-
-def test_set_password_wraps_ldb_error():
-    manager = UserManager.__new__(UserManager)
-
-    def raise_ldb_error(self, dn, password):
-        raise ldb.LdbError(1, "Password does not meet complexity requirements")
-
-    manager.samdb = type('FakeSamDB', (), {'setpassword': raise_ldb_error})()
-
-    with pytest.raises(Exception, match="complexity requirements"):
-        manager.set_password('jdupont', 'weak')
 
 
 # --- DeviceManager -------------------------------------------------------

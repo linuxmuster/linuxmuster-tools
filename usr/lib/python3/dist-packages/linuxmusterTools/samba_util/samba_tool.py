@@ -1,8 +1,6 @@
 import os
 import re
-import string
 import base64
-import random
 import logging
 import subprocess
 from dataclasses import dataclass
@@ -30,7 +28,7 @@ lp = None
 creds = None
 
 
-def _load_samba_bindings():
+def load_samba_bindings():
     """
     Import Samba's Python bindings and build the shared lp/creds session on
     first use, instead of at module import time.
@@ -41,6 +39,12 @@ def _load_samba_bindings():
     production or in a test that patched SamDB beforehand) still ends up
     with a working system_session/creds/lp, without clobbering a test's
     SamDB double once it's already been set.
+
+    Public (not prefixed with `_`): `ldapconnector.writers.user.LMNUser`
+    calls this directly to open its own SamDB connection for password
+    writes, since `ldapconnector` can't import this module at the top level
+    (samba_util already imports ldapconnector, so a module-level import in
+    the other direction would be circular) — see LMNUser.set_actual_password.
     """
 
     global system_session, Credentials, LoadParm, SamDB, get_gpo_info
@@ -133,7 +137,7 @@ class DomainPasswordSettingsManager:
     """
 
     def __init__(self):
-        _load_samba_bindings()
+        load_samba_bindings()
         self.samdb = None
         if os.path.isfile(SAMDB_PATH):
             try:
@@ -232,7 +236,7 @@ class GPOManager:
     """
 
     def __init__(self):
-        _load_samba_bindings()
+        load_samba_bindings()
 
         gpos_infos = {}
 
@@ -264,7 +268,7 @@ class GroupManager:
     """
 
     def __init__(self, school='default-school'):
-        _load_samba_bindings()
+        load_samba_bindings()
         self.POST_HOOK_DIR = '/etc/linuxmuster/tools/hooks/group-manager'
         self.school = school
         self.school_prefix = "" if self.school == 'default-school' else f"{school}-"
@@ -339,51 +343,6 @@ class GroupManager:
 
         self._run_post_hook('add', group, members)
 
-class UserManager:
-    """
-    Sample class to manage samba users via samba-tool.
-    """
-
-    def __init__(self):
-        _load_samba_bindings()
-        self.POST_HOOK_DIR = '/etc/linuxmuster/tools/hooks/user-manager'
-
-        if os.path.isfile(SAMDB_PATH):
-            try:
-                self.samdb = SamDB(url=SAMDB_PATH, session_info=system_session(),credentials=creds, lp=lp)
-            except Exception:
-                logger.error(f'Could not load {SAMDB_PATH}, is linuxmuster installed ?')
-        else:
-            logger.warning(f'{SAMDB_PATH} not found, is linuxmuster installed ?')
-
-    def _check_password_strength(self, password):
-        """
-        Passwords must contain at least one lowercase, one uppercase, one special char or number, and at least 7 chars.
-        """
-
-        regexp = re.compile(r"(?=.*[a-z])(?=.*[A-Z])(?=.*[?!@#§+\-$%&*{}()]|(?=.*\d)).{7,}")
-        return re.match(regexp, password) is None
-
-    def _generate_password(self):
-        """
-        Passwords must contain at least one lowercase, one uppercase, one special char or number, and at least 7 chars.
-        """
-
-        charlist = string.ascii_letters + string.digits + "?!@#§+-$%&*{}()]["
-        password_check = False
-        while not password_check:
-            password = ''.join(random.choices(charlist, k=8))
-            password_check = self._check_password_strength(password)
-
-        return password
-
-    def set_password(self, username, password):
-        try:
-            self.samdb.setpassword(f"samaccountname={username}", password)
-        except LdbError as e:
-            logger.error(e.args[1])
-            raise Exception(e.args[1])
-
 class DeviceManager:
     """
     Sample class to manage samba devices via samba-tool.
@@ -391,7 +350,7 @@ class DeviceManager:
 
 
     def __init__(self):
-        _load_samba_bindings()
+        load_samba_bindings()
         self.POST_HOOK_DIR = '/etc/linuxmuster/tools/hooks/user-manager'
         self.samdb = None
 

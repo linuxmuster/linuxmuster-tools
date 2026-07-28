@@ -54,7 +54,7 @@ Each `GPO` bundles a `DriveManager`, which parses that policy's `Drives.xml` int
 ## Group, user and device management
 
 ```python
-from linuxmusterTools.samba_util import GroupManager, UserManager, DeviceManager
+from linuxmusterTools.samba_util import GroupManager, DeviceManager
 
 groups = GroupManager(school='default-school')
 groups.list()                              # {sophomorixType: [cn, ...], ...}
@@ -65,13 +65,12 @@ groups.remove_members('7b', ['jdupont'])
 `GroupManager` runs every script in `/etc/linuxmuster/tools/hooks/group-manager/` after each membership change.
 
 ```python
-users = UserManager()
-users.set_password('jdupont', 'N3wP@ssw0rd')
-
 devices = DeviceManager()
 creds = devices.get_credentials('client01')       # base64-encoded unicodePwd / supplementalCredentials
 devices.set_credentials('client01', hash_pwd_b64, hash_supplemental_b64)
 ```
+
+User password management (setting `unicodePwd`/`sophomorixFirstPassword`) has moved to `LMNUser` in [`ldapconnector`](../ldapconnector/README.md#password-management) — see `set_actual_password()`/`set_first_password()`/`set_random_first_password()`. `load_samba_bindings()` (this module) is what `LMNUser` calls internally to open its own `SamDB` connection, since `ldapconnector` can't import `samba_util` at module level without creating a cycle.
 
 ---
 
