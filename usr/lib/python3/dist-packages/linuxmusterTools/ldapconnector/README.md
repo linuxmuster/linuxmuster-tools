@@ -235,6 +235,15 @@ obj.getattr('mail')                             # read one attribute
 obj.delete()                                    # delete the entry
 ```
 
+### Password check
+
+```python
+user = LMNUser('johndoe')
+user.test_first_password()   # True / False
+```
+
+Performs a real LDAP bind against `user.dn` using the stored `sophomorixFirstPassword`, to check whether the user is still using their initial password. It does not read or modify `unicodePwd`. Raises if the bind itself cannot be attempted (e.g. LDAP unreachable) rather than returning `False`.
+
 ### Group management
 
 `LMNGroup`, `LMNSchoolclass`, `LMNProject`, and `LMNMgmtGroup` also expose:
