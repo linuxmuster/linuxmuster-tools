@@ -86,7 +86,11 @@ class LMNUserMixin:
     def create_custom_fields_objects(self, custom_config={}):
         self.customFields = {}
 
-        proxy_add = custom_config.get('proxyAddresses', {}).get(self.sophomorixRole, {'editable': False, 'show': False, 'title':''})
+        # custom_fields.yml keys roles in the plural (students, teachers, ...)
+        # while sophomorixRole is singular (student, teacher, ...).
+        role = f"{self.sophomorixRole}s"
+
+        proxy_add = custom_config.get('proxyAddresses', {}).get(role, {'editable': False, 'show': False, 'title':''})
         self.customFields['proxyAddresses'] = {
             'title': proxy_add['title'],
             'canRead': proxy_add['show'],
@@ -94,8 +98,8 @@ class LMNUserMixin:
             'value': self.proxyAddresses
         }
 
-        for i in range(1, 5):
-            config = custom_config.get('custom', {}).get(self.sophomorixRole, {}).get(str(i), {'editable': False, 'show': False, 'title':''})
+        for i in range(1, 6):
+            config = custom_config.get('custom', {}).get(role, {}).get(str(i), {'editable': False, 'show': False, 'title':''})
             self.customFields[f"sophomorixCustom{i}"] = {
                 'title': config['title'],
                 'canRead': config['show'],
@@ -103,8 +107,8 @@ class LMNUserMixin:
                 'value': getattr(self, f"sophomorixCustom{i}")
             }
 
-        for i in range(1, 5):
-            config = custom_config.get('customMulti', {}).get(self.sophomorixRole, {}).get(str(i), {'editable': False, 'show': False, 'title': ''})
+        for i in range(1, 6):
+            config = custom_config.get('customMulti', {}).get(role, {}).get(str(i), {'editable': False, 'show': False, 'title': ''})
             self.customFields[f"sophomorixCustomMulti{i}"] = {
                 'title': config['title'],
                 'canRead': config['show'],
