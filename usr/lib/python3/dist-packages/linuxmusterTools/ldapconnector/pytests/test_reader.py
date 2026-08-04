@@ -3,6 +3,7 @@ from types import SimpleNamespace
 from dataclasses import dataclass, asdict
 from unittest.mock import MagicMock
 
+import linuxmusterTools.ldapconnector.ldap_reader as ldap_reader_module
 from linuxmusterTools.ldapconnector.ldap_reader import LdapReader
 
 
@@ -121,3 +122,84 @@ class TestCreateResultObject:
         result = self.reader._create_result_object((None, {}), _SimpleModel, as_dict=False)
         assert isinstance(result, _SimpleModel)
         assert result.cn == ''
+
+
+class TestCustomFieldsConfigSchoolWiring:
+    """
+    get_single/get_collection must load custom_fields.yml for the school
+    actually being queried, not always default-school.
+    """
+
+    def setup_method(self):
+        self.reader = LdapReader.__new__(LdapReader)
+        self.reader.lc = MagicMock()
+        self.reader.lc._get.return_value = []
+
+    def test_get_single_loads_config_for_the_queried_school(self, monkeypatch):
+        seen_schools = []
+        monkeypatch.setattr(
+            ldap_reader_module, 'CustomFieldsConfig',
+            lambda school: seen_schools.append(school) or SimpleNamespace(config={})
+        )
+
+        self.reader.get_single(_SimpleModel, 'filter', school='other-school')
+
+        assert seen_schools == ['other-school']
+
+    def test_get_single_defaults_to_default_school(self, monkeypatch):
+        seen_schools = []
+        monkeypatch.setattr(
+            ldap_reader_module, 'CustomFieldsConfig',
+            lambda school: seen_schools.append(school) or SimpleNamespace(config={})
+        )
+
+        self.reader.get_single(_SimpleModel, 'filter')
+
+        assert seen_schools == ['default-school']
+
+    def test_get_collection_loads_config_for_the_queried_school(self, monkeypatch):
+        seen_schools = []
+        monkeypatch.setattr(
+            ldap_reader_module, 'CustomFieldsConfig',
+            lambda school: seen_schools.append(school) or SimpleNamespace(config={})
+        )
+
+        self.reader.get_collection(_SimpleModel, 'filter', school='other-school')
+
+        assert seen_schools == ['other-school']
+
+    def test_get_collection_defaults_to_default_school(self, monkeypatch):
+        seen_schools = []
+        monkeypatch.setattr(
+            ldap_reader_module, 'CustomFieldsConfig',
+            lambda school: seen_schools.append(school) or SimpleNamespace(config={})
+        )
+
+        self.reader.get_collection(_SimpleModel, 'filter')
+
+        assert seen_schools == ['default-school']
+
+    def test_get_single_global_falls_back_to_default_school(self, monkeypatch):
+        # 'global' is a routing marker for global-admin searches, not a real
+        # school directory — it must not be used as-is to build the
+        # custom_fields.yml path.
+        seen_schools = []
+        monkeypatch.setattr(
+            ldap_reader_module, 'CustomFieldsConfig',
+            lambda school: seen_schools.append(school) or SimpleNamespace(config={})
+        )
+
+        self.reader.get_single(_SimpleModel, 'filter', school='global')
+
+        assert seen_schools == ['default-school']
+
+    def test_get_collection_global_falls_back_to_default_school(self, monkeypatch):
+        seen_schools = []
+        monkeypatch.setattr(
+            ldap_reader_module, 'CustomFieldsConfig',
+            lambda school: seen_schools.append(school) or SimpleNamespace(config={})
+        )
+
+        self.reader.get_collection(_SimpleModel, 'filter', school='global')
+
+        assert seen_schools == ['default-school']

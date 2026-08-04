@@ -301,3 +301,75 @@ class TestGroupModelGetAllMembers:
         group.get_all_members()
         assert group.membersCount == 0
         assert group.all_members == []
+
+
+class TestCreateCustomFieldsObjects:
+
+    def _make_user(self, role='teacher'):
+        user = _FakeUser()
+        user.sophomorixRole = role
+        user.proxyAddresses = ['smtp:john@example.com']
+        for i in range(1, 6):
+            setattr(user, f'sophomorixCustom{i}', f'value{i}')
+            setattr(user, f'sophomorixCustomMulti{i}', [f'multi{i}'])
+        return user
+
+    def test_role_is_looked_up_in_the_plural(self):
+        user = self._make_user(role='teacher')
+        config = {
+            'custom': {'teachers': {'1': {'title': 'Matricule', 'show': True, 'editable': False}}},
+        }
+        user.create_custom_fields_objects(config)
+        assert user.customFields['sophomorixCustom1']['title'] == 'Matricule'
+        assert user.customFields['sophomorixCustom1']['canRead'] is True
+        assert user.customFields['sophomorixCustom1']['canWrite'] is False
+
+    def test_singular_role_key_is_never_matched(self):
+        # Regression: the config used to be looked up with the singular
+        # sophomorixRole ('teacher'), which never matches the plural keys
+        # written by the webui ('teachers').
+        user = self._make_user(role='teacher')
+        config = {
+            'custom': {'teacher': {'1': {'title': 'Wrong key', 'show': True, 'editable': True}}},
+        }
+        user.create_custom_fields_objects(config)
+        assert user.customFields['sophomorixCustom1']['title'] == ''
+        assert user.customFields['sophomorixCustom1']['canRead'] is False
+
+    def test_all_five_custom_fields_are_exposed(self):
+        user = self._make_user(role='student')
+        config = {
+            'custom': {'students': {str(i): {'title': f'T{i}', 'show': True, 'editable': True} for i in range(1, 6)}},
+        }
+        user.create_custom_fields_objects(config)
+        for i in range(1, 6):
+            assert f'sophomorixCustom{i}' in user.customFields
+            assert user.customFields[f'sophomorixCustom{i}']['title'] == f'T{i}'
+            assert user.customFields[f'sophomorixCustom{i}']['value'] == f'value{i}'
+
+    def test_all_five_custom_multi_fields_are_exposed(self):
+        user = self._make_user(role='student')
+        config = {
+            'customMulti': {'students': {str(i): {'title': f'M{i}', 'show': True, 'editable': True} for i in range(1, 6)}},
+        }
+        user.create_custom_fields_objects(config)
+        for i in range(1, 6):
+            assert f'sophomorixCustomMulti{i}' in user.customFields
+            assert user.customFields[f'sophomorixCustomMulti{i}']['title'] == f'M{i}'
+
+    def test_proxy_addresses_use_pluralized_role(self):
+        user = self._make_user(role='globaladministrator')
+        config = {
+            'proxyAddresses': {'globaladministrators': {'title': 'Emails', 'show': True, 'editable': False}},
+        }
+        user.create_custom_fields_objects(config)
+        assert user.customFields['proxyAddresses']['title'] == 'Emails'
+        assert user.customFields['proxyAddresses']['canRead'] is True
+        assert user.customFields['proxyAddresses']['value'] == user.proxyAddresses
+
+    def test_missing_config_falls_back_to_defaults(self):
+        user = self._make_user(role='student')
+        user.create_custom_fields_objects({})
+        assert user.customFields['sophomorixCustom1'] == {
+            'title': '', 'canRead': False, 'canWrite': False, 'value': 'value1',
+        }
