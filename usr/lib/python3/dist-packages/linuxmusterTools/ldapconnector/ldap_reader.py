@@ -79,7 +79,11 @@ class LdapReader:
 
         results = self.lc._get(ldap_filter, scope=scope, subdn=subdn)
 
-        custom_fields_config = CustomFieldsConfig().config
+        school = kwargs.get('school')
+        if not school or school == 'global':
+            school = 'default-school'
+
+        custom_fields_config = CustomFieldsConfig(school=school).config
 
         if len(results) == 0:
             return self._create_result_object([None], objectclass, attributes=attributes, custom_config= custom_fields_config, **kwargs)
@@ -125,7 +129,11 @@ class LdapReader:
         response = []
 
         # TODO: ugly code, find a better way to handle specific parameters
-        custom_fields_config = CustomFieldsConfig().config
+        school = kwargs.get('school')
+        if not school or school == 'global':
+            school = 'default-school'
+
+        custom_fields_config = CustomFieldsConfig(school=school).config
 
         for result in results:
             formatted_obj = self._create_result_object(result, objectclass, attributes=attributes, custom_config= custom_fields_config, **kwargs)
