@@ -12,6 +12,10 @@ it is intentionally left untested here. parse_log_level() is pure and
 independent of any of that, so it is fully covered below.
 """
 
+import importlib
+from subprocess import CalledProcessError
+
+import linuxmusterTools.lmnconfig.samba as samba_module
 from linuxmusterTools.lmnconfig.samba import parse_log_level
 
 
@@ -46,3 +50,35 @@ def test_last_bare_int_wins_for_general():
 def test_extra_whitespace_is_ignored():
     result = parse_log_level('   1   auth_audit:2   ')
     assert result == {'general': 1, 'auth_audit': 2}
+
+
+# ---------------------------------------------------------------------------
+# Import without a Samba installation
+# ---------------------------------------------------------------------------
+
+def _reload_samba_with_check_output(monkeypatch, raising):
+    """Re-execute samba.py with a check_output that fails the given way."""
+    import subprocess
+
+    monkeypatch.setattr(subprocess, 'check_output', raising)
+    return importlib.reload(samba_module)
+
+
+def test_import_survives_missing_net_binary(monkeypatch):
+    def _no_binary(*args, **kwargs):
+        raise FileNotFoundError(2, 'No such file or directory', '/usr/bin/net')
+
+    reloaded = _reload_samba_with_check_output(monkeypatch, _no_binary)
+
+    assert reloaded.SHARES_LIST == []
+    assert reloaded.DFS == {}
+
+
+def test_import_survives_failing_net_call(monkeypatch):
+    def _fails(*args, **kwargs):
+        raise CalledProcessError(1, ['/usr/bin/net', 'conf', 'list'])
+
+    reloaded = _reload_samba_with_check_output(monkeypatch, _fails)
+
+    assert reloaded.SHARES_LIST == []
+    assert reloaded.DFS == {}

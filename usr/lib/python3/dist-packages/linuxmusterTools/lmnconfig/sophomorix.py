@@ -36,6 +36,8 @@ class SophomorixIni:
     def __init__(self):
         self.path = "/usr/share/sophomorix/devel/sophomorix.ini"
         self.data = ConfigParser(delimiters=("=",), dict_type=MultiOrderedDict, strict=False)
+        if not os.path.isfile(self.path):
+            logger.warning(f"No sophomorix ini found at {self.path}. Is sophomorix installed and configured ?")
         self.data.read(self.path)
         self.sections = list(self.data.keys())
 
@@ -56,7 +58,7 @@ class SophomorixIni:
             'thinclient',
             'iponly',
         ]
-        self.userrole = list(self.dict['ROLE_USER'].keys())
+        self.userrole = list(self.dict.get('ROLE_USER', {}).keys())
 
     @staticmethod
     def sanitize(value):

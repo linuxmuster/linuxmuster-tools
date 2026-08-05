@@ -2,7 +2,7 @@ import logging
 import os
 from configparser import ConfigParser
 from configobj import ConfigObj
-from subprocess import check_output
+from subprocess import CalledProcessError, check_output
 from io import StringIO
 
 
@@ -57,7 +57,11 @@ except Exception as e:
 
 DFS = {}
 
-config = ConfigObj(StringIO(check_output(["/usr/bin/net", "conf", "list"], shell=False).decode()))
+try:
+    config = ConfigObj(StringIO(check_output(["/usr/bin/net", "conf", "list"], shell=False).decode()))
+except (OSError, CalledProcessError) as e:
+    logger.error(f"Can not read the samba share configuration: {str(e)}. Is linuxmuster.net installed and configured ?")
+    config = ConfigObj()
 
 SHARES_LIST = list(config.keys())
 

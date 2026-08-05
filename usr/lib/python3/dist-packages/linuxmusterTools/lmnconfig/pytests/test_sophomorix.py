@@ -234,3 +234,22 @@ def test_sophomorix_conf_file_found_reads_data_attribute(monkeypatch, fake_lmnfi
     # Note: SophomorixConf reads config.data (not config.read()), unlike the
     # other classes in this module.
     assert config.data == canned
+
+
+# ---------------------------------------------------------------------------
+# SophomorixIni without a sophomorix installation
+# ---------------------------------------------------------------------------
+
+def test_sophomorix_ini_without_role_user_section_gives_empty_roles(monkeypatch):
+    # ConfigParser.read() silently ignores a missing file, so an unconfigured
+    # machine leaves the parser with nothing but the DEFAULT section. Reading
+    # ROLE_USER unguarded raised KeyError and made the whole package
+    # unimportable off-server.
+    monkeypatch.setattr(
+        sophomorix_module.ConfigParser, 'read', lambda self, *args, **kwargs: []
+    )
+
+    ini = SophomorixIni()
+
+    assert ini.userrole == []
+    assert ini.computerrole == []
