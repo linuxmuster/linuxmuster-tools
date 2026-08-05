@@ -1,3 +1,35 @@
+linuxmuster-tools7 (7.4.11) lmn74; urgency=medium
+
+  * [ldapconnector] Add password-management methods to LMNUser:
+    set_actual_password() (direct SamDB unicodePwd write, bypasses
+    sophomorix-passwd/smbpasswd), set_first_password(), and
+    set_random_first_password() (policy-aware random generation).
+  * [ldapconnector] Add LMNUser.test_first_password(); extract the shared
+    LDAP bind check into models/common.py::check_password().
+  * [samba_util] Remove the deprecated, buggy UserManager class - password
+    management now lives entirely in LMNUser (see ldapconnector).
+  * [samba_util] Lazy-import Samba's Python bindings instead of at module
+    import time - avoids an import-time failure/slowdown when Samba isn't
+    available yet, and breaks a circular import with the password module.
+  * [quotas] Lazy-import smbclient/smbprotocol bindings for the same
+    reason.
+  * [ldapconnector] Fix custom fields config resolution: role names were
+    looked up singular against a YAML keyed plural, only fields 1-4 were
+    read instead of 1-5, and the config always loaded default-school's
+    settings regardless of the actual user's school. Closes #25.
+  * [ldapconnector] Fix add_members()/remove_members() silently hiding
+    per-user failures; one invalid cn no longer hides the rest of the
+    batch, failures are now collected and returned as a list.
+  * [ldapconnector] Fix stale data when converting a group to an LMN group
+    (missing load_data() refresh before the follow-up setattr()).
+  * [tests] Add coverage for custom fields config, LMNUser first-password
+    methods, and group member batch failures.
+  * [docs] Add README for common, devices, install scripts, lmnconfig,
+    print, smbclient and subnets modules; update ldapconnector README for
+    the new password-management API.
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Wed, 05 Aug 2026 15:30:00 +0200
+
 linuxmuster-tools7 (7.4.10) lmn74; urgency=medium
 
   * [passwords] New password constraints module: policy provider, Samba
