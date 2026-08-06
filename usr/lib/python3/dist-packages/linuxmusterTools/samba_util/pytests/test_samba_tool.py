@@ -376,14 +376,13 @@ def test_group_manager_add_members_swallows_duplicate_member_error(tmp_path, mon
     assert calls == [['jdupont']]
 
 
-def test_group_manager_add_members_swallows_unrelated_errors_too():
+def test_group_manager_add_members_reraises_unrelated_errors():
     """
-    Known bug: the except clause in GroupManager.add_members() only *checks*
-    for the LDAP "already exists" code 68 inside `if "(68," in str(e): pass`
-    but has no `else: raise`, so ANY exception raised by
-    add_remove_group_members (not just the intended idempotent-add case) is
-    silently swallowed. This documents the current (buggy) behavior rather
-    than the presumably-intended one.
+    add_members() must only swallow the benign "already a member" case
+    (LDAP code 68); any other failure from add_remove_group_members (e.g.
+    "Unable to find group", "Unable to find <member>") must propagate,
+    otherwise the caller (linuxmuster-api) would report success even though
+    nothing was added.
     """
     manager = GroupManager.__new__(GroupManager)
     manager.school_prefix = ''
@@ -395,9 +394,55 @@ def test_group_manager_add_members_swallows_unrelated_errors_too():
     manager.samdb = type('FakeSamDB', (), {'add_remove_group_members': staticmethod(fake_add)})()
     manager._run_post_hook = lambda action, group, members: None
 
-    # Does not raise, even though the failure has nothing to do with the
-    # "member already exists" case the `if` was meant to special-case.
+    with pytest.raises(Exception, match="totally unrelated failure"):
+        manager.add_members('9a', ['jdupont'])
+
+
+def test_run_post_hook_logs_and_continues_on_script_failure(monkeypatch):
+    """
+    One broken hook script must not prevent the others from running, and
+    must not raise: hooks are site-local customization, not part of the
+    membership change's own success/failure.
+    """
+    manager = GroupManager.__new__(GroupManager)
+    manager.POST_HOOK_DIR = '/fake/hooks'
+
+    ran = []
+    monkeypatch.setattr(st.os, 'listdir', lambda path: ['1-broken.sh', '2-ok.sh'])
+
+    def fake_run(argv, *a, **kw):
+        script = argv[0]
+        if 'broken' in script:
+            raise PermissionError(13, 'Permission denied')
+        ran.append(script)
+
+    monkeypatch.setattr(st.subprocess, 'run', fake_run)
+
+    # Must not raise, and the second (working) script must still run.
+    manager._run_post_hook('add', '9a', ['jdupont'])
+
+    assert ran == [st.os.path.join('/fake/hooks', '2-ok.sh')]
+
+
+def test_add_members_succeeds_even_if_post_hook_fails(tmp_path, monkeypatch):
+    """
+    The LDAP membership change already succeeded by the time the post-hook
+    runs: a broken hook (e.g. missing +x, per a real incident on this exact
+    setup) must not make add_members() report a failure that didn't happen.
+    """
+    calls = []
+    fake_samdb = type('FakeSamDB', (), {
+        'add_remove_group_members': lambda self, group, members, add_members_operation: calls.append(
+            (group, members, add_members_operation)
+        ),
+    })()
+    manager = _group_manager(tmp_path, monkeypatch, samdb=fake_samdb)
+    monkeypatch.setattr(st.os, 'listdir', lambda path: ['broken.sh'])
+    monkeypatch.setattr(st.subprocess, 'run', lambda *a, **kw: (_ for _ in ()).throw(PermissionError(13, 'Permission denied')))
+
     manager.add_members('9a', ['jdupont'])
+
+    assert calls == [('9a', ['jdupont'], True)]
 
 
 # --- DeviceManager -------------------------------------------------------

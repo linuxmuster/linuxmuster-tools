@@ -291,11 +291,21 @@ class GroupManager:
         :type group: basestring
         :param members: members list, will be given coma separated as argument
         :type members: list
+
+        By the time this runs, the LDAP membership change already succeeded.
+        A hook failure (missing +x, broken script, ...) is only logged, never
+        raised: it must not make the caller (add_members/remove_members)
+        report a failure that didn't happen, and one broken script must not
+        stop the others from running.
         """
 
         for script in sorted(os.listdir(self.POST_HOOK_DIR)):
-            print(f"Executing {os.path.join(self.POST_HOOK_DIR, script)}")
-            subprocess.run([os.path.join(self.POST_HOOK_DIR, script), action, group, ','.join(members)])
+            script_path = os.path.join(self.POST_HOOK_DIR, script)
+            try:
+                print(f"Executing {script_path}")
+                subprocess.run([script_path, action, group, ','.join(members)])
+            except Exception as e:
+                logger.error(f"Group-manager post-hook {script_path} failed: {e}")
 
     def list(self):
         raw_groups = lr.get('/groups', attributes=['cn', 'sophomorixType'], school=self.school)
@@ -337,9 +347,9 @@ class GroupManager:
             try:
                 self.samdb.add_remove_group_members(f"{self.school_prefix}{group}", members=[member], add_members_operation=True)
             except Exception as e:
-                if "(68," in str(e):
-                    # Attribute member already exists for target GUID ... already in group, passing error
-                    pass
+                if "(68," not in str(e):
+                    # Not the benign "already a member" case (LDAP code 68): re-raise.
+                    raise
 
         self._run_post_hook('add', group, members)
 
