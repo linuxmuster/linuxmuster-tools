@@ -59,6 +59,21 @@ class ImageExistsError(FileExistsError):
         self.path = path
 
 
+class IncompleteImageInfoError(ValueError):
+    """
+    Raised when a .info file is missing or missing required fields.
+    """
+
+    def __init__(self, info_path, missing_fields=None):
+        if missing_fields:
+            message = f"Incomplete image info file {info_path}: missing {', '.join(missing_fields)}"
+        else:
+            message = f"Missing image info file: {info_path}"
+        super().__init__(message)
+        self.info_path = info_path
+        self.missing_fields = missing_fields or []
+
+
 class LinboImage:
     """
     A class to manage a linbo image or a backup image
@@ -129,6 +144,15 @@ class LinboImage:
                 self.extras[extra] = None
 
     def parse_info_file(self):
+        """
+        Parse the .info file LINBO itself reads to deploy this image.
+
+        Raises IncompleteImageInfoError if the file is missing or missing a
+        required field: an incomplete .info here means the image is not
+        safely deployable, which callers must see rather than have papered
+        over with a fabricated value.
+        """
+
         info_path = os.path.join(self.path, f"{self.image}.info")
         attributes = {}
         if os.path.isfile(info_path):
@@ -137,9 +161,22 @@ class LinboImage:
                     if '=' in line:
                         # Support timestamp=2021..
                         # and timestamp="2021..."
-                        k, v = line.strip().split('=')
+                        k, v = line.strip().split('=', 1)
                         v = v.strip('"')
-                        attributes[k] = v
+                        # Older/foreign .info files carry keys ImageInfo does not
+                        # model (e.g. "baseimage" instead of "partition"); ignored
+                        # here, but the required field it would have filled is
+                        # still reported missing below.
+                        if k in ImageInfo.__dataclass_fields__:
+                            attributes[k] = v
+
+        missing = [
+            field for field in ImageInfo.__dataclass_fields__
+            if not attributes.get(field)
+        ]
+        if missing:
+            raise IncompleteImageInfoError(info_path, missing)
+
         self.info_file = ImageInfo(**attributes)
 
     def delete_files(self):
@@ -296,7 +333,18 @@ class LinboImageGroup:
 
     def load(self):
         self.backups = {}
-        self.base = LinboImage(self.name)
+        self.error = None
+        try:
+            self.base = LinboImage(self.name)
+        except IncompleteImageInfoError as e:
+            # Isolated here rather than left to propagate: one image with a
+            # broken .info must not take the whole manager's listing down with
+            # it. The group still exists, flagged, so it stays visible instead
+            # of silently vanishing from the list.
+            logger.error(f"Image group {self.name} is not usable: {e}")
+            self.base = None
+            self.error = str(e)
+            return
         self.get_backups()
         self.get_diff()
 
@@ -327,7 +375,11 @@ class LinboImageGroup:
         """
 
         if os.path.exists(os.path.join(LINBO_PATH, self.name, f'{self.name}.{DIFF_IMAGE}')):
-            self.diff_image = LinboImage(self.name, diff=True)
+            try:
+                self.diff_image = LinboImage(self.name, diff=True)
+            except IncompleteImageInfoError as e:
+                logger.error(f"Differential image for {self.name} is not usable: {e}")
+                self.diff_image = None
         else:
             self.diff_image = None
 
@@ -396,6 +448,11 @@ class LinboImageGroup:
         self.base.delete()
 
     def to_dict(self):
+        if self.base is None:
+            # Flagged rather than raised or omitted: the caller (an images
+            # listing) must still see this group exists and needs attention.
+            return {'name': self.name, 'error': self.error, 'selected': False}
+
         result = self.base.to_dict()
         result['diff_image'] = self.diff_image.to_dict() if self.diff_image else {}
         result['backups'] = {
