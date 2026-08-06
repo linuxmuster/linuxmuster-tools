@@ -50,6 +50,15 @@ def date2timestamp(date):
 def timestamp2date(timestamp):
     return datetime.strptime(timestamp, TIMESTAMP_FMT).strftime(DATE_UI_FMT)
 
+
+class ImageExistsError(FileExistsError):
+    """Raised when a new image or backup would replace an existing path."""
+
+    def __init__(self, path):
+        super().__init__(f"Image path already exists: {path}")
+        self.path = path
+
+
 class LinboImage:
     """
     A class to manage a linbo image or a backup image
@@ -168,12 +177,7 @@ class LinboImage:
 
         if not self.diff:
             # Remove directory
-            try:
-                os.rmdir(self.path)
-            except OSError as e:
-                # TODO: better handle this
-                print(e)
-                #raise EndpointError(e)
+            os.rmdir(self.path)
 
     def rename(self, new_name):
         """
@@ -387,12 +391,7 @@ class LinboImageGroup:
             self.diff_image.delete()
 
         if os.path.isdir(self.backup_path):
-            try:
-                os.rmdir(self.backup_path)
-            except OSError as e:
-                # TODO: better handle this
-                print(e)
-                #raise EndpointError(e)
+            os.rmdir(self.backup_path)
 
         self.base.delete()
 
@@ -575,8 +574,7 @@ class LinboImageManager:
         """
 
         if os.path.isdir(os.path.join(LINBO_PATH, new_name)):
-            print(f"Directory {new_name} already exists")
-            return
+            raise ImageExistsError(os.path.join(LINBO_PATH, new_name))
 
         if group in self.groups:
             shutil.copytree(
@@ -619,8 +617,7 @@ class LinboImageManager:
                 )
 
                 if os.path.isdir(new_backup_dir):
-                    print(f"Backup directory {new_backup_dir} already exists")
-                    return
+                    raise ImageExistsError(new_backup_dir)
                 
                 os.mkdir(new_backup_dir)
 
