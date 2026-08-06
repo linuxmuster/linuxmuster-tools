@@ -722,10 +722,14 @@ class LinboImageManager:
         if group in self.groups:
             imageGroup = self.groups[group]
             if diff:
+                if imageGroup.diff_image is None:
+                    raise RuntimeError(f"Image group {group} has no differential image")
                 imageGroup.diff_image.save_extras(data)
             elif date in imageGroup.backups:
                 imageGroup.backups[date].save_extras(data)
             else:
+                if imageGroup.base is None:
+                    raise RuntimeError(f"Cannot save extras for image group {group}: {imageGroup.error}")
                 imageGroup.base.save_extras(data)
 
     def get_images_infos(self):

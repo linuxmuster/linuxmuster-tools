@@ -189,6 +189,25 @@ def test_delete_refuses_on_broken_group(environment):
     assert (images_root / "broken").is_dir()
 
 
+def test_save_extras_refuses_on_broken_group(environment):
+    images_root, images = environment
+    _create_broken_image(images_root, "broken")
+    images.list()
+
+    with pytest.raises(RuntimeError, match="Cannot save extras for image group broken"):
+        images.save_extras("broken", {"desc": "test"})
+
+
+def test_save_extras_refuses_when_no_diff_image_exists(environment):
+    images_root, images = environment
+    _create_image(images_root, "ubuntu")
+    images.list()
+    assert images.groups["ubuntu"].diff_image is None
+
+    with pytest.raises(RuntimeError, match="Image group ubuntu has no differential image"):
+        images.save_extras("ubuntu", {"desc": "test"}, diff=True)
+
+
 # ── LinboImage.delete() / LinboImageGroup.delete() propagate OSError ─
 
 
