@@ -413,6 +413,9 @@ class LinboImageGroup:
         Rename an image and all his backups.
         """
 
+        if self.base is None:
+            raise RuntimeError(f"Cannot rename image group {self.name}: {self.error}")
+
         for timestamp, backup in self.backups.items():
             backup.rename(new_name)
 
@@ -435,6 +438,9 @@ class LinboImageGroup:
         """
         Delete basic image, all backups, diff image and all config files.
         """
+
+        if self.base is None:
+            raise RuntimeError(f"Cannot delete image group {self.name}: {self.error}")
 
         for timestamp, backup in self.backups.items():
             backup.delete()
