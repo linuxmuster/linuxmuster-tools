@@ -373,3 +373,20 @@ class TestCreateCustomFieldsObjects:
         assert user.customFields['sophomorixCustom1'] == {
             'title': '', 'canRead': False, 'canWrite': False, 'value': 'value1',
         }
+
+    def test_partial_field_config_missing_editable_key_does_not_crash(self):
+        # Regression: a field entry present but missing 'editable' (older
+        # custom_fields.yml or manual edit) used to raise KeyError('editable')
+        # instead of falling back to the default for that key only.
+        user = self._make_user(role='student')
+        config = {
+            'custom': {'students': {'1': {'title': 'Matricule', 'show': True}}},
+            'customMulti': {'students': {'1': {'title': 'Groupes', 'show': True}}},
+            'proxyAddresses': {'students': {'title': 'Emails', 'show': True}},
+        }
+        user.create_custom_fields_objects(config)
+        assert user.customFields['sophomorixCustom1']['title'] == 'Matricule'
+        assert user.customFields['sophomorixCustom1']['canRead'] is True
+        assert user.customFields['sophomorixCustom1']['canWrite'] is False
+        assert user.customFields['sophomorixCustomMulti1']['canWrite'] is False
+        assert user.customFields['proxyAddresses']['canWrite'] is False

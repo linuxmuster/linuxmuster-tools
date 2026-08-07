@@ -90,7 +90,9 @@ class LMNUserMixin:
         # while sophomorixRole is singular (student, teacher, ...).
         role = f"{self.sophomorixRole}s"
 
-        proxy_add = custom_config.get('proxyAddresses', {}).get(role, {'editable': False, 'show': False, 'title':''})
+        default_field_config = {'editable': False, 'show': False, 'title': ''}
+
+        proxy_add = {**default_field_config, **custom_config.get('proxyAddresses', {}).get(role, {})}
         self.customFields['proxyAddresses'] = {
             'title': proxy_add['title'],
             'canRead': proxy_add['show'],
@@ -99,7 +101,7 @@ class LMNUserMixin:
         }
 
         for i in range(1, 6):
-            config = custom_config.get('custom', {}).get(role, {}).get(str(i), {'editable': False, 'show': False, 'title':''})
+            config = {**default_field_config, **custom_config.get('custom', {}).get(role, {}).get(str(i), {})}
             self.customFields[f"sophomorixCustom{i}"] = {
                 'title': config['title'],
                 'canRead': config['show'],
@@ -108,7 +110,7 @@ class LMNUserMixin:
             }
 
         for i in range(1, 6):
-            config = custom_config.get('customMulti', {}).get(role, {}).get(str(i), {'editable': False, 'show': False, 'title': ''})
+            config = {**default_field_config, **custom_config.get('customMulti', {}).get(role, {}).get(str(i), {})}
             self.customFields[f"sophomorixCustomMulti{i}"] = {
                 'title': config['title'],
                 'canRead': config['show'],
