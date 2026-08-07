@@ -1,6 +1,6 @@
 from .images import *
 from .config import *
-from .command import *
+from .linbo_sync import *
 
 # Experimental for linbo docker
 
