@@ -30,9 +30,9 @@ class LinboConfigManager:
         self.load_linbo_startconfs()
 
     def load_linbo_startconfs(self):
-        for config in sorted(glob('/srv/linbo/start.conf.*')):
+        for config in sorted(glob(os.path.join(LINBO_PATH, 'start.conf.*'))):
             if not os.path.islink(config):
-                group = config.replace('/srv/linbo/start.conf.', '')
+                group = config.replace(os.path.join(LINBO_PATH, 'start.conf.'), '')
 
                 ## Maybe is the ignore list incomplete
                 if any(s in group for s in ('.bak', '.bkp', '.tmp')) or group.endswith('~'):
@@ -256,6 +256,8 @@ def group_os(workstations):
     """
 
 
+    startconf_mgr = LinboConfigManager()
+
     for group in workstations.keys():
         workstations[group]['os'] = []
         config = read_config(group)
@@ -272,11 +274,19 @@ def group_os(workstations):
                 'prestart': 0,
                 'partition': 0,
             }
+
+            linbo_config = startconf_mgr.linbo_configs.get(group)
+            # 1-based position among [Partition] sections, what linbo-remote's
+            # format:<#> actually expects — NOT the digit in the device path
+            # (Root=/dev/sda3 isn't necessarily partition 3).
+            partitions = [p.Dev for p in linbo_config.Partitions] if linbo_config else []
+
             for osConfig in config:
                 if osConfig['SyncEnabled'] or osConfig['NewEnabled']:
+                    root = osConfig['Root']
                     tmpDict = {
                                 'baseimage': osConfig['BaseImage'],
-                                'partition': osConfig['Root'][-1],
+                                'partition': partitions.index(root) + 1 if root in partitions else None,
                                 'new_enabled': osConfig['NewEnabled'],
                                 'start_enabled': osConfig['StartEnabled'],
                                 'run_format': 0,

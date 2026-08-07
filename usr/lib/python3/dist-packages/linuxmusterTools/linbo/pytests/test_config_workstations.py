@@ -51,6 +51,51 @@ def test_group_os_no_startconf_leaves_empty_os(tmp_path):
     assert 'auto' not in workstations['grp1']
 
 
+def test_group_os_partition_is_none_without_partition_sections(tmp_path):
+    write_start_conf(tmp_path)  # no [Partition] section at all
+    workstations = {'grp1': {'hosts': []}}
+
+    group_os(workstations)
+
+    assert workstations['grp1']['os'][0]['partition'] is None
+
+
+START_CONF_WITH_PARTITIONS = """\
+[Partition]
+Dev=/dev/sda1
+Size=200M
+Id=ef
+Label=efi
+Bootable=yes
+FSType=vfat
+
+[Partition]
+Dev=/dev/sda3
+Size=30G
+Id=83
+Label=data
+Bootable=no
+FSType=ext4
+
+[OS]
+BaseImage=ubuntu.qcow2
+Root=/dev/sda3
+SyncEnabled=yes
+NewEnabled=no
+StartEnabled=yes
+"""
+
+
+def test_group_os_partition_is_position_not_device_digit(tmp_path):
+    (tmp_path / 'start.conf.grp1').write_text(START_CONF_WITH_PARTITIONS)
+    workstations = {'grp1': {'hosts': []}}
+
+    group_os(workstations)
+
+    # Root=/dev/sda3 is the 2nd [Partition] section, not partition "3".
+    assert workstations['grp1']['os'][0]['partition'] == 2
+
+
 # ── last_sync_all ────────────────────────────────────────────────────────
 
 

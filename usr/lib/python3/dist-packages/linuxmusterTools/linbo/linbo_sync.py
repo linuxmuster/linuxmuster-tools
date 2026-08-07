@@ -13,7 +13,7 @@ from datetime import datetime, timezone
 
 from ..devices import Devices
 from ..ldapconnector import LMNLdapReader as lr
-from .config import read_config
+from .config import LinboConfigManager, read_config
 
 
 SESSION_SUFFIX = '.linbo-remote'
@@ -150,13 +150,20 @@ class LinboRemote:
         if not groups:
             raise LinboRemoteParameterError(f'Could not resolve any group for the given target.')
 
+        # Only needed for 'format': the partition count of a group, from its
+        # [Partition] sections (nr for other commands is an [OS] position,
+        # already available from read_config below).
+        startconf_mgr = LinboConfigManager() if name == 'format' else None
+
         for group in groups:
             config = read_config(group)
             if not config:
                 raise LinboRemoteParameterError(f'No start.conf for group {group}.')
 
             if name == 'format':
-                if nr not in {c['Root'][-1] for c in config}:
+                linbo_config = startconf_mgr.linbo_configs.get(group)
+                nr_partitions = len(linbo_config.Partitions) if linbo_config else 0
+                if not (1 <= int(nr) <= nr_partitions):
                     raise LinboRemoteParameterError(f'No partition {nr} in start.conf.{group}.')
             elif name in self.NR_OS_POSITION_COMMANDS and not (1 <= int(nr) <= len(config)):
                 raise LinboRemoteParameterError(f'No OS at position {nr} in start.conf.{group}.')

@@ -77,19 +77,35 @@ def test_check_nr_rejects_out_of_range_os_position():
             remote.build()
 
 
+def make_fake_startconf_mgr(group, partitions_count):
+    linbo_config = MagicMock()
+    linbo_config.Partitions = [MagicMock() for _ in range(partitions_count)]
+    mgr = MagicMock()
+    mgr.linbo_configs = {group: linbo_config}
+    return mgr
+
+
 def test_check_nr_accepts_valid_partition_for_format():
     remote = LinboRemote(group='win10', cmd='format:2')
 
     with patch('linuxmusterTools.linbo.linbo_sync.read_config', return_value=OS_CONFIG):
-        remote.build()  # must not raise
+        with patch(
+            'linuxmusterTools.linbo.linbo_sync.LinboConfigManager',
+            return_value=make_fake_startconf_mgr('win10', 2),
+        ):
+            remote.build()  # must not raise
 
 
 def test_check_nr_rejects_unknown_partition_for_format():
     remote = LinboRemote(group='win10', cmd='format:9')
 
     with patch('linuxmusterTools.linbo.linbo_sync.read_config', return_value=OS_CONFIG):
-        with pytest.raises(LinboRemoteParameterError):
-            remote.build()
+        with patch(
+            'linuxmusterTools.linbo.linbo_sync.LinboConfigManager',
+            return_value=make_fake_startconf_mgr('win10', 2),
+        ):
+            with pytest.raises(LinboRemoteParameterError):
+                remote.build()
 
 
 def test_check_nr_rejects_missing_start_conf():
