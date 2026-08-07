@@ -1,6 +1,6 @@
 # linbo
 
-Manages [LINBO](https://www.linuxmuster.net) images, backups, hardware inventories and Windows driver profiles on a linuxmuster.net server.
+Manages [LINBO](https://www.linuxmuster.net) images, backups, hardware inventories, Windows driver profiles, and remote commands/sessions on a linuxmuster.net server.
 
 ---
 
@@ -34,6 +34,71 @@ a directory that cannot be removed propagates the underlying `OSError`, and
 `duplicate()`/`restore()` raise `ImageExistsError` (a `FileExistsError`
 subclass, importable from `linuxmusterTools.linbo`) if the target image or
 backup directory already exists.
+
+`EXTRA_NONEDITABLE_IMAGE_FILES` also recognizes a `.hash` extra file
+alongside `.torrent`/`.macct`/`.md5`, so it gets renamed/deleted along with
+the rest of an image's extras.
+
+A missing or incomplete `.info` file (an existing image whose required
+fields aren't all present) raises `IncompleteImageInfoError` (a
+`ValueError` subclass) when the manager loads it. Rather than taking the
+whole listing down with it, `LinboImageManager` catches this per group: a
+broken group still appears in `to_dict()`'s output, as
+`{'name': <group>, 'error': <message>, 'selected': False}`, instead of a
+full image description.
+
+---
+
+## Remote commands
+
+`LinboRemote` builds and runs a `linbo-remote` command against a group, a
+room, or a list of clients (an ip or a hostname). It validates its
+parameters (mutually exclusive target, `wait`/`wol` pairing, valid school)
+and the position/partition number (`nr`) against the target's
+`start.conf` before running anything, raising `LinboRemoteParameterError`
+(a `ValueError` subclass) instead of silently building - or running - a
+wrong command.
+
+```python
+>>> from linuxmusterTools.linbo import LinboRemote
+>>> remote = LinboRemote(group='win10', cmd='sync:1')
+>>> remote.run()
+{'status': 0, 'msg': 'Started with PID 1234. Log see /var/log/linuxmuster/linbo/pc001_linbo-remote.\n'}
+```
+
+`list_running_sessions()` lists the tmux sessions `linbo-remote` currently
+has running (one per targeted host), and `attach_command()` builds the
+`tmux attach` command for a given hostname - not meant to be run through a
+web request (`tmux attach` needs an interactive terminal), only to give a
+future terminal-in-browser feature the exact session name to use.
+
+```python
+>>> from linuxmusterTools.linbo import list_running_sessions, attach_command
+>>> list_running_sessions()
+[{'hostname': 'pc001', 'session': 'pc001_linbo-remote', 'created': '2026-08-07T11:49:15+00:00'}]
+>>> attach_command('pc001')
+'tmux attach -t pc001_linbo-remote'
+```
+
+---
+
+## Host status
+
+`classify_host(hostname_or_ip)` probes ports 2222/22/135 with plain
+blocking sockets (no `nmap`, no asyncio - safe to call from gevent-based
+code) and reports one of `'Off'`, `'Linbo'`, `'OS Linux'`, `'OS Windows'`,
+`'OS Unknown'`.
+
+```python
+>>> from linuxmusterTools.linbo.host_status import classify_host
+>>> classify_host('pc001')
+'Linbo'
+```
+
+`probe_host()`/`scan_hosts()`/`scan_hosts_sync()` (same module) answer a
+narrower question - is a host reachable on LINBO's port 2222 - concurrently
+across many hosts via asyncio; used where a full boot-state classification
+isn't needed.
 
 ---
 
