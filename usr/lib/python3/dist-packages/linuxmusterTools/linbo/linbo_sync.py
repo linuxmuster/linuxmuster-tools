@@ -22,8 +22,8 @@ class LinboRemoteParameterError(ValueError):
 
 
 # TODO:
-#  - check nr for partitions and os
-#  - check if given ips, group and room are valid
+#  - check nr for partitions and os (linbo-remote itself only checks it's an
+#    integer, not that it matches an existing position in start.conf)
 #  - add support for remote linbo server (per ssh)
 
 class LinboRemote:
@@ -186,9 +186,12 @@ class LinboRemote:
         Build and run the linbo-remote command.
 
         :return: Status dict {'status': 0, 'msg': <command output>} on success,
-            or {'status': 1, 'msg': <error>} if some hosts were offline or
-            parameters were invalid.
+            or {'status': 1, 'msg': <error>} if some hosts were offline.
         :rtype: dict
+        :raises LinboRemoteParameterError: if linbo-remote itself rejected the
+            command line (e.g. unknown group/room, no valid host in a -i list,
+            missing command) — it validates ips/group/room and exits non-zero
+            before running anything in that case.
         """
 
         self.build()
@@ -200,6 +203,10 @@ class LinboRemote:
             text=True,
         )
         output = result.stdout
+
+        if result.returncode != 0:
+            error = output.strip().splitlines()[-1] if output.strip() else 'linbo-remote failed with no output.'
+            raise LinboRemoteParameterError(error)
 
         if 'Not online, host skipped.' in output:
             offline_hosts = [
