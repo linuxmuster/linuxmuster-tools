@@ -369,8 +369,8 @@ def _patch_admin_secret(check, monkeypatch, secret='testpw123'):
 
 def test_get_user_quotas_non_admin_success(check, monkeypatch):
     attributes = {
-        'sophomorixCloudQuotaCalculated': ['500 MB'],
-        'sophomorixMailQuotaCalculated': ['200'],
+        'sophomorixCloudQuotaCalculated': '500 MB',
+        'sophomorixMailQuotaCalculated': '200',
         'sophomorixSchoolname': 'default-school',
         'sophomorixRole': 'teacher',
     }
@@ -397,8 +397,8 @@ def test_get_user_quotas_non_admin_success(check, monkeypatch):
 
 def test_get_user_quotas_admin_role_uses_shares_list(check, monkeypatch):
     attributes = {
-        'sophomorixCloudQuotaCalculated': ['0 MB'],
-        'sophomorixMailQuotaCalculated': ['0'],
+        'sophomorixCloudQuotaCalculated': '0 MB',
+        'sophomorixMailQuotaCalculated': '0',
         'sophomorixSchoolname': 'default-school',
         'sophomorixRole': 'schooladministrator',
     }
@@ -419,8 +419,8 @@ def test_get_user_quotas_admin_role_uses_shares_list(check, monkeypatch):
 
 def test_get_user_quotas_dfs_path_used_when_available(check, monkeypatch):
     attributes = {
-        'sophomorixCloudQuotaCalculated': ['0 MB'],
-        'sophomorixMailQuotaCalculated': ['0'],
+        'sophomorixCloudQuotaCalculated': '0 MB',
+        'sophomorixMailQuotaCalculated': '0',
         'sophomorixSchoolname': 'default-school',
         'sophomorixRole': 'teacher',
     }
@@ -440,8 +440,8 @@ def test_get_user_quotas_dfs_path_used_when_available(check, monkeypatch):
 
 def test_get_user_quotas_smbcquotas_error_branch(check, monkeypatch):
     attributes = {
-        'sophomorixCloudQuotaCalculated': ['0 MB'],
-        'sophomorixMailQuotaCalculated': ['0'],
+        'sophomorixCloudQuotaCalculated': '0 MB',
+        'sophomorixMailQuotaCalculated': '0',
         'sophomorixSchoolname': 'default-school',
         'sophomorixRole': 'teacher',
     }
@@ -461,8 +461,8 @@ def test_get_user_quotas_smbcquotas_error_branch(check, monkeypatch):
 
 def test_get_user_quotas_no_limit_passthrough(check, monkeypatch):
     attributes = {
-        'sophomorixCloudQuotaCalculated': ['0 MB'],
-        'sophomorixMailQuotaCalculated': ['0'],
+        'sophomorixCloudQuotaCalculated': '0 MB',
+        'sophomorixMailQuotaCalculated': '0',
         'sophomorixSchoolname': 'default-school',
         'sophomorixRole': 'teacher',
     }

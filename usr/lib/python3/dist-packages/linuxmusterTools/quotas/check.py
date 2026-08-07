@@ -218,7 +218,7 @@ def get_user_quotas(user):
             }
 
     pw = ''
-    quotas['cloud'] = attributes['sophomorixCloudQuotaCalculated'][0].split()[0]
-    quotas['mail'] = attributes['sophomorixMailQuotaCalculated'][0]
+    quotas['cloud'] = attributes['sophomorixCloudQuotaCalculated'].split()[0]
+    quotas['mail'] = attributes['sophomorixMailQuotaCalculated']
 
     return quotas

@@ -27,7 +27,7 @@ class LMNUserModel(LMNUserMixin, LMNModel):
     sophomorixAdminClass: str
     sophomorixAdminFile: str
     sophomorixBirthdate: str
-    sophomorixCloudQuotaCalculated: list
+    sophomorixCloudQuotaCalculated: str
     sophomorixComment: str
     sophomorixCreationDate: str # datetime
     sophomorixCustom1: str
@@ -56,7 +56,7 @@ class LMNUserModel(LMNUserMixin, LMNModel):
     sophomorixIntrinsicMulti3: list
     sophomorixIntrinsicMulti4: list
     sophomorixIntrinsicMulti5: list
-    sophomorixMailQuotaCalculated: list
+    sophomorixMailQuotaCalculated: str
     sophomorixMailQuota: list
     sophomorixQuota: list
     sophomorixRole: str

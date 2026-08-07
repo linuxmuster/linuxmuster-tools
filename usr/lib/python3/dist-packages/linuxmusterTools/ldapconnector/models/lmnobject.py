@@ -32,7 +32,7 @@ class LMNObjectModel(LMNModel):
     sophomorixAdminGroups: list
     sophomorixAdmins: list
     sophomorixBirthdate: str
-    sophomorixCloudQuotaCalculated: list
+    sophomorixCloudQuotaCalculated: str
     sophomorixComment: str
     sophomorixComputerIP: str
     sophomorixComputerMAC: str
@@ -69,7 +69,7 @@ class LMNObjectModel(LMNModel):
     sophomorixJoinable: bool
     sophomorixMailAlias: bool
     sophomorixMailList: bool
-    sophomorixMailQuotaCalculated: list
+    sophomorixMailQuotaCalculated: str
     sophomorixMailQuota: list
     sophomorixMaxMembers: int
     sophomorixMemberGroups: list
