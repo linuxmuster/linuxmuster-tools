@@ -25,7 +25,7 @@ DATE_UI_FMT = '%d/%m/%Y %H:%M'
 
 # Filenames like ubuntu.qcow2.desc
 EXTRA_IMAGE_FILES = ['desc', 'info', 'vdi']
-EXTRA_NONEDITABLE_IMAGE_FILES = ['torrent', 'macct', 'md5']
+EXTRA_NONEDITABLE_IMAGE_FILES = ['torrent', 'macct', 'md5', 'hash']
 
 # Filenames like ubuntu.reg
 EXTRA_COMMON_FILES = ['reg', 'postsync', 'prestart']
