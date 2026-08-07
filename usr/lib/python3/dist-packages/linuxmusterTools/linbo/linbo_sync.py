@@ -11,7 +11,9 @@ reference those tmux sessions.
 import subprocess
 from datetime import datetime, timezone
 
+from ..devices import Devices
 from ..ldapconnector import LMNLdapReader as lr
+from .config import read_config
 
 
 SESSION_SUFFIX = '.linbo-remote'
@@ -22,8 +24,6 @@ class LinboRemoteParameterError(ValueError):
 
 
 # TODO:
-#  - check nr for partitions and os (linbo-remote itself only checks it's an
-#    integer, not that it matches an existing position in start.conf)
 #  - add support for remote linbo server (per ssh)
 
 class LinboRemote:
@@ -99,8 +99,6 @@ class LinboRemote:
         if self.school and self.school not in lr.getval('/schools', 'ou'):
             raise LinboRemoteParameterError(f'{self.school} is not a valid school.')
 
-        # Check valid ips, group and room too ?
-
         if self.ips and self.group:
             raise LinboRemoteParameterError(f"group and ips are mutually exclusive.")
 
@@ -112,6 +110,56 @@ class LinboRemote:
 
         if not self.ips and not self.room and not self.group:
             raise LinboRemoteParameterError(f"Specify at least a group, a room or an ip.")
+
+    # Commands whose nr is a position in start.conf's [OS] list, not a partition number.
+    NR_OS_POSITION_COMMANDS = {
+        'new', 'sync', 'postsync', 'start', 'prestart',
+        'create_image', 'upload_image', 'create_qdiff', 'upload_qdiff',
+    }
+
+    def _target_groups(self):
+        """
+        Resolve the linbo group(s) actually targeted by this command, so nr
+        can be checked against every start.conf involved — a room or an ip
+        list can span hosts from different groups.
+
+        :return: Set of group names.
+        :rtype: set of str
+        """
+
+        if self.group:
+            return {self.group}
+
+        devices = Devices(school=self.school or 'default-school')
+
+        if self.room:
+            return {d['group'] for d in devices.devices if d['room'] == self.room}
+
+        return {d['group'] for d in devices.devices if d['ip'] in self.ips}
+
+    def _check_nr(self, name, nr):
+        """
+        Check that nr matches an actual position in the start.conf of every
+        group targeted by this command.
+        """
+
+        if not nr.isdigit():
+            raise LinboRemoteParameterError(f'{nr} is not a valid position for {name}.')
+
+        groups = self._target_groups()
+        if not groups:
+            raise LinboRemoteParameterError(f'Could not resolve any group for the given target.')
+
+        for group in groups:
+            config = read_config(group)
+            if not config:
+                raise LinboRemoteParameterError(f'No start.conf for group {group}.')
+
+            if name == 'format':
+                if nr not in {c['Root'][-1] for c in config}:
+                    raise LinboRemoteParameterError(f'No partition {nr} in start.conf.{group}.')
+            elif name in self.NR_OS_POSITION_COMMANDS and not (1 <= int(nr) <= len(config)):
+                raise LinboRemoteParameterError(f'No OS at position {nr} in start.conf.{group}.')
 
     def _check_cmd(self):
         if not self.cmd:
@@ -134,8 +182,6 @@ class LinboRemote:
                 raise LinboRemoteParameterError(f'Command {name} unknown.')
 
             if nr and not self.SUPPORTED_COMMANDS[name]['nr']:
-                # Check linbo config too ?
-                # Avoid errors like sync:5
                 raise LinboRemoteParameterError(f'Command {name} does not support any option.')
 
             if msg and not self.SUPPORTED_COMMANDS[name]['msg']:
@@ -143,6 +189,9 @@ class LinboRemote:
 
             if name == 'initcache' and nr not in self.SUPPORTED_COMMANDS['initcache']['type']:
                 raise LinboRemoteParameterError(f'Wrong type {nr} for the command initcache.')
+
+            if nr and name != 'initcache':
+                self._check_nr(name, nr)
 
     def build(self):
         self._check_args()

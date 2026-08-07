@@ -20,7 +20,9 @@ from linuxmusterTools.linbo.linbo_sync import (
 
 
 def make_remote(**kwargs):
-    return LinboRemote(ips=['10.0.0.5'], cmd='sync:1', **kwargs)
+    # cmd has no nr on purpose: LinboRemote.run() tests below aren't about nr
+    # validation and shouldn't need to resolve a group via Devices/devices.csv.
+    return LinboRemote(ips=['10.0.0.5'], cmd='reboot', **kwargs)
 
 
 def test_build_rejects_mutually_exclusive_targets():
@@ -51,6 +53,103 @@ def test_build_rejects_option_on_command_without_one():
         remote.build()
 
 
+# ── LinboRemote nr validation against start.conf ────────────────────────
+
+
+OS_CONFIG = [
+    {'BaseImage': 'a.qcow2', 'Root': '/dev/sda1'},
+    {'BaseImage': 'b.qcow2', 'Root': '/dev/sda2'},
+]
+
+
+def test_check_nr_accepts_valid_os_position():
+    remote = LinboRemote(group='win10', cmd='sync:2')
+
+    with patch('linuxmusterTools.linbo.linbo_sync.read_config', return_value=OS_CONFIG):
+        remote.build()  # must not raise
+
+
+def test_check_nr_rejects_out_of_range_os_position():
+    remote = LinboRemote(group='win10', cmd='sync:5')
+
+    with patch('linuxmusterTools.linbo.linbo_sync.read_config', return_value=OS_CONFIG):
+        with pytest.raises(LinboRemoteParameterError):
+            remote.build()
+
+
+def test_check_nr_accepts_valid_partition_for_format():
+    remote = LinboRemote(group='win10', cmd='format:2')
+
+    with patch('linuxmusterTools.linbo.linbo_sync.read_config', return_value=OS_CONFIG):
+        remote.build()  # must not raise
+
+
+def test_check_nr_rejects_unknown_partition_for_format():
+    remote = LinboRemote(group='win10', cmd='format:9')
+
+    with patch('linuxmusterTools.linbo.linbo_sync.read_config', return_value=OS_CONFIG):
+        with pytest.raises(LinboRemoteParameterError):
+            remote.build()
+
+
+def test_check_nr_rejects_missing_start_conf():
+    remote = LinboRemote(group='win10', cmd='sync:1')
+
+    with patch('linuxmusterTools.linbo.linbo_sync.read_config', return_value=None):
+        with pytest.raises(LinboRemoteParameterError):
+            remote.build()
+
+
+def make_fake_devices(devices_list):
+    fake = MagicMock()
+    fake.devices = devices_list
+    return fake
+
+
+def test_check_nr_resolves_group_from_ip():
+    devices = [{'ip': '10.0.0.5', 'group': 'win10', 'room': 'room1'}]
+    remote = LinboRemote(ips=['10.0.0.5'], cmd='sync:2')
+
+    with patch('linuxmusterTools.linbo.linbo_sync.Devices', return_value=make_fake_devices(devices)):
+        with patch('linuxmusterTools.linbo.linbo_sync.read_config', return_value=OS_CONFIG):
+            remote.build()  # must not raise
+
+
+def test_check_nr_rejects_out_of_range_for_ip_resolved_group():
+    devices = [{'ip': '10.0.0.5', 'group': 'win10', 'room': 'room1'}]
+    remote = LinboRemote(ips=['10.0.0.5'], cmd='sync:5')
+
+    with patch('linuxmusterTools.linbo.linbo_sync.Devices', return_value=make_fake_devices(devices)):
+        with patch('linuxmusterTools.linbo.linbo_sync.read_config', return_value=OS_CONFIG):
+            with pytest.raises(LinboRemoteParameterError):
+                remote.build()
+
+
+def test_check_nr_checks_every_group_in_a_room():
+    devices = [
+        {'ip': '10.0.0.5', 'group': 'win10', 'room': 'room1'},
+        {'ip': '10.0.0.6', 'group': 'linux', 'room': 'room1'},
+    ]
+    remote = LinboRemote(room='room1', cmd='sync:2')
+
+    def fake_read_config(group):
+        return OS_CONFIG if group == 'win10' else OS_CONFIG[:1]
+
+    with patch('linuxmusterTools.linbo.linbo_sync.Devices', return_value=make_fake_devices(devices)):
+        with patch('linuxmusterTools.linbo.linbo_sync.read_config', side_effect=fake_read_config):
+            # position 2 doesn't exist for the 'linux' group (only 1 OS there)
+            with pytest.raises(LinboRemoteParameterError):
+                remote.build()
+
+
+def test_check_nr_rejects_when_group_cannot_be_resolved():
+    remote = LinboRemote(ips=['10.0.0.5'], cmd='sync:1')
+
+    with patch('linuxmusterTools.linbo.linbo_sync.Devices', return_value=make_fake_devices([])):
+        with pytest.raises(LinboRemoteParameterError):
+            remote.build()
+
+
 # ── LinboRemote.run() ────────────────────────────────────────────────────
 
 
@@ -62,7 +161,7 @@ def test_run_executes_the_built_command():
         remote.run()
 
     args, kwargs = run.call_args
-    assert args[0] == '/usr/sbin/linbo-remote -i 10.0.0.5 -c sync:1'.split()
+    assert args[0] == '/usr/sbin/linbo-remote -i 10.0.0.5 -c reboot'.split()
     assert kwargs['stderr'] is not None
     assert kwargs['text'] is True
 
