@@ -2,10 +2,8 @@
 LINBO remote commands — build, run and track linbo-remote sessions.
 
 linbo-remote sends actions (format/sync/start/halt/...) to hosts over ssh.
-Each run happens in a detached tmux session named "<hostname>.linbo-remote"
-(see the -a/-l options of /usr/sbin/linbo-remote). LinboRemote builds and
-runs the command; list_running_sessions()/attach_command() track and
-reference those tmux sessions.
+Each run happens in a detached tmux session, in a script-visible variable
+named "<hostname>.linbo-remote".
 """
 
 import subprocess
@@ -16,7 +14,7 @@ from ..ldapconnector import LMNLdapReader as lr
 from .config import LinboConfigManager, read_config
 
 
-SESSION_SUFFIX = '.linbo-remote'
+SESSION_SUFFIX = '_linbo-remote'
 
 
 class LinboRemoteParameterError(ValueError):
@@ -58,7 +56,7 @@ class LinboRemote:
             cmd='',                     # -c
             disable_gui=False,          # -d
             group=None,                 # -g
-            ips=[],                     # -i
+            clients=[],                 # -i, ip or hostname
             bypass=None,                # -n
             room=None,                  # -r
             school=None,                # -s
@@ -70,7 +68,7 @@ class LinboRemote:
         self.cmd = cmd
         self.disable_gui = disable_gui
         self.group = group
-        self.ips = ips
+        self.clients = clients
         self.bypass = bypass
         self.room = room
         self.school = school
@@ -99,17 +97,17 @@ class LinboRemote:
         if self.school and self.school not in lr.getval('/schools', 'ou'):
             raise LinboRemoteParameterError(f'{self.school} is not a valid school.')
 
-        if self.ips and self.group:
-            raise LinboRemoteParameterError(f"group and ips are mutually exclusive.")
+        if self.clients and self.group:
+            raise LinboRemoteParameterError(f"group and clients are mutually exclusive.")
 
-        if self.ips and self.room:
-            raise LinboRemoteParameterError(f"room and ips are mutually exclusive.")
+        if self.clients and self.room:
+            raise LinboRemoteParameterError(f"room and clients are mutually exclusive.")
 
         if self.room and self.group:
             raise LinboRemoteParameterError(f"group and room are mutually exclusive.")
 
-        if not self.ips and not self.room and not self.group:
-            raise LinboRemoteParameterError(f"Specify at least a group, a room or an ip.")
+        if not self.clients and not self.room and not self.group:
+            raise LinboRemoteParameterError(f"Specify at least a group, a room or a client.")
 
     # Commands whose nr is a position in start.conf's [OS] list, not a partition number.
     NR_OS_POSITION_COMMANDS = {
@@ -120,8 +118,12 @@ class LinboRemote:
     def _target_groups(self):
         """
         Resolve the linbo group(s) actually targeted by this command, so nr
-        can be checked against every start.conf involved — a room or an ip
-        list can span hosts from different groups.
+        can be checked against every start.conf involved — a room or a
+        clients list can span hosts from different groups.
+
+        clients is matched against ip, hostname and school-prefixed
+        hostname, since -i (like this method) accepts either an ip or a
+        hostname.
 
         :return: Set of group names.
         :rtype: set of str
@@ -130,12 +132,20 @@ class LinboRemote:
         if self.group:
             return {self.group}
 
-        devices = Devices(school=self.school or 'default-school')
+        school = self.school or 'default-school'
+        devices = Devices(school=school)
 
         if self.room:
             return {d['group'] for d in devices.devices if d['room'] == self.room}
 
-        return {d['group'] for d in devices.devices if d['ip'] in self.ips}
+        def is_targeted(device):
+            if device['ip'] in self.clients:
+                return True
+            hostname = device['hostname']
+            prefixed = f'{school}-{hostname}' if school != 'default-school' else hostname
+            return hostname in self.clients or prefixed in self.clients
+
+        return {d['group'] for d in devices.devices if is_targeted(d)}
 
     def _check_nr(self, name, nr):
         """
@@ -222,7 +232,7 @@ class LinboRemote:
         elif self.group:
             self.built_cmd += f' -g {self.group}'
         else:
-            self.built_cmd += f' -i {','.join(self.ips)}'
+            self.built_cmd += f' -i {','.join(self.clients)}'
 
         if self.school:
             self.built_cmd += f' -s {self.school}'
@@ -246,8 +256,8 @@ class LinboRemote:
         :rtype: dict
         :raises LinboRemoteParameterError: if linbo-remote itself rejected the
             command line (e.g. unknown group/room, no valid host in a -i list,
-            missing command) — it validates ips/group/room and exits non-zero
-            before running anything in that case.
+            missing command) — it validates clients/group/room and exits
+            non-zero before running anything in that case.
         """
 
         self.build()
@@ -319,7 +329,7 @@ def attach_command(hostname: str) -> str:
 
     :param hostname: Hostname whose session to attach to
     :type hostname: str
-    :return: Shell command string, e.g. "tmux attach -t pc001.linbo-remote"
+    :return: Shell command string, e.g. "tmux attach -t pc001_linbo-remote"
     :rtype: str
     """
 

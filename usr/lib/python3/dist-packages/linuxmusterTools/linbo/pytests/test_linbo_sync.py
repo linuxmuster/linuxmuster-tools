@@ -22,11 +22,11 @@ from linuxmusterTools.linbo.linbo_sync import (
 def make_remote(**kwargs):
     # cmd has no nr on purpose: LinboRemote.run() tests below aren't about nr
     # validation and shouldn't need to resolve a group via Devices/devices.csv.
-    return LinboRemote(ips=['10.0.0.5'], cmd='reboot', **kwargs)
+    return LinboRemote(clients=['10.0.0.5'], cmd='reboot', **kwargs)
 
 
 def test_build_rejects_mutually_exclusive_targets():
-    remote = LinboRemote(ips=['10.0.0.5'], group='win10', cmd='sync:1')
+    remote = LinboRemote(clients=['10.0.0.5'], group='win10', cmd='sync:1')
 
     with pytest.raises(LinboRemoteParameterError):
         remote.build()
@@ -40,14 +40,14 @@ def test_build_rejects_no_target():
 
 
 def test_build_rejects_unknown_command():
-    remote = LinboRemote(ips=['10.0.0.5'], cmd='frobnicate:1')
+    remote = LinboRemote(clients=['10.0.0.5'], cmd='frobnicate:1')
 
     with pytest.raises(LinboRemoteParameterError):
         remote.build()
 
 
 def test_build_rejects_option_on_command_without_one():
-    remote = LinboRemote(ips=['10.0.0.5'], cmd='partition:1')
+    remote = LinboRemote(clients=['10.0.0.5'], cmd='partition:1')
 
     with pytest.raises(LinboRemoteParameterError):
         remote.build()
@@ -123,17 +123,36 @@ def make_fake_devices(devices_list):
 
 
 def test_check_nr_resolves_group_from_ip():
-    devices = [{'ip': '10.0.0.5', 'group': 'win10', 'room': 'room1'}]
-    remote = LinboRemote(ips=['10.0.0.5'], cmd='sync:2')
+    devices = [{'ip': '10.0.0.5', 'hostname': 'pc001', 'group': 'win10', 'room': 'room1'}]
+    remote = LinboRemote(clients=['10.0.0.5'], cmd='sync:2')
 
     with patch('linuxmusterTools.linbo.linbo_sync.Devices', return_value=make_fake_devices(devices)):
         with patch('linuxmusterTools.linbo.linbo_sync.read_config', return_value=OS_CONFIG):
             remote.build()  # must not raise
 
 
+def test_check_nr_resolves_group_from_hostname():
+    devices = [{'ip': '10.0.0.5', 'hostname': 'pc001', 'group': 'win10', 'room': 'room1'}]
+    remote = LinboRemote(clients=['pc001'], cmd='sync:2')
+
+    with patch('linuxmusterTools.linbo.linbo_sync.Devices', return_value=make_fake_devices(devices)):
+        with patch('linuxmusterTools.linbo.linbo_sync.read_config', return_value=OS_CONFIG):
+            remote.build()  # must not raise
+
+
+def test_check_nr_resolves_group_from_school_prefixed_hostname():
+    devices = [{'ip': '10.0.0.5', 'hostname': 'pc001', 'group': 'win10', 'room': 'room1'}]
+    remote = LinboRemote(clients=['lehrer-pc001'], cmd='sync:2', school='lehrer')
+
+    with patch('linuxmusterTools.linbo.linbo_sync.lr.getval', return_value=['lehrer']):
+        with patch('linuxmusterTools.linbo.linbo_sync.Devices', return_value=make_fake_devices(devices)):
+            with patch('linuxmusterTools.linbo.linbo_sync.read_config', return_value=OS_CONFIG):
+                remote.build()  # must not raise
+
+
 def test_check_nr_rejects_out_of_range_for_ip_resolved_group():
-    devices = [{'ip': '10.0.0.5', 'group': 'win10', 'room': 'room1'}]
-    remote = LinboRemote(ips=['10.0.0.5'], cmd='sync:5')
+    devices = [{'ip': '10.0.0.5', 'hostname': 'pc001', 'group': 'win10', 'room': 'room1'}]
+    remote = LinboRemote(clients=['10.0.0.5'], cmd='sync:5')
 
     with patch('linuxmusterTools.linbo.linbo_sync.Devices', return_value=make_fake_devices(devices)):
         with patch('linuxmusterTools.linbo.linbo_sync.read_config', return_value=OS_CONFIG):
@@ -143,8 +162,8 @@ def test_check_nr_rejects_out_of_range_for_ip_resolved_group():
 
 def test_check_nr_checks_every_group_in_a_room():
     devices = [
-        {'ip': '10.0.0.5', 'group': 'win10', 'room': 'room1'},
-        {'ip': '10.0.0.6', 'group': 'linux', 'room': 'room1'},
+        {'ip': '10.0.0.5', 'hostname': 'pc001', 'group': 'win10', 'room': 'room1'},
+        {'ip': '10.0.0.6', 'hostname': 'pc002', 'group': 'linux', 'room': 'room1'},
     ]
     remote = LinboRemote(room='room1', cmd='sync:2')
 
@@ -159,7 +178,7 @@ def test_check_nr_checks_every_group_in_a_room():
 
 
 def test_check_nr_rejects_when_group_cannot_be_resolved():
-    remote = LinboRemote(ips=['10.0.0.5'], cmd='sync:1')
+    remote = LinboRemote(clients=['10.0.0.5'], cmd='sync:1')
 
     with patch('linuxmusterTools.linbo.linbo_sync.Devices', return_value=make_fake_devices([])):
         with pytest.raises(LinboRemoteParameterError):
@@ -221,13 +240,16 @@ def test_run_raises_on_nonzero_exit():
 # ── list_running_sessions() / attach_command() ──────────────────────────
 
 
-def test_attach_command_uses_dot_separated_session_name():
-    assert attach_command('pc001') == 'tmux attach -t pc001.linbo-remote'
+def test_attach_command_uses_underscore_separated_session_name():
+    # tmux itself replaces the dot with an underscore in session names
+    # (dots are significant in its session:window.pane target syntax) —
+    # verified against a live tmux server, see the module docstring.
+    assert attach_command('pc001') == 'tmux attach -t pc001_linbo-remote'
 
 
 def test_list_running_sessions_filters_non_linbo_remote_sessions():
     ts = 1733600000
-    output = f'pc001.linbo-remote|{ts}\nsome-other-session|{ts}\n'
+    output = f'pc001_linbo-remote|{ts}\nsome-other-session|{ts}\n'
 
     with patch('linuxmusterTools.linbo.linbo_sync.subprocess.run') as run:
         run.return_value = MagicMock(stdout=output)
@@ -235,7 +257,7 @@ def test_list_running_sessions_filters_non_linbo_remote_sessions():
 
     assert sessions == [{
         'hostname': 'pc001',
-        'session': 'pc001.linbo-remote',
+        'session': 'pc001_linbo-remote',
         'created': datetime.fromtimestamp(ts, tz=timezone.utc).isoformat(),
     }]
 
