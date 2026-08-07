@@ -1,5 +1,4 @@
 from .user import *
-from .managementgroup import *
 from .group import *
 from .project import *
 from .device import *

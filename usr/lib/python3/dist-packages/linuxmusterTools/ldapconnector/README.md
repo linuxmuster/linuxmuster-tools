@@ -218,7 +218,7 @@ from linuxmusterTools.ldapconnector import (
     LMNSchoolAdmin, LMNGlobalAdmin,
     LMNSchoolclass, LMNSchoolclasses,
     LMNProject, LMNProjects,
-    LMNGroup, LMNMgmtGroup,
+    LMNGroup,
 )
 ```
 
@@ -252,7 +252,7 @@ user.set_random_first_password()         # generates a policy-compliant password
 
 ### Group management
 
-`LMNGroup`, `LMNSchoolclass`, `LMNProject`, and `LMNMgmtGroup` also expose:
+`LMNGroup`, `LMNSchoolclass`, and `LMNProject` also expose:
 
 ```python
 group = LMNSchoolclass('7b')
