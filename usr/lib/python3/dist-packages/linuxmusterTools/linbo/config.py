@@ -17,6 +17,7 @@ from ..common.timestamps import get_utc_mtime
 
 
 LINBO_PATH = '/srv/linbo'
+LINBO_LOG_PATH = '/var/log/linuxmuster/linbo'
 logger = logging.getLogger(__name__)
 name_checker = NameChecker()
 
@@ -189,7 +190,7 @@ def last_sync(workstation, image):
     """
 
 
-    statusfile = f'/var/log/linuxmuster/linbo/{workstation}_image.status'
+    statusfile = os.path.join(LINBO_LOG_PATH, f'{workstation}_image.status')
     image_last_sync, diff_last_sync = '0','0'
     diff_image = image.replace('.qcow2', '.qdiff')
 
@@ -265,6 +266,7 @@ def group_os(workstations):
                 }
             workstations[group]['auto'] = {
                 'disable_gui': 0,
+                'broadcast': 0,
                 'bypass': 0,
                 'wol': 0,
                 'prestart': 0,
@@ -328,13 +330,13 @@ def last_sync_all(workstations):
 
     for group, grpDict in sorted(workstations.items()):
             for host in grpDict['hosts']:
-                host['images'] = []
-                host['sync'] = {}
+                host['image'] = []
                 for image in workstations[group]['os']:
                     last = last_sync(host['hostname'], image['baseimage'])
                     date = last if last else "Never"
                     tmpDict = {
                             'date': date,
+                            'image': image['baseimage']
                     }
                     if date == "Never" or (today - date > 30*24*3600):
                         tmpDict['status'] = "danger"
@@ -342,5 +344,4 @@ def last_sync_all(workstations):
                         tmpDict['status'] = "warning"
                     else:
                         tmpDict['status'] = "success"
-                    host['sync'][image['baseimage']] = tmpDict
-                    host['images'].append(image['baseimage'])
+                    host['image'].append(tmpDict)
