@@ -18,7 +18,10 @@ def patch_linbo_paths(tmp_path, monkeypatch):
     """
     grub_dir = tmp_path / 'boot' / 'grub'
     grub_dir.mkdir(parents=True)
+    log_dir = tmp_path / 'var_log_linbo'
+    log_dir.mkdir(parents=True)
 
     monkeypatch.setattr(config_module, 'LINBO_PATH', str(tmp_path))
     monkeypatch.setattr(config_module, 'GRUB_DIR_DEFAULT', str(grub_dir))
+    monkeypatch.setattr(config_module, 'LINBO_LOG_PATH', str(log_dir))
     monkeypatch.setattr(lmnfile_module, 'ALLOWED_PATHS', [str(tmp_path)])
