@@ -40,11 +40,15 @@ class SambaToolDNS():
         path = '/etc/linuxmuster/sophomorix/default-school/devices.csv'
 
         self.lmn_hosts = []
-        with LMNFile(path, 'r') as devices:
-            for device in devices.data:
-                # Ignore comment lines
-                if device['hostname'] is not None:
-                    self.lmn_hosts.append(device['hostname'].lower())
+        try:
+            with LMNFile(path, 'r') as devices:
+                for device in devices.data:
+                    # Ignore comment lines
+                    if device['hostname'] is not None:
+                        self.lmn_hosts.append(device['hostname'].lower())
+        except FileNotFoundError:
+            # No devices.csv yet, e.g. fresh install not provisioned yet
+            pass
 
     def _samba_tool_process(self, action, options):
         """

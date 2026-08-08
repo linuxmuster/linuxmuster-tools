@@ -89,7 +89,7 @@ dns.update({'host': 'test', 'type': 'A', 'value': '10.0.1.1'}, {'host': 'test', 
 dns.delete('test', 'A', '10.0.1.2')
 ```
 
-`list()` drives `samba-tool dns query` and filters out entries belonging to known linuxmuster devices (from `devices.csv`), since that list would otherwise be too long to be useful.
+`list()` drives `samba-tool dns query` and filters out entries belonging to known linuxmuster devices (from `devices.csv`), since that list would otherwise be too long to be useful. If `devices.csv` doesn't exist yet (fresh install, school not provisioned yet), the ignore list is simply left empty instead of raising.
 
 ---
 

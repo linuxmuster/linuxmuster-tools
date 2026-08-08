@@ -135,6 +135,17 @@ def test_ignore_list_lowercases_and_skips_comment_rows():
     assert instance.lmn_hosts == ['pc01', 'pc02']
 
 
+def test_ignore_list_defaults_to_empty_when_devices_csv_missing():
+    # Zone is set, so _get_ignore_list() runs, but devices.csv doesn't exist
+    # yet (e.g. fresh install, school not provisioned yet) -> must not raise.
+    _register_setup()
+    # Deliberately do not register the devices.csv path.
+
+    instance = SambaToolDNS()
+
+    assert instance.lmn_hosts == []
+
+
 # --- _samba_tool_process --------------------------------------------------
 
 def test_samba_tool_process_rejects_unknown_action():
