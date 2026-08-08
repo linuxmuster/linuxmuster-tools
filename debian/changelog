@@ -1,3 +1,44 @@
+linuxmuster-tools7 (7.4.13) lmn74; urgency=medium
+
+  * [ldapconnector] Remove the deprecated LMNMgmtGroup class (superseded
+    by samba_util.GroupManager, which properly reports LDAP errors
+    instead of swallowing them). Update the ResetInternet.py example
+    accordingly.
+  * [ldapconnector/quotas] Fix sophomorixCloudQuotaCalculated and
+    sophomorixMailQuotaCalculated being typed as list instead of str in
+    LMNUserModel, LMNRawUserModel and LMNObjectModel - both are
+    single-valued LDAP attributes (isSingleValued: TRUE), so the reader
+    was wrapping a plain string in a list, showing up as e.g.
+    ["2506 MB"] once rendered by the webui. get_user_quotas() adjusted
+    accordingly. Breaking change: any consumer of these two fields now
+    gets a str, not a list.
+  * [tests] Adjust fixtures and expectations in ldapconnector and quotas
+    test suites for the list->str change above.
+  * [common] Add is_samba_provisioned() (provisioning.py), based on the
+    presence of /etc/linuxmuster/.secret/administrator - the AD admin
+    secret samba-tool domain provision creates - rather than
+    /var/lib/linuxmuster/setup.ini, which is written by linuxmuster-setup's
+    very first module and stays present for most of the install while LDAP
+    is still unusable. Also add LdapNotProvisionedError (exceptions.py).
+  * [ldapconnector] LdapConnector._connect() now raises
+    LdapNotProvisionedError instead of a raw FileNotFoundError when
+    connecting as root/outside the webui on a domain that isn't
+    provisioned yet, so callers can catch it and respond cleanly (e.g.
+    redirect to the setup wizard, return a 503) instead of crashing.
+  * [devices] Devices.load() no longer raises when
+    SCHOOL/[SCHOOL.]devices.csv doesn't exist yet (fresh install, school
+    not provisioned yet): devices/groups/macs/ips/rooms are left empty
+    instead. Fixes a startup crash in linuxmuster-webui7, which imports
+    all its plugins eagerly and, through ldapconnector.writers.device,
+    instantiates a module-level Devices() singleton.
+  * [samba_util] SambaToolDNS._get_ignore_list() gets the same guard for
+    the same devices.csv read.
+  * [packaging] debian/control: add python3-pip as a dependency.
+  * [tests] Add coverage for the provisioning check (common, ldapconnector)
+    and for the missing-devices.csv case (devices, samba_util).
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sat, 08 Aug 2026 16:00:00 +0200
+
 linuxmuster-tools7 (7.4.12) lmn74; urgency=medium
 
   * [linbo] Add LinboRemote (linbo_sync.py) to build and run linbo-remote
