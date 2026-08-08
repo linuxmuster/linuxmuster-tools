@@ -1,10 +1,10 @@
 """
-Tests for the SchoolError exception.
+Tests for the SchoolError and LdapNotProvisionedError exceptions.
 """
 
 import pytest
 
-from linuxmusterTools.common.exceptions import SchoolError
+from linuxmusterTools.common.exceptions import SchoolError, LdapNotProvisionedError
 
 
 def test_school_error_is_an_exception_subclass():
@@ -16,3 +16,14 @@ def test_school_error_raisable_and_catchable_with_message():
         raise SchoolError("global is not a valid school scope")
 
     assert str(excinfo.value) == "global is not a valid school scope"
+
+
+def test_ldap_not_provisioned_error_is_an_exception_subclass():
+    assert issubclass(LdapNotProvisionedError, Exception)
+
+
+def test_ldap_not_provisioned_error_raisable_and_catchable_with_message():
+    with pytest.raises(LdapNotProvisionedError) as excinfo:
+        raise LdapNotProvisionedError("setup.ini missing")
+
+    assert str(excinfo.value) == "setup.ini missing"

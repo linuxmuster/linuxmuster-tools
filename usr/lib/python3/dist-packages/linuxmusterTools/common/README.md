@@ -152,12 +152,28 @@ Each function returns a `dict` keyed by timestamp. `all`, `today` and `lastweek`
 ## Exceptions
 
 ```python
-from linuxmusterTools.common import SchoolError
+from linuxmusterTools.common import SchoolError, LdapNotProvisionedError
 
 raise SchoolError("'global' is not a valid school scope here")
+raise LdapNotProvisionedError("Samba not provisioned yet")
 ```
 
 `SchoolError` is raised when an operation is given an invalid or unresolvable school scope (e.g. `'global'` where a single, concrete school is required).
+
+`LdapNotProvisionedError` is raised by [`ldapconnector`](../ldapconnector/README.md) when LDAP/Samba credentials are requested before `linuxmuster-setup` has provisioned the domain (fresh install, setup wizard not completed yet).
+
+---
+
+## Provisioning status
+
+```python
+from linuxmusterTools.common import is_samba_provisioned
+
+if not is_samba_provisioned():
+    ...  # redirect to the setup wizard instead of touching LDAP
+```
+
+`is_samba_provisioned(admin_secret_path='/etc/linuxmuster/.secret/administrator')` returns whether `samba-tool domain provision` has actually run, based on the AD administrator secret it creates. `/var/lib/linuxmuster/setup.ini` (used by the setup wizard to decide whether to show the welcome screen) is not a reliable signal here: it's written by `linuxmuster-setup`'s very first module, well before Samba is provisioned, so it exists for most of the setup run while LDAP is still unusable.
 
 ---
 

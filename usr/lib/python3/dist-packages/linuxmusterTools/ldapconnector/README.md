@@ -12,6 +12,8 @@ A URL-based LDAP client for [linuxmuster.net](https://www.linuxmuster.net), prov
 - [`python-ldap`](https://pypi.org/project/python-ldap/)
 - A reachable Samba/AD LDAP server (configured via `linuxmuster.net` setup)
 
+Connecting as root (or outside the webui) requires Samba to already be provisioned (`linuxmuster-setup` run). If it isn't yet — fresh install, setup wizard not completed — `LdapConnector._connect()` raises `linuxmusterTools.common.LdapNotProvisionedError` instead of a raw `FileNotFoundError` on the missing `.secret/administrator`; catch it to redirect to the setup wizard / return a clear "not provisioned" error instead of a 500.
+
 ---
 
 ## Reading — `LMNLdapReader`

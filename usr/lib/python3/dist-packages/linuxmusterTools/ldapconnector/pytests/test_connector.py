@@ -1,12 +1,27 @@
 import pytest
 import ldap
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, mock_open, patch
 
+from linuxmusterTools.common.exceptions import LdapNotProvisionedError
 from linuxmusterTools.ldapconnector.connector import LdapConnector
 import linuxmusterTools.ldapconnector.connector as conn_module
 
 SEARCHDN = 'DC=linuxmuster,DC=lan'
 USER_DN = 'CN=johndoe,OU=7a,OU=default-school,DC=linuxmuster,DC=lan'
+
+
+class FakeLMNFile:
+    """Minimal stand-in for LMNFile, only supports the config.yml read used in _connect."""
+
+    def __init__(self, path, mode):
+        pass
+
+    def __enter__(self):
+        self.data = {'linuxmuster': {'ldap': {'searchdn': SEARCHDN}}}
+        return self
+
+    def __exit__(self, *exc):
+        return False
 
 
 @pytest.fixture
@@ -197,3 +212,62 @@ class TestWriteOperations:
         connector._add_group('CN=test,DC=test', existing_ldif)
         ldif = mock_conn.add_s.call_args[0][1]
         assert ldif.count(('objectclass', [b'top', b'group'])) == 1
+
+
+class TestConnectProvisioning:
+    """
+    _connect() takes the admin-credentials branch when running as root, or
+    outside the webui (webui_import False) - that's the only branch touching
+    .secret/administrator, so it's the only one that needs the provisioning
+    check.
+    """
+
+    def test_connect_raises_when_not_provisioned_as_root(self, monkeypatch):
+        monkeypatch.setattr(conn_module, 'webui_import', True)
+        monkeypatch.setattr(conn_module.os, 'getuid', lambda: 0)
+        monkeypatch.setattr(conn_module, 'is_samba_provisioned', lambda: False)
+
+        with pytest.raises(LdapNotProvisionedError):
+            LdapConnector()._connect()
+
+    def test_connect_raises_when_not_provisioned_outside_webui(self, monkeypatch):
+        monkeypatch.setattr(conn_module, 'webui_import', False)
+        monkeypatch.setattr(conn_module.os, 'getuid', lambda: 1000)
+        monkeypatch.setattr(conn_module, 'is_samba_provisioned', lambda: False)
+
+        with pytest.raises(LdapNotProvisionedError):
+            LdapConnector()._connect()
+
+    def test_connect_ignores_provisioning_for_non_root_webui_user(self, monkeypatch):
+        # This branch never touches .secret/administrator, so an unprovisioned
+        # domain must not affect it.
+        monkeypatch.setattr(conn_module, 'webui_import', True)
+        monkeypatch.setattr(conn_module.os, 'getuid', lambda: 1000)
+        monkeypatch.setattr(conn_module, 'is_samba_provisioned', lambda: False)
+        monkeypatch.setattr(
+            conn_module, 'params',
+            {'binddn': 'CN=webui,DC=test', 'bindpw': 'secret', 'searchdn': SEARCHDN},
+            raising=False,
+        )
+
+        mock_conn = MagicMock()
+        monkeypatch.setattr(ldap, 'initialize', lambda uri: mock_conn)
+
+        conn, searchdn = LdapConnector()._connect()
+        assert conn is mock_conn
+        assert searchdn == SEARCHDN
+
+    def test_connect_succeeds_when_provisioned_as_root(self, monkeypatch):
+        monkeypatch.setattr(conn_module, 'webui_import', True)
+        monkeypatch.setattr(conn_module.os, 'getuid', lambda: 0)
+        monkeypatch.setattr(conn_module, 'is_samba_provisioned', lambda: True)
+        monkeypatch.setattr(conn_module, 'LMNFile', FakeLMNFile)
+
+        mock_conn = MagicMock()
+        monkeypatch.setattr(ldap, 'initialize', lambda uri: mock_conn)
+
+        with patch('builtins.open', mock_open(read_data='s3cr3t\n')):
+            conn, searchdn = LdapConnector()._connect()
+
+        assert conn is mock_conn
+        assert searchdn == SEARCHDN

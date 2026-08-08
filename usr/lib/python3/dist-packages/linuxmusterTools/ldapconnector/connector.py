@@ -4,6 +4,7 @@ import threading
 import ldap
 
 from ..lmnfile import LMNFile
+from ..common import is_samba_provisioned, LdapNotProvisionedError
 
 
 try:
@@ -58,6 +59,11 @@ class LdapConnector:
         conn.protocol_version = ldap.VERSION3
 
         if not webui_import or os.getuid() == 0:
+            if not is_samba_provisioned():
+                raise LdapNotProvisionedError(
+                    'Samba/LDAP is not provisioned yet (setup.ini missing) - run linuxmuster-setup first.'
+                )
+
             # Using Administrator password to be able to write data in LDAP
             with LMNFile('/etc/linuxmuster/webui/config.yml', 'r') as config:
                 ldap_params = config.data['linuxmuster']['ldap']
