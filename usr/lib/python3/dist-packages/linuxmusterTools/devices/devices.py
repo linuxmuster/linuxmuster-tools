@@ -29,15 +29,19 @@ class Devices:
     def load(self):
         self.devices = []
 
-        with LMNFile(self.path, 'r') as devices_csv:
-            for device in devices_csv.read():
-                if not device['room'].startswith('#'):
-                    # TODO: special cases for linbo docker
-                    device['school'] = self.school
-                    device['mac'] = name_checker.normalize_mac(device['mac'])
-                    device['pxeEnabled'] = self._check_pxe_flag(device)
+        try:
+            with LMNFile(self.path, 'r') as devices_csv:
+                for device in devices_csv.read():
+                    if not device['room'].startswith('#'):
+                        # TODO: special cases for linbo docker
+                        device['school'] = self.school
+                        device['mac'] = name_checker.normalize_mac(device['mac'])
+                        device['pxeEnabled'] = self._check_pxe_flag(device)
 
-                    self.devices.append(device)
+                        self.devices.append(device)
+        except FileNotFoundError:
+            # No devices.csv yet, e.g. fresh install not provisioned yet
+            pass
 
         self.groups = list(set([d['group'] for d in self.devices if d.get('group', False)]))
         self.macs = list(set([d['mac'] for d in self.devices if d.get('mac', False)]))

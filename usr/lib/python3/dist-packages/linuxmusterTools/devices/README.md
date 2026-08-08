@@ -24,7 +24,7 @@ from linuxmusterTools.devices import Devices, UPChecker
 
 ### `Devices` — inventory
 
-Loads `/etc/linuxmuster/sophomorix/SCHOOL/[SCHOOL.]devices.csv` on instantiation.
+Loads `/etc/linuxmuster/sophomorix/SCHOOL/[SCHOOL.]devices.csv` on instantiation. If that file doesn't exist yet (fresh install, school not provisioned yet), `devices`/`groups`/`macs`/`ips`/`rooms` are simply left empty instead of raising.
 
 ```python
 devicesmgr = Devices(school='default-school')

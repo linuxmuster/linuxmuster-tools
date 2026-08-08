@@ -14,6 +14,19 @@ from linuxmusterTools.devices.devices import Devices
 # switch() / load()
 # ---------------------------------------------------------------------------
 
+def test_missing_devices_csv_results_in_empty_device_list(devices_path):
+    # e.g. fresh install, school not provisioned yet: must not raise.
+    assert not devices_path().exists()
+
+    devicesmgr = Devices()
+
+    assert devicesmgr.devices == []
+    assert devicesmgr.groups == []
+    assert devicesmgr.macs == []
+    assert devicesmgr.ips == []
+    assert devicesmgr.rooms == []
+
+
 def test_default_school_loads_devices(make_device_row, write_devices_csv):
     write_devices_csv([make_device_row(hostname='pc01')])
 
