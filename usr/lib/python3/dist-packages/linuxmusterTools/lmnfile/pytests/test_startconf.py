@@ -212,6 +212,24 @@ def test_write_creates_file_if_absent(tmp_path):
     assert 'Server = 10.0.0.1' in f.read_text()
 
 
+def test_context_manager_creates_new_group_file(tmp_path):
+    # Regression test for issue #293: webui creates a new group via
+    # `with LMNFile(path, 'w') as f: f.write(data)`, which calls __enter__
+    # on a file that does not exist yet.
+    f = tmp_path / 'start.conf.newgroup'
+    assert not f.exists()
+
+    with LMNFile(str(f), 'w') as lmn:
+        lmn.write({
+            'config': {'LINBO': {'Server': '10.0.0.1'}},
+            'partitions': [],
+            'os': [],
+        })
+
+    assert f.exists()
+    assert 'Server = 10.0.0.1' in f.read_text()
+
+
 # ── File name variants ─────────────────────────────────────────────────────────
 
 def test_start_conf_with_numeric_suffix(tmp_path):

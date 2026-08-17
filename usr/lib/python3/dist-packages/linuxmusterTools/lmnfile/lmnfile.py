@@ -421,14 +421,21 @@ class StartConfLoader(LMNFile):
     extensions = []  # handled by filename check in __new__, not by extension
 
     def __enter__(self):
-        self.opened = open(self.file, 'r', encoding=self.encoding)
+        self.data = {
+            'config': {},
+            'partitions': [],
+            'os': [],
+        }
+
+        if os.path.isfile(self.file):
+            self.opened = open(self.file, 'r', encoding=self.encoding)
+        elif 'w' in self.mode:
+            self.opened = None
+        else:
+            raise FileNotFoundError(f'File {self.file} not found.')
+
         # TODO: use new parser in linbo module
-        if 'r' in self.mode or '+' in self.mode:
-            self.data = {
-                'config': {},
-                'partitions': [],
-                'os': [],
-            }
+        if self.opened and ('r' in self.mode or '+' in self.mode):
             for line in self.opened:
                 line = line.split('#')[0].strip()
 

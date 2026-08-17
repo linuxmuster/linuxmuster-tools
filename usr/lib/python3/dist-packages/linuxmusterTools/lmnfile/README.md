@@ -145,7 +145,12 @@ with LMNFile('/srv/linbo/start.conf', 'r') as f:
     data = f.read()
     data['config']['LINBO']['Server'] = '10.0.0.1'
     f.write(data)
+
+with LMNFile('/srv/linbo/start.conf.newgroup', 'w') as f:
+    f.write({'config': {'LINBO': {'Server': '10.0.0.1'}}, 'partitions': [], 'os': []})
 ```
+
+> Opening a non-existent `start.conf.*` in `'w'` mode creates a new group file instead of raising `FileNotFoundError`.
 
 ### Linbo metadata files
 
