@@ -62,7 +62,7 @@ class LinboChangeTracker:
 
         # Parse ids
         all_startconf_ids = [
-            id for id in self.config_manager.linbo_groups()
+            id for id in self.config_manager.group_ids
             if id in school_groups
         ]
         all_config_ids = [

@@ -171,7 +171,7 @@ class LinboRemote:
                 raise LinboRemoteParameterError(f'No start.conf for group {group}.')
 
             if name == 'format':
-                linbo_config = startconf_mgr.linbo_configs.get(group)
+                linbo_config = startconf_mgr.load_linbo_startconf(group)
                 nr_partitions = len(linbo_config.Partitions) if linbo_config else 0
                 if not (1 <= int(nr) <= nr_partitions):
                     raise LinboRemoteParameterError(f'No partition {nr} in start.conf.{group}.')
