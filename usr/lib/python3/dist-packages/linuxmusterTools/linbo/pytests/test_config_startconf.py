@@ -208,3 +208,60 @@ def test_parse_keeps_last_partition_stanza_when_file_ends_there(tmp_path):
 
     assert len(lc.Partitions) == 1
     assert lc.Partitions[0].Dev == '/dev/sda2'
+
+
+# ── group_ids / load_linbo_startconf(s) ──────────────────────────────────────
+
+
+INCOMPLETE_CONTENT = """\
+[LINBO]
+Server = 10.0.0.1
+Group = mygroup
+
+[Partition]
+Dev = /dev/sda1
+Label = efi
+"""
+
+
+def test_group_ids_lists_group_with_unparsable_startconf(tmp_path):
+    mgr = LinboConfigManager()
+    mgr.write_raw_startconf('mygroup', INCOMPLETE_CONTENT)  # missing Cache
+
+    mgr = LinboConfigManager()  # re-instantiate now that the file exists on disk
+
+    assert mgr.group_ids == ['mygroup']
+    assert mgr.linbo_configs == {}
+
+
+def test_load_linbo_startconf_returns_none_on_missing_field(tmp_path):
+    mgr = LinboConfigManager()
+    mgr.write_raw_startconf('mygroup', INCOMPLETE_CONTENT)  # missing Cache
+
+    result = mgr.load_linbo_startconf('mygroup')
+
+    assert result is None
+    assert 'mygroup' not in mgr.linbo_configs
+
+
+def test_load_linbo_startconf_returns_parsed_config_on_success(tmp_path):
+    mgr = LinboConfigManager()
+    mgr.write_raw_startconf('mygroup', FULL_CONTENT)
+
+    result = mgr.load_linbo_startconf('mygroup')
+
+    assert result is not None
+    assert result.LINBO.Group == 'mygroup'
+    assert mgr.linbo_configs['mygroup'] is result
+
+
+def test_load_linbo_startconfs_populates_only_parsable_groups(tmp_path):
+    mgr = LinboConfigManager()
+    mgr.write_raw_startconf('goodgroup', FULL_CONTENT)
+    mgr.write_raw_startconf('badgroup', INCOMPLETE_CONTENT)
+
+    mgr = LinboConfigManager()  # re-instantiate to discover both files
+    mgr.load_linbo_startconfs()
+
+    assert set(mgr.group_ids) == {'goodgroup', 'badgroup'}
+    assert set(mgr.linbo_configs.keys()) == {'goodgroup'}

@@ -81,7 +81,7 @@ def make_fake_startconf_mgr(group, partitions_count):
     linbo_config = MagicMock()
     linbo_config.Partitions = [MagicMock() for _ in range(partitions_count)]
     mgr = MagicMock()
-    mgr.linbo_configs = {group: linbo_config}
+    mgr.load_linbo_startconf.return_value = linbo_config
     return mgr
 
 
