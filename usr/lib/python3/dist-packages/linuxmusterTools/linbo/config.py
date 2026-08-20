@@ -26,15 +26,17 @@ class LinboConfigManager:
     def __init__(self, school='default-school'):
         self.school = school
         self.linbo_configs = {}
+        self.group_ids = self._list_group_ids()
 
-        self.load_linbo_startconfs()
-
-    def load_linbo_startconfs(self):
+    def _list_group_ids(self):
         """
-        WIP. Do not use in productivity !
+        List the hardware group IDs with an existing, validly-named
+        start.conf file. Enumeration only: independent of whether the
+        file's content actually parses.
         """
 
 
+        group_ids = []
         for config in sorted(glob(os.path.join(LINBO_PATH, 'start.conf.*'))):
             if not os.path.islink(config):
                 group = config.replace(os.path.join(LINBO_PATH, 'start.conf.'), '')
@@ -47,10 +49,32 @@ class LinboConfigManager:
                     logger.warning(f"Invalid config name, this file will be ignored: {config}")
                     continue
 
-                try:
-                    self.linbo_configs[group] = self.parse_linbo_startconf(config)
-                except TypeError as e:
-                    logger.error(f"Failed to load {config}: {e}")
+                group_ids.append(group)
+        return group_ids
+
+    def load_linbo_startconf(self, group):
+        """
+        WIP. Do not use in productivity !
+        Parse a single group's start.conf and cache it in linbo_configs.
+        """
+
+
+        config = os.path.join(LINBO_PATH, f'start.conf.{group}')
+        try:
+            self.linbo_configs[group] = self.parse_linbo_startconf(config)
+        except TypeError as e:
+            logger.error(f"Failed to load {config}: {e}")
+        return self.linbo_configs.get(group)
+
+    def load_linbo_startconfs(self):
+        """
+        WIP. Do not use in productivity !
+        Parse every known group's start.conf.
+        """
+
+
+        for group in self.group_ids:
+            self.load_linbo_startconf(group)
 
     def parse_linbo_startconf(self, config):
         """
@@ -127,9 +151,6 @@ class LinboConfigManager:
                 'updatedAt': mtime.isoformat() if mtime else None,
             })
         return results
-
-    def linbo_groups(self):
-        return list(self.linbo_configs.keys())
 
     def write_raw_startconf(self, group_id: str, content: str) -> None:
         """
@@ -286,7 +307,7 @@ def group_os(workstations):
                 'partition': 0,
             }
 
-            linbo_config = startconf_mgr.linbo_configs.get(group)
+            linbo_config = startconf_mgr.load_linbo_startconf(group)
             # 1-based position among [Partition] sections, what linbo-remote's
             # format:<#> actually expects — NOT the digit in the device path
             # (Root=/dev/sda3 isn't necessarily partition 3).
