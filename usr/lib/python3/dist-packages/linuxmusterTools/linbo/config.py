@@ -30,6 +30,11 @@ class LinboConfigManager:
         self.load_linbo_startconfs()
 
     def load_linbo_startconfs(self):
+        """
+        WIP. Do not use in productivity !
+        """
+
+
         for config in sorted(glob(os.path.join(LINBO_PATH, 'start.conf.*'))):
             if not os.path.islink(config):
                 group = config.replace(os.path.join(LINBO_PATH, 'start.conf.'), '')
@@ -49,6 +54,7 @@ class LinboConfigManager:
 
     def parse_linbo_startconf(self, config):
         """
+        WIP. Do not use in productivity !
         Parse a start.conf file to a LinboConfig object.
         TODO: duplicate in lmnfile reader
         """
@@ -56,6 +62,14 @@ class LinboConfigManager:
 
         if not os.path.isfile(config):
             raise FileNotFoundError(f'Linbo config file not found: {config}.')
+
+        def flush_stanza(model, kwargs, lc):
+            if model == 'LINBO':
+                lc.LINBO = Linbo.from_dict(kwargs)
+            elif model == 'Partition':
+                lc.Partitions.append(Partition.from_dict(kwargs))
+            elif model == 'OS':
+                lc.OS.append(OS.from_dict(kwargs))
 
         with open(config, 'r') as f:
             kwargs = {'config': config}
@@ -67,13 +81,7 @@ class LinboConfigManager:
                 line = line.split('#')[0].strip()
 
                 if line.startswith('['):
-                    if current_model == 'LINBO':
-                        lc.LINBO = Linbo.from_dict(kwargs)
-                    elif current_model == 'Partition':
-                        lc.Partitions.append(Partition.from_dict(kwargs))
-                    elif current_model == 'OS':
-                        lc.OS.append(OS.from_dict(kwargs))
-
+                    flush_stanza(current_model, kwargs, lc)
                     kwargs = {'config': config}
                     current_model = line.strip('[]')
 
@@ -83,6 +91,9 @@ class LinboConfigManager:
                     if v in ['yes', 'no']:
                         v = v == 'yes'
                     kwargs[k.strip()] = v
+
+            # Flush the last stanza: no trailing '[' ever comes to trigger it.
+            flush_stanza(current_model, kwargs, lc)
 
             return lc
 

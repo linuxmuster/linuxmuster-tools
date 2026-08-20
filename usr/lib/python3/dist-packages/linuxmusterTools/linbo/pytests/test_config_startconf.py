@@ -157,3 +157,54 @@ def test_delete_rejects_invalid_group_id(tmp_path):
     mgr = LinboConfigManager()
     with pytest.raises(ValueError):
         mgr.delete_startconf('../etc/passwd')
+
+
+# ── parse_linbo_startconf ─────────────────────────────────────────────────────
+
+
+FULL_CONTENT = """\
+[LINBO]
+Server = 10.0.0.1
+Group = mygroup
+Cache = /dev/sda1
+
+[Partition]
+Dev = /dev/sda2
+Label = system
+Size = 30G
+Id = 83
+Bootable = no
+FSType = ext4
+
+[OS]
+Name = Ubuntu
+BaseImage = ubuntu.qcow2
+Root = /dev/sda2
+Kernel = vmlinuz
+Initrd = initrd
+Append =
+DefaultAction = sync
+Description = Ubuntu
+IconName = ubuntu
+"""
+
+
+def test_parse_keeps_last_os_stanza(tmp_path):
+    mgr = LinboConfigManager()
+    mgr.write_raw_startconf('mygroup', FULL_CONTENT)
+
+    lc = mgr.parse_linbo_startconf(str(start_conf_path(tmp_path)))
+
+    assert len(lc.OS) == 1
+    assert lc.OS[0].Name == 'Ubuntu'
+
+
+def test_parse_keeps_last_partition_stanza_when_file_ends_there(tmp_path):
+    content = FULL_CONTENT.split('[OS]')[0]
+    mgr = LinboConfigManager()
+    mgr.write_raw_startconf('mygroup', content)
+
+    lc = mgr.parse_linbo_startconf(str(start_conf_path(tmp_path)))
+
+    assert len(lc.Partitions) == 1
+    assert lc.Partitions[0].Dev == '/dev/sda2'

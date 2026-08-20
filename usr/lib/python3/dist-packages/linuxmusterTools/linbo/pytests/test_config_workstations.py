@@ -78,8 +78,15 @@ Bootable=no
 FSType=ext4
 
 [OS]
+Name=Ubuntu
 BaseImage=ubuntu.qcow2
 Root=/dev/sda3
+Kernel=vmlinuz
+Initrd=initrd
+Append=
+DefaultAction=sync
+Description=Ubuntu
+IconName=ubuntu
 SyncEnabled=yes
 NewEnabled=no
 StartEnabled=yes
