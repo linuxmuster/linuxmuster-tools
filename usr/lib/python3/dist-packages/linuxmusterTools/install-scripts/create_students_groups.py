@@ -13,6 +13,12 @@ else:
     # No school given on purpose: every schoolclass of every school must be
     # checked here, and each one carries its own sophomorixSchoolname.
     for c in lr.get('/schoolclasses', as_dict=False):
+        # The attic is an adminclass too, but has no students/teachers/parents
+        # subgroups to maintain. Filtering on the dn and not on the cn, which
+        # is prefixed with the school name in a multischool setup.
+        if ',OU=attic,' in c.dn:
+            continue
+
         lprint.info(f"Checking students groups from schoolclass {c.cn}")
         try:
             l = LMNSchoolclass(c.cn, school=c.sophomorixSchoolname)
