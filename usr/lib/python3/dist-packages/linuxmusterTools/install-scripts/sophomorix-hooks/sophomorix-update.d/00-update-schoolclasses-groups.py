@@ -91,17 +91,14 @@ for entry in entries:
                 student.remove_parent(user)
 
 for school, groups in schoolclass_groups_to_update.items():
-    for schoolclass in groups['students']:
-        lprint.lmn(f"Updating students group of schoolclass {schoolclass} in {school}")
-        schoolclass_group = LMNSchoolclass(schoolclass, school=school)
-        schoolclass_group.students_group.fill_members()
-
-    for schoolclass in groups['parents']:
-        lprint.lmn(f"Updating parents group of schoolclass {schoolclass} in {school}")
-        schoolclass_group = LMNSchoolclass(schoolclass, school=school)
-        schoolclass_group.parents_group.fill_members()
-
-    for schoolclass in groups['teachers']:
-        lprint.lmn(f"Updating teachers group of schoolclass {schoolclass} in {school}")
-        schoolclass_group = LMNSchoolclass(schoolclass, school=school)
-        schoolclass_group.teachers_group.fill_members()
+    for group_type in ['students', 'parents', 'teachers']:
+        for schoolclass in groups[group_type]:
+            lprint.lmn(f"Updating {group_type} group of schoolclass {schoolclass} in {school}")
+            try:
+                schoolclass_group = LMNSchoolclass(schoolclass, school=school)
+                getattr(schoolclass_group, f'{group_type}_group').fill_members()
+            except Exception as e:
+                # A single failing schoolclass must not abort the whole hook:
+                # the users have already been updated by sophomorix at this
+                # point.
+                lprint.danger(f"Could not update the {group_type} group of {schoolclass} in {school}: {str(e)}")

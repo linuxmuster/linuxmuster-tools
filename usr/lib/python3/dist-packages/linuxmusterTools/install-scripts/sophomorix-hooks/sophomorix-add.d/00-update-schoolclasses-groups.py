@@ -50,5 +50,10 @@ for entry in entries:
 for school, groups in schoolclass_groups_to_update.items():
     for schoolclass in groups['students']:
         lprint.lmn(f"Updating students group of schoolclass {schoolclass} in {school}")
-        schoolclass_group = LMNSchoolclass(schoolclass, school=school)
-        schoolclass_group.students_group.fill_members()
+        try:
+            schoolclass_group = LMNSchoolclass(schoolclass, school=school)
+            schoolclass_group.students_group.fill_members()
+        except Exception as e:
+            # A single failing schoolclass must not abort the whole hook: the
+            # users have already been added by sophomorix at this point.
+            lprint.danger(f"Could not update the students group of {schoolclass} in {school}: {str(e)}")
