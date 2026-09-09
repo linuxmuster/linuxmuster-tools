@@ -303,9 +303,30 @@ Available collection classes: `LMNUsers`, `LMNStudents`, `LMNTeachers`, `LMNPare
 
 ## Multi-school support
 
-Most routes and writer classes accept a `school` parameter. Omitting it defaults to `'default-school'`. Use `'global'` to search across all schools (valid for global administrators only).
+Most routes and writer classes accept a `school` parameter. Use `'global'` to search across all schools (valid for global administrators only).
 
 ```python
 lr.get('/schoolclasses', school='secondary')
 LMNSchoolclass('7b', school='secondary')
 ```
+
+**Always pass `school` explicitly on a multi-school server.** What omitting it does depends on the route:
+
+| Route kind | `school` omitted |
+|---|---|
+| Route with a school-scoped subdn (`/units`, `/groups`, `/printers`, `/rooms`, `/ou`, …) | searched under `OU=default-school` |
+| Any other route (`/schoolclasses`, `/users`, `/projects`, …) | **no filtering at all** — entries of every school are returned |
+
+The reason is that the reader filters on the DN only when it actually receives a `school` (`school_node = f"OU={school},"`); the default `'default-school'` is used to substitute the subdn marker, not to filter the results. So `lr.getval('/schoolclasses', 'cn')` lists the schoolclasses of *all* schools, while `lr.getval('/schoolclasses', 'cn', school='default-school')` lists only that school's ones.
+
+### Validating a school
+
+```python
+from linuxmusterTools.ldapconnector.checks import is_valid_school, valid_schools
+
+valid_schools()                     # ['default-school', 'secondary']
+is_valid_school('secondary')        # True
+is_valid_school('global')           # False, 'global' is a routing marker, not a school
+```
+
+Both read `/schools` on each call (no caching). `'global'` is never a valid school: it is the marker telling that a global administrator is not scoped to a single school, and passing it to a writer instead of a real school name writes bogus school-scoped attributes.
