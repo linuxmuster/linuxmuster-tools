@@ -1,3 +1,4 @@
+import ldap
 import pytest
 from unittest.mock import MagicMock
 
@@ -119,6 +120,49 @@ class TestLMNSchoolclassGroupFillMembers:
         sc = LMNSchoolclass('7a')
         sc.parents_group.fill_members()
         assert mock_connect.modify_s.called
+
+    def test_fill_empty_members_deletes_attribute(self, monkeypatch, mock_connect):
+        # No parents accounts is a valid state: the attribute must be cleared
+        # through delattr(), setattr() would raise a ValueError.
+        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_SCHOOLCLASS))
+        monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: None)
+
+        sc = LMNSchoolclass('7a')
+        mock_connect.modify_s.reset_mock()
+        sc.parents_group.fill_members()
+
+        assert mock_connect.modify_s.called
+        ldif = mock_connect.modify_s.call_args[0][1]
+        assert ldif == [(ldap.MOD_DELETE, 'member', None)]
+
+    def test_fill_empty_members_without_attribute_does_nothing(self, monkeypatch, mock_connect):
+        # Subgroup just auto created: no member attribute in ldap yet, so
+        # there is nothing to delete either.
+        def mock_get(url, **kw):
+            if url.startswith('/units/7a-'):
+                return dict(SUBGROUP, member=[])
+            return dict(SAMPLE_SCHOOLCLASS)
+
+        monkeypatch.setattr(router, 'get', mock_get)
+        monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: None)
+
+        sc = LMNSchoolclass('7a')
+        mock_connect.modify_s.reset_mock()
+        sc.parents_group.fill_members()
+
+        assert not mock_connect.modify_s.called
+
+    def test_fill_group_members_survives_empty_subgroup(self, monkeypatch, mock_connect):
+        # fill_group_members() must not stop at the first empty subgroup:
+        # the students and teachers groups have to be filled anyway.
+        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_SCHOOLCLASS))
+        monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: None)
+
+        sc = LMNSchoolclass('7a')
+        mock_connect.modify_s.reset_mock()
+        sc.fill_group_members()
+
+        assert mock_connect.modify_s.call_count == 3
 
 
 class TestLMNSchoolclassSubgroupAutoCreate:

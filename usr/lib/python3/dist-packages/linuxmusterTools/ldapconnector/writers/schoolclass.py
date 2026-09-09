@@ -110,7 +110,14 @@ class LMNSchoolclassGroup(LMNGroupCommon):
         else:
             return
 
-        self.setattr(data={'member': list(set(members))})
+        members = list(set(members))
+
+        if members:
+            self.setattr(data={'member': members})
+        elif self.data.get('member'):
+            # An empty member list is a valid state (e.g. a schoolclass
+            # without parents accounts), setattr() would raise a ValueError.
+            self.delattr(data={'member': None})
 
 
 class LMNSchoolclass(LMNGroupCommon):
