@@ -1,4 +1,5 @@
 import pytest
+from copy import deepcopy
 from unittest.mock import MagicMock
 
 from linuxmusterTools.ldapconnector.writers.group import LMNGroupCommon, LMNGroup, find_legacy_groups
@@ -38,14 +39,14 @@ SAMPLE_GROUP = {
 
 @pytest.fixture
 def group(monkeypatch, mock_connect):
-    monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_GROUP))
+    monkeypatch.setattr(router, 'get', lambda url, **kw: deepcopy(SAMPLE_GROUP))
     return LMNGroupCommon('7a'), mock_connect
 
 
 class TestLMNGroupCommonInit:
 
     def test_init_loads_data(self, monkeypatch, mock_connect):
-        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_GROUP))
+        monkeypatch.setattr(router, 'get', lambda url, **kw: deepcopy(SAMPLE_GROUP))
         g = LMNGroupCommon('7a')
         assert g.data['cn'] == '7a'
         assert g.cn == '7a'
@@ -68,7 +69,7 @@ class TestLMNGroupCommonAddMember:
 
     def test_add_member_calls_ldap_modify(self, monkeypatch, mock_connect):
         new_user_dn = 'CN=janedoe,OU=7a,OU=Students,OU=default-school,OU=SCHOOLS,DC=linuxmuster,DC=lan'
-        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_GROUP))
+        monkeypatch.setattr(router, 'get', lambda url, **kw: deepcopy(SAMPLE_GROUP))
         monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: new_user_dn)
 
         g = LMNGroupCommon('7a')
@@ -76,12 +77,33 @@ class TestLMNGroupCommonAddMember:
         assert mock_connect.modify_s.called
 
     def test_add_member_raises_when_user_not_found(self, monkeypatch, mock_connect):
-        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_GROUP))
+        monkeypatch.setattr(router, 'get', lambda url, **kw: deepcopy(SAMPLE_GROUP))
         monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: None)
 
         g = LMNGroupCommon('7a')
         with pytest.raises(Exception, match='was not found in ldap'):
             g.add_member('nonexistent')
+
+    def test_add_member_is_a_noop_when_user_is_already_a_member(self, monkeypatch, mock_connect):
+        monkeypatch.setattr(router, 'get', lambda url, **kw: deepcopy(SAMPLE_GROUP))
+        monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: USER_DN)
+
+        g = LMNGroupCommon('7a')
+        g.add_member('johndoe')
+
+        # johndoe is already in SAMPLE_GROUP['member']: writing the list again
+        # would send the same dn twice and be rejected by ldap.
+        assert not mock_connect.modify_s.called
+
+    def test_add_member_propagates_a_failed_write(self, monkeypatch, mock_connect):
+        new_user_dn = 'CN=janedoe,OU=7a,OU=Students,OU=default-school,OU=SCHOOLS,DC=linuxmuster,DC=lan'
+        monkeypatch.setattr(router, 'get', lambda url, **kw: deepcopy(SAMPLE_GROUP))
+        monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: new_user_dn)
+        mock_connect.modify_s.side_effect = Exception('insufficient access')
+
+        g = LMNGroupCommon('7a')
+        with pytest.raises(Exception, match='insufficient access'):
+            g.add_member('janedoe')
 
 
 class TestLMNGroupCommonAddMembers:
@@ -91,7 +113,7 @@ class TestLMNGroupCommonAddMembers:
             'janedoe': 'CN=janedoe,OU=7a,OU=Students,OU=default-school,OU=SCHOOLS,DC=linuxmuster,DC=lan',
             'bobdoe': 'CN=bobdoe,OU=7a,OU=Students,OU=default-school,OU=SCHOOLS,DC=linuxmuster,DC=lan',
         }
-        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_GROUP))
+        monkeypatch.setattr(router, 'get', lambda url, **kw: deepcopy(SAMPLE_GROUP))
         monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: dns.get(url.rsplit('/', 1)[-1]))
 
         g = LMNGroupCommon('7a')
@@ -102,8 +124,25 @@ class TestLMNGroupCommonAddMembers:
         # janedoe and bobdoe were both still applied despite the invalid entries.
         assert mock_connect.modify_s.call_count == 2
 
+    def test_a_failed_write_is_reported_in_the_failures(self, monkeypatch, mock_connect):
+        dns = {
+            'janedoe': 'CN=janedoe,OU=7a,OU=Students,OU=default-school,OU=SCHOOLS,DC=linuxmuster,DC=lan',
+            'bobdoe': 'CN=bobdoe,OU=7a,OU=Students,OU=default-school,OU=SCHOOLS,DC=linuxmuster,DC=lan',
+        }
+        monkeypatch.setattr(router, 'get', lambda url, **kw: deepcopy(SAMPLE_GROUP))
+        monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: dns.get(url.rsplit('/', 1)[-1]))
+        mock_connect.modify_s.side_effect = [Exception('insufficient access'), None]
+
+        g = LMNGroupCommon('7a')
+        failures = g.add_members(['janedoe', 'bobdoe'])
+
+        assert [f[0] for f in failures] == ['janedoe']
+        assert 'insufficient access' in failures[0][1]
+        # bobdoe was still applied after the failure of janedoe.
+        assert mock_connect.modify_s.call_count == 2
+
     def test_all_valid_members_returns_no_failures(self, monkeypatch, mock_connect):
-        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_GROUP))
+        monkeypatch.setattr(router, 'get', lambda url, **kw: deepcopy(SAMPLE_GROUP))
         monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: USER_DN)
 
         g = LMNGroupCommon('7a')
@@ -115,7 +154,7 @@ class TestLMNGroupCommonAddMembers:
 class TestLMNGroupCommonRemoveMember:
 
     def test_remove_member_calls_ldap_modify(self, monkeypatch, mock_connect):
-        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_GROUP))
+        monkeypatch.setattr(router, 'get', lambda url, **kw: deepcopy(SAMPLE_GROUP))
         monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: USER_DN)
 
         g = LMNGroupCommon('7a')
@@ -123,7 +162,7 @@ class TestLMNGroupCommonRemoveMember:
         assert mock_connect.modify_s.called
 
     def test_remove_member_no_op_when_not_in_group(self, monkeypatch, mock_connect):
-        data = dict(SAMPLE_GROUP)
+        data = deepcopy(SAMPLE_GROUP)
         data['member'] = []
         monkeypatch.setattr(router, 'get', lambda url, **kw: dict(data))
         monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: USER_DN)
@@ -134,7 +173,7 @@ class TestLMNGroupCommonRemoveMember:
         assert not mock_connect.modify_s.called
 
     def test_remove_member_raises_when_user_not_found(self, monkeypatch, mock_connect):
-        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_GROUP))
+        monkeypatch.setattr(router, 'get', lambda url, **kw: deepcopy(SAMPLE_GROUP))
         monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: None)
 
         g = LMNGroupCommon('7a')
@@ -145,7 +184,7 @@ class TestLMNGroupCommonRemoveMember:
 class TestLMNGroupCommonRemoveMembers:
 
     def test_valid_members_are_removed_despite_invalid_ones_in_the_batch(self, monkeypatch, mock_connect):
-        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_GROUP))
+        monkeypatch.setattr(router, 'get', lambda url, **kw: deepcopy(SAMPLE_GROUP))
         monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: USER_DN if url.endswith('/johndoe') else None)
 
         g = LMNGroupCommon('7a')
@@ -155,7 +194,7 @@ class TestLMNGroupCommonRemoveMembers:
         assert mock_connect.modify_s.called
 
     def test_all_valid_members_returns_no_failures(self, monkeypatch, mock_connect):
-        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_GROUP))
+        monkeypatch.setattr(router, 'get', lambda url, **kw: deepcopy(SAMPLE_GROUP))
         monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: USER_DN)
 
         g = LMNGroupCommon('7a')
@@ -167,7 +206,7 @@ class TestLMNGroupCommonRemoveMembers:
 class TestLMNGroupCommonRemoveAllMembers:
 
     def test_remove_all_members_calls_ldap_modify(self, monkeypatch, mock_connect):
-        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_GROUP))
+        monkeypatch.setattr(router, 'get', lambda url, **kw: deepcopy(SAMPLE_GROUP))
 
         g = LMNGroupCommon('7a')
         g.remove_all_members()
@@ -177,13 +216,13 @@ class TestLMNGroupCommonRemoveAllMembers:
 class TestLMNGroupCommonSetDelattr:
 
     def test_setattr_calls_ldap_modify(self, monkeypatch, mock_connect):
-        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_GROUP))
+        monkeypatch.setattr(router, 'get', lambda url, **kw: deepcopy(SAMPLE_GROUP))
         g = LMNGroupCommon('7a')
         g.setattr(data={'sophomorixStatus': 'U'})
         assert mock_connect.modify_s.called
 
     def test_delattr_calls_ldap_modify(self, monkeypatch, mock_connect):
-        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_GROUP))
+        monkeypatch.setattr(router, 'get', lambda url, **kw: deepcopy(SAMPLE_GROUP))
         g = LMNGroupCommon('7a')
         g.delattr(data={'sophomorixStatus': ''})
         assert mock_connect.modify_s.called
@@ -192,7 +231,7 @@ class TestLMNGroupCommonSetDelattr:
 class TestLMNGroupCommonDelete:
 
     def test_delete_calls_ldap_delete(self, monkeypatch, mock_connect):
-        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_GROUP))
+        monkeypatch.setattr(router, 'get', lambda url, **kw: deepcopy(SAMPLE_GROUP))
         g = LMNGroupCommon('7a')
         g.delete()
         assert mock_connect.delete_s.called

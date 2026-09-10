@@ -1,9 +1,5 @@
 import logging
-import os
-import time
-import locale
 from dataclasses import fields
-from datetime import datetime
 
 from ..ldap_writer import LdapWriter
 from ..urls.ldaprouter import router
@@ -123,35 +119,6 @@ class LMNDevice:
                 self.new = True
                 self.data =  {field.name:field.type() for field in fields(self.model) if field.init}
                 self.data['cn'] = self.cn
-
-    def last_sync(self, image):
-        if self.pxe:
-            statusfile = f'/var/log/linuxmuster/linbo/{self.cn}_image.status'
-            image_last_sync, diff_last_sync = '0','0'
-            diff_image = image.replace('.qcow2', '.qdiff')
-
-            if os.path.isfile(statusfile) and os.stat(statusfile).st_size != 0:
-                for line in open(statusfile, 'r').readlines():
-                    if image in line:
-                        image_last_sync = line.rstrip().split(' ')[0]
-                    if diff_image in line:
-                        diff_last_sync = line.strip().split(' ')[0]
-
-            last = max(image_last_sync, diff_last_sync)
-
-            if last == '0':
-                return False
-
-            ## Linbo locale is en_GB, not necessarily the server locale
-            saved = locale.setlocale(locale.LC_ALL)
-            locale.setlocale(locale.LC_ALL, 'C.UTF-8')
-            last = datetime.strptime(last, '%Y%m%d%H%M')
-            locale.setlocale(locale.LC_ALL, saved)
-
-            last = time.mktime(last.timetuple())
-            return last
-
-        return "Not a PXE device."
 
     def setattr(self, **kwargs):
         """
