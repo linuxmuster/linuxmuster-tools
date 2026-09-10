@@ -39,7 +39,11 @@ def linbo_timestamp_to_epoch(timestamp):
     ## Linbo locale is en_GB, not necessarily the server locale
     saved = locale.setlocale(locale.LC_ALL)
     locale.setlocale(locale.LC_ALL, 'C.UTF-8')
-    parsed = datetime.strptime(timestamp, '%Y%m%d%H%M')
-    locale.setlocale(locale.LC_ALL, saved)
+    try:
+        parsed = datetime.strptime(timestamp, '%Y%m%d%H%M')
+    finally:
+        # A malformed timestamp raises: without this the whole process would
+        # be left in C.UTF-8.
+        locale.setlocale(locale.LC_ALL, saved)
 
     return time.mktime(parsed.timetuple())

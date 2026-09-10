@@ -112,3 +112,15 @@ def test_linbo_timestamp_rejects_a_malformed_value(tz):
 
     with pytest.raises(ValueError):
         linbo_timestamp_to_epoch('not-a-timestamp')
+
+
+def test_linbo_timestamp_restores_the_locale_after_a_malformed_value():
+    import locale
+
+    saved = locale.setlocale(locale.LC_ALL)
+    try:
+        with pytest.raises(ValueError):
+            linbo_timestamp_to_epoch('209913451299')
+        assert locale.setlocale(locale.LC_ALL) == saved
+    finally:
+        locale.setlocale(locale.LC_ALL, saved)
