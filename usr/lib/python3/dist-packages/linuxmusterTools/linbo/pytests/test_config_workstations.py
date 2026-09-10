@@ -3,6 +3,7 @@ Tests for group_os(), last_sync_all() and get_host_image_status() in
 linuxmusterTools.linbo.config.
 """
 
+import logging
 import time
 from datetime import datetime, timezone
 
@@ -265,3 +266,35 @@ def test_get_host_image_status_skips_malformed_line(tmp_path):
 
 def test_get_host_image_status_no_files_returns_empty_dict(tmp_path):
     assert get_host_image_status() == {}
+
+
+def test_get_host_image_status_reports_an_unreadable_file_and_keeps_the_others(tmp_path, caplog, monkeypatch):
+    log_dir = tmp_path / 'var_log_linbo'
+    (log_dir / 'pc005_image.status').write_text(
+        '202603241142 applied: win11_pro_edu.qcow2 "202601271107"\n'
+    )
+    (log_dir / 'pc006_image.status').write_text(
+        '202603241142 applied: win11_pro_edu.qcow2 "202601271107"\n'
+    )
+
+    real_open = open
+
+    def refuse_pc006(file, *args, **kwargs):
+        if 'pc006' in str(file):
+            raise PermissionError(13, 'Permission denied')
+        return real_open(file, *args, **kwargs)
+
+    monkeypatch.setattr('builtins.open', refuse_pc006)
+    # The linuxmusterTools logger does not propagate (see __init__.py), so
+    # caplog would see nothing without this.
+    monkeypatch.setattr(logging.getLogger('linuxmusterTools'), 'propagate', True)
+
+    with caplog.at_level('WARNING'):
+        status = get_host_image_status()
+
+    # The readable host is still reported ...
+    assert 'pc005' in status
+    # ... the unreadable one is not silently dropped: a host missing from the
+    # result is indistinguishable from a host which never synced.
+    assert 'pc006' not in status
+    assert 'pc006' in caplog.text

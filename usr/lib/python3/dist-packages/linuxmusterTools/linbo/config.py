@@ -306,7 +306,16 @@ def get_host_image_status(log_dir=None):
     result = {}
     for filename in sorted(status_files):
         hostname = filename.removesuffix('_image.status')
-        entries = _parse_image_status_file(base / filename)
+
+        try:
+            entries = _parse_image_status_file(base / filename)
+        except OSError as e:
+            # One unreadable file must not cost the whole report, but it is
+            # reported: a host silently missing from the result would look
+            # like a host which never synced.
+            logger.warning(f"Could not read the image status file of {hostname}: {str(e)}")
+            continue
+
         if not entries:
             continue
 
