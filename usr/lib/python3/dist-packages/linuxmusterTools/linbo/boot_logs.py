@@ -5,7 +5,6 @@ Provides safe file listing, reading, and deletion with path traversal protection
 """
 
 import logging
-import os
 import re
 from datetime import datetime, timezone
 from pathlib import Path
@@ -15,55 +14,6 @@ logger = logging.getLogger(__name__)
 DEFAULT_LOG_DIR = "/var/log/linuxmuster/linbo"
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 MB
 _SAFE_FILENAME = re.compile(r"^[a-zA-Z0-9._-]+$")
-_IMAGE_STATUS_PATTERN = re.compile(r"^(\d{12})\s+(\w+):\s+(\S+)(?:\s+\"(\d+)\")?")
-
-
-def get_host_image_status(log_dir: str | None = None) -> dict:
-    """Parse _image.status files for per-host last sync info.
-
-    Reads *_image.status files from the LINBO log directory. Each file
-    contains a single line like: 202603241142 applied: win11_pro_edu.qcow2 "202601271107"
-
-    Args:
-        log_dir: Override log directory (default: /var/log/linuxmuster/linbo)
-
-    Returns:
-        Dict mapping hostname to {lastSync, action, image, imageVersion}
-    """
-    base = Path(log_dir) if log_dir else Path(DEFAULT_LOG_DIR)
-    if not base.is_dir():
-        return {}
-
-    result = {}
-    try:
-        entries = os.listdir(base)
-    except OSError:
-        return {}
-
-    status_files = [f for f in entries if f.endswith("_image.status")]
-
-    for filename in sorted(status_files):
-        hostname = filename.removesuffix("_image.status")
-        filepath = base / filename
-        try:
-            content = filepath.read_text(encoding="utf-8", errors="replace").strip()
-        except OSError:
-            continue
-
-        m = _IMAGE_STATUS_PATTERN.match(content)
-        if m:
-            ts = m.group(1)  # YYYYMMDDHHMI
-            year, month, day = ts[0:4], ts[4:6], ts[6:8]
-            hour, minute = ts[8:10], ts[10:12]
-
-            result[hostname] = {
-                "lastSync": f"{year}-{month}-{day}T{hour}:{minute}:00.000Z",
-                "action": m.group(2),
-                "image": m.group(3),
-                "imageVersion": m.group(4) or None,
-            }
-
-    return result
 
 
 class LinboBootLogs:

@@ -1,19 +1,19 @@
 import os
-import locale
+import re
 import time
 import logging
 import filecmp
 from pathlib import Path
 import hashlib
 from glob import glob
-from datetime import datetime
+from datetime import datetime, timezone
 
 from .models import *
 from .grub import GRUB_DIR_DEFAULT
 from ..devices import Devices
 from ..lmnfile import LMNFile
 from ..common.checks import NameChecker
-from ..common.timestamps import get_utc_mtime
+from ..common.timestamps import get_utc_mtime, linbo_timestamp_to_epoch
 
 
 LINBO_PATH = '/srv/linbo'
@@ -209,6 +209,47 @@ class LinboConfigManager:
 ## The following functions need to be rewritten
 ## Still used in lmncli
 
+_IMAGE_STATUS_PATTERN = re.compile(r'^(\d{12})\s+(\w+):\s+(\S+)(?:\s+"?(\d+)"?)?')
+
+def _parse_image_status_file(statusfile):
+    """
+    Parse a *_image.status file as written by linuxmuster-linbo7's
+    shell_functions log_image_status(), e.g.:
+        202603241142 applied: win11_pro_edu.qcow2 "202601271107"
+        202601271107 created: win11_pro_edu.qcow2 202601271107
+
+    The trailing image timestamp is quoted on "applied" lines and bare on
+    "created" ones: linbo_sync reads it back from the image .info file with
+    getinfo(), which returns the raw right-hand side of timestamp="...",
+    quotes included, while linbo_mkinfo passes date(1) output directly.
+    Both forms are accepted.
+
+    The file is overwritten (not appended) on every sync/creation, so it
+    normally holds a single line, but every matching line is returned, in
+    file order, to stay tolerant of older or hand-edited multi-line files.
+
+    :param statusfile: Path to the *_image.status file
+    :type statusfile: string
+    :return: List of {timestamp, action, image, image_timestamp}
+    :rtype: list of dict
+    """
+
+    if not os.path.isfile(statusfile) or os.stat(statusfile).st_size == 0:
+        return []
+
+    entries = []
+    with open(statusfile, 'r', encoding='utf-8', errors='replace') as f:
+        for line in f:
+            m = _IMAGE_STATUS_PATTERN.match(line.strip())
+            if m:
+                entries.append({
+                    'timestamp': m.group(1),
+                    'action': m.group(2),
+                    'image': m.group(3),
+                    'image_timestamp': m.group(4),
+                })
+    return entries
+
 def last_sync(workstation, image):
     """
     Get the date of the last sync date for a workstation w.
@@ -223,29 +264,65 @@ def last_sync(workstation, image):
 
 
     statusfile = os.path.join(LINBO_LOG_PATH, f'{workstation}_image.status')
-    image_last_sync, diff_last_sync = '0','0'
     diff_image = image.replace('.qcow2', '.qdiff')
 
-    if os.path.isfile(statusfile) and os.stat(statusfile).st_size != 0:
-        for line in open(statusfile, 'r').readlines():
-            if image in line:
-                image_last_sync = line.rstrip().split(' ')[0]
-            if diff_image in line:
-                diff_last_sync = line.strip().split(' ')[0]
+    matches = [
+        entry['timestamp'] for entry in _parse_image_status_file(statusfile)
+        if entry['image'] in (image, diff_image)
+    ]
 
-    last = max(image_last_sync, diff_last_sync)
-
-    if last == '0':
+    if not matches:
         return False
 
-    ## Linbo locale is en_GB, not necessarily the server locale
-    saved = locale.setlocale(locale.LC_ALL)
-    locale.setlocale(locale.LC_ALL, 'C.UTF-8')
-    last = datetime.strptime(last, '%Y%m%d%H%M')
-    locale.setlocale(locale.LC_ALL, saved)
+    return linbo_timestamp_to_epoch(max(matches))
 
-    last = time.mktime(last.timetuple())
-    return last
+def get_host_image_status(log_dir=None):
+    """
+    Report the last logged image status for every host, read directly from
+    the *_image.status files in the LINBO log directory.
+
+    Unlike last_sync(), this does not need to know beforehand which image a
+    host is expected to run: it just reports whatever the last
+    log_image_status() call from linuxmuster-linbo7's shell_functions wrote
+    to that host's status file, "applied" or "created".
+
+    :param log_dir: Override log directory (default: LINBO_LOG_PATH)
+    :type log_dir: string
+    :return: Dict mapping hostname to {lastSync, action, image, imageVersion}
+    :rtype: dict
+    """
+
+    base = Path(log_dir) if log_dir else Path(LINBO_LOG_PATH)
+    if not base.is_dir():
+        return {}
+
+    try:
+        filenames = os.listdir(base)
+    except OSError:
+        return {}
+
+    status_files = [f for f in filenames if f.endswith('_image.status')]
+
+    result = {}
+    for filename in sorted(status_files):
+        hostname = filename.removesuffix('_image.status')
+        entries = _parse_image_status_file(base / filename)
+        if not entries:
+            continue
+
+        last = entries[-1]
+        # The timestamp is the client's local time, not UTC: convert it
+        # instead of relabelling the raw digits with a "Z".
+        epoch = linbo_timestamp_to_epoch(last['timestamp'])
+
+        result[hostname] = {
+            'lastSync': datetime.fromtimestamp(epoch, tz=timezone.utc).isoformat(),
+            'action': last['action'],
+            'image': last['image'],
+            'imageVersion': last['image_timestamp'],
+        }
+
+    return result
 
 def read_config(group):
     """
