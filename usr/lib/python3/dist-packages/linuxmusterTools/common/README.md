@@ -218,8 +218,16 @@ from linuxmusterTools.common.attic import get_attic_status, check_attic_dir
 ### `common.timestamps`
 
 ```python
-from linuxmusterTools.common.timestamps import get_utc_mtime
+from linuxmusterTools.common.timestamps import get_utc_mtime, linbo_timestamp_to_epoch
 
 get_utc_mtime(Path('/etc/linuxmuster/sophomorix/default-school/students.csv'))
 # datetime(..., tzinfo=timezone.utc), or None if the file does not exist
+
+linbo_timestamp_to_epoch('202608071440')
+# 1754570400.0
 ```
+
+| Function | Description |
+|---|---|
+| `get_utc_mtime(path)` | A file's mtime as a UTC datetime, or `None` if the file does not exist. |
+| `linbo_timestamp_to_epoch(timestamp)` | A LINBO `YYYYMMDDHHMI` timestamp as a Unix epoch. LINBO clients write their local wall clock, which matches the server's local time, so the timestamp is read as server-local — never as UTC. Raises `ValueError` on a malformed timestamp. |
