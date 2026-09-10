@@ -113,13 +113,23 @@ class LMNGroupCommon:
             logger.info(f"The user {user} was not found in ldap.")
             raise Exception(f"The user {user} was not found in ldap.")
 
+        members = self.data['member']
+
+        if user_dn in members:
+            logger.info(f"{user} is already a member of {self.cn}")
+            return
+
+        members.append(user_dn)
+
         try:
-            members = self.data['member']
-            members.append(user_dn)
             self.lw._setattr(self, data={'member': members})
             self.load_data()
         except Exception as e:
+            # A failed write must reach the caller: add_members() collects it
+            # in its failures list, and a single add_member() call must not
+            # report success for a membership which was never written.
             logger.warning(f"Could not append member {user_dn} to {self.cn}: {str(e)}")
+            raise
 
     def add_members(self, userlist):
         """
