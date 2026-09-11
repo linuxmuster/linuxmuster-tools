@@ -224,7 +224,7 @@ get_utc_mtime(Path('/etc/linuxmuster/sophomorix/default-school/students.csv'))
 # datetime(..., tzinfo=timezone.utc), or None if the file does not exist
 
 linbo_timestamp_to_epoch('202608071440')
-# 1754570400.0
+# 1786106400.0
 ```
 
 | Function | Description |

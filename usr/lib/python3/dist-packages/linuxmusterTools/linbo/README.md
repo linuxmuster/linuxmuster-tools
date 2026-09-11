@@ -102,6 +102,49 @@ isn't needed.
 
 ---
 
+## Image status
+
+Every sync or image creation makes the LINBO client overwrite a single line
+in `/var/log/linuxmuster/linbo/<hostname>_image.status` (written by
+`log_image_status()` in linuxmuster-linbo7's `shell_functions`):
+
+```text
+202608071440 applied: data-jammy.qcow2 "202507051609"
+202601271107 created: win11.qcow2 202601271107
+```
+
+| Function | Description |
+|---|---|
+| `last_sync(workstation, image)` | Epoch of the most recent entry for that image, or `False` if the host never synced it. The image name is matched exactly, along with its `.qdiff` variant: `last_sync('client1', 'jammy.qcow2')` does *not* report a sync of `data-jammy.qcow2`. |
+| `get_host_image_status(log_dir=None)` | Last logged status of **every** host found in the log directory, without knowing beforehand which image a host is supposed to run. Returns `{}` if the directory is missing. |
+| `last_sync_all(workstations)` | Enriches a `list_workstations()` dict: each host gets an `image` list of `{date, image, status}`, `status` being the bootstrap class `success`/`warning`/`danger` (fresher than 7 days, older than 7 days, older than 30 days or never). |
+
+```python
+>>> from linuxmusterTools.linbo import last_sync, get_host_image_status
+>>> last_sync('client1', 'data-jammy.qcow2')
+1786106400.0
+>>> last_sync('client1', 'win11.qcow2')
+False
+>>> get_host_image_status()
+{'client1': {'lastSync': '2026-08-07T12:40:00+00:00', 'action': 'applied', 'image': 'data-jammy.qcow2', 'imageVersion': '202507051609'},
+ 'client3': {'lastSync': '2026-03-26T11:26:00+00:00', 'action': 'applied', 'image': 'win11.qcow2', 'imageVersion': '202603251539'}}
+```
+
+Both functions read their timestamps through
+`linuxmusterTools.common.timestamps.linbo_timestamp_to_epoch()`: LINBO
+clients write their own local wall clock, which matches the server's local
+time, so `last_sync()` returns a server-local epoch and
+`get_host_image_status()` serializes real UTC - `2026-08-07T12:40:00+00:00`
+for a client that logged `202608071440` in CEST.
+
+An unreadable status file is handled differently by the two entry points, on
+purpose: `last_sync()` propagates the `OSError`, because answering "Never"
+for a file it could not read would be indistinguishable from a host that
+really never synced, while `get_host_image_status()` logs a warning and skips
+that host rather than losing the whole report.
+
+---
+
 ## Hardware inventories
 
 `LinboHardwareInventoryManager` reads the `*_hwinfo.gz` files uploaded by
