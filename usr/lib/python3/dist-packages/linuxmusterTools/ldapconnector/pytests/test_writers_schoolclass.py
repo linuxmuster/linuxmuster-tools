@@ -23,6 +23,7 @@ SAMPLE_SCHOOLCLASS = {
     'name': '7a', 'objectClass': [], 'proxyAddresses': [],
     'sAMAccountName': '7a', 'sAMAccountType': '',
     'sophomorixAdminClass': '', 'sophomorixAddMailQuota': '---',
+    'sophomorixAdmins': [],
     'sophomorixAddQuota': '---',
     'sophomorixCreationDate': '',
     'sophomorixCustom1': '', 'sophomorixCustom2': '', 'sophomorixCustom3': '',
@@ -169,6 +170,119 @@ class TestLMNSchoolclassGroupFillMembers:
         sc.fill_group_members()
 
         assert mock_connect.modify_s.call_count == 3
+
+
+class TestLMNSchoolclassFillAdmins:
+
+    def _admins_ldif(self, mock_connect):
+        """Return the (op, attr, values) entries written for sophomorixAdmins."""
+        return [
+            (op, attr, val)
+            for call in mock_connect.modify_s.call_args_list
+            for op, attr, val in call[0][1]
+            if attr == 'sophomorixAdmins'
+        ]
+
+    def test_teacher_member_is_written_to_sophomorix_admins(self, monkeypatch, mock_connect):
+        monkeypatch.setattr(router, 'get', lambda url, **kw: dict(SAMPLE_SCHOOLCLASS))
+        monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: None)
+
+        sc = LMNSchoolclass('7a')
+        mock_connect.modify_s.reset_mock()
+        sc.fill_admins()
+
+        written = self._admins_ldif(mock_connect)
+        assert written == [(ldap.MOD_ADD, 'sophomorixAdmins', [b'teacher1'])]
+
+    def test_students_are_not_written_to_sophomorix_admins(self, monkeypatch, mock_connect):
+        # Only the members under OU=Teachers are admins: a student in the class
+        # stays out of sophomorixAdmins (adding one is a sophomorix operation,
+        # it needs the shares of the fileserver)
+        monkeypatch.setattr(router, 'get', lambda url, **kw:
+            dict(SAMPLE_SCHOOLCLASS, member=[STUDENT_DN]))
+        monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: None)
+
+        sc = LMNSchoolclass('7a')
+        mock_connect.modify_s.reset_mock()
+        sc.fill_admins()
+
+        assert self._admins_ldif(mock_connect) == []
+
+    def test_teacher_in_attic_is_ignored(self, monkeypatch, mock_connect):
+        attic_dn = 'CN=teacher2,OU=attic,OU=Teachers,OU=default-school,OU=SCHOOLS,DC=linuxmuster,DC=lan'
+        monkeypatch.setattr(router, 'get', lambda url, **kw:
+            dict(SAMPLE_SCHOOLCLASS, member=[TEACHER_DN, attic_dn]))
+        monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: None)
+
+        sc = LMNSchoolclass('7a')
+        mock_connect.modify_s.reset_mock()
+        sc.fill_admins()
+
+        assert self._admins_ldif(mock_connect) == [(ldap.MOD_ADD, 'sophomorixAdmins', [b'teacher1'])]
+
+    def test_class_without_teacher_clears_the_attribute(self, monkeypatch, mock_connect):
+        # An empty list is a valid state, setattr() would raise a ValueError
+        monkeypatch.setattr(router, 'get', lambda url, **kw:
+            dict(SAMPLE_SCHOOLCLASS, member=[STUDENT_DN], sophomorixAdmins=['teacher1']))
+        monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: None)
+
+        sc = LMNSchoolclass('7a')
+        mock_connect.modify_s.reset_mock()
+        sc.fill_admins()
+
+        assert self._admins_ldif(mock_connect) == [(ldap.MOD_DELETE, 'sophomorixAdmins', None)]
+
+    def test_class_without_teacher_and_without_attribute_writes_nothing(self, monkeypatch, mock_connect):
+        monkeypatch.setattr(router, 'get', lambda url, **kw:
+            dict(SAMPLE_SCHOOLCLASS, member=[STUDENT_DN], sophomorixAdmins=[]))
+        monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: None)
+
+        sc = LMNSchoolclass('7a')
+        mock_connect.modify_s.reset_mock()
+        sc.fill_admins()
+
+        assert self._admins_ldif(mock_connect) == []
+
+    def test_removed_teacher_leaves_sophomorix_admins(self, monkeypatch, mock_connect):
+        # The reported bug: a teacher removed from a class through lmntools used
+        # to stay in sophomorixAdmins, and kept the rights attached to it.
+        # A single dict is returned on every read so that the removal from
+        # member is visible to the following fill_admins(), as in ldap.
+        state = dict(SAMPLE_SCHOOLCLASS, member=[STUDENT_DN, TEACHER_DN],
+                     sophomorixAdmins=['teacher1'])
+        monkeypatch.setattr(router, 'get', lambda url, **kw: state)
+        monkeypatch.setattr(router, 'getval', lambda url, attr, **kw:
+            TEACHER_DN if url.startswith('/users/') else None)
+
+        sc = LMNSchoolclass('7a')
+        mock_connect.modify_s.reset_mock()
+        sc.remove_member('teacher1')
+
+        assert TEACHER_DN not in state['member']
+        assert self._admins_ldif(mock_connect) == [(ldap.MOD_DELETE, 'sophomorixAdmins', None)]
+
+    def test_added_teacher_reaches_sophomorix_admins(self, monkeypatch, mock_connect):
+        state = dict(SAMPLE_SCHOOLCLASS, member=[STUDENT_DN], sophomorixAdmins=[])
+        monkeypatch.setattr(router, 'get', lambda url, **kw: state)
+        monkeypatch.setattr(router, 'getval', lambda url, attr, **kw:
+            TEACHER_DN if url.startswith('/users/') else None)
+
+        sc = LMNSchoolclass('7a')
+        mock_connect.modify_s.reset_mock()
+        sc.add_member('teacher1')
+
+        assert self._admins_ldif(mock_connect) == [(ldap.MOD_ADD, 'sophomorixAdmins', [b'teacher1'])]
+
+    def test_remove_all_teachers_clears_sophomorix_admins(self, monkeypatch, mock_connect):
+        monkeypatch.setattr(router, 'get', lambda url, **kw:
+            dict(SAMPLE_SCHOOLCLASS, sophomorixAdmins=['teacher1']))
+        monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: None)
+
+        sc = LMNSchoolclass('7a')
+        mock_connect.modify_s.reset_mock()
+        sc.remove_all_teachers()
+
+        assert (ldap.MOD_DELETE, 'sophomorixAdmins', None) in self._admins_ldif(mock_connect)
 
 
 class TestLMNSchoolclassSubgroupAutoCreate:

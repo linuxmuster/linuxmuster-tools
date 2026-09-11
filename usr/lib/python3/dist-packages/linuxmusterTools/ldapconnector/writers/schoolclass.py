@@ -144,19 +144,23 @@ class LMNSchoolclass(LMNGroupCommon):
     def add_member(self, user):
         super().add_member(user)
         self.fill_group_members()
+        self.fill_admins()
 
     def add_members(self, userlist):
         failures = super().add_members(userlist)
         self.fill_group_members()
+        self.fill_admins()
         return failures
 
     def remove_member(self, user):
         super().remove_member(user)
         self.fill_group_members()
+        self.fill_admins()
 
     def remove_members(self, userlist):
         failures = super().remove_members(userlist)
         self.fill_group_members()
+        self.fill_admins()
         return failures
 
     def remove_all_teachers(self):
@@ -172,6 +176,7 @@ class LMNSchoolclass(LMNGroupCommon):
                 self.lw._delattr(self, data={'member': None})
             self.load_data()
             self.teachers_group.fill_members()
+            self.fill_admins()
         except ValueError as e:
             logger.warning(f"Could not remove all teachers from {self.cn}: {str(e)}")
 
@@ -186,6 +191,38 @@ class LMNSchoolclass(LMNGroupCommon):
         self.students_group.fill_members()
         self.teachers_group.fill_members()
         self.parents_group.fill_members()
+
+    def fill_admins(self):
+        """
+        Set sophomorixAdmins to the teachers of the schoolclass, read from the
+        same member list as the 7a-teachers subgroup.
+
+        sophomorix stores the teachers of a class in sophomorixAdmins (as
+        sAMAccountNames) and rebuilds the member attribute from it: a teacher
+        who is only in member is invisible to everything reading
+        sophomorixAdmins (webui and api permissions, lmncli, first passwords
+        printing), and is dropped from member by the next sophomorix run
+        touching this class (AD_project_sync_members). Writing both keeps the
+        two views of the same fact identical.
+
+        Students are deliberately not handled here: adding one to a class is
+        not only an LDAP membership, it needs the share management which lives
+        in sophomorix.
+        """
+
+
+        admins = sorted({
+            member_dn.split(',')[0].removeprefix('CN=')
+            for member_dn in self.data['member']
+            if 'OU=Teachers' in member_dn and 'OU=attic' not in member_dn
+        })
+
+        if admins:
+            self.setattr(data={'sophomorixAdmins': admins})
+        elif self.data.get('sophomorixAdmins'):
+            # An empty list is a valid state (a class without any teacher),
+            # setattr() would raise a ValueError.
+            self.delattr(data={'sophomorixAdmins': None})
 
 class LMNSchoolclasses:
 

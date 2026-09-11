@@ -265,7 +265,9 @@ group.remove_members(['johndoe', 'janedoe'])
 group.remove_all_members()
 ```
 
-`LMNSchoolclass` automatically keeps the `7b-students`, `7b-teachers`, and `7b-parents` subgroups in sync after every membership change.
+`LMNSchoolclass` automatically keeps the `7b-students`, `7b-teachers`, and `7b-parents` subgroups in sync after every membership change, and `fill_admins()` keeps `sophomorixAdmins` — where sophomorix stores the teachers of a class, as sAMAccountNames — equal to the members under `OU=Teachers`.
+
+That second sync matters because sophomorix treats `sophomorixMembers`/`sophomorixAdmins` as the source of truth and rebuilds `member` from them: a teacher written only into `member` is invisible to the webui and API permissions, to `lmncli schoolclass teachers` and to first passwords printing, and is silently dropped from the class by the next sophomorix run. Students are not handled this way: putting one in a class is not only an LDAP membership, it needs the share management which lives in sophomorix.
 
 Those subgroups belong to `linuxmusterTools`, not to sophomorix:
 `sophomorix-class --kill` only deletes the schoolclass group itself and leaves
