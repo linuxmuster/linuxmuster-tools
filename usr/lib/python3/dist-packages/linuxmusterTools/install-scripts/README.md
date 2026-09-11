@@ -62,7 +62,7 @@ Each installed copy is then called automatically by sophomorix (Perl) after the 
 | Argument | Description |
 |---|---|
 | `EPOCH` | Unix timestamp identifying the sophomorix log entry batch to process. |
-| `SCHOOL` | School the operation applies to (multi-school setups). |
+| `SCHOOL` | School the operation applies to. **Ignored by these hooks**: the sophomorix logs are global files which carry the school of every entry, so each hook reads the school from the log and handles all the schools at once. A single copy in `default-school` is therefore enough — copying them into every school's hook directory would only run them once per school on the same log. |
 
 Each hook re-reads the corresponding sophomorix log (`parse_add_log`, `parse_update_log`, `parse_kill_log` from `linuxmusterTools.common`) for that `EPOCH`, works out which `<class>-students` / `<class>-teachers` / `<class>-parents` groups are affected, and refreshes their membership via `LMNSchoolclass(...).students_group.fill_members()` (and `.teachers_group` / `.parents_group`).
 

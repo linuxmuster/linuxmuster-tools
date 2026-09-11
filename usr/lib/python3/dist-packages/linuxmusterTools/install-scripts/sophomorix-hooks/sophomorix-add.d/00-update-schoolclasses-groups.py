@@ -9,8 +9,10 @@ from linuxmusterTools.common import parse_add_log, lprint
 from linuxmusterTools.ldapconnector import LMNUser, LMNSchoolclass
 
 
+# sophomorix also passes the school as second argument, but it is not
+# used: the sophomorix logs are global files and carry the school of
+# every entry, so one copy of this hook handles all the schools.
 epoch = sys.argv[1]
-school = sys.argv[2]
 
 if epoch is None:
     updates = parse_add_log(today=True)
