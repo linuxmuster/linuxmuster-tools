@@ -1,7 +1,10 @@
+import ldap
 import logging
 
-from linuxmusterTools.common import lprint, spinner
+from linuxmusterTools.common import lprint, spinner, SchoolclassExistsError
 from linuxmusterTools.common.checks import NameChecker
+from ..connector import LdapConnector
+from ..ldap_writer import LdapWriter
 from ..models import LMNSchoolClassModel
 from .group import LMNGroupCommon
 from ..urls.ldaprouter import router
@@ -9,6 +12,8 @@ from ..urls.ldaprouter import router
 
 logger = logging.getLogger(__name__)
 name_checker = NameChecker()
+
+SCHOOLCLASS_SUBGROUP_SUFFIXES = ('-students', '-teachers', '-parents')
 
 class LMNSchoolclassGroup(LMNGroupCommon):
     """
@@ -202,3 +207,108 @@ class LMNSchoolclasses:
 
     def __getitem__(self, schoolclass_cn):
         return self.schoolclasses[schoolclass_cn]
+
+def delete_schoolclass_subgroups(cn, school='default-school'):
+    """
+    Delete the subgroups <cn>-students, <cn>-teachers and <cn>-parents of a
+    schoolclass which does not exist anymore, and the organizational unit of
+    this schoolclass if nothing is left in it. That OU is the parent of the
+    subgroups, so an OU left alone, without any subgroup to locate it, is not
+    handled here.
+
+    sophomorix-class --kill (and --delete-all-empty-classes) only deletes the
+    schoolclass group itself: the subgroups created by LMNSchoolclassGroup are
+    unknown to sophomorix and stay in LDAP with their members and their mail
+    addresses, invisible to every listing (those filter sophomorixType on the
+    exact value 'adminclass'), and would be reused as they are if the
+    schoolclass was created again.
+
+    :param cn: Name of the deleted schoolclass, e.g. 7a
+    :type cn: string
+    :param school: School of the deleted schoolclass
+    :type school: string
+    :return: DN of each deleted object
+    :rtype: list
+    """
+
+
+    lw = LdapWriter()
+    lc = LdapConnector()
+
+    if router.get(f'/schoolclasses/{cn}', school=school):
+        raise SchoolclassExistsError(
+            f"The schoolclass {cn} still exists in {school}, refusing to delete its subgroups."
+        )
+
+    deleted = []
+    ou_dn = ''
+
+    for suffix in SCHOOLCLASS_SUBGROUP_SUFFIXES:
+        subgroup = router.get(f'/units/{cn}{suffix}', school=school)
+
+        if not subgroup:
+            continue
+
+        dn = subgroup['distinguishedName']
+
+        # The subgroups are created in the OU of the schoolclass, so their
+        # parent is the OU to clean up once they are gone.
+        parent_dn = dn.split(',', 1)[1]
+
+        if parent_dn.startswith(f'OU={cn},'):
+            ou_dn = parent_dn
+
+        lw._del(dn)
+        deleted.append(dn)
+
+    if not ou_dn:
+        return deleted
+
+    # The OU of a schoolclass also holds the accounts of its students: it may
+    # only be deleted once nothing is left in it. A schoolclass killed while
+    # its students still exist keeps them here until the next import.
+    _, base_dn = lc._get_conn()
+    children = lc._get('(objectClass=*)', scope=ldap.SCOPE_ONELEVEL,
+                       subdn=ou_dn.removesuffix(base_dn))
+
+    if children:
+        logger.warning(
+            f"The OU of the schoolclass {cn} still contains {len(children)} object(s), keeping it."
+        )
+        return deleted
+
+    lw._del(ou_dn)
+    deleted.append(ou_dn)
+
+    return deleted
+
+def orphan_schoolclass_subgroups(school='default-school'):
+    """
+    List the schoolclasses whose subgroups are still in LDAP while the
+    schoolclass itself is gone, e.g. after a sophomorix-class --kill run
+    before lmncli was called to clean up behind it.
+
+    :param school: School to scan
+    :type school: string
+    :return: Sorted list of the names of the deleted schoolclasses
+    :rtype: list
+    """
+
+
+    candidates = set()
+
+    for group in router.getvalues('/units', ['cn', 'sophomorixType'], school=school):
+        group_type = group['sophomorixType'] or ''
+
+        if not group_type.startswith('adminclass-'):
+            continue
+
+        suffix = group_type.removeprefix('adminclass')
+
+        if suffix in SCHOOLCLASS_SUBGROUP_SUFFIXES and group['cn'].endswith(suffix):
+            candidates.add(group['cn'].removesuffix(suffix))
+
+    return sorted(
+        cn for cn in candidates
+        if not router.get(f'/schoolclasses/{cn}', school=school)
+    )

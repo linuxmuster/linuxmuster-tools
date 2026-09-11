@@ -2,7 +2,13 @@ import ldap
 import pytest
 from unittest.mock import MagicMock
 
-from linuxmusterTools.ldapconnector.writers.schoolclass import LMNSchoolclass, LMNSchoolclassGroup
+from linuxmusterTools.common import SchoolclassExistsError
+from linuxmusterTools.ldapconnector.writers.schoolclass import (
+    LMNSchoolclass,
+    LMNSchoolclassGroup,
+    delete_schoolclass_subgroups,
+    orphan_schoolclass_subgroups,
+)
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router
 
 
@@ -199,3 +205,131 @@ class TestLMNSchoolclassAddMember:
         initial_modify_calls = mock_connect.modify_s.call_count
         sc.remove_member('johndoe')
         assert mock_connect.modify_s.call_count > initial_modify_calls
+
+
+CLASS_OU_DN = 'OU=7a,OU=Students,OU=default-school,OU=SCHOOLS,DC=linuxmuster,DC=lan'
+
+
+def subgroup_dn(suffix, parent=None):
+    if parent:
+        return f'CN=7a{suffix},{parent}'
+    return GROUP_DN.replace('CN=7a,', f'CN=7a{suffix},')
+
+
+def killed_class_get(schoolclass=None, parent=None):
+    """
+    Router mock for a schoolclass which was killed by sophomorix: the
+    schoolclass itself is gone, its subgroups and its OU are still there.
+    """
+
+
+    def mock_get(url, **kw):
+        if url.startswith('/schoolclasses/'):
+            return dict(schoolclass) if schoolclass else {}
+        if url.startswith('/units/'):
+            suffix = url.removeprefix('/units/7a')
+            dn = subgroup_dn(suffix, parent=parent)
+            return dict(SUBGROUP, cn=f'7a{suffix}', name=f'7a{suffix}',
+                        distinguishedName=dn, dn=dn)
+        return {}
+
+    return mock_get
+
+
+class TestDeleteSchoolclassSubgroups:
+
+    def test_deletes_subgroups_and_empty_ou(self, monkeypatch, mock_connect):
+        monkeypatch.setattr(router, 'get', killed_class_get())
+        # Nothing left in the OU once the subgroups are deleted
+        mock_connect.search_s.return_value = []
+
+        deleted = delete_schoolclass_subgroups('7a')
+
+        assert deleted == [
+            subgroup_dn('-students'),
+            subgroup_dn('-teachers'),
+            subgroup_dn('-parents'),
+            CLASS_OU_DN,
+        ]
+        assert [call[0][0] for call in mock_connect.delete_s.call_args_list] == deleted
+
+    def test_keeps_ou_still_containing_objects(self, monkeypatch, mock_connect):
+        monkeypatch.setattr(router, 'get', killed_class_get())
+        # A student account is still in the OU: deleting it would delete the user
+        mock_connect.search_s.return_value = [(STUDENT_DN, {'cn': [b'johndoe']})]
+
+        deleted = delete_schoolclass_subgroups('7a')
+
+        assert CLASS_OU_DN not in deleted
+        assert len(deleted) == 3
+        assert CLASS_OU_DN not in [call[0][0] for call in mock_connect.delete_s.call_args_list]
+
+    def test_refuses_to_delete_subgroups_of_an_existing_class(self, monkeypatch, mock_connect):
+        monkeypatch.setattr(router, 'get', killed_class_get(schoolclass=SAMPLE_SCHOOLCLASS))
+
+        with pytest.raises(SchoolclassExistsError, match='still exists'):
+            delete_schoolclass_subgroups('7a')
+
+        assert not mock_connect.delete_s.called
+
+    def test_missing_subgroups_are_skipped(self, monkeypatch, mock_connect):
+        def mock_get(url, **kw):
+            if url == '/units/7a-teachers':
+                return {}
+            return killed_class_get()(url, **kw)
+
+        monkeypatch.setattr(router, 'get', mock_get)
+        mock_connect.search_s.return_value = []
+
+        deleted = delete_schoolclass_subgroups('7a')
+
+        assert subgroup_dn('-teachers') not in deleted
+        assert deleted == [subgroup_dn('-students'), subgroup_dn('-parents'), CLASS_OU_DN]
+
+    def test_without_any_subgroup_nothing_is_deleted(self, monkeypatch, mock_connect):
+        # The OU is the parent of the subgroups: with no subgroup left there is
+        # nothing to locate it with, and nothing to clean up either.
+        monkeypatch.setattr(router, 'get', lambda url, **kw: {})
+
+        assert delete_schoolclass_subgroups('7a') == []
+        assert not mock_connect.delete_s.called
+
+    def test_subgroup_outside_the_class_ou_does_not_delete_its_parent(self, monkeypatch, mock_connect):
+        # A subgroup moved elsewhere must not take its new parent down with it
+        other_ou = 'OU=Students,OU=default-school,OU=SCHOOLS,DC=linuxmuster,DC=lan'
+        monkeypatch.setattr(router, 'get', killed_class_get(parent=other_ou))
+        mock_connect.search_s.return_value = []
+
+        deleted = delete_schoolclass_subgroups('7a')
+
+        assert deleted == [
+            subgroup_dn('-students', parent=other_ou),
+            subgroup_dn('-teachers', parent=other_ou),
+            subgroup_dn('-parents', parent=other_ou),
+        ]
+        assert other_ou not in [call[0][0] for call in mock_connect.delete_s.call_args_list]
+
+
+class TestOrphanSchoolclassSubgroups:
+
+    def test_reports_only_subgroups_without_schoolclass(self, monkeypatch, mock_connect):
+        units = [
+            {'cn': '7a-students', 'sophomorixType': 'adminclass-students'},
+            {'cn': '7a-teachers', 'sophomorixType': 'adminclass-teachers'},
+            {'cn': '8b-students', 'sophomorixType': 'adminclass-students'},
+            {'cn': '7a', 'sophomorixType': 'adminclass'},
+            {'cn': 'p_robotics', 'sophomorixType': 'project'},
+        ]
+        monkeypatch.setattr(router, 'getvalues', lambda url, attrs, **kw: units)
+        # 7a still exists, 8b does not
+        monkeypatch.setattr(router, 'get', lambda url, **kw:
+            dict(SAMPLE_SCHOOLCLASS) if url == '/schoolclasses/7a' else {})
+
+        assert orphan_schoolclass_subgroups() == ['8b']
+
+    def test_ignores_groups_without_sophomorix_type(self, monkeypatch, mock_connect):
+        units = [{'cn': 'somegroup', 'sophomorixType': None}]
+        monkeypatch.setattr(router, 'getvalues', lambda url, attrs, **kw: units)
+        monkeypatch.setattr(router, 'get', lambda url, **kw: {})
+
+        assert orphan_schoolclass_subgroups() == []

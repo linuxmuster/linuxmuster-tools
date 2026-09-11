@@ -267,6 +267,30 @@ group.remove_all_members()
 
 `LMNSchoolclass` automatically keeps the `7b-students`, `7b-teachers`, and `7b-parents` subgroups in sync after every membership change.
 
+Those subgroups belong to `linuxmusterTools`, not to sophomorix:
+`sophomorix-class --kill` only deletes the schoolclass group itself and leaves
+them, and the OU of the schoolclass, in the directory. Two functions clean
+that up (both used by `lmncli schoolclass cleanup`, which `sophomorix-class`
+calls after a kill):
+
+```python
+from linuxmusterTools.ldapconnector import (
+    delete_schoolclass_subgroups, orphan_schoolclass_subgroups,
+)
+
+orphan_schoolclass_subgroups()
+# ['16e']  schoolclasses which are gone but whose subgroups are still there
+
+delete_schoolclass_subgroups('16e')
+# ['CN=16e-students,OU=16e,...', ..., 'OU=16e,OU=Students,...']
+```
+
+`delete_schoolclass_subgroups()` raises `SchoolclassExistsError` if the
+schoolclass still exists, and deletes the OU of the schoolclass only once
+nothing is left in it — a class killed while its students still existed keeps
+their accounts there until the next import. That OU is located as the parent
+of the subgroups, so an OU which is left alone is not cleaned up.
+
 `add_member()` is idempotent: adding a cn which already is a member is a no-op, not an error. A failed LDAP write raises, it is never reported as a success.
 
 `add_members()`/`remove_members()` never abort partway through the list: an entry which fails — an invalid cn as well as a rejected LDAP write — is skipped rather than stopping the batch, and the call returns a list of `(cn, error_message)` tuples for the entries that failed (empty list if everything succeeded).
