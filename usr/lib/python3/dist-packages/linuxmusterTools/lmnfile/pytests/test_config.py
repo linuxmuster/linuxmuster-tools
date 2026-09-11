@@ -47,6 +47,57 @@ def test_read_converts_digit_string_to_int(tmp_path):
     assert isinstance(data['setup']['port'], int)
 
 
+def test_read_converts_negative_int(tmp_path):
+    # -1 means "unlimited" in school.conf: isdigit() used to leave it a string,
+    # which broke the number inputs of the webui (ask #12176/222)
+    f = make_ini(tmp_path, '[role.student]\nQUOTA_DEFAULT_SCHOOL = -1\n')
+    with LMNFile(str(f), 'r') as lmn:
+        data = lmn.read()
+    assert data['role.student']['QUOTA_DEFAULT_SCHOOL'] == -1
+    assert isinstance(data['role.student']['QUOTA_DEFAULT_SCHOOL'], int)
+
+
+def test_read_converts_explicitly_positive_int(tmp_path):
+    f = make_ini(tmp_path, '[setup]\nport = +8080\n')
+    with LMNFile(str(f), 'r') as lmn:
+        data = lmn.read()
+    assert data['setup']['port'] == 8080
+
+
+def test_read_keeps_non_integer_values_as_strings(tmp_path):
+    # Only integers are converted: a float or a lone sign stays untouched
+    f = make_ini(tmp_path, '[setup]\nratio = 1.5\nsign = -\nrange = 1-2\n')
+    with LMNFile(str(f), 'r') as lmn:
+        data = lmn.read()
+    assert data['setup']['ratio'] == '1.5'
+    assert data['setup']['sign'] == '-'
+    assert data['setup']['range'] == '1-2'
+
+
+def test_read_negative_int_without_value_conversion_stays_a_string(tmp_path):
+    f = make_ini(tmp_path, '[role.student]\nQUOTA_DEFAULT_SCHOOL = -1\n')
+    with LMNFile(str(f), 'r', convert_values=False) as lmn:
+        data = lmn.read()
+    assert data['role.student']['QUOTA_DEFAULT_SCHOOL'] == '-1'
+
+
+def test_negative_int_survives_a_read_write_roundtrip(tmp_path):
+    f = make_ini(tmp_path, '[role.student]\nQUOTA_DEFAULT_SCHOOL = -1\nMAILQUOTA_DEFAULT = 100\n')
+
+    with LMNFile(str(f), 'r') as lmn:
+        data = lmn.read()
+        data['role.student']['MAILQUOTA_DEFAULT'] = -1
+        lmn.write(data)
+
+    assert 'QUOTA_DEFAULT_SCHOOL = -1' in f.read_text()
+    assert 'MAILQUOTA_DEFAULT = -1' in f.read_text()
+
+    with LMNFile(str(f), 'r') as lmn:
+        data = lmn.read()
+    assert data['role.student']['QUOTA_DEFAULT_SCHOOL'] == -1
+    assert data['role.student']['MAILQUOTA_DEFAULT'] == -1
+
+
 def test_read_multiple_sections(tmp_path):
     content = '[school]\nname = MySchool\n[network]\nip = 10.0.0.1\n'
     f = make_ini(tmp_path, content)

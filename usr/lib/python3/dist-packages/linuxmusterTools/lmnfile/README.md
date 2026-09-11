@@ -119,7 +119,8 @@ with LMNFile('/var/lib/linuxmuster/setup.ini', 'r') as f:
 String values are automatically converted on read:
 - `'yes'` → `True`
 - `'no'` → `False`
-- Digit strings → `int`
+- Integer strings → `int`, signs included (`'-1'`, the unlimited quota of
+  `school.conf`, becomes `-1` and not the string `'-1'`)
 
 And converted back on write.
 

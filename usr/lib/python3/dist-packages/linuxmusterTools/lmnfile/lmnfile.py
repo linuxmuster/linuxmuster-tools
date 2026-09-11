@@ -7,6 +7,7 @@ import os.path
 import logging
 import abc
 import csv
+import re
 import magic
 import filecmp
 import stat
@@ -371,7 +372,9 @@ class ConfigLoader(LMNFile):
         if self.convert_values:
             for section, options in self.data.items():
                 for key, value in options.items():
-                    value = int(value) if value.isdigit() else value
+                    # isdigit() is False for a sign, and -1 is a valid value in
+                    # school.conf (unlimited quota): it has to be converted too.
+                    value = int(value) if re.fullmatch(r'[+-]?\d+', value) else value
                     value = True if value == 'yes' else value
                     value = False if value == 'no' else value
                     self.data[section][key] = value
