@@ -9,6 +9,8 @@ from datetime import datetime, timezone
 
 import pytest
 
+import linuxmusterTools.linbo.config as config_module
+from linuxmusterTools.common.timestamps import linbo_timestamp_to_epoch
 from linuxmusterTools.linbo.config import group_os, last_sync, last_sync_all, get_host_image_status
 
 
@@ -193,6 +195,36 @@ def test_last_sync_does_not_match_image_name_as_substring(tmp_path):
     (tmp_path / 'var_log_linbo' / 'pc001_image.status').write_text(
         '202601271107 applied: old_ubuntu.qcow2 202601271107\n'
     )
+
+    assert last_sync('pc001', 'ubuntu.qcow2') is False
+
+
+def test_last_sync_ignores_the_case_of_the_status_file(tmp_path):
+    # The file is named after the reverse DNS resolution made by rsyncd, which
+    # is not the case of devices.csv (ask #12356)
+    (tmp_path / 'var_log_linbo' / 'PC-001_image.status').write_text(
+        '202601271107 applied: ubuntu.qcow2 202601271107\n'
+    )
+
+    assert last_sync('pc-001', 'ubuntu.qcow2') is not False
+    assert last_sync('PC-001', 'ubuntu.qcow2') is not False
+
+
+def test_last_sync_keeps_the_most_recent_of_two_case_variants(tmp_path):
+    # Exactly the reported situation: the old file keeps the case of
+    # devices.csv and is frozen, the new one is lowercase and up to date
+    (tmp_path / 'var_log_linbo' / 'PC-001_image.status').write_text(
+        '202601271107 applied: ubuntu.qcow2 202601271107\n'
+    )
+    (tmp_path / 'var_log_linbo' / 'pc-001_image.status').write_text(
+        '202603241142 applied: ubuntu.qcow2 202601271107\n'
+    )
+
+    assert last_sync('PC-001', 'ubuntu.qcow2') == linbo_timestamp_to_epoch('202603241142')
+
+
+def test_last_sync_without_log_directory_returns_false(tmp_path, monkeypatch):
+    monkeypatch.setattr(config_module, 'LINBO_LOG_PATH', str(tmp_path / 'nonexistent'))
 
     assert last_sync('pc001', 'ubuntu.qcow2') is False
 

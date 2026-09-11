@@ -254,6 +254,13 @@ def last_sync(workstation, image):
     """
     Get the date of the last sync date for a workstation w.
 
+    The status file is looked up without taking its case into account: its
+    name is built by rsync-pre-download.sh from the reverse DNS resolution
+    made by rsyncd, not from devices.csv, and DNS is case insensitive. Both
+    PC-001_image.status and pc-001_image.status can therefore sit in the log
+    directory, only one of them still being written to, so every variant is
+    read and the most recent entry wins.
+
     :param w: Workstation
     :type w: string
     :param image: Name of the image file
@@ -263,13 +270,22 @@ def last_sync(workstation, image):
     """
 
 
-    statusfile = os.path.join(LINBO_LOG_PATH, f'{workstation}_image.status')
+    if not os.path.isdir(LINBO_LOG_PATH):
+        return False
+
+    statusfile = f'{workstation}_image.status'.lower()
     diff_image = image.replace('.qcow2', '.qdiff')
 
-    matches = [
-        entry['timestamp'] for entry in _parse_image_status_file(statusfile)
-        if entry['image'] in (image, diff_image)
-    ]
+    matches = []
+    for filename in os.listdir(LINBO_LOG_PATH):
+        if filename.lower() != statusfile:
+            continue
+
+        matches.extend(
+            entry['timestamp']
+            for entry in _parse_image_status_file(os.path.join(LINBO_LOG_PATH, filename))
+            if entry['image'] in (image, diff_image)
+        )
 
     if not matches:
         return False

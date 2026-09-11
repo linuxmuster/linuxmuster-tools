@@ -115,7 +115,7 @@ in `/var/log/linuxmuster/linbo/<hostname>_image.status` (written by
 
 | Function | Description |
 |---|---|
-| `last_sync(workstation, image)` | Epoch of the most recent entry for that image, or `False` if the host never synced it. The image name is matched exactly, along with its `.qdiff` variant: `last_sync('client1', 'jammy.qcow2')` does *not* report a sync of `data-jammy.qcow2`. |
+| `last_sync(workstation, image)` | Epoch of the most recent entry for that image, or `False` if the host never synced it. The image name is matched exactly, along with its `.qdiff` variant: `last_sync('client1', 'jammy.qcow2')` does *not* report a sync of `data-jammy.qcow2`. The file name is matched **case insensitively**, see below. |
 | `get_host_image_status(log_dir=None)` | Last logged status of **every** host found in the log directory, without knowing beforehand which image a host is supposed to run. Returns `{}` if the directory is missing. |
 | `last_sync_all(workstations)` | Enriches a `list_workstations()` dict: each host gets an `image` list of `{date, image, status}`, `status` being the bootstrap class `success`/`warning`/`danger` (fresher than 7 days, older than 7 days, older than 30 days or never). |
 
@@ -129,6 +129,14 @@ False
 {'client1': {'lastSync': '2026-08-07T12:40:00+00:00', 'action': 'applied', 'image': 'data-jammy.qcow2', 'imageVersion': '202507051609'},
  'client3': {'lastSync': '2026-03-26T11:26:00+00:00', 'action': 'applied', 'image': 'win11.qcow2', 'imageVersion': '202603251539'}}
 ```
+
+The file is named by `rsync-pre-download.sh` after the reverse DNS resolution
+made by rsyncd, not after `devices.csv`, and DNS is case insensitive: the same
+host can end up with `PC-001_image.status` and `pc-001_image.status` side by
+side, only one of them still being written to. `last_sync()` therefore reads
+every case variant of the name and keeps the most recent entry.
+`get_host_image_status()` still reports each host under the exact case of its
+file name.
 
 Both functions read their timestamps through
 `linuxmusterTools.common.timestamps.linbo_timestamp_to_epoch()`: LINBO
