@@ -1,10 +1,15 @@
 """
-Tests for the SchoolError and LdapNotProvisionedError exceptions.
+Tests for the SchoolError, LdapNotProvisionedError and SchoolclassExistsError
+exceptions.
 """
 
 import pytest
 
-from linuxmusterTools.common.exceptions import SchoolError, LdapNotProvisionedError
+from linuxmusterTools.common.exceptions import (
+    SchoolError,
+    LdapNotProvisionedError,
+    SchoolclassExistsError,
+)
 
 
 def test_school_error_is_an_exception_subclass():
@@ -27,3 +32,14 @@ def test_ldap_not_provisioned_error_raisable_and_catchable_with_message():
         raise LdapNotProvisionedError("setup.ini missing")
 
     assert str(excinfo.value) == "setup.ini missing"
+
+
+def test_schoolclass_exists_error_is_an_exception_subclass():
+    assert issubclass(SchoolclassExistsError, Exception)
+
+
+def test_schoolclass_exists_error_raisable_and_catchable_with_message():
+    with pytest.raises(SchoolclassExistsError) as excinfo:
+        raise SchoolclassExistsError("The schoolclass 7a still exists in default-school")
+
+    assert str(excinfo.value) == "The schoolclass 7a still exists in default-school"

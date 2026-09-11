@@ -152,15 +152,20 @@ Each function returns a `dict` keyed by timestamp. `all`, `today` and `lastweek`
 ## Exceptions
 
 ```python
-from linuxmusterTools.common import SchoolError, LdapNotProvisionedError
+from linuxmusterTools.common import (
+    SchoolError, LdapNotProvisionedError, SchoolclassExistsError,
+)
 
 raise SchoolError("'global' is not a valid school scope here")
 raise LdapNotProvisionedError("Samba not provisioned yet")
+raise SchoolclassExistsError("The schoolclass 7a still exists in default-school")
 ```
 
 `SchoolError` is raised when an operation is given an invalid or unresolvable school scope (e.g. `'global'` where a single, concrete school is required).
 
 `LdapNotProvisionedError` is raised by [`ldapconnector`](../ldapconnector/README.md) when LDAP/Samba credentials are requested before `linuxmuster-setup` has provisioned the domain (fresh install, setup wizard not completed yet).
+
+`SchoolclassExistsError` is raised by [`ldapconnector`](../ldapconnector/README.md)'s `delete_schoolclass_subgroups()` when the subgroups of a schoolclass are requested to be deleted while the schoolclass itself still exists.
 
 ---
 

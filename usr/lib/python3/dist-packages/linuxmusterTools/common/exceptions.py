@@ -10,3 +10,10 @@ class LdapNotProvisionedError(Exception):
     Raised when LDAP/Samba credentials are requested before linuxmuster-setup
     has provisioned the domain (e.g. fresh install, setup wizard not completed yet).
     """
+
+
+class SchoolclassExistsError(Exception):
+    """
+    Raised when the subgroups of a schoolclass are requested to be deleted
+    while the schoolclass itself still exists in LDAP.
+    """
