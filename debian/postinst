@@ -72,7 +72,10 @@ case "$1" in
         #rm -f /usr/local/sbin/lmntools-managementgroup
 
         msg "Checking sophomorix hook scripts"
-        # TODO: Multischool !
+        # One copy in default-school is enough for every school: the sophomorix
+        # logs are global files carrying the school of each entry, and the hooks
+        # read the school from there, not from their arguments. Copying them
+        # into each school would only run them once per school on the same log.
         # TODO: check replacement
 
         mkdir -p /etc/linuxmuster/sophomorix/default-school/hooks/sophomorix-add.d
