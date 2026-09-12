@@ -1,10 +1,12 @@
 import pytest
+from dataclasses import fields
 from unittest.mock import MagicMock
 
 from linuxmusterTools.ldapconnector.models.common import LMNModel
 from linuxmusterTools.ldapconnector.models.lmnusermixin import LMNUserMixin
 from linuxmusterTools.ldapconnector.models.lmngroup import LMNGroupModel
 from linuxmusterTools.ldapconnector.models.lmnproject import LMNProjectModel
+from linuxmusterTools.ldapconnector.models.lmnuser import LMNUserModel
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router
 
 DN = 'CN=johndoe,OU=7a,OU=Students,OU=default-school,OU=SCHOOLS,DC=linuxmuster,DC=lan'
@@ -46,6 +48,35 @@ class TestLMNModel:
     def test_common_name_on_ou_dn(self):
         obj = _Concrete()
         assert obj.common_name('OU=Students,DC=test,DC=lan') == 'Students'
+
+
+class TestStudentParents:
+
+    @pytest.mark.parametrize('school, username', [
+        ('default-school', 'anna.test'),
+        ('agy', 'agy-anna.test'),
+    ])
+    @pytest.mark.parametrize('group, expected_parents', [
+        ({}, []),
+        ({'member': ['CN=parent.test,OU=Parents,DC=test,DC=lan']}, ['parent.test']),
+    ])
+    def test_initializes_dotted_student_with_parent_lookup(
+        self, monkeypatch, school, username, group, expected_parents
+    ):
+        read_group = MagicMock(return_value=group)
+        monkeypatch.setattr(router.lr, 'get_single', read_group)
+        data = {field.name: field.type() for field in fields(LMNUserModel) if field.init}
+        data.update(cn=username, sophomorixRole='student', sophomorixSchoolname=school)
+
+        user = LMNUserModel(**data, custom_fields_config={})
+
+        assert user.parents == expected_parents
+        read_group.assert_called_once()
+        args, kwargs = read_group.call_args
+        assert args[0] is LMNGroupModel
+        assert f'(cn={username}-parents)' in args[1]
+        assert kwargs['school'] == school
+        assert kwargs['subdn'] == f'OU={school},OU=SCHOOLS,'
 
 
 class TestCheckSchoolclassNumber:
