@@ -278,3 +278,45 @@ def test_domain_valid():
 
 def test_domain_invalid():
     assert checker.check_domain_name("linuxmuster_lan!") is False
+
+
+# ---------------------------------------------------------------------------
+# validate(): same rules as check(), but raises instead of returning False
+# ---------------------------------------------------------------------------
+
+def test_validate_returns_the_name_unchanged():
+    assert checker.validate("linbo_image", "ubuntu22.qcow2") == "ubuntu22.qcow2"
+    assert checker.validate_linbo_image_name("win11.qcow2") == "win11.qcow2"
+
+
+@pytest.mark.parametrize("name_type", list(NAME_RULES))
+def test_validate_raises_on_path_traversal(name_type):
+    for bad in ["..", "../..", "a/b", "a\\b"]:
+        with pytest.raises(ValueError):
+            checker.validate(name_type, bad)
+
+
+@pytest.mark.parametrize("name_type", list(NAME_RULES))
+def test_validate_raises_on_non_string_and_empty(name_type):
+    for bad in [None, 12345, ["a"], ""]:
+        with pytest.raises(ValueError):
+            checker.validate(name_type, bad)
+
+
+def test_validate_error_names_the_rule_and_the_value():
+    with pytest.raises(ValueError, match=r"Invalid linbo_image name: '\.\.'"):
+        checker.validate_linbo_image_name("..")
+
+
+@pytest.mark.parametrize("name_type", list(NAME_RULES))
+def test_every_rule_gets_a_validate_shortcut(name_type):
+    assert hasattr(checker, f"validate_{name_type}_name")
+
+
+def test_validate_agrees_with_check():
+    for value in ["ubuntu.qcow2", "..", "", "a/b", "win11-diff.qdiff"]:
+        if checker.check("linbo_image", value):
+            assert checker.validate("linbo_image", value) == value
+        else:
+            with pytest.raises(ValueError):
+                checker.validate("linbo_image", value)

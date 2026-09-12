@@ -37,6 +37,15 @@ Validator.normalize_mac('aa-bb-cc-dd-ee-ff')        # 'AA:BB:CC:DD:EE:FF'
 
 `check(name_type, string)` (and its `check_*_name` shortcuts) always reject non-string/empty input and any string containing `/`, `\`, `\0` or `..` (path traversal guard), before matching it against the rule's regex.
 
+`validate(name_type, string)` applies the same rules but raises `ValueError` instead of returning `False`, and returns the string so the result can be assigned back. A `validate_<name>_name(string)` shortcut is generated for every rule, exactly like `check_*_name`.
+
+```python
+Validator.validate_linbo_image_name('ubuntu22.qcow2')   # 'ubuntu22.qcow2'
+Validator.validate_linbo_image_name('..')               # ValueError
+```
+
+Prefer `validate()` wherever the name is about to build a filesystem path. A caller that forgets to test the boolean returned by `check()` silently keeps an unchecked name — which is how `..` once reached a `shutil.rmtree()` in `linbo/image_sync.py` — while a forgotten `validate()` cannot go unnoticed.
+
 | Rule | Typical use |
 |---|---|
 | `password` | Allowed characters in a password |

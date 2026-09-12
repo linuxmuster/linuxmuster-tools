@@ -30,6 +30,7 @@ NAME_RULES = {
 def set_check_method(cls, *args):
     for name_type in NAME_RULES:
         setattr(cls, f"check_{name_type}_name", partialmethod(cls.check, name_type))
+        setattr(cls, f"validate_{name_type}_name", partialmethod(cls.validate, name_type))
     return cls
 
 @set_check_method
@@ -48,6 +49,29 @@ class NameChecker:
         if pattern:
             return re.match(pattern, string) is not None
         return False
+
+    def validate(self, name_type, string):
+        """
+        Same rules as check(), but raise instead of returning False, and
+        return the string so that the result can be assigned back.
+
+        Use this wherever the name is about to build a filesystem path: a
+        caller that forgets to test check()'s boolean silently keeps an
+        unchecked name, while a forgotten validate() cannot go unnoticed.
+
+        :param name_type: One of the rules declared in NAME_RULES
+        :type name_type: string
+        :param string: The name to validate
+        :type string: string
+        :return: The validated name, unchanged
+        :rtype: string
+        :raises ValueError: if the name does not pass check()
+        """
+
+
+        if not self.check(name_type, string):
+            raise ValueError(f"Invalid {name_type} name: {string!r}")
+        return string
 
     def normalize_mac(self, mac):
         """

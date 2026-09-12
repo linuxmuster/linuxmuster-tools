@@ -38,8 +38,8 @@ def resolve_image_file(images_dir: Path, image_name: str, filename: str) -> Path
     """
 
 
-    name_checker.check_linbo_image_name(image_name)
-    name_checker.check_linbo_image_name(filename)
+    image_name = name_checker.validate_linbo_image_name(image_name)
+    filename = name_checker.validate_linbo_image_name(filename)
 
     file_path = (images_dir / image_name / filename).resolve()
     if not file_path.is_relative_to(images_dir.resolve()):
@@ -86,8 +86,8 @@ def receive_upload_chunk(
     """
 
 
-    name_checker.check_linbo_image_name(image_name)
-    name_checker.check_linbo_image_name(filename)
+    image_name = name_checker.validate_linbo_image_name(image_name)
+    filename = name_checker.validate_linbo_image_name(filename)
 
     staging_dir = images_dir / INCOMING_DIR_NAME / image_name
     staging_dir.mkdir(parents=True, exist_ok=True)
@@ -115,8 +115,8 @@ def get_upload_status(images_dir: Path, image_name: str, filename: str) -> dict:
     """
 
 
-    name_checker.check_linbo_image_name(image_name)
-    name_checker.check_linbo_image_name(filename)
+    image_name = name_checker.validate_linbo_image_name(image_name)
+    filename = name_checker.validate_linbo_image_name(filename)
 
     file_path = images_dir / INCOMING_DIR_NAME / image_name / filename
     if not file_path.is_file():
@@ -135,7 +135,7 @@ def finalize_upload(images_dir: Path, image_name: str) -> dict:
     """
 
 
-    name_checker.check_linbo_image_name(image_name)
+    image_name = name_checker.validate_linbo_image_name(image_name)
 
     staging_dir = images_dir / INCOMING_DIR_NAME / image_name
     if not staging_dir.is_dir():
@@ -192,7 +192,7 @@ def cancel_upload(images_dir: Path, image_name: str) -> dict:
     """
 
 
-    name_checker.check_linbo_image_name(image_name)
+    image_name = name_checker.validate_linbo_image_name(image_name)
 
     staging_dir = images_dir / INCOMING_DIR_NAME / image_name
     if staging_dir.is_dir():
