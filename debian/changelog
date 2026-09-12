@@ -1,3 +1,15 @@
+linuxmuster-tools7 (7.3.48) lmn73; urgency=medium
+
+  * [linbo][ldapconnector] Fix case sensitive names for image.status, so
+    that the last sync date is found whatever the case of the file name.
+  * [ldapconnector] Fix ValueError when the member list of a schoolclass
+    subgroup ends up empty: the attribute is now deleted instead of being
+    set to an empty list.
+  * [lmnfile] Accept negative values in config files, so that the
+    unlimited quota (-1) of school.conf is read as an integer.
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sat, 12 Sep 2026 16:41:49 +0200
+
 linuxmuster-tools7 (7.3.47) lmn73; urgency=medium
 
   * [print] Possibility to print large cards (36 passwords on 2 pages).
