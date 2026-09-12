@@ -56,6 +56,30 @@ class TestURLMatching:
         func, data = router._find_method('/groups')
         assert func.type == 'collection'
 
+    @pytest.mark.parametrize('name', [
+        'anna.test-parents',
+        'agy-anna.test-parents',
+        'annatest-parents',
+        'anna-test-parents',
+        'anna_test-parents',
+        'anna test-parents',
+    ])
+    def test_single_unit_route(self, name):
+        func, data = router._find_method(f'/units/{name}')
+        assert func.type == 'single'
+        assert data == {'name': name}
+        assert f'(cn={name})' in func(**data)
+
+    @pytest.mark.parametrize('name', [
+        'anna/test-parents',
+        'anna*test-parents',
+        'anna(test)-parents',
+        'anna\\test-parents',
+    ])
+    def test_single_unit_route_rejects_invalid_names(self, name):
+        with pytest.raises(Exception, match='unknown'):
+            router._find_method(f'/units/{name}')
+
     def test_devices_collection_route(self):
         func, data = router._find_method('/devices')
         assert func.type == 'collection'
