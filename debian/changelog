@@ -1,3 +1,40 @@
+linuxmuster-tools7 (7.4.15) lmn74; urgency=medium
+
+  * [ldapconnector] Printer members are now added and removed in a single
+    targeted LDAP modify instead of rewriting the whole member list: two
+    changes landing at the same time can no longer overwrite each other.
+    LMNPrinter.add_members()/remove_members() take users as well as
+    groups and report their failures like the group writers do.
+  * [ldapconnector] Fix ValueError when the last member of a group was
+    removed: an empty member list now goes through delattr(). Reported by
+    @juergen.
+  * [ldapconnector] A failed LDAP write while adding a member now reaches
+    the caller instead of being logged and reported as a success.
+  * [ldapconnector] Fix the parent group lookup for student logins
+    containing a dot. Merge pull request #31 from @Maddi02.
+  * [lmnfile] ConfigLoader accepts negative values: a quota of -1 stayed a
+    string and left the quota tab empty. Reported by @juergen.
+  * [linbo] image.status: the three duplicated parsers are merged into
+    one, timestamps are exposed as UTC epoch, a missing or malformed
+    status file no longer raises, and file names are matched
+    case-insensitively. Reported by @TomS.
+  * [linbo] scan_hosts() no longer returns lastSeen: it held the time of
+    the probe, not a last-seen date. Recording it is the caller's job.
+  * [linbo] parse_linbo_startconf() flushes the last stanza. Fix #29,
+    reported by @TomlDev. Group listing is decoupled from start.conf
+    parsing and exposed through the new group_ids attribute.
+  * [linbo] Move the unused LinboImageSync class to WIP.
+  * [common] New NameChecker.validate(), used wherever a name is used to
+    build a path.
+  * [schoolclasses] The <class>-teachers/-students/-parents subgroups are
+    now kept in sync in sophomorixAdmins too, can be deleted, and their
+    orphans detected after a kill. New SchoolClassExistError.
+  * [install-scripts] Student groups are checked for every school and the
+    attic is excluded. The sophomorix hooks no longer abort on a single
+    failure and drop a deprecated school parameter. 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sun, 13 Sep 2026 16:04:50 +0200
+
 linuxmuster-tools7 (7.4.14) lmn74; urgency=medium
 
   * [lmnfile] StartConfLoader: opening a non-existent start.conf.* in 'w'
