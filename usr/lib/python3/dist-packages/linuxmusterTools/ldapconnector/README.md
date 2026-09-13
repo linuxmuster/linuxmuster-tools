@@ -220,7 +220,7 @@ from linuxmusterTools.ldapconnector import (
     LMNSchoolAdmin, LMNGlobalAdmin,
     LMNSchoolclass, LMNSchoolclasses,
     LMNProject, LMNProjects,
-    LMNGroup,
+    LMNGroup, LMNPrinter,
 )
 ```
 
@@ -296,6 +296,32 @@ of the subgroups, so an OU which is left alone is not cleaned up.
 `add_member()` is idempotent: adding a cn which already is a member is a no-op, not an error. A failed LDAP write raises, it is never reported as a success.
 
 `add_members()`/`remove_members()` never abort partway through the list: an entry which fails — an invalid cn as well as a rejected LDAP write — is skipped rather than stopping the batch, and the call returns a list of `(cn, error_message)` tuples for the entries that failed (empty list if everything succeeded).
+
+### Printers
+
+A printer is a group whose members are printing rights. Members are users
+**or** groups, so both are given as plain cn and resolved on either side:
+
+```python
+printer = LMNPrinter('printer1')
+printer.add_members(['johndoe', '7a-students'])     # users and groups alike
+printer.remove_members(['johndoe', '7a-students'])
+printer.add_member('johndoe')                       # raises on failure
+printer.remove_member('johndoe')
+printer.remove_all_members()
+```
+
+`add_members()`/`remove_members()` apply **one** targeted LDAP modify for the
+whole list (`MOD_ADD`/`MOD_DELETE` per value), never a rewrite of `member`.
+That matters beyond speed: a rewritten list carries whatever the caller read
+a moment earlier, so two requests changing the members at the same time — the
+webui sends one per kind when users and groups are applied together — would
+silently drop one of the two changes. They return the same
+`(cn, error_message)` failure list as the group writers, and skip a cn which
+is already (or not) a member rather than failing the whole modify on it.
+
+Removing every member needs no special case: the last `MOD_DELETE` leaves no
+value behind and the directory drops the attribute on its own.
 
 ### Students
 

@@ -339,27 +339,24 @@ class LMNPrinter(LMNDevice):
                 self.data =  {field.name:field.type() for field in fields(self.model) if field.init}
                 self.data['cn'] = self.cn
 
+    def _get_member_dn(self, member):
+        """
+        Resolve the dn of a printer member, which may be a user or a group.
+
+        :param member: cn of an user or of a group
+        :type member: basestring
+        :return: The dn of the member, None if no object matches
+        :rtype: basestring or None
+        """
+
+
+        return self.lr.getval(f'/users/{member}', 'dn') or self.lr.getval(f'/units/{member}', 'dn')
+
     def remove_member(self, user):
-        user_dn = self.lr.getval(f'/users/{user}', 'dn')
+        failures = self.remove_members([user])
 
-        if not user_dn:
-            logger.info(f"The user {user} was not found in ldap.")
-            raise Exception(f"The object {user} was not found in ldap.")
-
-        try:
-            members = self.data['member']
-            if user_dn in members:
-                members.remove(user_dn)
-            else:
-                logging.info(f"{user} is not a member of schoolclass {self.cn}")
-                return
-            if members:
-                self.lw._setattr(self, data={'member': members})
-            else:
-                self.lw._delattr(self, data={'member': None})
-            self.load_data()
-        except ValueError as e:
-            logger.warning(f"Could not remove member {user_dn} from {self.cn}: {str(e)}")
+        if failures:
+            raise Exception(failures[0][1])
 
     def remove_all_members(self):
         try:
@@ -369,27 +366,111 @@ class LMNPrinter(LMNDevice):
             logger.warning(f"Could not remove all members from {self.cn}: {str(e)}")
 
     def add_member(self, user):
-        user_dn = self.lr.getval(f'/users/{user}', 'dn')
+        failures = self.add_members([user])
 
-        if not user_dn:
-            logger.info(f"The user {user} was not found in ldap.")
-            raise Exception(f"The user {user} was not found in ldap.")
+        if failures:
+            raise Exception(failures[0][1])
+
+    def add_members(self, members):
+        """
+        Add all members from a given list in a single ldap modify.
+
+        Members are users or groups. Rewriting the whole member list would
+        lose any concurrent change: two requests adding an user and a group
+        at the same time both read the list, and the last one to write wins.
+        Targeted MOD_ADD operations are applied by the directory itself, so
+        nothing gets lost. The whole modify fails if a value is added twice,
+        so members already in the list are filtered out first.
+
+        One invalid cn doesn't abort the rest of the batch: it's skipped and
+        reported.
+
+        :param members: List of valid cn (users or groups)
+        :type members: list
+        :return: list of (member, error message) tuples for entries that
+        could not be added
+        :rtype: list
+        """
+
+
+        failures = []
+        members_list = []
+        to_add = []
+
+        for member in members:
+            member_dn = self._get_member_dn(member)
+
+            if not member_dn:
+                logger.info(f"The member {member} was not found in ldap.")
+                failures.append((member, f"The member {member} was not found in ldap."))
+                continue
+
+            if member_dn in self.data['member'] or member_dn in members_list:
+                logger.info(f"{member} is already a member of {self.cn}")
+                continue
+
+            members_list.append(member_dn)
+            to_add.append(member)
+
+        if not members_list:
+            return failures
 
         try:
-            members = self.data['member']
-            members.append(user_dn)
-            self.lw._setattr(self, data={'member': members})
+            self.lw._setattr(self, data={'member': members_list}, add=True)
             self.load_data()
         except Exception as e:
-            logger.warning(f"Could not append member {user_dn} to {self.cn}: {str(e)}")
+            logger.warning(f"Could not add members {members_list} to {self.cn}: {str(e)}")
+            failures.extend((member, str(e)) for member in to_add)
 
-    def add_members(self, userlist):
+        return failures
+
+    def remove_members(self, members):
         """
-        Shortcut to add all members from a given list
+        Remove all members from a given list in a single ldap modify.
 
-        :param userlist: List of valid cn
+        Members are users or groups. See add_members() about why the member
+        list is not rewritten as a whole. Removing every member leaves no
+        value behind, and the directory drops the attribute on its own: no
+        need for the delattr() dance setattr() would require.
+
+        One invalid cn doesn't abort the rest of the batch: it's skipped and
+        reported.
+
+        :param members: List of valid cn (users or groups)
+        :type members: list
+        :return: list of (member, error message) tuples for entries that
+        could not be removed
+        :rtype: list
         """
 
 
-        for user in userlist:
-            self.add_member(user)
+        failures = []
+        members_list = []
+        to_remove = []
+
+        for member in members:
+            member_dn = self._get_member_dn(member)
+
+            if not member_dn:
+                logger.info(f"The member {member} was not found in ldap.")
+                failures.append((member, f"The member {member} was not found in ldap."))
+                continue
+
+            if member_dn not in self.data['member']:
+                logger.info(f"{member} is not a member of {self.cn}")
+                continue
+
+            members_list.append(member_dn)
+            to_remove.append(member)
+
+        if not members_list:
+            return failures
+
+        try:
+            self.lw._delattr(self, data={'member': members_list})
+            self.load_data()
+        except Exception as e:
+            logger.warning(f"Could not remove members {members_list} from {self.cn}: {str(e)}")
+            failures.extend((member, str(e)) for member in to_remove)
+
+        return failures
