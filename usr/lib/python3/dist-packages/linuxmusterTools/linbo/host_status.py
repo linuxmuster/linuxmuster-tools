@@ -15,7 +15,6 @@ nmap-based webui implementation made.
 import asyncio
 import logging
 import socket
-from datetime import datetime, timezone
 
 logger = logging.getLogger(__name__)
 
@@ -63,11 +62,10 @@ async def scan_hosts(
         concurrency: Max concurrent probes
 
     Returns:
-        List of {mac, ip, hostname, online, lastSeen} dicts
+        List of {mac, ip, hostname, online} dicts
     """
 
     semaphore = asyncio.Semaphore(concurrency)
-    now = datetime.now(timezone.utc).isoformat()
 
     async def _probe(host: dict) -> dict:
         async with semaphore:
@@ -78,7 +76,6 @@ async def scan_hosts(
                     "ip": None,
                     "hostname": host.get("hostname"),
                     "online": False,
-                    "lastSeen": None,
                 }
             online = await probe_host(ip, port=port, timeout=timeout)
             return {
@@ -86,7 +83,6 @@ async def scan_hosts(
                 "ip": ip,
                 "hostname": host.get("hostname"),
                 "online": online,
-                "lastSeen": now if online else None,
             }
 
     tasks = [_probe(h) for h in hosts]
