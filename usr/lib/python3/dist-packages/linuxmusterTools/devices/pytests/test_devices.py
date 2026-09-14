@@ -49,6 +49,54 @@ def test_named_school_uses_prefixed_path(make_device_row, write_devices_csv):
     assert devicesmgr.devices[0]['school'] == 'school1'
 
 
+def test_hostnames_are_collected(make_device_row, write_devices_csv):
+    write_devices_csv([
+        make_device_row(hostname='pc01'),
+        make_device_row(hostname='pc02'),
+    ])
+
+    devicesmgr = Devices()
+
+    assert sorted(devicesmgr.hostnames) == ['pc01', 'pc02']
+
+
+def test_default_school_hostnames_carry_no_prefix(make_device_row, write_devices_csv):
+    write_devices_csv([make_device_row(hostname='pc01')])
+
+    devicesmgr = Devices()
+
+    assert devicesmgr.hostname_prefix == ''
+    assert devicesmgr.prefixed_hostnames == {'pc01'}
+
+
+def test_named_school_hostnames_are_prefixed_with_a_hyphen(make_device_row, write_devices_csv):
+    """
+    The inventory file is school1.devices.csv, but the host is school1-labpc:
+    the two prefixes are not the same and must not be confused.
+    """
+
+    write_devices_csv([make_device_row(hostname='labpc')], school='school1')
+
+    devicesmgr = Devices('school1')
+
+    assert devicesmgr.prefix == 'school1.'
+    assert devicesmgr.hostname_prefix == 'school1-'
+    assert devicesmgr.hostnames == ['labpc']
+    assert devicesmgr.prefixed_hostnames == {'school1-labpc'}
+
+
+def test_prefixed_hostnames_follow_a_switch(make_device_row, write_devices_csv):
+    write_devices_csv([make_device_row(hostname='pc01')])
+    write_devices_csv([make_device_row(hostname='labpc')], school='school1')
+
+    devicesmgr = Devices()
+    assert devicesmgr.prefixed_hostnames == {'pc01'}
+
+    devicesmgr.switch('school1')
+
+    assert devicesmgr.prefixed_hostnames == {'school1-labpc'}
+
+
 def test_switch_between_schools(make_device_row, write_devices_csv):
     write_devices_csv([make_device_row(hostname='pc-default')], school='default-school')
     write_devices_csv([make_device_row(hostname='pc-school1')], school='school1')

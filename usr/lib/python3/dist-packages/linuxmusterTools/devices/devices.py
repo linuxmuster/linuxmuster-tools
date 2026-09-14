@@ -19,9 +19,15 @@ class Devices:
     def switch(self, school):
         self.school = school
         if self.school != 'default-school':
+            # Two different prefixes, do not mix them up: the inventory file
+            # is <school>.devices.csv, while a host of that school is named
+            # <school>-<hostname> everywhere it is seen from outside its own
+            # school - sophomorix' own SCHOOLS.<school>.PREFIX.
             self.prefix = f'{self.school}.'
+            self.hostname_prefix = f'{self.school}-'
         else:
             self.prefix = ''
+            self.hostname_prefix = ''
 
         self.path = f'/etc/linuxmuster/sophomorix/{self.school}/{self.prefix}devices.csv'
         self.load()
@@ -47,6 +53,11 @@ class Devices:
         self.macs = list(set([d['mac'] for d in self.devices if d.get('mac', False)]))
         self.ips = list(set([d['ip'] for d in self.devices if d.get('ip', False)]))
         self.rooms = list(set([d['room'] for d in self.devices if d.get('room', False)]))
+        self.hostnames = list(set([d['hostname'] for d in self.devices if d.get('hostname', False)]))
+        # Same hosts, named as anything school-agnostic writes them: LINBO
+        # logs, hwinfo files, AD objects. Answers "is this host mine?" for a
+        # caller holding a name that came from outside the school.
+        self.prefixed_hostnames = {f'{self.hostname_prefix}{h}' for h in self.hostnames}
         self.clients = self.filter(roles=CLIENT_ROLES)
         self.csv_mtime = get_utc_mtime(Path(self.path)) # check if I can replace all paths with Path instances
 

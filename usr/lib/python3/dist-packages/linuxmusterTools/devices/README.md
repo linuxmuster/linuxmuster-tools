@@ -24,7 +24,9 @@ from linuxmusterTools.devices import Devices, UPChecker
 
 ### `Devices` — inventory
 
-Loads `/etc/linuxmuster/sophomorix/SCHOOL/[SCHOOL.]devices.csv` on instantiation. If that file doesn't exist yet (fresh install, school not provisioned yet), `devices`/`groups`/`macs`/`ips`/`rooms` are simply left empty instead of raising.
+Loads `/etc/linuxmuster/sophomorix/SCHOOL/[SCHOOL.]devices.csv` on instantiation. If that file doesn't exist yet (fresh install, school not provisioned yet), `devices`/`groups`/`macs`/`ips`/`rooms`/`hostnames` are simply left empty instead of raising.
+
+Two different prefixes come with a school and must not be confused: `prefix` (`'school1.'`) names the inventory **file**, `hostname_prefix` (`'school1-'`) names a **host** as seen from outside its own school - it is sophomorix' own `SCHOOLS.<school>.PREFIX`. Use `prefixed_hostnames` to answer "does this host, named by something that doesn't know about schools, belong to this school?" rather than rebuilding the name at the call site.
 
 ```python
 devicesmgr = Devices(school='default-school')
@@ -43,6 +45,9 @@ devicesmgr = Devices(school='default-school')
 | `macs` | `list[str]` | Unique normalized MAC addresses |
 | `ips` | `list[str]` | Unique IP addresses |
 | `rooms` | `list[str]` | Unique room names |
+| `hostnames` | `list[str]` | Unique host names, as written in the inventory |
+| `prefixed_hostnames` | `set[str]` | The same hosts named `<school>-<hostname>`, the form used outside their own school (LINBO logs, hwinfo files, AD objects); identical to `hostnames` for `default-school` |
+| `hostname_prefix` | `str` | `'<school>-'`, or `''` for `default-school` |
 | `clients` | `list[dict]` | Devices whose `sophomorixRole` is a client role (from `sophomorix.ini`) |
 | `csv_mtime` | `datetime` | Last modification time of the CSV file (UTC) |
 
