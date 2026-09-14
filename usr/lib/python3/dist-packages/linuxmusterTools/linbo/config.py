@@ -206,6 +206,81 @@ class LinboConfigManager:
         if os.path.isfile(grub_cfg_path):
             os.unlink(grub_cfg_path)
 
+    def read_vdi_config(self, group_id: str) -> dict:
+        """
+        Return a group's parsed VDI config.
+
+        The file is start.conf.<group_id>.vdi, YAML: LMNFile excludes the
+        extension from its start.conf handler. Not an image's .vdi sidecar
+        (<image>.qcow2.vdi, free text, owned by LinboImageManager).
+
+        :param group_id: LINBO group id (the `<id>` in start.conf.<id>)
+        :type group_id: string
+        :return: Parsed config, an empty dict if the file exists but is empty
+        :rtype: dict
+        :raises ValueError: if the group id is not a valid config name
+        :raises FileNotFoundError: if the group has no VDI config
+        """
+
+
+        name_checker.validate_linbo_conf_name(group_id)
+
+        vdi_path = os.path.join(LINBO_PATH, f'start.conf.{group_id}.vdi')
+        if not os.path.isfile(vdi_path):
+            raise FileNotFoundError(f"VDI config start.conf.{group_id}.vdi not found.")
+
+        with LMNFile(vdi_path, 'r') as vdi_file:
+            # An empty file parses as None, the callers expect a mapping.
+            return vdi_file.read() or {}
+
+    def write_vdi_config(self, group_id: str, config: dict) -> None:
+        """
+        Create or update a group's VDI config, replacing it as a whole.
+
+        The file is left mode 600, which is what YAMLLoader itself sets when
+        it opens the file and what these configs have on a server; its own
+        final rename would otherwise leave the new file at the umask default.
+        The write goes through LMNFile, which backs the previous version up.
+
+        :param group_id: LINBO group id (the `<id>` in start.conf.<id>)
+        :type group_id: string
+        :param config: Full config to write
+        :type config: dict
+        :raises ValueError: if the group id is not a valid config name
+        """
+
+
+        name_checker.validate_linbo_conf_name(group_id)
+
+        vdi_path = os.path.join(LINBO_PATH, f'start.conf.{group_id}.vdi')
+        with LMNFile(vdi_path, 'w') as vdi_file:
+            vdi_file.write(config)
+
+        os.chmod(vdi_path, 0o600)
+
+    def delete_vdi_config(self, group_id: str) -> None:
+        """
+        Delete a group's VDI config, which disables VDI for that group.
+
+        The group's start.conf is left untouched.
+
+        :param group_id: LINBO group id (the `<id>` in start.conf.<id>)
+        :type group_id: string
+        :raises ValueError: if the group id is not a valid config name
+        :raises FileNotFoundError: if the group has no VDI config
+        """
+
+
+        name_checker.validate_linbo_conf_name(group_id)
+
+        vdi_path = os.path.join(LINBO_PATH, f'start.conf.{group_id}.vdi')
+        if not os.path.isfile(vdi_path):
+            raise FileNotFoundError(f"VDI config start.conf.{group_id}.vdi not found.")
+
+        with LMNFile(vdi_path, 'r') as vdi_file:
+            vdi_file.backup()
+        os.unlink(vdi_path)
+
 ## The following functions need to be rewritten
 ## Still used in lmncli
 

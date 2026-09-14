@@ -12,6 +12,53 @@ Manages [LINBO](https://www.linuxmuster.net) images, backups, hardware inventori
 
 ---
 
+## Group configs
+
+`LinboConfigManager` owns the per-group files in `/srv/linbo`: the
+`start.conf.<group>` itself and its optional VDI companion
+`start.conf.<group>.vdi`. Every method validates the group id before it
+builds a path, so an id coming from a request cannot escape `/srv/linbo`.
+
+| Method | Description |
+|---|---|
+| `load_raw_startconfs(group_ids)` | Raw text, sha256 and mtime of each requested `start.conf`, skipping the ids that are invalid or have no file |
+| `write_raw_startconf(group_id, content)` | Writes the text verbatim, comments and formatting preserved, creating the file if needed |
+| `delete_startconf(group_id)` | Deletes the `start.conf` and the group's GRUB config |
+| `read_vdi_config(group_id)` | Parsed VDI config, `{}` if the file is empty |
+| `write_vdi_config(group_id, config)` | Creates or replaces the VDI config as a whole |
+| `delete_vdi_config(group_id)` | Deletes the VDI config, which disables VDI for that group |
+
+The `.vdi` file is YAML, not a `start.conf`: `LMNFile` excludes the extension
+from its start.conf handler and routes it to the YAML loader, so booleans,
+integers and lists survive a round trip. It holds what the group editor's
+VDI tab shows - `activated`, `name`, `bios`, `ostype`, `boot`, `hostname`,
+`ip`, `mac`, `bridge`, `tag`, `cores`, `memory`, `size`, `storage` and the
+reserved `vmids` - and is consumed by `edulution-linbo-vdi`, which owns that
+schema: the manager reads and writes the mapping without interpreting it.
+
+```python
+>>> from linuxmusterTools.linbo import LinboConfigManager
+>>> manager = LinboConfigManager()
+>>> manager.write_vdi_config('win11', {'activated': True, 'cores': 4, 'vmids': [101, 102]})
+>>> manager.read_vdi_config('win11')
+{'activated': True, 'cores': 4, 'vmids': [101, 102]}
+>>> manager.delete_vdi_config('win11')
+```
+
+Do not confuse this file with an image's `.vdi` sidecar
+(`<image>.qcow2.vdi`, free text, managed by `LinboImageManager` along with
+`.desc`/`.reg`/`.postsync`): same extension, unrelated object.
+
+`write_raw_startconf()` keeps the `start.conf` at mode 755, like the other
+files LINBO itself reads, while `write_vdi_config()` leaves the VDI config at
+600 - what these files have on a server, and what the YAML loader sets before
+its own final rename would drop it back to the umask default. Both back the
+previous version up. `read_vdi_config()` and
+`delete_vdi_config()` raise `FileNotFoundError` when the group has no VDI
+config - a group without one simply has VDI disabled.
+
+---
+
 ## Image manager
 
 `LinboImageManager` provides an object to manage all linbo images, backups and extra files (rename, delete, ... ).
