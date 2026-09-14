@@ -14,6 +14,10 @@ logger = logging.getLogger(__name__)
 DEFAULT_LOG_DIR = "/var/log/linuxmuster/linbo"
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 MB
 _SAFE_FILENAME = re.compile(r"^[a-zA-Z0-9._-]+$")
+# Clients name their logs after themselves, with either separator:
+# <hostname>_linbo.log, <hostname>_image.status, <hostname>.linbo-remote.
+# A hostname holds no '_' and no '.', so the first one of either ends it.
+_LOG_HOSTNAME = re.compile(r"^(?P<hostname>[a-zA-Z0-9-]+)[._]")
 
 
 class LinboBootLogs:
@@ -26,7 +30,12 @@ class LinboBootLogs:
         """List all log files with metadata.
 
         Returns:
-            List of {filename, size, modifiedAt} dicts, sorted newest first
+            List of {filename, hostname, size, modifiedAt} dicts, sorted
+            newest first. hostname is None for a file whose name says nothing
+            about a host; it is a name no inventory matches for the ones that
+            belong to no machine anyway, like a multicast log
+            (bionic.cloop_mcast.log) or a client that could not identify
+            itself (UNKNOWN_linbo.log).
         """
         if not self.log_dir.is_dir():
             return []
@@ -36,8 +45,10 @@ class LinboBootLogs:
             if not f.is_file():
                 continue
             stat = f.stat()
+            hostname = _LOG_HOSTNAME.match(f.name)
             logs.append({
                 "filename": f.name,
+                "hostname": hostname.group("hostname") if hostname else None,
                 "size": stat.st_size,
                 "modifiedAt": datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc).isoformat(),
             })
