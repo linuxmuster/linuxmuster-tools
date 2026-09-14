@@ -18,6 +18,8 @@ from ..common.timestamps import get_utc_mtime, linbo_timestamp_to_epoch
 
 LINBO_PATH = '/srv/linbo'
 LINBO_LOG_PATH = '/var/log/linuxmuster/linbo'
+# Sidecar kinds shipped in /srv/linbo/examples, next to the start.conf.* ones.
+EXAMPLE_SIDECAR_TYPES = ('reg', 'postsync', 'prestart')
 logger = logging.getLogger(__name__)
 name_checker = NameChecker()
 
@@ -205,6 +207,70 @@ class LinboConfigManager:
         grub_cfg_path = os.path.join(GRUB_DIR_DEFAULT, f'{group_id}.cfg')
         if os.path.isfile(grub_cfg_path):
             os.unlink(grub_cfg_path)
+
+    def list_examples(self) -> list[dict]:
+        """
+        List the example configs shipped in /srv/linbo/examples.
+
+        Only the files that are usable as a starting point are listed: the
+        start.conf templates and the .reg/.postsync/.prestart sidecars, same
+        kinds as the legacy webui offered. Anything else in the directory
+        (the README, for one) is left out, and that listing is what
+        read_example() accepts as a name.
+
+        :return: One dict per example, with its name, kind, size and mtime
+        :rtype: list of dict
+        """
+
+
+        examples_path = os.path.join(LINBO_PATH, 'examples')
+        if not os.path.isdir(examples_path):
+            logger.warning(f"No LINBO examples directory found in {examples_path}.")
+            return []
+
+        examples = []
+        for name in sorted(os.listdir(examples_path)):
+            path = Path(examples_path) / name
+            if not path.is_file():
+                continue
+
+            if name.startswith('start.conf.'):
+                example_type = 'config'
+            else:
+                extension = name.rsplit('.', 1)[-1]
+                if extension not in EXAMPLE_SIDECAR_TYPES:
+                    continue
+                example_type = extension
+
+            mtime = get_utc_mtime(path)
+            examples.append({
+                'name': name,
+                'type': example_type,
+                'size': path.stat().st_size,
+                'updatedAt': mtime.isoformat() if mtime else None,
+            })
+        return examples
+
+    def read_example(self, name: str) -> str:
+        """
+        Return the content of one example config.
+
+        The name is accepted only if list_examples() reports it, which is
+        what keeps a name coming from a request inside the directory: a path
+        of its own, absolute or not, is never one of the listed entries.
+
+        :param name: File name as listed by list_examples()
+        :type name: string
+        :return: Content of the example file
+        :rtype: string
+        :raises FileNotFoundError: if no example goes by that name
+        """
+
+
+        if name not in [example['name'] for example in self.list_examples()]:
+            raise FileNotFoundError(f"Example {name} not found.")
+
+        return (Path(LINBO_PATH) / 'examples' / name).read_text(encoding='utf-8')
 
     def read_vdi_config(self, group_id: str) -> dict:
         """

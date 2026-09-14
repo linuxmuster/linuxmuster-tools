@@ -27,6 +27,17 @@ builds a path, so an id coming from a request cannot escape `/srv/linbo`.
 | `read_vdi_config(group_id)` | Parsed VDI config, `{}` if the file is empty |
 | `write_vdi_config(group_id, config)` | Creates or replaces the VDI config as a whole |
 | `delete_vdi_config(group_id)` | Deletes the VDI config, which disables VDI for that group |
+| `list_examples()` | The ready-made configs in `/srv/linbo/examples`, with kind, size and mtime |
+| `read_example(name)` | Content of one of them, by a name the listing reports |
+
+`list_examples()` and `read_example(name)` complete the set with the
+ready-made configs LINBO ships in `/srv/linbo/examples`: the `start.conf.*`
+templates and the `.reg`/`.postsync`/`.prestart` sidecars, each reported with
+its kind (`config`, `reg`, `postsync`, `prestart`), size and mtime. Anything
+else in that directory - the README, for one - is left out, and the listing
+doubles as the whitelist: `read_example()` only accepts a name the listing
+reports, so a name coming from a request cannot walk out of the directory. A
+server without the directory lists nothing rather than raising.
 
 The `.vdi` file is YAML, not a `start.conf`: `LMNFile` excludes the extension
 from its start.conf handler and routes it to the YAML loader, so booleans,
