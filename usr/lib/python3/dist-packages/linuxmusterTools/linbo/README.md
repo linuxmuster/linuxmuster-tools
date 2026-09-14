@@ -29,6 +29,24 @@ builds a path, so an id coming from a request cannot escape `/srv/linbo`.
 | `delete_vdi_config(group_id)` | Deletes the VDI config, which disables VDI for that group |
 | `list_examples()` | The ready-made configs in `/srv/linbo/examples`, with kind, size and mtime |
 | `read_example(name)` | Content of one of them, by a name the listing reports |
+| `list_startconf_backups(group_id)` | The group's `start.conf` backups, newest first, with epoch, size and date |
+| `restore_startconf_backup(group_id, timestamp)` | Puts one back in place, saving the current file first |
+| `delete_startconf_backup(group_id, timestamp)` | Deletes one backup, irreversibly |
+
+Every write path leaves a backup behind, named
+`.start.conf.<group>.bak.<epoch>` by `LMNFile.backup()`, and that is the
+history `list_startconf_backups()` reports. It is a short one: `backup()`
+keeps the ten previous versions and drops the oldest when it writes an
+eleventh, so it is a way back from a bad edit, not an archive. Matching is
+exact - group names prefix each other on a real server (`101`, `101-test`,
+`101b`), and a group's VDI config keeps backups of its own under
+`.start.conf.<group>.vdi.bak.<epoch>`.
+
+`restore_startconf_backup()` reads the backup before saving the current
+`start.conf`, because saving it rotates the oldest backup out and the oldest
+may be the very one being restored. The file is then copied byte for byte
+rather than parsed and rewritten: the comments are what makes a backup worth
+restoring.
 
 `list_examples()` and `read_example(name)` complete the set with the
 ready-made configs LINBO ships in `/srv/linbo/examples`: the `start.conf.*`

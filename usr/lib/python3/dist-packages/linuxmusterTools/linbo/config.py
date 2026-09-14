@@ -272,6 +272,105 @@ class LinboConfigManager:
 
         return (Path(LINBO_PATH) / 'examples' / name).read_text(encoding='utf-8')
 
+    def list_startconf_backups(self, group_id: str) -> list[dict]:
+        """
+        List the backups LMNFile.backup() left next to a group's start.conf,
+        newest first.
+
+        The list is bounded: backup() keeps the ten previous versions and
+        drops the oldest whenever it writes an eleventh, so an edit older
+        than that is gone for good.
+
+        Matching is exact on `.start.conf.<group_id>.bak.<epoch>`. Group
+        names do prefix each other on a real server (101, 101-test, 101b),
+        and a group's VDI config has backups of its own
+        (`.start.conf.<group_id>.vdi.bak.<epoch>`): neither must show up in
+        the other's history.
+
+        :param group_id: LINBO group id (the `<id>` in start.conf.<id>)
+        :type group_id: string
+        :return: One dict per backup, with its epoch timestamp, size and date
+        :rtype: list of dict
+        :raises ValueError: if the group id is not a valid config name
+        """
+
+
+        name_checker.validate_linbo_conf_name(group_id)
+
+        prefix = f'.start.conf.{group_id}.bak.'
+        backups = []
+        for name in os.listdir(LINBO_PATH):
+            if not name.startswith(prefix):
+                continue
+
+            timestamp = name[len(prefix):]
+            if not timestamp.isdigit():
+                continue
+
+            backups.append({
+                'timestamp': int(timestamp),
+                'size': (Path(LINBO_PATH) / name).stat().st_size,
+                'createdAt': datetime.fromtimestamp(int(timestamp), tz=timezone.utc).isoformat(),
+            })
+
+        return sorted(backups, key=lambda backup: backup['timestamp'], reverse=True)
+
+    def restore_startconf_backup(self, group_id: str, timestamp: int) -> None:
+        """
+        Put a backup back in place as the group's start.conf.
+
+        The current start.conf is backed up first, so a restore can itself be
+        undone. The backup is copied byte for byte rather than parsed and
+        rewritten: comments and formatting are the point of having it.
+
+        :param group_id: LINBO group id (the `<id>` in start.conf.<id>)
+        :type group_id: string
+        :param timestamp: Epoch timestamp of the backup, as listed
+        :type timestamp: integer
+        :raises ValueError: if the group id or the timestamp is not valid
+        :raises FileNotFoundError: if no backup goes by that timestamp
+        """
+
+
+        name_checker.validate_linbo_conf_name(group_id)
+
+        backup_path = Path(LINBO_PATH) / f'.start.conf.{group_id}.bak.{int(timestamp)}'
+        if not backup_path.is_file():
+            raise FileNotFoundError(f"No backup {timestamp} for start.conf.{group_id}.")
+
+        # Read it before backing the current file up: that backup rotates the
+        # oldest one out, and the oldest one may be this very file.
+        content = backup_path.read_bytes()
+
+        conf_path = os.path.join(LINBO_PATH, f'start.conf.{group_id}')
+        if os.path.isfile(conf_path):
+            with LMNFile(conf_path, 'r') as lmn_file:
+                lmn_file.backup()
+
+        Path(conf_path).write_bytes(content)
+        os.chmod(conf_path, 0o755)
+
+    def delete_startconf_backup(self, group_id: str, timestamp: int) -> None:
+        """
+        Delete one backup of a group's start.conf, irreversibly.
+
+        :param group_id: LINBO group id (the `<id>` in start.conf.<id>)
+        :type group_id: string
+        :param timestamp: Epoch timestamp of the backup, as listed
+        :type timestamp: integer
+        :raises ValueError: if the group id or the timestamp is not valid
+        :raises FileNotFoundError: if no backup goes by that timestamp
+        """
+
+
+        name_checker.validate_linbo_conf_name(group_id)
+
+        backup_path = Path(LINBO_PATH) / f'.start.conf.{group_id}.bak.{int(timestamp)}'
+        if not backup_path.is_file():
+            raise FileNotFoundError(f"No backup {timestamp} for start.conf.{group_id}.")
+
+        backup_path.unlink()
+
     def read_vdi_config(self, group_id: str) -> dict:
         """
         Return a group's parsed VDI config.
