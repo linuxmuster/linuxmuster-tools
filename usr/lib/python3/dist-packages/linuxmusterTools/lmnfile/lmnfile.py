@@ -336,7 +336,15 @@ class CSVLoader(LMNFile):
                 if first_field in ['', EMPTY_LINE_MARKER]:
                     f.write(first_field.replace(EMPTY_LINE_MARKER, '') + '\n')
                 elif first_field.startswith('#'):
-                    f.write(first_field + '\n')
+                    # A field is None when the comment line did not have that
+                    # column, so trailing separators are neither added nor lost.
+                    fields = [elt.get(name) for name in self.fieldnames]
+                    while fields[-1] is None:
+                        fields.pop()
+                    fields.extend(elt.get(None) or [])
+                    f.write(self.delimiter.join(
+                        '' if field is None else str(field) for field in fields
+                    ) + '\n')
                 else:
                     writer.writerow(elt)
         if not filecmp.cmp(tmp, self.file):

@@ -81,6 +81,53 @@ def test_comment_lines_preserved_on_write(tmp_path):
     assert '# comment line' in f.read_text()
 
 
+def test_comment_with_delimiters_round_trips(tmp_path):
+    content = '#room1;pc1;aa:bb:cc\nroom2;pc2;dd:ee:ff\n'
+    f = make_csv(tmp_path, content)
+    with LMNFile(str(f), 'r', fieldnames=FIELDS) as lmn:
+        rows = lmn.read()
+        lmn.write(rows)
+    assert f.read_text() == content
+
+
+def test_comment_with_more_columns_than_fieldnames_round_trips(tmp_path):
+    # Columns past the last fieldname land under DictReader's restkey (None)
+    content = '#room1;pc1;aa:bb:cc;extra;more\nroom2;pc2;dd:ee:ff\n'
+    f = make_csv(tmp_path, content)
+    with LMNFile(str(f), 'r', fieldnames=FIELDS) as lmn:
+        rows = lmn.read()
+        lmn.write(rows)
+    assert f.read_text() == content
+
+
+def test_comment_without_delimiters_gains_no_separators(tmp_path):
+    content = '# comment line\nroom1;pc1;aa:bb:cc\n'
+    f = make_csv(tmp_path, content)
+    with LMNFile(str(f), 'r', fieldnames=FIELDS) as lmn:
+        rows = lmn.read()
+        lmn.write(rows)
+    assert f.read_text() == content
+
+
+def test_comment_trailing_empty_columns_kept(tmp_path):
+    content = '#room1;pc1;\n#room2;;\nroom3;pc3;aa:bb:cc\n'
+    f = make_csv(tmp_path, content)
+    with LMNFile(str(f), 'r', fieldnames=FIELDS) as lmn:
+        rows = lmn.read()
+        lmn.write(rows)
+    assert f.read_text() == content
+
+
+def test_data_rows_unaffected_by_comment_handling(tmp_path):
+    content = '#room1;pc1;aa:bb:cc\nroom2;pc2;dd:ee:ff\nroom3;;\n'
+    f = make_csv(tmp_path, content)
+    with LMNFile(str(f), 'r', fieldnames=FIELDS) as lmn:
+        rows = lmn.read()
+        rows[1]['hostname'] = 'pc9'
+        lmn.write(rows)
+    assert f.read_text() == '#room1;pc1;aa:bb:cc\nroom2;pc9;dd:ee:ff\nroom3;;\n'
+
+
 def test_empty_lines_preserved_on_write(tmp_path):
     content = 'room1;pc1;aa:bb:cc\n\nroom2;pc2;dd:ee:ff\n'
     f = make_csv(tmp_path, content)
