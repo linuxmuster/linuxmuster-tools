@@ -1,3 +1,45 @@
+linuxmuster-tools7 (7.4.16) lmn74; urgency=medium
+
+  * [linbo] Renaming or duplicating an image left behind a .torrent and a
+    .hash describing the previous name: a torrent embeds the file name it
+    serves, so neither survives the rename. Both are now dropped and
+    rebuilt with "linbo-torrent create", in the background and only once
+    the directory holds its final name. The image listing gained a
+    torrent flag saying whether the file is there. Fix #30, reported by
+    @TomlDev.
+  * [linbo] New start.conf backup handling: list_startconf_backups(),
+    restore_startconf_backup() and delete_startconf_backup(). A restore
+    backs the current file up first, so it can itself be undone, and
+    copies the backup byte for byte: comments and formatting are the
+    point of keeping one.
+  * [linbo] list_examples() and read_example() expose the example configs
+    shipped in /srv/linbo/examples, limited to the start.conf templates
+    and their .reg/.postsync/.prestart sidecars.
+  * [linbo] read_vdi_config(), write_vdi_config() and delete_vdi_config()
+    handle a group's start.conf.<group>.vdi file.
+  * [linbo] Boot logs are listed with the hostname each file belongs to,
+    None for a file naming no host (a multicast log, a client which could
+    not identify itself), so that a caller can keep only the machines of
+    one school.
+  * [devices] Devices exposes hostnames, hostname_prefix and
+    prefixed_hostnames: the same hosts as anything school-agnostic writes
+    them (LINBO logs, hwinfo files, AD objects), which answers "is this
+    host mine?" for a name coming from outside the school.
+  * [packaging] configobj, jinja2, python-ldap, magic, pexpect and pyyaml
+    are declared as apt dependencies instead of requirements.txt: pip
+    installs nothing in a --system-site-packages venv when the system
+    already satisfies the requirement, so the file never guaranteed
+    anything. Should fix #32, reported by @HappyBasher.
+  * [packaging] A venv whose pyvenv.cfg no longer matches the running
+    Python is rebuilt from scratch: it records its interpreter version
+    once and never updates it, so after an Ubuntu LTS upgrade everything
+    pip installed sits in an orphaned site-packages, off sys.path, and
+    the venv looks healthy while importing nothing. The rebuild fires the
+    new linuxmuster-venv dpkg trigger, which has linuxmuster-api7, -cli7
+    and -webui7 reinstall their own requirements.
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Tue, 15 Sep 2026 21:19:14 +0200
+
 linuxmuster-tools7 (7.4.15) lmn74; urgency=medium
 
   * [ldapconnector] Printer members are now added and removed in a single
