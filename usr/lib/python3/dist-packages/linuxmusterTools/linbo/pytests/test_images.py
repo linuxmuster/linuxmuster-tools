@@ -18,6 +18,9 @@ def environment(tmp_path, monkeypatch):
     images_root.mkdir()
     drivers = LinboDriverManager(tmp_path / "drivers")
     monkeypatch.setattr(images_module, "LINBO_PATH", str(images_root))
+    # _torrent_create() logs next to the real LINBO logs: keep every test out
+    # of /var/log, whether or not it renames anything.
+    monkeypatch.setattr(images_module, "LINBO_LOG_PATH", str(tmp_path / "log"))
     return images_root, LinboImageManager(driver_manager=drivers)
 
 
@@ -361,3 +364,104 @@ def test_restore_rejects_a_same_minute_collision(environment):
 
     # Refused before moving anything: original backup is still a backup.
     assert date_key in images.groups["ubuntu"].backups
+
+
+# ── Torrents: rename/duplicate must not leave a stale one behind ─────
+
+
+@pytest.fixture
+def torrent_calls(monkeypatch):
+    """Capture the linbo-torrent invocations instead of running them."""
+
+    calls = []
+
+    def fake_popen(command, **kwargs):
+        calls.append(command)
+        return None
+
+    monkeypatch.setattr(images_module.subprocess, "Popen", fake_popen)
+    monkeypatch.setattr(images_module.subprocess, "check_output", lambda *a, **k: b"")
+    return calls
+
+
+def _add_torrent(image_dir, image):
+    """The pair linbo-torrent produces for an image: torrent plus its hash."""
+
+    (image_dir / f"{image}.torrent").write_text("torrent")
+    (image_dir / f"{image}.hash").write_text("deadbeef")
+
+
+def test_rename_drops_the_torrent_and_its_hash(environment, torrent_calls):
+    images_root, images = environment
+    image_dir = _create_image(images_root, "ubuntu")
+    _add_torrent(image_dir, "ubuntu.qcow2")
+    images.list()
+
+    images.rename("ubuntu", "debian")
+
+    renamed = images_root / "debian"
+    # The hash describes the torrent that just went away: it must not survive
+    # under the new name, where it would feed opentracker a phantom entry.
+    assert not (renamed / "debian.qcow2.torrent").exists()
+    assert not (renamed / "debian.qcow2.hash").exists()
+    assert not (renamed / "ubuntu.qcow2.torrent").exists()
+    assert not (renamed / "ubuntu.qcow2.hash").exists()
+
+
+def test_rename_rebuilds_the_torrent_under_the_new_directory(environment, torrent_calls):
+    images_root, images = environment
+    image_dir = _create_image(images_root, "ubuntu")
+    _add_torrent(image_dir, "ubuntu.qcow2")
+    images.list()
+
+    images.rename("ubuntu", "debian")
+
+    creations = [call for call in torrent_calls if call[1] == "create"]
+    assert len(creations) == 1
+    # Created only after the directory move, otherwise the seeding session
+    # would point at a path that no longer exists.
+    assert creations[0][2] == str(images_root / "debian" / "debian.qcow2")
+
+
+def test_rename_does_not_rebuild_a_torrent_for_backups(environment, torrent_calls):
+    images_root, images = environment
+    image_dir = _create_image(images_root, "ubuntu")
+    _create_backup(image_dir, "ubuntu", "202601020000")
+    images.list()
+
+    images.rename("ubuntu", "debian")
+
+    creations = [call for call in torrent_calls if call[1] == "create"]
+    assert [call[2] for call in creations] == [
+        str(images_root / "debian" / "debian.qcow2")
+    ]
+
+
+def test_duplicate_leaves_the_torrent_and_hash_behind(environment, torrent_calls):
+    images_root, images = environment
+    image_dir = _create_image(images_root, "ubuntu")
+    _add_torrent(image_dir, "ubuntu.qcow2")
+    images.list()
+
+    images.duplicate("ubuntu", "ubuntu-copy")
+
+    copy = images_root / "ubuntu-copy"
+    # A copied torrent would describe the original file name.
+    assert not (copy / "ubuntu-copy.qcow2.torrent").exists()
+    assert not (copy / "ubuntu-copy.qcow2.hash").exists()
+    assert not (copy / "ubuntu.qcow2.torrent").exists()
+    assert not (copy / "ubuntu.qcow2.hash").exists()
+    # The original keeps its own.
+    assert (image_dir / "ubuntu.qcow2.torrent").exists()
+    assert (image_dir / "ubuntu.qcow2.hash").exists()
+
+
+def test_to_dict_reports_whether_a_torrent_exists(environment, torrent_calls):
+    images_root, images = environment
+    image_dir = _create_image(images_root, "ubuntu")
+    _create_image(images_root, "debian")
+    _add_torrent(image_dir, "ubuntu.qcow2")
+    images.list()
+
+    assert images.groups["ubuntu"].base.to_dict()["torrent"] is True
+    assert images.groups["debian"].base.to_dict()["torrent"] is False

@@ -19,6 +19,7 @@ from .models import ImageInfo
 logger = logging.getLogger(__name__)
 
 LINBO_PATH = '/srv/linbo/images'
+LINBO_LOG_PATH = '/var/log/linuxmuster/linbo'
 TIMESTAMP_FMT = '%Y%m%d%H%M'
 DATE_UI_FMT = '%d/%m/%Y %H:%M'
 
@@ -91,6 +92,36 @@ class LinboImage:
             subprocess.check_output(['/usr/sbin/linbo-torrent', 'stop', os.path.join(self.path, f'{self.image}.torrent')])
         except Exception as e:
             logger.error(f'Unable to stop torrent service for {self.image} : {e.output}')
+
+    def _torrent_create(self):
+        """
+        Rebuild this image's torrent and hash file, in the background.
+
+        linbo-torrent create runs buildtorrent over the whole image, which
+        takes minutes on a large one: doing it inline would hold the caller,
+        and the HTTP request behind it, for the entire build. Nothing has to
+        be tracked beyond the result, which describes itself: <image>.torrent
+        and <image>.hash appear once it is done, and linbo-torrent status
+        lists the seeding session.
+        """
+
+        command = ['/usr/sbin/linbo-torrent', 'create', os.path.join(self.path, self.image)]
+
+        try:
+            os.makedirs(LINBO_LOG_PATH, exist_ok=True)
+            logfile = open(os.path.join(LINBO_LOG_PATH, f'torrent-create-{self.image}.log'), 'w')
+        except OSError as e:
+            # An unwritable log directory must not cost the torrent itself.
+            logger.warning(f'Unable to log torrent creation for {self.image} : {e}')
+            logfile = subprocess.DEVNULL
+
+        try:
+            subprocess.Popen(command, stdout=logfile, stderr=subprocess.STDOUT, start_new_session=True)
+        except OSError as e:
+            logger.error(f'Unable to start torrent creation for {self.image} : {e}')
+        finally:
+            if logfile is not subprocess.DEVNULL:
+                logfile.close()
 
     def load_info(self):
         """
@@ -244,8 +275,11 @@ class LinboImage:
                     with LMNFile(actual, 'w') as info:
                         info.write(data)
 
-                # Need to generate a new torrent file
-                if extra == "torrent":
+                # A torrent embeds the file name it describes, and the hash
+                # file describes that torrent: neither survives the rename.
+                # Both are dropped here and rebuilt by _torrent_create(), once
+                # the directory holding them has its final name.
+                if extra in ("torrent", "hash"):
                     os.unlink(actual)
 
                     continue
@@ -263,6 +297,7 @@ class LinboImage:
 
         # Refresh informations
         self.name = new_name
+        self.image = new_image_name
 
     def save_extras(self, data):
         """
@@ -310,6 +345,7 @@ class LinboImage:
             'prestart': self.extras['prestart'],
             'backup': self.backup,
             'diff': self.diff,
+            'torrent': os.path.exists(os.path.join(self.path, f'{self.image}.torrent')),
             'timestamp': self.timestamp,
             'date': self.date,
         }
@@ -433,6 +469,19 @@ class LinboImageGroup:
         self.name = new_name
         self.path = os.path.join(LINBO_PATH, self.name)
         self.backup_path = os.path.join(LINBO_PATH, self.name, 'backups')
+
+        # Only now: base.rename() moved the directory as its last step, and a
+        # torrent created before that would seed from a path about to vanish.
+        # Backups are left out on purpose, linbo-torrent only looks two levels
+        # below /srv/linbo/images and never sees them.
+        self.base._torrent_create()
+
+        if self.diff_image:
+            # load_info() would re-parse the .info file and raise on an
+            # incomplete one, which must not abort a rename that has already
+            # succeeded: the path is all that is stale here.
+            self.diff_image.path = self.path
+            self.diff_image._torrent_create()
 
     def delete(self):
         """
@@ -640,10 +689,18 @@ class LinboImageManager:
             raise ImageExistsError(os.path.join(LINBO_PATH, new_name))
 
         if group in self.groups:
+            # A torrent embeds the file name it describes and the hash file
+            # describes that torrent: copying them under a new name would only
+            # produce two files that lie. They are left out, and the rename()
+            # below rebuilds them. 'backups' is returned as a set: shutil
+            # matches names with `in`, and a bare string would also swallow
+            # every one of its substrings.
             shutil.copytree(
                 os.path.join(LINBO_PATH, group),
                 os.path.join(LINBO_PATH, new_name),
-                ignore=lambda x,y: 'backups'
+                ignore=lambda src, names: {'backups'} | {
+                    name for name in names if name.endswith(('.torrent', '.hash'))
+                },
             )
 
             old_prefix = f'{group}.'
