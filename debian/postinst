@@ -20,6 +20,36 @@ msg()
 }
 
 
+remove_stale_venv()
+{
+    # A venv records its interpreter version in pyvenv.cfg and never updates
+    # it, while bin/python3 is a symlink to /usr/bin/python3 and follows the
+    # system to the next release. When the two disagree, everything pip ever
+    # installed sits in an orphaned lib/python<old>/site-packages, off
+    # sys.path: the venv looks healthy and imports nothing. This happens on
+    # every Ubuntu LTS upgrade. Rebuilding is a no-op once done, so the check
+    # costs one grep and re-arms itself at the next release.
+    if [ ! -f /opt/linuxmuster/pyvenv.cfg ] ; then
+        return 0
+    fi
+
+    running=$(/usr/bin/python3 -c 'import sys; print("%d.%d" % sys.version_info[:2])')
+    if grep -qE "^version = ${running}\." /opt/linuxmuster/pyvenv.cfg ; then
+        return 0
+    fi
+
+    msg "Python is now $running, rebuilding the linuxmuster venv from scratch"
+    rm -rf /opt/linuxmuster
+
+    # linuxmuster-api7, -cli7 and -webui7 own their own requirements and must
+    # reinstall them into the new venv, whether or not they are upgraded in
+    # this very run: dpkg calls their postinst with 'triggered' at the end of
+    # it. Guarded because dpkg-trigger fails outside a maintainer script.
+    if ! dpkg-trigger linuxmuster-venv ; then
+        msg "Could not activate the linuxmuster-venv trigger. Reinstall linuxmuster-api7, linuxmuster-cli7 and linuxmuster-webui7 to repopulate the venv."
+    fi
+}
+
 create_linuxmuster_venv()
 {
     # Nothing to do if the linuxmuster's venv is already installed
@@ -36,6 +66,7 @@ case "$1" in
     install|configure)
         msg "Install Python requirements"
 
+        remove_stale_venv
         create_linuxmuster_venv
         . /opt/linuxmuster/bin/activate
         
