@@ -1,4 +1,4 @@
-linuxmuster-tools7 (7.3.49) lmn74; urgency=medium
+linuxmuster-tools7 (7.3.49) lmn73; urgency=medium
 
   * [lmnfile] Do not parse comment lines as CSV.  
 
