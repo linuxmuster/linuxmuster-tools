@@ -101,6 +101,13 @@ with LMNFile('/path/to/custom.csv', 'r', fieldnames=['col1', 'col2']) as f:
   #HEADERS#col1;col2;col3
   ```
 - **Empty lines and comments**: Lines starting with `#` and empty lines are preserved on write.
+  A comment is not parsed as CSV: the whole line, delimiters and quotes included, is returned
+  in the first field and the other fields are `None`, so that it can be written back unchanged.
+
+  ```python
+  # '#room1;pc1;aa:bb:cc' is read as
+  {'room': '#room1;pc1;aa:bb:cc', 'hostname': None, 'mac': None}
+  ```
 
 ### INI / Config
 

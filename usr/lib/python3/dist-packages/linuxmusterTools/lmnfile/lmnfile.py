@@ -299,6 +299,16 @@ class CSVLoader(LMNFile):
                     headers_found = True
                     continue
 
+                if line.lstrip().startswith('#'):
+                    # A comment is not CSV. Quoting the whole line for the
+                    # reader keeps it in the first field, delimiters, quotes
+                    # and spacing included, and write() puts it back
+                    # unchanged. Parsed as CSV it would lose everything after
+                    # the first delimiter, and a single unmatched quote would
+                    # swallow every row that follows it.
+                    trim.append('"' + line.rstrip('\r\n').replace('"', '""') + '"')
+                    continue
+
                 trim.append(self.delimiter.join(
                     [field.strip() for field in line.split(self.delimiter)]
                 ))

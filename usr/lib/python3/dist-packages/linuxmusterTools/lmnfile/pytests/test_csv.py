@@ -81,6 +81,99 @@ def test_comment_lines_preserved_on_write(tmp_path):
     assert '# comment line' in f.read_text()
 
 
+def test_comment_with_delimiter_round_trips(tmp_path):
+    """A comment holding the delimiter keeps everything after the first one."""
+
+    content = '#room1;pc1;aa:bb:cc\nroom2;pc2;dd:ee:ff\n'
+    f = make_csv(tmp_path, content)
+    with LMNFile(str(f), 'r', fieldnames=FIELDS) as lmn:
+        rows = lmn.read()
+        lmn.write(rows)
+    assert f.read_text() == content
+
+
+def test_comment_with_more_columns_than_fieldnames_round_trips(tmp_path):
+    """Columns past the last fieldname are part of the comment too."""
+
+    content = '#room1;pc1;aa:bb:cc;extra;more\nroom2;pc2;dd:ee:ff\n'
+    f = make_csv(tmp_path, content)
+    with LMNFile(str(f), 'r', fieldnames=FIELDS) as lmn:
+        rows = lmn.read()
+        lmn.write(rows)
+    assert f.read_text() == content
+
+
+def test_comment_without_delimiter_gains_no_separator(tmp_path):
+    """A comment is written as-is, without the trailing empty columns."""
+
+    content = '# just a comment\nroom1;pc1;aa:bb:cc\n'
+    f = make_csv(tmp_path, content)
+    with LMNFile(str(f), 'r', fieldnames=FIELDS) as lmn:
+        rows = lmn.read()
+        lmn.write(rows)
+    assert f.read_text() == content
+
+
+def test_comment_with_quotes_round_trips(tmp_path):
+    """Quotes inside a comment are content, not CSV quoting."""
+
+    content = '#room "1";pc1;aa:bb:cc\nroom2;pc2;dd:ee:ff\n'
+    f = make_csv(tmp_path, content)
+    with LMNFile(str(f), 'r', fieldnames=FIELDS) as lmn:
+        rows = lmn.read()
+        lmn.write(rows)
+    assert f.read_text() == content
+
+
+def test_unmatched_quote_in_comment_keeps_following_rows(tmp_path):
+    """An unmatched quote must not swallow the rows after the comment."""
+
+    content = '#room "1;pc1\nroom2;pc2;dd:ee:ff\nroom3;pc3;11:22:33\n'
+    f = make_csv(tmp_path, content)
+    with LMNFile(str(f), 'r', fieldnames=FIELDS) as lmn:
+        rows = lmn.read()
+        assert len(rows) == 3
+        assert rows[1]['hostname'] == 'pc2'
+        assert rows[2]['hostname'] == 'pc3'
+        lmn.write(rows)
+    assert f.read_text() == content
+
+
+def test_comment_is_read_as_a_single_field(tmp_path):
+    """The whole comment lands in the first field, the others stay empty."""
+
+    f = make_csv(tmp_path, '#room1;pc1;aa:bb:cc\nroom2;pc2;dd:ee:ff\n')
+    with LMNFile(str(f), 'r', fieldnames=FIELDS) as lmn:
+        rows = lmn.read()
+    assert rows[0]['room'] == '#room1;pc1;aa:bb:cc'
+    assert rows[0]['hostname'] is None
+    assert rows[0]['mac'] is None
+
+
+def test_header_marker_still_wins_over_comment_handling(tmp_path):
+    """#HEADERS# declares the fieldnames, it is not kept as a comment."""
+
+    content = '#HEADERS#room;hostname;mac\nroom1;pc1;aa:bb:cc\n'
+    f = make_csv(tmp_path, content)
+    with LMNFile(str(f), 'r') as lmn:
+        rows = lmn.read()
+    assert len(rows) == 1
+    assert rows[0]['room'] == 'room1'
+
+
+def test_data_rows_are_unaffected_by_comment_handling(tmp_path):
+    """Quoting a comment changes nothing for the rows around it."""
+
+    content = 'room1;pc1;aa:bb:cc\n#a comment;with;delimiters\nroom2;pc2;dd:ee:ff\n'
+    f = make_csv(tmp_path, content)
+    with LMNFile(str(f), 'r', fieldnames=FIELDS) as lmn:
+        rows = lmn.read()
+        assert rows[0]['mac'] == 'aa:bb:cc'
+        assert rows[2]['mac'] == 'dd:ee:ff'
+        lmn.write(rows)
+    assert f.read_text() == content
+
+
 def test_empty_lines_preserved_on_write(tmp_path):
     content = 'room1;pc1;aa:bb:cc\n\nroom2;pc2;dd:ee:ff\n'
     f = make_csv(tmp_path, content)
