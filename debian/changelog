@@ -1,3 +1,9 @@
+linuxmuster-tools7 (7.4.17) lmn74; urgency=medium
+
+  * [lmnfile] Do not parse comment lines as CSV. 
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Tue, 15 Sep 2026 22:57:36 +0200
+
 linuxmuster-tools7 (7.4.16) lmn74; urgency=medium
 
   * [linbo] Renaming or duplicating an image left behind a .torrent and a
