@@ -22,18 +22,13 @@ msg()
 
 create_linuxmuster_venv()
 {
-    msg "Setting up virtual env in /opt"
-    /usr/bin/python3 -m venv /opt/linuxmuster --system-site-packages
-}
-
-migrate_to_venv()
-{
-    # Checking if the linuxmuster's venv  is already installed
+    # Nothing to do if the linuxmuster's venv is already installed
     if [ -f /opt/linuxmuster/bin/activate ] ; then
       return
     fi
 
-    create_linuxmuster_venv
+    msg "Setting up virtual env in /opt"
+    /usr/bin/python3 -m venv /opt/linuxmuster --system-site-packages
 }
 
 
@@ -41,7 +36,7 @@ case "$1" in
     install|configure)
         msg "Install Python requirements"
 
-        migrate_to_venv
+        create_linuxmuster_venv
         . /opt/linuxmuster/bin/activate
         
         PYTHON3=/opt/linuxmuster/bin/python3
