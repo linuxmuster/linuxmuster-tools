@@ -490,9 +490,9 @@ def _parse_image_status_file(statusfile):
                 })
     return entries
 
-def last_sync(workstation, image):
+def last_sync(workstation, image, timestamp=True):
     """
-    Get the date of the last sync date for a workstation w.
+    Get the last synchronisation of a workstation for a given image.
 
     The status file is looked up without taking its case into account: its
     name is built by rsync-pre-download.sh from the reverse DNS resolution
@@ -501,12 +501,17 @@ def last_sync(workstation, image):
     directory, only one of them still being written to, so every variant is
     read and the most recent entry wins.
 
-    :param w: Workstation
-    :type w: string
+    :param workstation: Workstation
+    :type workstation: string
     :param image: Name of the image file
     :type image: string
-    :return: Last synchronisation time
-    :rtype: datetime
+    :param timestamp: Return the epoch of the entry (default), or the whole
+                      entry when False, to also get the version of the image
+                      which was applied.
+    :type timestamp: bool
+    :return: Epoch, or the entry as returned by _parse_image_status_file();
+             False in both cases if the host never synced that image
+    :rtype: float, dict or bool
     """
 
 
@@ -522,7 +527,7 @@ def last_sync(workstation, image):
             continue
 
         matches.extend(
-            entry['timestamp']
+            entry
             for entry in _parse_image_status_file(os.path.join(LINBO_LOG_PATH, filename))
             if entry['image'] in (image, diff_image)
         )
@@ -530,7 +535,12 @@ def last_sync(workstation, image):
     if not matches:
         return False
 
-    return linbo_timestamp_to_epoch(max(matches))
+    last = max(matches, key=lambda entry: entry['timestamp'])
+
+    if not timestamp:
+        return last
+
+    return linbo_timestamp_to_epoch(last['timestamp'])
 
 def get_host_image_status(log_dir=None):
     """
@@ -716,11 +726,13 @@ def last_sync_all(workstations):
             for host in grpDict['hosts']:
                 host['image'] = []
                 for image in workstations[group]['os']:
-                    last = last_sync(host['hostname'], image['baseimage'])
+                    entry = last_sync(host['hostname'], image['baseimage'], timestamp=False)
+                    last = linbo_timestamp_to_epoch(entry['timestamp']) if entry else False
                     date = last if last else "Never"
                     tmpDict = {
                             'date': date,
-                            'image': image['baseimage']
+                            'image': image['baseimage'],
+                            'imageVersion': entry['image_timestamp'] if entry else None
                     }
                     if date == "Never" or (today - date > 30*24*3600):
                         tmpDict['status'] = "danger"

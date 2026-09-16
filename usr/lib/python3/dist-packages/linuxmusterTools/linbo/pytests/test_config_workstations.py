@@ -131,7 +131,12 @@ def test_last_sync_all_sets_image_list(tmp_path):
     last_sync_all(workstations)
 
     host = workstations['grp1']['hosts'][0]
-    assert host['image'] == [{'date': 'Never', 'image': 'ubuntu.qcow2', 'status': 'danger'}]
+    assert host['image'] == [{
+        'date': 'Never',
+        'image': 'ubuntu.qcow2',
+        'imageVersion': None,
+        'status': 'danger',
+    }]
 
 
 def test_last_sync_all_does_not_use_legacy_shape(tmp_path):
@@ -160,6 +165,24 @@ def test_last_sync_all_reads_status_file(tmp_path):
 
     host = workstations['grp1']['hosts'][0]
     assert host['image'][0]['status'] == 'success'
+
+
+def test_last_sync_all_reports_the_applied_image_version(tmp_path):
+    write_start_conf(tmp_path)
+    workstations = {'grp1': {'hosts': [{'hostname': 'pc001'}]}}
+    group_os(workstations)
+
+    now = datetime.now().strftime('%Y%m%d%H%M')
+    (tmp_path / 'var_log_linbo' / 'pc001_image.status').write_text(
+        f'{now} applied: ubuntu.qcow2 "202601271107"\n'
+    )
+
+    last_sync_all(workstations)
+
+    host = workstations['grp1']['hosts'][0]
+    # Creation timestamp of the image the host actually runs, not the date
+    # of the sync itself.
+    assert host['image'][0]['imageVersion'] == '202601271107'
 
 
 # ── last_sync ────────────────────────────────────────────────────────────

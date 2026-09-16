@@ -203,9 +203,9 @@ in `/var/log/linuxmuster/linbo/<hostname>_image.status` (written by
 
 | Function | Description |
 |---|---|
-| `last_sync(workstation, image)` | Epoch of the most recent entry for that image, or `False` if the host never synced it. The image name is matched exactly, along with its `.qdiff` variant: `last_sync('client1', 'jammy.qcow2')` does *not* report a sync of `data-jammy.qcow2`. The file name is matched **case insensitively**, see below. |
+| `last_sync(workstation, image, timestamp=True)` | Epoch of the most recent entry for that image, or `False` if the host never synced it. With `timestamp=False`, the whole `{timestamp, action, image, image_timestamp}` entry is returned instead, to also get the version of the image which was applied. The image name is matched exactly, along with its `.qdiff` variant: `last_sync('client1', 'jammy.qcow2')` does *not* report a sync of `data-jammy.qcow2`. The file name is matched **case insensitively**, see below. |
 | `get_host_image_status(log_dir=None)` | Last logged status of **every** host found in the log directory, without knowing beforehand which image a host is supposed to run. Returns `{}` if the directory is missing. |
-| `last_sync_all(workstations)` | Enriches a `list_workstations()` dict: each host gets an `image` list of `{date, image, status}`, `status` being the bootstrap class `success`/`warning`/`danger` (fresher than 7 days, older than 7 days, older than 30 days or never). |
+| `last_sync_all(workstations)` | Enriches a `list_workstations()` dict: each host gets an `image` list of `{date, image, imageVersion, status}`. `imageVersion` is the creation timestamp of the image the host actually runs (`None` if it never synced it), not the date of the sync. `status` is the bootstrap class `success`/`warning`/`danger` (fresher than 7 days, older than 7 days, older than 30 days or never). |
 
 ```python
 >>> from linuxmusterTools.linbo import last_sync, get_host_image_status
