@@ -6,6 +6,7 @@ code accesses (entries[1], entries[3], ... split on '::'), since no sample
 log fixtures ship in this repo.
 """
 
+import logging
 from datetime import datetime, timedelta
 
 import pytest
@@ -15,6 +16,22 @@ from linuxmusterTools.common.parsers.sophomorix_log import (
     parse_add_log,
     parse_update_log,
 )
+
+
+@pytest.fixture
+def lmn_caplog(caplog):
+    """
+    linuxmusterTools disables propagation on its package logger, so the
+    handler caplog installs on the root logger never sees these records.
+    Attach it to the package logger instead.
+    """
+
+    logger = logging.getLogger('linuxmusterTools')
+    logger.addHandler(caplog.handler)
+    try:
+        yield caplog
+    finally:
+        logger.removeHandler(caplog.handler)
 
 
 NOW = int(datetime.now().timestamp())
@@ -95,11 +112,11 @@ def test_parse_kill_log_skips_blank_and_comment_lines(log_paths):
     assert len(result) == 1
 
 
-def test_parse_kill_log_skips_malformed_line_missing_fields(log_paths, caplog):
+def test_parse_kill_log_skips_malformed_line_missing_fields(log_paths, lmn_caplog):
     content = "\n".join(["utc::123::tooshort", _kill_line()])
     log_paths["kill"].write_text(content + "\n")
 
-    with caplog.at_level("WARNING"):
+    with lmn_caplog.at_level("DEBUG"):
         result = parse_kill_log(all=True)
 
     # Production quirk: result[timestamp] = [] is set *before* the
@@ -108,7 +125,7 @@ def test_parse_kill_log_skips_malformed_line_missing_fields(log_paths, caplog):
     # instead of being fully skipped. See production bug note.
     assert result.get(123) == []
     assert len(result[NOW]) == 1
-    assert "Malformed line in kill log" in caplog.text
+    assert "Malformed line in kill log" in lmn_caplog.text
 
 
 def test_parse_kill_log_skips_malformed_line_non_integer_timestamp(log_paths):
@@ -282,17 +299,17 @@ def test_parse_add_log_missing_file_raises(log_paths):
         parse_add_log(all=True)
 
 
-def test_parse_add_log_skips_malformed_line(log_paths, caplog):
+def test_parse_add_log_skips_malformed_line(log_paths, lmn_caplog):
     content = "\n".join(["utc::123::too::short", _add_line()])
     log_paths["add"].write_text(content + "\n")
 
-    with caplog.at_level("WARNING"):
+    with lmn_caplog.at_level("DEBUG"):
         result = parse_add_log(all=True)
 
     # Same stray-empty-list quirk as parse_kill_log (see other test note).
     assert result.get(123) == []
     assert len(result[NOW]) == 1
-    assert "Malformed line in add log" in caplog.text
+    assert "Malformed line in add log" in lmn_caplog.text
 
 
 def test_parse_add_log_epoch_lookup(log_paths):
@@ -349,21 +366,21 @@ def test_parse_update_log_list_changes_false_returns_empty_changes_dict(log_path
     assert result[NOW][0]["changes"] == {}
 
 
-def test_parse_update_log_malformed_change_drops_entire_entry(log_paths, caplog):
+def test_parse_update_log_malformed_change_drops_entire_entry(log_paths, lmn_caplog):
     # "GROUP:a:b" has two colons -> split(':') yields 3 parts, cannot unpack
     # into key, move -> ValueError -> the whole line (not just this change)
     # is skipped.
     changes = '"GROUP:a:b"'
     log_paths["update"].write_bytes((_update_line(changes=changes) + "\n").encode("utf-8"))
 
-    with caplog.at_level("WARNING"):
+    with lmn_caplog.at_level("DEBUG"):
         result = parse_update_log(all=True)
 
     # Same stray-empty-list quirk: result[timestamp] = [] is set before the
     # unpacking ValueError is raised, so the timestamp key survives with an
     # empty list even though the whole line was meant to be dropped.
     assert result == {NOW: []}
-    assert "Malformed line in update log" in caplog.text
+    assert "Malformed line in update log" in lmn_caplog.text
 
 
 def test_parse_update_log_skips_blank_and_comment_lines(log_paths):

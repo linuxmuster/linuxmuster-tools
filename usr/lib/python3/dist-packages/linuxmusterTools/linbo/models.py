@@ -2,6 +2,8 @@ import inspect
 import logging
 from dataclasses import dataclass, asdict
 
+logger = logging.getLogger(__name__)
+
 
 ### Images files
 
@@ -48,7 +50,7 @@ class Partition:
                     endkwargs[p] = v
                     break
             else:
-                logging.warning(f"Parameter {k} is not an Partition parameter in {config}.")
+                logger.debug(f"Parameter {k} is not an Partition parameter in {config}.")
         return cls(**endkwargs)
 
 @dataclass
@@ -84,7 +86,7 @@ class OS:
                     endkwargs[p] = v
                     break
             else:
-                logging.warning(f"Parameter {k} is not an OS parameter in {config}.")
+                logger.debug(f"Parameter {k} is not an OS parameter in {config}.")
         return cls(**endkwargs)
 
 @dataclass
@@ -118,7 +120,7 @@ class Linbo:
                     endkwargs[p] = v
                     break
             else:
-                logging.warning(f"Parameter {k} is not an Linbo parameter in {config}.")
+                logger.debug(f"Parameter {k} is not an Linbo parameter in {config}.")
         return cls(**endkwargs)
 
 @dataclass

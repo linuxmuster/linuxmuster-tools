@@ -2,6 +2,8 @@ import os
 import logging
 from datetime import datetime, timedelta
 
+logger = logging.getLogger(__name__)
+
 
 KILL_LOG_PATH = '/var/log/sophomorix/userlog/user-kill.log'
 ADD_LOG_PATH = '/var/log/sophomorix/userlog/user-add.log'
@@ -82,7 +84,7 @@ def parse_kill_log(all=False, epoch=None, today=False, lastweek=False):
                     'home_deleted': 'TRUE' in entries[10],
                 })
             except (IndexError, ValueError) as e:
-                logging.warning(f"Malformed line in kill log, skipping: {e}")
+                logger.debug(f"Malformed line in kill log, skipping: {e}")
 
     if epoch is not None:
         try:
@@ -168,7 +170,7 @@ def parse_add_log(all=False, epoch=None, today=False, lastweek=False):
                     'unid': entries[9] if entries[9] != '---' else None,
                 })
             except (IndexError, ValueError) as e:
-                logging.warning(f"Malformed line in add log, skipping: {e}")
+                logger.debug(f"Malformed line in add log, skipping: {e}")
 
     if epoch is not None:
         try:
@@ -272,7 +274,7 @@ def parse_update_log(all=False, epoch=None, today=False, lastweek=False, list_ch
                     'changes': changes,
                 })
             except (IndexError, ValueError) as e:
-                logging.warning(f"Malformed line in update log, skipping: {e}")
+                logger.debug(f"Malformed line in update log, skipping: {e}")
 
     if epoch is not None:
         try:
