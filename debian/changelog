@@ -1,3 +1,24 @@
+linuxmuster-tools7 (7.4.18) lmn74; urgency=medium
+
+  * [linbo] last_sync() takes a timestamp parameter. Left to its default
+    it returns the epoch of the last synchronisation, as before; set to
+    False it returns the whole status entry, which also carries the
+    creation timestamp of the image that was applied. last_sync_all()
+    uses it to add an imageVersion key to every entry of a host's image
+    list, saying which version of the image that host actually runs, or
+    None when it never synchronised it. Existing callers are untouched.
+  * [linbo] Unknown start.conf parameters are reported at debug level
+    through the module logger, instead of warning level through the root
+    one. A start.conf holding legacy LINBO 2.x keys logged one warning
+    per key and per file, and since the root logger is the one the
+    consumers configure, those warnings landed straight in the output of
+    lmncli: 37 lines for three groups before a single result was
+    printed.
+  * [common] Same treatment for the malformed lines skipped by the
+    sophomorix log parsers.
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Wed, 16 Sep 2026 21:10:17 +0200
+
 linuxmuster-tools7 (7.4.17) lmn74; urgency=medium
 
   * [lmnfile] Do not parse comment lines as CSV. 
