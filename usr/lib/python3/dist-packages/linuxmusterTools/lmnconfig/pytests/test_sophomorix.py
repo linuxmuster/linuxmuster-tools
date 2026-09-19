@@ -3,8 +3,6 @@ Tests for linuxmusterTools.lmnconfig.sophomorix:
 SchoolConfig, MultiOrderedDict, SophomorixIni, SophomorixConf.
 """
 
-import configparser
-
 import pytest
 
 import linuxmusterTools.lmnconfig.sophomorix as sophomorix_module
@@ -121,13 +119,17 @@ def test_sanitize_multiline_value_without_any_comments():
 # /usr/share/sophomorix/devel/sophomorix.ini file on this machine).
 # ---------------------------------------------------------------------------
 
+# The classroom-studentcomputer section reproduces the indentation of the
+# shipped sophomorix.ini: a tabulation on some keys, eight spaces on others.
 SYNTHETIC_INI = """
 [ROLE_USER]
 teacher = Teacher
 student = Student
 
 [computerrole.classroom-studentcomputer]
-somekey = somevalue
+\tDEVICE_SHORT = csc
+        COMPUTER_ACCOUNT = TRUE
+\tHOST_GROUP = FALSE
 
 [computerrole.faculty-teachercomputer]
 otherkey = othervalue
@@ -149,16 +151,11 @@ def synthetic_ini(tmp_path):
 @pytest.fixture
 def sophomorix_ini(monkeypatch, synthetic_ini):
     """
-    A real SophomorixIni instance, but with ConfigParser.read redirected to
-    the synthetic temp file instead of the hardcoded production path, so the
-    test is independent of what's actually installed on this machine.
+    A real SophomorixIni instance reading the synthetic temp file instead of
+    the hardcoded production path, so the test is independent of what's
+    actually installed on this machine.
     """
-    real_read = configparser.ConfigParser.read
-
-    def fake_read(self, filenames, encoding=None):
-        return real_read(self, str(synthetic_ini), encoding=encoding)
-
-    monkeypatch.setattr(configparser.ConfigParser, 'read', fake_read)
+    monkeypatch.setattr(sophomorix_module, 'SOPHOMORIX_INI_PATH', str(synthetic_ini))
     return SophomorixIni()
 
 
@@ -196,6 +193,22 @@ def test_sophomorix_ini_get_missing_section_raises_key_error(sophomorix_ini):
 def test_sophomorix_ini_get_missing_key_raises_key_error(sophomorix_ini):
     with pytest.raises(KeyError):
         sophomorix_ini.get('SOME_SECTION', 'no_such_key')
+
+
+def test_sophomorix_ini_space_indented_key_after_tab_is_not_swallowed(sophomorix_ini):
+    # configparser reads a line indented deeper than the previous key as a
+    # continuation of its value. Tabs are expanded so that both indentation
+    # styles of sophomorix.ini land on the same level.
+    section = sophomorix_ini.dict['computerrole.classroom-studentcomputer']
+
+    assert section['device_short'] == 'csc'
+    assert section['computer_account'] == 'TRUE'
+    assert section['host_group'] == 'FALSE'
+
+
+def test_sophomorix_ini_genuine_continuation_line_is_preserved(sophomorix_ini):
+    # A line indented further than eight columns is still a continuation.
+    assert sophomorix_ini.dict['SOME_SECTION']['multi'] == ['line1', 'line2']
 
 
 def test_sophomorix_ini_clientrole_is_hardcoded_list(sophomorix_ini):

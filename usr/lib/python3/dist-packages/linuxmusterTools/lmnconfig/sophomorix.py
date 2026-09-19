@@ -2,11 +2,14 @@ import os
 import logging
 from collections import OrderedDict
 from configparser import ConfigParser
+from pathlib import Path
 
 from linuxmusterTools.lmnfile import LMNFile
 
 
 logger = logging.getLogger(__name__)
+
+SOPHOMORIX_INI_PATH = "/usr/share/sophomorix/devel/sophomorix.ini"
 
 class SchoolConfig:
 
@@ -34,9 +37,9 @@ class MultiOrderedDict(OrderedDict):
 class SophomorixIni:
 
     def __init__(self):
-        self.path = "/usr/share/sophomorix/devel/sophomorix.ini"
+        self.path = SOPHOMORIX_INI_PATH
         self.data = ConfigParser(delimiters=("=",), dict_type=MultiOrderedDict, strict=False)
-        self.data.read(self.path)
+        self.data.read_string(self._read_expanded())
         self.sections = list(self.data.keys())
 
         self.dict = {}
@@ -57,6 +60,31 @@ class SophomorixIni:
             'iponly',
         ]
         self.userrole = list(self.dict['ROLE_USER'].keys())
+
+    def _read_expanded(self):
+        """
+        Read sophomorix.ini and expand its tabs.
+
+        The file indents its keys with a tabulation in most sections and
+        with eight spaces in others, sometimes within the same section.
+        configparser reads a line indented deeper than the previous key as
+        a continuation of its value, so a space indented key following a
+        tab indented one is swallowed into the value above it: 53 keys of
+        the shipped file are lost that way, the COMPUTER_ACCOUNT of all 15
+        computer roles among them. Expanding tabs to eight columns puts
+        both forms at the same level, and leaves genuine continuation
+        lines - indented further than eight columns - untouched.
+
+        :return: The content of the file, empty if it can not be read
+        :rtype: str
+        """
+
+
+        try:
+            return Path(self.path).read_text().expandtabs(8)
+        except OSError as e:
+            logger.warning(f"Could not read {self.path}: {e}")
+            return ""
 
     @staticmethod
     def sanitize(value):

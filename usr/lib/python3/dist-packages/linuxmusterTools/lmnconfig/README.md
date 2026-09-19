@@ -94,6 +94,8 @@ conf.data['global']['LANG']
 
 All three config classes fall back to an empty dict (`.config`/`.data` == `{}`) and log a warning if their file is missing.
 
+The file is read with its tabs expanded to eight columns. `sophomorix.ini` indents its keys with a tabulation in most sections and with eight spaces in others, sometimes within the same section, and `configparser` reads a line indented deeper than the previous key as a continuation of its value — 53 keys of the shipped file were lost that way, the `COMPUTER_ACCOUNT` of all 15 computer roles among them. Genuine continuation lines, indented further than eight columns, are unaffected. The path is the module-level `SOPHOMORIX_INI_PATH`.
+
 ### `webui.py` — `CustomFieldsConfig`
 
 Reads `/etc/linuxmuster/sophomorix/{school}/custom_fields.yml` and splits it per role.
