@@ -55,6 +55,8 @@ Each device `dict` is enriched on load with:
 
 - `school` — the school it was loaded for
 - `mac` — normalized to `AA:BB:CC:DD:EE:FF` uppercase colon form (`None` if invalid)
+- `macRaw` — the address exactly as written in the file, always a `str`. `mac` is `None` for a malformed address, which names nothing in an error message
+- `csvLine` — `int`, the physical line of the device in `devices.csv`, comments and empty lines included, so a caller can point at the line to fix
 - `pxeEnabled` — `bool`, `True` only if `pxeFlag` is a positive integer and `group` is not `nopxe` (case-insensitive)
 
 #### Methods

@@ -449,3 +449,50 @@ def test_check_conf_duplicate_mac(make_device_row, write_devices_csv):
 
     report = devicesmgr.check_conf()
     assert any('have the same mac AA:BB:CC:DD:EE:01' in line for line in report)
+
+
+# ---------------------------------------------------------------------------
+# macRaw and csvLine, added by load() for the callers that report errors
+# ---------------------------------------------------------------------------
+
+def test_load_keeps_the_raw_mac_beside_the_normalized_one(make_device_row, write_devices_csv):
+    write_devices_csv([make_device_row(mac='aa-bb-cc-dd-ee-01')])
+
+    device = Devices().devices[0]
+
+    assert device['mac'] == 'AA:BB:CC:DD:EE:01'
+    assert device['macRaw'] == 'aa-bb-cc-dd-ee-01'
+
+
+def test_load_keeps_the_raw_mac_when_it_is_invalid(make_device_row, write_devices_csv):
+    # normalize_mac() gives None, which names nothing in a report
+    write_devices_csv([make_device_row(mac='not-a-mac')])
+
+    device = Devices().devices[0]
+
+    assert device['mac'] is None
+    assert device['macRaw'] == 'not-a-mac'
+
+
+def test_load_numbers_the_lines(make_device_row, write_devices_csv):
+    write_devices_csv([
+        make_device_row(hostname='pc01'),
+        make_device_row(hostname='pc02', mac='AA:BB:CC:DD:EE:02', ip='10.16.1.11'),
+    ])
+
+    devices = Devices().devices
+
+    assert [d['csvLine'] for d in devices] == [1, 2]
+
+
+def test_load_line_numbers_account_for_comments(make_device_row, write_devices_csv, devices_path):
+    path = devices_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    row = ';'.join(make_device_row(hostname='pc01'))
+    path.write_text(f"# a comment\n{row}\n", encoding='utf-8')
+
+    devices = Devices().devices
+
+    # The comment is dropped from the list but still counts as a line
+    assert len(devices) == 1
+    assert devices[0]['csvLine'] == 2

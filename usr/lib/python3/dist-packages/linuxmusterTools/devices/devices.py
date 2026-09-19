@@ -37,11 +37,20 @@ class Devices:
 
         try:
             with LMNFile(self.path, 'r') as devices_csv:
-                for device in devices_csv.read():
+                rows = devices_csv.read()
+                for device, csv_line in zip(rows, devices_csv.line_numbers):
                     if not device['room'].startswith('#'):
                         # TODO: special cases for linbo docker
                         device['school'] = self.school
-                        device['mac'] = name_checker.normalize_mac(device['mac'])
+                        # The address as written in the file, kept beside the
+                        # normalized one: normalize_mac() returns None on a
+                        # malformed address, and a caller reporting it would
+                        # have nothing left to name.
+                        device['macRaw'] = device['mac'] or ''
+                        device['mac'] = name_checker.normalize_mac(device['macRaw'])
+                        # Physical line in devices.csv, so that a caller can
+                        # point at the line to fix.
+                        device['csvLine'] = csv_line
                         device['pxeEnabled'] = self._check_pxe_flag(device)
 
                         self.devices.append(device)
