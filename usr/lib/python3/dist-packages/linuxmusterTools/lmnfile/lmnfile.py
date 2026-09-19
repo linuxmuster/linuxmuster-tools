@@ -284,11 +284,16 @@ class CSVLoader(LMNFile):
     def __enter__(self):
         self.fix_bom()
         self.opened = open(self.file, 'r', encoding=self.encoding)
+        # Physical line number of each row read(), 1-based and parallel to
+        # it. A HEADERS marker produces no row, so the two would otherwise
+        # drift apart, and a caller reporting an error has no way back to
+        # the line the user has to fix.
+        self.line_numbers = []
         if 'r' in self.mode or '+' in self.mode:
             # Removing leading and trailing spaces for all fields
             trim = []
             headers_found = False
-            for line in self.opened:
+            for line_number, line in enumerate(self.opened, start=1):
 
                 if not headers_found and HEADER_MARKER in line:
                     # Only the first HEADERS marker will be used
@@ -307,11 +312,13 @@ class CSVLoader(LMNFile):
                     # the first delimiter, and a single unmatched quote would
                     # swallow every row that follows it.
                     trim.append('"' + line.rstrip('\r\n').replace('"', '""') + '"')
+                    self.line_numbers.append(line_number)
                     continue
 
                 trim.append(self.delimiter.join(
                     [field.strip() for field in line.split(self.delimiter)]
                 ))
+                self.line_numbers.append(line_number)
             self.data = csv.DictReader(
                 (line if len(line) > 3 else EMPTY_LINE_MARKER for line in trim),
                 delimiter = self.delimiter,

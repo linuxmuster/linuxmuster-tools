@@ -108,6 +108,17 @@ with LMNFile('/path/to/custom.csv', 'r', fieldnames=['col1', 'col2']) as f:
   # '#room1;pc1;aa:bb:cc' is read as
   {'room': '#room1;pc1;aa:bb:cc', 'hostname': None, 'mac': None}
   ```
+- **Physical line numbers**: `line_numbers` holds the 1-based line of each row of `read()`,
+  in the same order. Comments and empty lines are rows and count; a `#HEADERS#` marker
+  produces no row, so without this the two would drift apart and a caller reporting an
+  error would have no way back to the line the user has to fix. Empty in write mode.
+
+  ```python
+  with LMNFile('/etc/linuxmuster/sophomorix/default-school/devices.csv', 'r') as f:
+      rows = f.read()
+      for row, line in zip(rows, f.line_numbers):
+          ...
+  ```
 
 ### INI / Config
 

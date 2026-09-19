@@ -264,3 +264,38 @@ def test_read_with_custom_delimiter(tmp_path):
         rows = lmn.read()
     assert rows[0]['room'] == 'room1'
     assert rows[0]['hostname'] == 'pc1'
+
+
+# ── Physical line numbers ─────────────────────────────────────────────────────
+
+def test_line_numbers_match_rows(tmp_path):
+    f = make_csv(tmp_path, 'room1;pc1;aa:bb:cc\nroom2;pc2;dd:ee:ff\n')
+    with LMNFile(str(f), 'r', fieldnames=FIELDS) as lmn:
+        rows = lmn.read()
+        assert lmn.line_numbers == [1, 2]
+    assert len(rows) == len(lmn.line_numbers)
+
+
+def test_line_numbers_count_comments_and_empty_lines(tmp_path):
+    content = '# a comment\nroom1;pc1;aa:bb:cc\n\nroom2;pc2;dd:ee:ff\n'
+    f = make_csv(tmp_path, content)
+    with LMNFile(str(f), 'r', fieldnames=FIELDS) as lmn:
+        rows = lmn.read()
+        assert lmn.line_numbers == [1, 2, 3, 4]
+    assert len(rows) == len(lmn.line_numbers)
+
+
+def test_line_numbers_skip_the_headers_marker(tmp_path):
+    content = '#HEADERS#room;hostname;mac\nroom1;pc1;aa:bb:cc\nroom2;pc2;dd:ee:ff\n'
+    f = make_csv(tmp_path, content)
+    with LMNFile(str(f), 'r') as lmn:
+        rows = lmn.read()
+        # The marker produces no row, so the first row is on physical line 2
+        assert lmn.line_numbers == [2, 3]
+    assert len(rows) == len(lmn.line_numbers)
+
+
+def test_line_numbers_empty_in_write_mode(tmp_path):
+    f = make_csv(tmp_path, 'room1;pc1;aa:bb:cc\n')
+    with LMNFile(str(f), 'w', fieldnames=FIELDS) as lmn:
+        assert lmn.line_numbers == []
