@@ -1,10 +1,10 @@
-# Release Notes – linuxmuster-tools 7.4
+# 🚀 Release Notes – linuxmuster-tools 7.4
 
 **Package version:** 7.4.1 – 7.4.18
 
 ---
 
-## Overview
+## 📋 Overview
 
 Version 7.4 has been a major feature and hardening cycle for the shared
 library. Four areas dominate: a full LINBO remote-control / host-status /
@@ -18,7 +18,7 @@ duplicated in those projects has moved here.
 
 ---
 
-## LINBO remote control & host status
+## 🖥️ LINBO remote control & host status
 
 - New `LinboRemote` (`linbo_sync.py`): builds and runs `linbo-remote` commands
   against a group, a room, or an explicit list of clients (IP or hostname),
@@ -59,7 +59,7 @@ duplicated in those projects has moved here.
 
 ---
 
-## LINBO images, torrents and start.conf files
+## 💾 LINBO images, torrents and start.conf files
 
 - Image manager: `.hash` files are now recognized as non-editable extras
   (previously left orphaned on delete/rename); new `ImageExistsError` /
@@ -89,7 +89,7 @@ duplicated in those projects has moved here.
 
 ---
 
-## Password management
+## 🔑 Password management
 
 - `LMNUser` gained `set_actual_password()` (direct SamDB write, bypassing
   `sophomorix-passwd`/`smbpasswd`), `set_first_password()`,
@@ -101,7 +101,7 @@ duplicated in those projects has moved here.
 
 ---
 
-## LDAP / group management hardening
+## 👥 LDAP / group management hardening
 
 - **Breaking change:** removed the deprecated `LMNMgmtGroup` class, superseded
   by `samba_util.GroupManager`, which reports LDAP errors instead of
@@ -137,7 +137,7 @@ duplicated in those projects has moved here.
 
 ---
 
-## Schoolclasses and devices
+## 🏫 Schoolclasses and devices
 
 - The `<class>-teachers` / `-students` / `-parents` subgroups are now kept in
   sync in `sophomorixAdmins` too, can be deleted, and their orphans are
@@ -152,7 +152,7 @@ duplicated in those projects has moved here.
 
 ---
 
-## Quotas fix (breaking change)
+## ⚠️ Quotas fix (breaking change)
 
 `sophomorixCloudQuotaCalculated` and `sophomorixMailQuotaCalculated` were
 typed as `list` instead of `str` in `LMNUserModel`, `LMNRawUserModel` and
@@ -163,7 +163,7 @@ displayed by the webui. **Any consumer of these two fields now gets a plain
 
 ---
 
-## Packaging and the shared venv
+## 📦 Packaging and the shared venv
 
 - `configobj`, `jinja2`, `python-ldap`, `magic`, `pexpect` and `pyyaml` are
   declared as apt dependencies instead of `requirements.txt`: pip installs
@@ -180,7 +180,7 @@ displayed by the webui. **Any consumer of these two fields now gets a plain
 
 ---
 
-## Logging
+## 📝 Logging
 
 - Unknown `start.conf` parameters are reported at debug level through the
   module logger, instead of warning level through the root one. A
@@ -193,7 +193,7 @@ displayed by the webui. **Any consumer of these two fields now gets a plain
 
 ---
 
-## Miscellaneous
+## 🔧 Miscellaneous
 
 - `lmnfile`: `ConfigLoader` writes are now atomic; `ConfigLoader` accepts
   negative values (a quota of `-1` stayed a string and left the quota tab
@@ -214,7 +214,7 @@ displayed by the webui. **Any consumer of these two fields now gets a plain
 
 ---
 
-## Upgrade notes
+## ⚠️ Upgrade notes
 
 The following changes are **breaking** for any code calling into
 `linuxmuster-tools` directly (the API, the webui and the CLI have all been
