@@ -50,6 +50,20 @@ class SophomorixIni:
 
         self.computerrole = [s.replace('computerrole.', '') for s in self.sections if s.startswith('computerrole')]
 
+        # Whether a computer role gets a real machine account in the AD, as
+        # opposed to a DNS node only. This is what decides if the NetBIOS
+        # limits apply to the hostname of a device: an account name is a
+        # sAMAccountName, capped at 15 characters plus the trailing '$'.
+        # https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/naming-conventions-for-computer-domain-site-ou
+        self.computer_account = {}
+        for role in self.computerrole:
+            value = self.dict[f'computerrole.{role}'].get('computer_account')
+            if value is None:
+                logger.warning(
+                    f"computerrole.{role} has no COMPUTER_ACCOUNT in {self.path}, assuming FALSE"
+                )
+            self.computer_account[role] = str(value).strip().upper() == 'TRUE'
+
         # TODO: should be loaded, not hardcoded
         self.clientrole = [
             'classroom-teachercomputer',

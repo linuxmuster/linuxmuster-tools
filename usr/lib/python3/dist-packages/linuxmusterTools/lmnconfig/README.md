@@ -79,6 +79,7 @@ ini = SophomorixIni()
 ini.get('ROLE_USER', 'teacher')
 ini.userrole          # ['teacher', 'student', ...], keys of section ROLE_USER
 ini.computerrole       # computer roles, 'computerrole.' prefix stripped
+ini.computer_account   # {role: bool}, whether the role gets an AD machine account
 ini.clientrole         # hardcoded list of LINBO client roles
 
 conf = SophomorixConf()
@@ -93,6 +94,8 @@ conf.data['global']['LANG']
 | `MultiOrderedDict` | — | `OrderedDict` variant used by `SophomorixIni`: re-assigning a list key extends it instead of overwriting it |
 
 All three config classes fall back to an empty dict (`.config`/`.data` == `{}`) and log a warning if their file is missing.
+
+`SophomorixIni.computer_account` maps every computer role to the `COMPUTER_ACCOUNT` flag of its `[computerrole.*]` section: `True` when the role gets a real machine account in the AD, `False` when it only gets a DNS node. This is what decides whether the NetBIOS limits apply to the hostname of a device — an account name is a `sAMAccountName`, [capped at 15 characters plus the trailing `$`](https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/naming-conventions-for-computer-domain-site-ou). A role declaring no `COMPUTER_ACCOUNT` is reported as `False` and logged as a warning.
 
 The file is read with its tabs expanded to eight columns. `sophomorix.ini` indents its keys with a tabulation in most sections and with eight spaces in others, sometimes within the same section, and `configparser` reads a line indented deeper than the previous key as a continuation of its value — 53 keys of the shipped file were lost that way, the `COMPUTER_ACCOUNT` of all 15 computer roles among them. Genuine continuation lines, indented further than eight columns, are unaffected. The path is the module-level `SOPHOMORIX_INI_PATH`.
 

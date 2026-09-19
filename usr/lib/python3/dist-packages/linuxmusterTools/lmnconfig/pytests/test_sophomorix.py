@@ -211,6 +211,19 @@ def test_sophomorix_ini_genuine_continuation_line_is_preserved(sophomorix_ini):
     assert sophomorix_ini.dict['SOME_SECTION']['multi'] == ['line1', 'line2']
 
 
+def test_sophomorix_ini_computer_account_is_a_bool_per_role(sophomorix_ini):
+    assert sophomorix_ini.computer_account['classroom-studentcomputer'] is True
+
+
+def test_sophomorix_ini_computer_account_defaults_to_false_when_absent(sophomorix_ini):
+    # faculty-teachercomputer declares no COMPUTER_ACCOUNT in the synthetic file
+    assert sophomorix_ini.computer_account['faculty-teachercomputer'] is False
+
+
+def test_sophomorix_ini_computer_account_covers_every_role(sophomorix_ini):
+    assert set(sophomorix_ini.computer_account) == set(sophomorix_ini.computerrole)
+
+
 def test_sophomorix_ini_clientrole_is_hardcoded_list(sophomorix_ini):
     assert sophomorix_ini.clientrole == [
         'classroom-teachercomputer',
