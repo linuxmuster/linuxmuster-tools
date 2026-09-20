@@ -1,10 +1,44 @@
 #! /opt/linuxmuster/bin/python3
 
+"""
+DEPRECATED - kept for manual use only, nothing calls it any more.
+
+debian/postinst used to run this on every install and upgrade, sweeping every
+schoolclass of every school. That sweep is now redundant: the subgroups of a
+class are maintained in line by the sophomorix-add/-update hooks, and by the
+lmncli callback sophomorix-class makes on --addadmins/--removeadmins and
+--addmembers/--removemembers (sophomorix4 >= 7.4.4). It was also slow and it
+failed the whole package configuration whenever LDAP was down.
+
+To repair a class that drifted anyway - a direct LDAP edit, a hook that failed -
+use the on demand command instead:
+
+    lmncli schoolclass sync -c <class> -s <school> --groups
+
+The sweep this script used to do at every upgrade has an exact equivalent, to
+run by hand when it is actually wanted:
+
+    lmncli schoolclass sync --all -s <school>
+
+Note that the second half of this script never worked: LMNParentsGroup('')
+reaches _check_ou() before self.student is set, so it raises AttributeError in
+the very case it was meant to fix - an actually missing Student-Parents OU.
+That OU is created on demand by any real LMNParentsGroup(<student>) anyway.
+
+May be removed in a future release.
+"""
+
+
 from pathlib import Path
 
 from linuxmusterTools.ldapconnector import LMNLdapReader as lr, LMNParentsGroup, LMNSchoolclass
 from linuxmusterTools.common import lprint
 
+
+lprint.warning(
+    'This script is deprecated and no longer run by the package. '
+    'Use "lmncli schoolclass sync" to repair a schoolclass.'
+)
 
 if not Path('/etc/linuxmuster/webui/config.yml').is_file():
     lprint.info('New installation detected, I will not check the LDAP groups.')

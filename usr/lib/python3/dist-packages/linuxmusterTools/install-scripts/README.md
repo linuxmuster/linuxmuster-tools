@@ -10,7 +10,7 @@ Unlike the other `linuxmusterTools` modules, this directory is **not an importab
 
 | Path | Role |
 |---|---|
-| `create_students_groups.py` | Rebuilds schoolclass/parents group membership in LDAP. Run once by `debian/postinst`. |
+| `create_students_groups.py` | **Deprecated.** Rebuilt schoolclass/parents group membership in LDAP. No longer run by `debian/postinst`; nothing calls it. |
 | `sophomorix-hooks/sophomorix-add.d/00-update-schoolclasses-groups.py` | Sophomorix `add` hook template. |
 | `sophomorix-hooks/sophomorix-update.d/00-update-schoolclasses-groups.py` | Sophomorix `update` hook template. |
 | `sophomorix-hooks/sophomorix-kill.d/00-update-schoolclasses-groups.py` | Sophomorix `kill` hook template. |
@@ -27,7 +27,22 @@ Unlike the other `linuxmusterTools` modules, this directory is **not an importab
 
 ## `create_students_groups.py`
 
-Iterates all schoolclasses and calls `LMNSchoolclass.fill_group_members()` on each, to (re)build the `<class>-students`, `<class>-teachers` and `<class>-parents` groups. It then instantiates a dummy `LMNParentsGroup` per school, which as a side effect ensures the `Student-Parents` OU/group structure exists for every school.
+> **Deprecated, may be removed in a future release.** Nothing calls this script any more — `debian/postinst` used to run it on every install and upgrade. Use `lmncli schoolclass sync -c <class> -s <school> --groups` to repair one class, or `lmncli schoolclass sync --all -s <school>` for the full sweep this script used to do.
+
+Iterates all schoolclasses and calls `LMNSchoolclass.fill_group_members()` on each, to (re)build the `<class>-students`, `<class>-teachers` and `<class>-parents` groups. It then instantiates a dummy `LMNParentsGroup` per school, which was meant to ensure the `Student-Parents` OU exists for every school.
+
+Why the sweep is redundant:
+
+| Path | What keeps the subgroups in sync |
+|---|---|
+| `sophomorix-add` / `-update` | The hooks below; instantiating `LMNSchoolclass` creates any missing subgroup |
+| Teacher joins/leaves a class | `sophomorix-class --addadmins/--removeadmins` calls back `lmncli schoolclass sync` |
+| Student added/removed outside an import | `sophomorix-class --addmembers/--removemembers`, same callback |
+| Class deleted | `sophomorix-class` calls `lmncli schoolclass cleanup` |
+
+Both callbacks need **sophomorix4 >= 7.4.4**, which is guaranteed in practice: an installation pulls `linuxmuster-webui7`, which depends on sophomorix.
+
+The `LMNParentsGroup('')` half never worked: `load_data()` calls `_check_ou()` before assigning `self.student`, and `_check_ou()` reads `self.student['dn']`, so an actually missing OU raises `AttributeError` — caught and logged as a failure. The OU is created on demand by any real `LMNParentsGroup(<student>)`.
 
 Errors are caught and logged with `lprint.danger()` rather than raised, so a failure here does not abort the package installation.
 
@@ -38,7 +53,7 @@ Errors are caught and logged with `lprint.danger()` rather than raised, so a fai
     /usr/lib/python3/dist-packages/linuxmusterTools/install-scripts/create_students_groups.py
 ```
 
-No arguments. In practice you never run this by hand — `debian/postinst` invokes it automatically on `install|configure`, and only when `/etc/linuxmuster/webui/config.yml` already exists. On a brand-new install that file is absent (there is no LDAP tree yet to check), so the script is skipped; it only runs on package **upgrades** of an already-provisioned server.
+No arguments. It prints a deprecation warning and, when `/etc/linuxmuster/webui/config.yml` is absent (a brand-new install, no LDAP tree to check yet), does nothing.
 
 ---
 
