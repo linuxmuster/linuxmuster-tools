@@ -7,7 +7,9 @@ from linuxmusterTools.passwords import MinLengthRule
 from linuxmusterTools.ldapconnector.writers import user as user_module
 from linuxmusterTools.ldapconnector.writers.user import (
     LMNUser, LMNStudent, LMNTeacher, LMNStaff, LMNSchoolAdmin, LMNGlobalAdmin,
+    LMNParentsGroup,
 )
+from linuxmusterTools.ldapconnector.ldap_writer import LdapWriter
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router
 
 
@@ -340,3 +342,57 @@ class TestRoleChecks:
         monkeypatch.setattr(router, 'get', lambda url, **kw: dict(data))
         with pytest.raises(Exception, match='is not a globaladministrator'):
             LMNGlobalAdmin('johndoe')
+
+
+class TestParentsGroupOu:
+    """
+    LMNParentsGroup.load_data() checks the Student-Parents OU before it reads
+    the student, and a dummy LMNParentsGroup('') never reads one at all: the
+    check must not depend on a member.
+    """
+
+
+    @pytest.fixture(autouse=True)
+    def fixed_context(self, monkeypatch):
+        monkeypatch.setattr(user_module, 'LDAP_CONTEXT', 'OU=SCHOOLS,DC=linuxmuster,DC=lan')
+
+    @pytest.fixture
+    def added_ous(self, monkeypatch):
+        added = []
+        monkeypatch.setattr(LdapWriter, '_add_ou', lambda self, dn: added.append(dn))
+        return added
+
+    def test_dummy_creates_the_missing_ou_from_the_school(self, monkeypatch, mock_connect, added_ous):
+        monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: ['Parents-Whatever'])
+
+        LMNParentsGroup('')
+
+        assert added_ous == [
+            'OU=Student-Parents,OU=Parents,OU=default-school,OU=SCHOOLS,DC=linuxmuster,DC=lan'
+        ]
+
+    def test_dummy_creates_the_ou_of_a_secondary_school(self, monkeypatch, mock_connect, added_ous):
+        monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: [])
+
+        LMNParentsGroup('', school='school2')
+
+        assert added_ous == [
+            'OU=Student-Parents,OU=Parents,OU=school2,OU=SCHOOLS,DC=linuxmuster,DC=lan'
+        ]
+
+    def test_nothing_is_created_when_the_ou_is_already_there(self, monkeypatch, mock_connect, added_ous):
+        monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: ['Student-Parents'])
+
+        LMNParentsGroup('')
+
+        assert added_ous == []
+
+    def test_an_empty_parents_ou_does_not_raise(self, monkeypatch, mock_connect, added_ous):
+        # getval() gives None when the Parents OU holds no child OU yet.
+        monkeypatch.setattr(router, 'getval', lambda url, attr, **kw: None)
+
+        LMNParentsGroup('')
+
+        assert added_ous == [
+            'OU=Student-Parents,OU=Parents,OU=default-school,OU=SCHOOLS,DC=linuxmuster,DC=lan'
+        ]

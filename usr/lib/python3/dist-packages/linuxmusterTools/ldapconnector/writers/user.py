@@ -8,6 +8,7 @@ from ..ldap_writer import LdapWriter
 from ..urls.ldaprouter import router
 from linuxmusterTools.common import lprint, spinner
 from linuxmusterTools.common.checks import NameChecker
+from linuxmusterTools.lmnconfig import LDAP_CONTEXT
 from ..models import LMNUserModel, check_password
 from .group import LMNGroupCommon
 from .schoolclass import LMNSchoolclass
@@ -603,10 +604,16 @@ class LMNParentsGroup(LMNGroupCommon):
         super().__init__(self.cn, school=school)
 
     def _check_ou(self):
-        # Check if the Student-Parents OU exists
-        if not 'Student-Parents' in self.lr.getval('/ou/parents', 'ou', school=self.school):
-            domain = ','.join(self.student['dn'].split(',')[3:])
-            new_ou = f"OU=Student-Parents,OU=Parents,{domain}"
+        """
+        Create the Student-Parents OU of the school if it is missing.
+        """
+
+
+        # getval() returns None when the Parents OU holds no child OU yet.
+        parents_ous = self.lr.getval('/ou/parents', 'ou', school=self.school) or []
+
+        if 'Student-Parents' not in parents_ous:
+            new_ou = f"OU=Student-Parents,OU=Parents,OU={self.school},{LDAP_CONTEXT}"
             self.lw._add_ou(new_ou)
 
     def load_data(self):
