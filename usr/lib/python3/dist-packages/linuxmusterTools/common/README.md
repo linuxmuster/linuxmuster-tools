@@ -1,6 +1,6 @@
 # common
 
-Shared low-level helpers for [linuxmuster.net](https://www.linuxmuster.net): name/certificate validation, colored shell output, value conversion, sophomorix log parsing and a couple of small utilities used across the other `linuxmusterTools` modules.
+Shared low-level helpers for [linuxmuster.net](https://www.linuxmuster.net): name/certificate validation, colored shell output, value conversion, natural sorting, sophomorix log parsing and a couple of small utilities used across the other `linuxmusterTools` modules.
 
 `common` has no single entry point like `LMNLdapReader` or `LMNFile`. Instead, its `__init__.py` re-exports a handful of ready-to-use instances and helper functions directly under `linuxmusterTools.common`.
 
@@ -135,6 +135,59 @@ convert_sophomorix_status('T')                    # 'Tolerated'
 | `format_size(num, suffix='B', base=2)` | Human-readable size, binary (`base=2`, Ki/Mi/Gi...) or decimal (`base=10`, K/M/G...) |
 | `convert_sophomorix_time(t)` | Sophomorix timestamp (`20081030125303.0Z`) → readable date; returns the input unchanged if it cannot be parsed |
 | `convert_sophomorix_status(s)` | Sophomorix status letter (`T`, `D`, `K`, ...) → readable label; returns `'Unknown'` for unrecognized codes |
+
+---
+
+## Natural sorting — `natural_key` / `sort_naturally`
+
+Names ending with a number (hosts, groups, rooms, schoolclasses, images) come
+out of a plain `sorted()` in the wrong order as soon as the numbers do not have
+the same number of digits: `m10` lands before `m5`. These two helpers sort them
+the way a human reads them.
+
+```python
+from linuxmusterTools.common import natural_key, sort_naturally
+
+sort_naturally(['m10', 'm5', 'm1'])                         # ['m1', 'm5', 'm10']
+sort_naturally(['m1', 'm05', 'm0020', 'm010', 'm5'])        # ['m0020', 'm05', 'm010', 'm1', 'm5']
+sort_naturally(['r100-pc10', 'r100-pc5'])                   # ['r100-pc5', 'r100-pc10']
+sort_naturally(['10.0.0.10', '10.0.0.2'])                   # ['10.0.0.2', '10.0.0.10']
+sort_naturally(hosts, key=lambda host: host['hostname'])     # list of dicts
+sorted(devices, key=lambda d: natural_key(d.hostname))       # or as a sorted() key
+```
+
+| Function | Description |
+|---|---|
+| `natural_key(value)` | Comparable key to pass to `sorted()`/`min()`/`max()`. Splits the string into text and number segments, compares numbers as numbers and text case-insensitively, deeper padding first. `None` sorts last, anything which is not a string is sorted on its `str()`. |
+| `sort_naturally(items, key=None, reverse=False)` | Returns a new sorted list. `key` is a callable returning the value to sort an item on, like `sorted()`'s own. |
+
+Every segment is compared, not only the first number, so `r100-pc5` and
+`r100-pc10` are ordered on the part which actually differs.
+
+Leading zeros are a naming convention of their own, not noise. Numbers are
+grouped by how deep their padding is, deepest first, and values are compared
+only inside a group, so a site numbering its machines `m0020`, `m05` to `m012`
+and `m1` to `m5` gets one block per padding depth, each block in numeric order:
+
+| Block | Names | Ordered on |
+|---|---|---|
+| two zeros | `m0020` | value |
+| one zero | `m05`, `m09`, `m010`, `m012` | value |
+| unpadded | `m1`, `m2`, `m5`, `m11`, `m140` | value |
+
+The rule is applied per segment, so the padding of `r01-pc1` never influences
+its second number, and a run made of zeros only keeps its last zero as its
+value, which makes a bare `0` a value rather than padding. This is deliberate
+and diverges from `sort -V`, `ls -v` and JavaScript's `Intl.Collator`, which all
+read `m05` as the plain number 5: a frontend has to reproduce this rule rather
+than rely on `Intl.Collator`, whose result additionally depends on the browser
+locale.
+
+Two names holding the same segments (`m5` and `M5`) are
+separated by the original string, which keeps the order total and stable. The
+comparison is pure Unicode case folding with no locale-dependent collation: the
+result never depends on the caller's locale (`ä` sorts after `z`). A `-` is read
+as a separator, never as a sign.
 
 ---
 

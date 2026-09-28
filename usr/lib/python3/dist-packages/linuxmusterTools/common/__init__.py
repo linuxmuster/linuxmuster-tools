@@ -1,4 +1,5 @@
 from .convert import *
+from .sorting import *
 from .checks import *
 from .parsers import *
 from .color_shell import *
