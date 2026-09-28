@@ -61,7 +61,7 @@ class LdapConnector:
         if not webui_import or os.getuid() == 0:
             if not is_samba_provisioned():
                 raise LdapNotProvisionedError(
-                    'Samba/LDAP is not provisioned yet (.secret/admnistrator missing) - run linuxmuster-setup first.'
+                    'Samba/LDAP is not provisioned yet (.secret/administrator missing) - run linuxmuster-setup first.'
                 )
 
             # Using Administrator password to be able to write data in LDAP
