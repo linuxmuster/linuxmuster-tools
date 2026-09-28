@@ -3,10 +3,13 @@
 from pathlib import Path
 
 from linuxmusterTools.ldapconnector import LMNLdapReader as lr, LMNParentsGroup, LMNSchoolclass
-from linuxmusterTools.common import lprint
+from linuxmusterTools.common import lprint, is_samba_provisioned
 
 
-if not Path('/etc/linuxmuster/webui/config.yml').is_file():
+# The webui config alone is no sign of a set up server: linuxmuster-webui7
+# writes it at install time, so it already exists on a server prepared for
+# linuxmuster-setup, where connecting to LDAP raises LdapNotProvisionedError.
+if not Path('/etc/linuxmuster/webui/config.yml').is_file() or not is_samba_provisioned():
     lprint.info('New installation detected, I will not check the LDAP groups.')
 else:
     # Checking groups like 7a-teachers, 7a-parents, 7a-students.
