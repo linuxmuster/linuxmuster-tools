@@ -189,6 +189,24 @@ future terminal-in-browser feature the exact session name to use.
 
 ---
 
+## Change tracker
+
+`LinboChangeTracker(school).get_changes(since_cursor)` tells a client what changed since its last call, from the files' mtimes only: the hosts (`devices.csv`), the start.conf and GRUB cfg of the school's groups, and the DHCP configuration (`devices.csv` or `subnets.conf`). `'0'` returns a full snapshot; the returned `nextCursor` is the value to pass next time.
+
+```python
+>>> from linuxmusterTools.linbo import LinboChangeTracker
+>>> changes = LinboChangeTracker('default-school').get_changes('1759430000')
+>>> sorted(changes)
+['allConfigIds', 'allHostMacs', 'allStartConfIds', 'configsChanged', 'dhcpChanged', 'hostsChanged', 'nextCursor', 'startConfsChanged']
+```
+
+- `nextCursor` is taken before the files are read, so a file written during the call is reported by the next one: a change can be reported twice, never lost.
+- `hostsChanged` lists every host of the school as soon as `devices.csv` changed, the mtime of a single file cannot tell which line was edited.
+- Nothing is remembered between two calls: a deleted host or start.conf is the entry missing from `allHostMacs` or `allStartConfIds` compared to the previous call. The former `deletedHosts` and `deletedStartConfs` fields, which were always empty, were removed.
+- A file whose mtime cannot be read counts as changed.
+
+---
+
 ## Host status
 
 `classify_host(hostname_or_ip)` probes ports 2222/22/135 with plain

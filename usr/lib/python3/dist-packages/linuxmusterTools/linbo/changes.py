@@ -11,7 +11,7 @@ from pathlib import Path
 from datetime import datetime, timezone
 
 from linuxmusterTools.devices import Devices
-from .config import LinboConfigManager
+from .config import LINBO_PATH, LinboConfigManager
 from .dhcp import DHCP_SUBNETS_PATH
 from .grub import LinboGrubReader
 from ..common.timestamps import get_utc_mtime
@@ -39,8 +39,18 @@ class LinboChangeTracker:
 
         Returns:
             Dict with nextCursor, hostsChanged, startConfsChanged,
-            configsChanged, dhcpChanged, deletedHosts, deletedStartConfs,
-            allHostMacs, allStartConfIds, allConfigIds.
+            configsChanged, dhcpChanged, allHostMacs, allStartConfIds,
+            allConfigIds.
+
+        hostsChanged lists every host of the school as soon as devices.csv
+        changed: all hosts live in this one file, its mtime cannot tell which
+        line was edited.
+
+        Nothing is remembered between two calls, so a deleted host or
+        start.conf cannot be reported as such: it is the entry missing from
+        allHostMacs or allStartConfIds compared to the previous call.
+
+        A file whose mtime cannot be read counts as changed.
         """
 
 
@@ -53,6 +63,11 @@ class LinboChangeTracker:
             datetime.fromtimestamp(cursor_ts, tz=timezone.utc) if cursor_ts > 0
             else None
         )
+
+        # Taken before anything is read: a file written during the scan then
+        # has an mtime at or after the next cursor, and is reported on the next
+        # call. The worst case is a change reported twice, never one lost.
+        next_cursor = str(int(time.time()))
 
         # Reload devices list
         self.devices_mgr.load()
@@ -73,19 +88,18 @@ class LinboChangeTracker:
         # Detect host changes via devices.csv mtime
         devices_csv_mtime = self.devices_mgr.csv_mtime
         hosts_changed_macs: list[str] = []
-        deleted_hosts: list[str] = []
 
         devices_modified = (
             cursor_dt is None
             or devices_csv_mtime is None
-            or (devices_csv_mtime > cursor_dt)
+            or (devices_csv_mtime >= cursor_dt)
         )
 
         subnets_conf_mtime = get_utc_mtime(DHCP_SUBNETS_PATH)
         subnets_modified = (
             cursor_dt is None
             or subnets_conf_mtime is None
-            or (subnets_conf_mtime > cursor_dt)
+            or (subnets_conf_mtime >= cursor_dt)
         )
 
         if devices_modified:
@@ -95,21 +109,18 @@ class LinboChangeTracker:
 
         # Check start.conf files
         startconfs_changed: list[str] = []
-        deleted_startconfs: list[str] = []
         for group in all_startconf_ids:
-            startconf_path = Path(f'/srv/linbo/start.conf.{group}')
+            startconf_path = Path(LINBO_PATH) / f'start.conf.{group}'
             mtime = get_utc_mtime(startconf_path)
-            if cursor_dt is None or (mtime and mtime > cursor_dt):
+            if cursor_dt is None or mtime is None or mtime >= cursor_dt:
                 startconfs_changed.append(group)
 
         # Check GRUB configs
         configs_changed: list[str] = []
         for group in all_config_ids:
             mtime = self.grub_reader.get_cfg_mtime(group)
-            if cursor_dt is None or (mtime and mtime > cursor_dt):
+            if cursor_dt is None or mtime is None or mtime >= cursor_dt:
                 configs_changed.append(group)
-
-        next_cursor = str(int(time.time()))
 
         return {
             "nextCursor": next_cursor,
@@ -117,8 +128,6 @@ class LinboChangeTracker:
             "startConfsChanged": startconfs_changed,
             "configsChanged": configs_changed,
             "dhcpChanged": dhcp_changed,
-            "deletedHosts": deleted_hosts,
-            "deletedStartConfs": deleted_startconfs,
             "allHostMacs": all_hosts_macs,
             "allStartConfIds": all_startconf_ids,
             "allConfigIds": all_config_ids,
