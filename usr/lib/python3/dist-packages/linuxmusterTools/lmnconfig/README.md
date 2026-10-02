@@ -80,6 +80,8 @@ ini.get('ROLE_USER', 'teacher')
 ini.userrole          # ['teacher', 'student', ...], keys of section ROLE_USER
 ini.computerrole       # computer roles, 'computerrole.' prefix stripped
 ini.computer_account   # {role: bool}, whether the role gets an AD machine account
+ini.computerrole_default  # GLOBAL.COMPUTERROLE_DEFAULT, the role of an empty role field
+ini.role_catalog()     # RoleCatalog of the computer roles, see below
 ini.clientrole         # hardcoded list of LINBO client roles
 
 conf = SophomorixConf()
@@ -96,6 +98,26 @@ conf.data['global']['LANG']
 All three config classes fall back to an empty dict (`.config`/`.data` == `{}`) and log a warning if their file is missing.
 
 `SophomorixIni.computer_account` maps every computer role to the `COMPUTER_ACCOUNT` flag of its `[computerrole.*]` section: `True` when the role gets a real machine account in the AD, `False` when it only gets a DNS node. This is what decides whether the NetBIOS limits apply to the hostname of a device — an account name is a `sAMAccountName`, [capped at 15 characters plus the trailing `$`](https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/naming-conventions-for-computer-domain-site-ou). A role declaring no `COMPUTER_ACCOUNT` is reported as `False` and logged as a warning.
+
+`SophomorixIni.computerrole_default` is the role sophomorix substitutes for an empty role field (`COMPUTERROLE_DEFAULT` of the `[GLOBAL]` section); `classroom-studentcomputer` with a warning if the key is missing.
+
+`SophomorixIni.role_catalog()` returns a frozen `RoleCatalog` dataclass, the computer roles split on their `COMPUTER_ACCOUNT` flag, in the order of the file:
+
+| Attribute | Type | Content |
+|---|---|---|
+| `accounts` | `tuple[str]` | Roles getting a machine account in the AD |
+| `dns_only` | `tuple[str]` | Roles getting a DNS node only |
+| `default` | `str` | `computerrole_default` |
+
+```python
+>>> catalog = SophomorixIni().role_catalog()
+>>> 'printer' in catalog            # known role, in either tuple
+True
+>>> 'thinclient' in catalog.accounts  # gets a machine account?
+False
+```
+
+A `RoleCatalog` can also be built by hand, to pin what a caller reads: `RoleCatalog(accounts=('staffcomputer',), dns_only=('printer',), default='staffcomputer')`.
 
 The file is read with its tabs expanded to eight columns. `sophomorix.ini` indents its keys with a tabulation in most sections and with eight spaces in others, sometimes within the same section, and `configparser` reads a line indented deeper than the previous key as a continuation of its value — 53 keys of the shipped file were lost that way, the `COMPUTER_ACCOUNT` of all 15 computer roles among them. Genuine continuation lines, indented further than eight columns, are unaffected. The path is the module-level `SOPHOMORIX_INI_PATH`.
 

@@ -2,6 +2,7 @@ import os
 import logging
 from collections import OrderedDict
 from configparser import ConfigParser
+from dataclasses import dataclass
 from pathlib import Path
 
 from linuxmusterTools.lmnfile import LMNFile
@@ -10,6 +11,9 @@ from linuxmusterTools.lmnfile import LMNFile
 logger = logging.getLogger(__name__)
 
 SOPHOMORIX_INI_PATH = "/usr/share/sophomorix/devel/sophomorix.ini"
+
+# What an installation without COMPUTERROLE_DEFAULT is assumed to mean.
+FALLBACK_DEFAULT_ROLE = 'classroom-studentcomputer'
 
 class SchoolConfig:
 
@@ -33,6 +37,26 @@ class MultiOrderedDict(OrderedDict):
             self[key].extend(value)
         else:
             super().__setitem__(key, value)
+
+@dataclass(frozen=True)
+class RoleCatalog:
+    """
+    What sophomorix.ini says about computer roles: the ones getting a
+    machine account in the AD, the ones getting a DNS node only, and the one
+    an empty role field means.
+
+    Built by SophomorixIni.role_catalog(), or by hand to pin what a caller
+    reads - a test, or a check run against an inventory coming from
+    somewhere else.
+    """
+
+    accounts: tuple = ()
+    dns_only: tuple = ()
+    default: str = FALLBACK_DEFAULT_ROLE
+
+    def __contains__(self, role):
+        return role in self.accounts or role in self.dns_only
+
 
 class SophomorixIni:
 
@@ -63,6 +87,15 @@ class SophomorixIni:
                     f"computerrole.{role} has no COMPUTER_ACCOUNT in {self.path}, assuming FALSE"
                 )
             self.computer_account[role] = str(value).strip().upper() == 'TRUE'
+
+        # The role sophomorix substitutes for an empty role field.
+        try:
+            self.computerrole_default = self.get('GLOBAL', 'COMPUTERROLE_DEFAULT')
+        except KeyError:
+            self.computerrole_default = FALLBACK_DEFAULT_ROLE
+            logger.warning(
+                f"No COMPUTERROLE_DEFAULT in {self.path}, assuming {FALLBACK_DEFAULT_ROLE}"
+            )
 
         # TODO: should be loaded, not hardcoded
         self.clientrole = [
@@ -99,6 +132,21 @@ class SophomorixIni:
         except OSError as e:
             logger.warning(f"Could not read {self.path}: {e}")
             return ""
+
+    def role_catalog(self):
+        """
+        The computer roles of this file, split on their COMPUTER_ACCOUNT
+        flag, in the order of the file.
+
+        :rtype: RoleCatalog
+        """
+
+
+        return RoleCatalog(
+            accounts=tuple(r for r in self.computerrole if self.computer_account[r]),
+            dns_only=tuple(r for r in self.computerrole if not self.computer_account[r]),
+            default=self.computerrole_default,
+        )
 
     @staticmethod
     def sanitize(value):

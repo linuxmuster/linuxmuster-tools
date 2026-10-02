@@ -7,6 +7,8 @@ import pytest
 
 import linuxmusterTools.lmnconfig.sophomorix as sophomorix_module
 from linuxmusterTools.lmnconfig.sophomorix import (
+    FALLBACK_DEFAULT_ROLE,
+    RoleCatalog,
     SchoolConfig,
     MultiOrderedDict,
     SophomorixIni,
@@ -122,6 +124,9 @@ def test_sanitize_multiline_value_without_any_comments():
 # The classroom-studentcomputer section reproduces the indentation of the
 # shipped sophomorix.ini: a tabulation on some keys, eight spaces on others.
 SYNTHETIC_INI = """
+[GLOBAL]
+COMPUTERROLE_DEFAULT = faculty-teachercomputer
+
 [ROLE_USER]
 teacher = Teacher
 student = Student
@@ -224,6 +229,31 @@ def test_sophomorix_ini_computer_account_covers_every_role(sophomorix_ini):
     assert set(sophomorix_ini.computer_account) == set(sophomorix_ini.computerrole)
 
 
+def test_sophomorix_ini_computerrole_default_is_read(sophomorix_ini):
+    assert sophomorix_ini.computerrole_default == 'faculty-teachercomputer'
+
+
+def test_sophomorix_ini_computerrole_default_falls_back_when_absent(monkeypatch, tmp_path):
+    ini_file = tmp_path / 'sophomorix.ini'
+    ini_file.write_text(SYNTHETIC_INI.replace('COMPUTERROLE_DEFAULT', 'OTHER_KEY'))
+    monkeypatch.setattr(sophomorix_module, 'SOPHOMORIX_INI_PATH', str(ini_file))
+
+    assert SophomorixIni().computerrole_default == FALLBACK_DEFAULT_ROLE
+
+
+def test_sophomorix_ini_role_catalog_splits_on_computer_account(sophomorix_ini):
+    assert sophomorix_ini.role_catalog() == RoleCatalog(
+        accounts=('classroom-studentcomputer',),
+        dns_only=('faculty-teachercomputer',),
+        default='faculty-teachercomputer',
+    )
+
+
+def test_sophomorix_ini_role_catalog_covers_every_role(sophomorix_ini):
+    catalog = sophomorix_ini.role_catalog()
+    assert set(catalog.accounts + catalog.dns_only) == set(sophomorix_ini.computerrole)
+
+
 def test_sophomorix_ini_clientrole_is_hardcoded_list(sophomorix_ini):
     assert sophomorix_ini.clientrole == [
         'classroom-teachercomputer',
@@ -233,6 +263,22 @@ def test_sophomorix_ini_clientrole_is_hardcoded_list(sophomorix_ini):
         'thinclient',
         'iponly',
     ]
+
+
+# ---------------------------------------------------------------------------
+# RoleCatalog
+# ---------------------------------------------------------------------------
+
+CATALOG = RoleCatalog(accounts=('staffcomputer',), dns_only=('printer',), default='staffcomputer')
+
+
+@pytest.mark.parametrize('role, expected', [
+    ('staffcomputer', True),
+    ('printer', True),
+    ('not-a-role', False),
+])
+def test_role_catalog_membership_is_the_union(role, expected):
+    assert (role in CATALOG) is expected
 
 
 # ---------------------------------------------------------------------------
