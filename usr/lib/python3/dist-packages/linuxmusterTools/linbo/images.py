@@ -44,12 +44,35 @@ EXTRA_PERMISSIONS_MAPPING = {
 }
 IMAGE = "qcow2"
 DIFF_IMAGE = "qdiff"
+IMAGE_SERVICES = ['linbo-multicast.service', 'linbo-torrent.service']
 
 def date2timestamp(date):
     return datetime.strptime(date, DATE_UI_FMT).strftime(TIMESTAMP_FMT)
 
 def timestamp2date(timestamp):
     return datetime.strptime(timestamp, TIMESTAMP_FMT).strftime(DATE_UI_FMT)
+
+
+def restart_image_services(timeout=60):
+    """
+    Restart the services distributing the images to the clients, multicast
+    and torrent, so that they serve the new version of a changed image.
+    Both are global: they are restarted for every school.
+
+    :param timeout: Seconds to wait for systemctl
+    :type timeout: int
+    :return: The restarted services
+    :rtype: list
+    :raises subprocess.CalledProcessError: systemctl failed, its stderr attached
+    :raises subprocess.TimeoutExpired: systemctl did not return in time
+    """
+
+
+    subprocess.run(
+        ['systemctl', 'restart', *IMAGE_SERVICES],
+        capture_output=True, text=True, check=True, timeout=timeout,
+    )
+    return IMAGE_SERVICES
 
 
 class ImageExistsError(FileExistsError):

@@ -1,3 +1,4 @@
+import subprocess
 from datetime import datetime
 
 import pytest
@@ -465,3 +466,28 @@ def test_to_dict_reports_whether_a_torrent_exists(environment, torrent_calls):
 
     assert images.groups["ubuntu"].base.to_dict()["torrent"] is True
     assert images.groups["debian"].base.to_dict()["torrent"] is False
+
+
+# ---------------------------------------------------------------------------
+# restart_image_services
+# ---------------------------------------------------------------------------
+
+def test_restart_image_services_restarts_multicast_and_torrent(monkeypatch):
+    calls = []
+    monkeypatch.setattr(images_module.subprocess, "run", lambda *args, **kwargs: calls.append((args, kwargs)))
+
+    assert images_module.restart_image_services() == images_module.IMAGE_SERVICES
+
+    (args, kwargs), = calls
+    assert args[0] == ['systemctl', 'restart', 'linbo-multicast.service', 'linbo-torrent.service']
+    assert kwargs["check"] is True
+    assert kwargs["timeout"] == 60
+
+
+def test_restart_image_services_raises_on_failure(monkeypatch):
+    def fail(*args, **kwargs):
+        raise subprocess.CalledProcessError(1, 'systemctl', stderr="Unit not found.")
+    monkeypatch.setattr(images_module.subprocess, "run", fail)
+
+    with pytest.raises(subprocess.CalledProcessError):
+        images_module.restart_image_services()

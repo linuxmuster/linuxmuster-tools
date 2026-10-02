@@ -135,6 +135,14 @@ broken group still appears in `to_dict()`'s output, as
 `{'name': <group>, 'error': <message>, 'selected': False}`, instead of a
 full image description.
 
+`restart_image_services()` restarts `linbo-multicast` and `linbo-torrent`, so that they distribute the new version of a changed image. Both services are global, they are restarted for every school. It raises `subprocess.CalledProcessError` (with systemctl's `stderr`) or `subprocess.TimeoutExpired` (60 seconds by default) rather than failing silently.
+
+```python
+>>> from linuxmusterTools.linbo import restart_image_services
+>>> restart_image_services()
+['linbo-multicast.service', 'linbo-torrent.service']
+```
+
 ---
 
 ## Remote commands
