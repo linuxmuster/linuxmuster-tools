@@ -111,8 +111,13 @@ def test_session_rejects_dot():
     assert checker.check_session_name("my.session") is False
 
 
-def test_linbo_conf_allows_dot_and_is_case_insensitive():
-    assert checker.check_linbo_conf_name("Win10.rsync") is True
+def test_linbo_conf_is_case_insensitive():
+    assert checker.check_linbo_conf_name("Win10_Room-1") is True
+
+
+@pytest.mark.parametrize("name", ["win10.rsync", "room+1", "."])
+def test_linbo_conf_rejects_what_sophomorix_rejects(name):
+    assert checker.check_linbo_conf_name(name) is False
 
 
 # ---------------------------------------------------------------------------

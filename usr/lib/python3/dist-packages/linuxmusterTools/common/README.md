@@ -52,7 +52,7 @@ Prefer `validate()` wherever the name is about to build a filesystem path. A cal
 | `strong_password` | Password with lower/upper case, digit or symbol, 7+ chars |
 | `project` / `group` | Project or sophomorix group name |
 | `session` | Session name |
-| `linbo_conf` | LINBO config name |
+| `linbo_conf` | LINBO group name (`start.conf.<group>`): letters, digits, `_` and `-`, as accepted by `sophomorix-device` |
 | `linbo_image` | LINBO image name |
 | `login` | User login |
 | `comment` | `sophomorixComment` field |

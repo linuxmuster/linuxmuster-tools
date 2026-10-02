@@ -11,7 +11,7 @@ NAME_RULES = {
     'project': re.compile(r"^[a-z0-9_\-]*$"),
     'group': re.compile(r"^[a-z0-9_\-]*$"),
     "session": re.compile(r"^[a-z0-9\+\-_]*$", re.IGNORECASE),
-    "linbo_conf": re.compile(r"^[a-z0-9\+\-_\.]*$", re.IGNORECASE),
+    "linbo_conf": re.compile(r"^[a-z0-9_\-]+$", re.IGNORECASE),
     "linbo_image": re.compile(r"^[a-zA-Z0-9_\-\.]+$"),
     "login": re.compile(r"^[a-z0-9\-_\.]*$", re.IGNORECASE),
     "comment": re.compile(r"^[a-z0-9\-_ ]*", re.IGNORECASE), # sophomorixComment
