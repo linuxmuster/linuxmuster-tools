@@ -8,7 +8,7 @@ import pytest
 import linuxmusterTools.lmnconfig.sophomorix as sophomorix_module
 from linuxmusterTools.lmnconfig.sophomorix import (
     FALLBACK_DEFAULT_ROLE,
-    RoleCatalog,
+    ComputerRoles,
     SchoolConfig,
     MultiOrderedDict,
     SophomorixIni,
@@ -169,11 +169,18 @@ def test_sophomorix_ini_sections_are_parsed(sophomorix_ini):
     assert 'SOME_SECTION' in sophomorix_ini.sections
 
 
-def test_sophomorix_ini_computerrole_strips_prefix(sophomorix_ini):
-    assert set(sophomorix_ini.computerrole) == {
+def test_sophomorix_ini_computer_roles_strip_prefix(sophomorix_ini):
+    assert set(sophomorix_ini.computer_roles.roles) == {
         'classroom-studentcomputer',
         'faculty-teachercomputer',
     }
+
+
+def test_sophomorix_ini_computerrole_is_deprecated(sophomorix_ini):
+    with pytest.deprecated_call():
+        roles = sophomorix_ini.computerrole
+
+    assert roles == list(sophomorix_ini.computer_roles.roles)
 
 
 def test_sophomorix_ini_userrole_comes_from_role_user_section(sophomorix_ini):
@@ -216,42 +223,22 @@ def test_sophomorix_ini_genuine_continuation_line_is_preserved(sophomorix_ini):
     assert sophomorix_ini.dict['SOME_SECTION']['multi'] == ['line1', 'line2']
 
 
-def test_sophomorix_ini_computer_account_is_a_bool_per_role(sophomorix_ini):
-    assert sophomorix_ini.computer_account['classroom-studentcomputer'] is True
-
-
-def test_sophomorix_ini_computer_account_defaults_to_false_when_absent(sophomorix_ini):
-    # faculty-teachercomputer declares no COMPUTER_ACCOUNT in the synthetic file
-    assert sophomorix_ini.computer_account['faculty-teachercomputer'] is False
-
-
-def test_sophomorix_ini_computer_account_covers_every_role(sophomorix_ini):
-    assert set(sophomorix_ini.computer_account) == set(sophomorix_ini.computerrole)
-
-
-def test_sophomorix_ini_computerrole_default_is_read(sophomorix_ini):
-    assert sophomorix_ini.computerrole_default == 'faculty-teachercomputer'
-
-
-def test_sophomorix_ini_computerrole_default_falls_back_when_absent(monkeypatch, tmp_path):
-    ini_file = tmp_path / 'sophomorix.ini'
-    ini_file.write_text(SYNTHETIC_INI.replace('COMPUTERROLE_DEFAULT', 'OTHER_KEY'))
-    monkeypatch.setattr(sophomorix_module, 'SOPHOMORIX_INI_PATH', str(ini_file))
-
-    assert SophomorixIni().computerrole_default == FALLBACK_DEFAULT_ROLE
-
-
-def test_sophomorix_ini_role_catalog_splits_on_computer_account(sophomorix_ini):
-    assert sophomorix_ini.role_catalog() == RoleCatalog(
+def test_sophomorix_ini_computer_roles_split_on_computer_account(sophomorix_ini):
+    # faculty-teachercomputer declares no COMPUTER_ACCOUNT in the synthetic
+    # file, which counts as FALSE.
+    assert sophomorix_ini.computer_roles == ComputerRoles(
         accounts=('classroom-studentcomputer',),
         dns_only=('faculty-teachercomputer',),
         default='faculty-teachercomputer',
     )
 
 
-def test_sophomorix_ini_role_catalog_covers_every_role(sophomorix_ini):
-    catalog = sophomorix_ini.role_catalog()
-    assert set(catalog.accounts + catalog.dns_only) == set(sophomorix_ini.computerrole)
+def test_sophomorix_ini_default_computer_role_falls_back_when_absent(monkeypatch, tmp_path):
+    ini_file = tmp_path / 'sophomorix.ini'
+    ini_file.write_text(SYNTHETIC_INI.replace('COMPUTERROLE_DEFAULT', 'OTHER_KEY'))
+    monkeypatch.setattr(sophomorix_module, 'SOPHOMORIX_INI_PATH', str(ini_file))
+
+    assert SophomorixIni().computer_roles.default == FALLBACK_DEFAULT_ROLE
 
 
 def test_sophomorix_ini_clientrole_is_hardcoded_list(sophomorix_ini):
@@ -266,10 +253,10 @@ def test_sophomorix_ini_clientrole_is_hardcoded_list(sophomorix_ini):
 
 
 # ---------------------------------------------------------------------------
-# RoleCatalog
+# ComputerRoles
 # ---------------------------------------------------------------------------
 
-CATALOG = RoleCatalog(accounts=('staffcomputer',), dns_only=('printer',), default='staffcomputer')
+ROLES = ComputerRoles(accounts=('staffcomputer',), dns_only=('printer',), default='staffcomputer')
 
 
 @pytest.mark.parametrize('role, expected', [
@@ -277,8 +264,12 @@ CATALOG = RoleCatalog(accounts=('staffcomputer',), dns_only=('printer',), defaul
     ('printer', True),
     ('not-a-role', False),
 ])
-def test_role_catalog_membership_is_the_union(role, expected):
-    assert (role in CATALOG) is expected
+def test_computer_roles_membership_is_the_union(role, expected):
+    assert (role in ROLES) is expected
+
+
+def test_computer_roles_roles_are_accounts_then_dns_only():
+    assert ROLES.roles == ('staffcomputer', 'printer')
 
 
 # ---------------------------------------------------------------------------

@@ -1,5 +1,6 @@
 import os
 import logging
+import warnings
 from collections import OrderedDict
 from configparser import ConfigParser
 from dataclasses import dataclass
@@ -39,20 +40,24 @@ class MultiOrderedDict(OrderedDict):
             super().__setitem__(key, value)
 
 @dataclass(frozen=True)
-class RoleCatalog:
+class ComputerRoles:
     """
     What sophomorix.ini says about computer roles: the ones getting a
     machine account in the AD, the ones getting a DNS node only, and the one
     an empty role field means.
 
-    Built by SophomorixIni.role_catalog(), or by hand to pin what a caller
-    reads - a test, or a check run against an inventory coming from
-    somewhere else.
+    Read by SophomorixIni into its computer_roles attribute, or built by hand
+    to pin what a caller reads - a test, or a check run against an inventory
+    coming from somewhere else.
     """
 
     accounts: tuple = ()
     dns_only: tuple = ()
     default: str = FALLBACK_DEFAULT_ROLE
+
+    @property
+    def roles(self):
+        return self.accounts + self.dns_only
 
     def __contains__(self, role):
         return role in self.accounts or role in self.dns_only
@@ -72,30 +77,36 @@ class SophomorixIni:
             for key,value in self.data[section].items():
                 self.dict[section][key] = self.sanitize(value)
 
-        self.computerrole = [s.replace('computerrole.', '') for s in self.sections if s.startswith('computerrole')]
-
         # Whether a computer role gets a real machine account in the AD, as
         # opposed to a DNS node only. This is what decides if the NetBIOS
         # limits apply to the hostname of a device: an account name is a
         # sAMAccountName, capped at 15 characters plus the trailing '$'.
         # https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/naming-conventions-for-computer-domain-site-ou
-        self.computer_account = {}
-        for role in self.computerrole:
-            value = self.dict[f'computerrole.{role}'].get('computer_account')
+        accounts, dns_only = [], []
+        for section in self.sections:
+            if not section.startswith('computerrole.'):
+                continue
+            role = section.replace('computerrole.', '', 1)
+            value = self.dict[section].get('computer_account')
             if value is None:
                 logger.warning(
-                    f"computerrole.{role} has no COMPUTER_ACCOUNT in {self.path}, assuming FALSE"
+                    f"{section} has no COMPUTER_ACCOUNT in {self.path}, assuming FALSE"
                 )
-            self.computer_account[role] = str(value).strip().upper() == 'TRUE'
+            if str(value).strip().upper() == 'TRUE':
+                accounts.append(role)
+            else:
+                dns_only.append(role)
 
         # The role sophomorix substitutes for an empty role field.
         try:
-            self.computerrole_default = self.get('GLOBAL', 'COMPUTERROLE_DEFAULT')
+            default = self.get('GLOBAL', 'COMPUTERROLE_DEFAULT')
         except KeyError:
-            self.computerrole_default = FALLBACK_DEFAULT_ROLE
+            default = FALLBACK_DEFAULT_ROLE
             logger.warning(
                 f"No COMPUTERROLE_DEFAULT in {self.path}, assuming {FALLBACK_DEFAULT_ROLE}"
             )
+
+        self.computer_roles = ComputerRoles(tuple(accounts), tuple(dns_only), default)
 
         # TODO: should be loaded, not hardcoded
         self.clientrole = [
@@ -133,20 +144,22 @@ class SophomorixIni:
             logger.warning(f"Could not read {self.path}: {e}")
             return ""
 
-    def role_catalog(self):
+    @property
+    def computerrole(self):
         """
-        The computer roles of this file, split on their COMPUTER_ACCOUNT
-        flag, in the order of the file.
+        Deprecated, use computer_roles.roles.
 
-        :rtype: RoleCatalog
+        :return: Every computer role, 'computerrole.' prefix stripped
+        :rtype: list
         """
 
 
-        return RoleCatalog(
-            accounts=tuple(r for r in self.computerrole if self.computer_account[r]),
-            dns_only=tuple(r for r in self.computerrole if not self.computer_account[r]),
-            default=self.computerrole_default,
+        warnings.warn(
+            "SophomorixIni.computerrole is deprecated, use SophomorixIni.computer_roles.roles",
+            DeprecationWarning,
+            stacklevel=2,
         )
+        return list(self.computer_roles.roles)
 
     @staticmethod
     def sanitize(value):
