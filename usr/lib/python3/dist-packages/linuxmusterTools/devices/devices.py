@@ -1,15 +1,20 @@
+import logging
 from pathlib import Path
 
 from ..lmnfile import LMNFile
 from ..common.checks import NameChecker
 from ..common.timestamps import get_utc_mtime
 from ..lmnconfig import SophomorixIni
+from .validator import InventoryValidator
 
 sophomorix_ini = SophomorixIni()
 CLIENT_ROLES = sophomorix_ini.clientrole
-COMPUTER_ROLES = sophomorix_ini.computerrole
 
 name_checker = NameChecker()
+
+logger = logging.getLogger(__name__)
+
+SOPHOMORIX_SCHOOLS_DIR = '/etc/linuxmuster/sophomorix'
 
 class Devices:
     def __init__(self, school='default-school'):
@@ -29,7 +34,7 @@ class Devices:
             self.prefix = ''
             self.hostname_prefix = ''
 
-        self.path = f'/etc/linuxmuster/sophomorix/{self.school}/{self.prefix}devices.csv'
+        self.path = f'{SOPHOMORIX_SCHOOLS_DIR}/{self.school}/{self.prefix}devices.csv'
         self.load()
 
     def load(self):
@@ -119,65 +124,81 @@ class Devices:
         return self.filter(roles=CLIENT_ROLES, groups=groups)
 
     def check_conf(self):
-        # TODO check
-        # MS SOFTWARE KEYS ?
-        # COMPUTER_ACCOUNT/HOST_GROUP/HOST_GROUP_TYPE flags ?
+        """
+        Validate the inventory of this school, reporting everything found
+        instead of stopping at the first problem.
 
-        report = []
+        Only this school is read, so a host name, a mac address or an ip
+        address shared with another school can not be seen here: use
+        check_all_schools() for that.
 
-        # Check values
-        ip_rev = {}
-        mac_rev = {}
-        for device in self.devices:
-            ip = device['ip']
-            mac = device['mac']
-
-            if ip in ip_rev:
-                ip_rev[ip].append(device['hostname'])
-            else:
-                ip_rev[ip] = [device['hostname']]
-
-            if mac in mac_rev:
-                mac_rev[mac].append(device['hostname'])
-            else:
-                mac_rev[mac] = [device['hostname']]
-
-            # Check values
-            if not name_checker.check_ip_name(ip):
-                report.append(f"{ip} is not a valid ip address")
-
-            if not name_checker.normalize_mac(mac):
-                report.append(f"{mac} is not a valid mac address")
-
-            if not name_checker.check_group_name(device['group']):
-                report.append(f"{device['group']} is not a valid Linbo group")
-
-            if not name_checker.check_room_name(device['room']):
-                report.append(f"{device['room']} is not a valid room name")
-
-            if not name_checker.check_host_name(device['hostname']):
-                report.append(f"{device['hostname']} is not a valid hostname")
-
-            if device['pxeFlag'] not in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
-                report.append(f"{device['pxeFlag']} is not a valid pxe flag")
-
-            if device['sophomorixRole'] not in COMPUTER_ROLES:
-                report.append(f"{device['sophomorixRole']} is not a valid computer role")
-
-        # Check uniqueness
-        for ip, hosts in ip_rev.items():
-            if len(hosts) > 1:
-                report.append(f"{','.join(hosts)} have the same ip {ip}")
-
-        for mac, hosts in mac_rev.items():
-            if len(hosts) > 1:
-                report.append(f"{','.join(hosts)} have the same mac {mac}")
-
-        if report:
-            return report
-
-        return False
+        :return: valid, counts, findings and report (see InventoryValidator.validate)
+        :rtype: dict
+        """
 
 
+        return InventoryValidator([{
+            'school': self.school,
+            'file': self.path,
+            'devices': self.devices,
+        }]).validate()
 
 
+def list_schools(root=None):
+    """
+    List the schools holding a devices.csv on this server.
+
+    This reads the filesystem rather than ldap on purpose: what is
+    validated here are the files, and a caller already holding the
+    authoritative list of provisioned schools passes it to
+    check_all_schools() instead.
+
+    :param root: Directory holding one subdirectory per school
+    :type root: string or Path
+    :return: Sorted school names
+    :rtype: list
+    """
+
+
+    root = Path(root or SOPHOMORIX_SCHOOLS_DIR)
+    schools = []
+
+    try:
+        candidates = sorted(entry for entry in root.iterdir() if entry.is_dir())
+    except OSError as e:
+        logger.warning(f"Could not list the schools in {root}: {e}")
+        return []
+
+    for entry in candidates:
+        prefix = '' if entry.name == 'default-school' else f'{entry.name}.'
+        if (entry / f'{prefix}devices.csv').is_file():
+            schools.append(entry.name)
+
+    return schools
+
+
+def check_all_schools(schools=None):
+    """
+    Validate the inventories of every school at once, which is the only way
+    to see a host name or a mac address used twice in two different schools.
+
+    :param schools: Schools to validate, discovered on disk if not given
+    :type schools: list
+    :return: valid, counts, findings and report (see InventoryValidator.validate)
+    :rtype: dict
+    """
+
+
+    if schools is None:
+        schools = list_schools()
+
+    inventories = []
+    for school in schools:
+        devicesmgr = Devices(school=school)
+        inventories.append({
+            'school': school,
+            'file': devicesmgr.path,
+            'devices': devicesmgr.devices,
+        })
+
+    return InventoryValidator(inventories).validate()

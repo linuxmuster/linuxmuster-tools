@@ -7,7 +7,7 @@ from datetime import datetime
 
 import pytest
 
-from linuxmusterTools.devices.devices import Devices
+from linuxmusterTools.devices.devices import Devices, check_all_schools, list_schools
 
 
 # ---------------------------------------------------------------------------
@@ -343,88 +343,128 @@ def test_get_clients_no_groups_returns_all_clients(make_device_row, write_device
 # check_conf()
 # ---------------------------------------------------------------------------
 
-def test_check_conf_valid_returns_false(make_device_row, write_devices_csv):
+def test_check_conf_valid_inventory(make_device_row, write_devices_csv):
     write_devices_csv([
         make_device_row(hostname='pc01', ip='10.0.0.1', mac='AA:BB:CC:DD:EE:01'),
         make_device_row(hostname='pc02', ip='10.0.0.2', mac='AA:BB:CC:DD:EE:02'),
     ])
 
-    devicesmgr = Devices()
+    result = Devices().check_conf()
 
-    assert devicesmgr.check_conf() is False
+    assert result['valid'] is True
+    assert result['findings'] == []
+    assert result['report'] == []
+    assert result['counts'] == {
+        'schools': 1, 'devices': 2, 'errors': 0, 'warnings': 0,
+    }
 
 
-def test_check_conf_no_devices_returns_false(write_devices_csv):
+def test_check_conf_no_devices_is_valid(write_devices_csv):
     write_devices_csv([])
 
-    devicesmgr = Devices()
+    result = Devices().check_conf()
 
-    assert devicesmgr.devices == []
-    assert devicesmgr.check_conf() is False
+    assert result['valid'] is True
+    assert result['counts']['devices'] == 0
 
 
 def test_check_conf_invalid_ip(make_device_row, write_devices_csv):
     write_devices_csv([make_device_row(ip='999.999.999.999')])
 
-    devicesmgr = Devices()
+    result = Devices().check_conf()
 
-    report = devicesmgr.check_conf()
-    assert report is not False
-    assert any('is not a valid ip address' in line for line in report)
+    assert result['valid'] is False
+    assert [f['code'] for f in result['findings']] == ['ip.invalid']
+    assert any('is not a valid ip address' in line for line in result['report'])
 
 
-def test_check_conf_invalid_mac(make_device_row, write_devices_csv):
+def test_check_conf_invalid_mac_names_the_raw_address(make_device_row, write_devices_csv):
+    # The normalized mac is None here, so only macRaw can name the problem.
     write_devices_csv([make_device_row(mac='not-a-mac')])
 
-    devicesmgr = Devices()
+    result = Devices().check_conf()
 
-    report = devicesmgr.check_conf()
-    assert any('is not a valid mac address' in line for line in report)
+    finding = result['findings'][0]
+    assert finding['code'] == 'mac.invalid'
+    assert finding['value'] == 'not-a-mac'
+    assert 'not-a-mac is not a valid mac address' in finding['message']
 
 
 def test_check_conf_invalid_group_name(make_device_row, write_devices_csv):
     write_devices_csv([make_device_row(group='Invalid Group!')])
 
-    devicesmgr = Devices()
+    result = Devices().check_conf()
 
-    report = devicesmgr.check_conf()
-    assert any('is not a valid Linbo group' in line for line in report)
+    assert [f['code'] for f in result['findings']] == ['group.invalid']
+
+
+def test_check_conf_accepts_an_upper_case_linbo_group(make_device_row, write_devices_csv):
+    # check_linbo_conf_name(), not check_group_name(): a LINBO group may
+    # carry upper case.
+    write_devices_csv([make_device_row(group='Win11_UEFI-2')])
+
+    assert Devices().check_conf()['valid'] is True
 
 
 def test_check_conf_invalid_room_name(make_device_row, write_devices_csv):
     write_devices_csv([make_device_row(room='room with spaces')])
 
-    devicesmgr = Devices()
+    result = Devices().check_conf()
 
-    report = devicesmgr.check_conf()
-    assert any('is not a valid room name' in line for line in report)
+    assert [f['code'] for f in result['findings']] == ['room.invalid']
 
 
 def test_check_conf_invalid_hostname(make_device_row, write_devices_csv):
     write_devices_csv([make_device_row(hostname='bad host name')])
 
-    devicesmgr = Devices()
+    result = Devices().check_conf()
 
-    report = devicesmgr.check_conf()
-    assert any('is not a valid hostname' in line for line in report)
+    assert [f['code'] for f in result['findings']] == ['hostname.invalid']
 
 
 def test_check_conf_invalid_pxe_flag(make_device_row, write_devices_csv):
     write_devices_csv([make_device_row(pxeFlag='42')])
 
-    devicesmgr = Devices()
+    result = Devices().check_conf()
 
-    report = devicesmgr.check_conf()
-    assert any('is not a valid pxe flag' in line for line in report)
+    assert [f['code'] for f in result['findings']] == ['pxe.invalid']
+
+
+def test_check_conf_accepts_an_empty_pxe_flag(make_device_row, write_devices_csv):
+    # Devices._check_pxe_flag() already reads an empty field as no pxe.
+    write_devices_csv([make_device_row(pxeFlag='')])
+
+    assert Devices().check_conf()['valid'] is True
 
 
 def test_check_conf_invalid_role(make_device_row, write_devices_csv):
     write_devices_csv([make_device_row(sophomorixRole='not-a-real-role')])
 
-    devicesmgr = Devices()
+    result = Devices().check_conf()
 
-    report = devicesmgr.check_conf()
-    assert any('is not a valid computer role' in line for line in report)
+    assert [f['code'] for f in result['findings']] == ['role.unknown']
+
+
+def test_check_conf_accepts_dhcp_as_an_ip(make_device_row, write_devices_csv):
+    write_devices_csv([
+        make_device_row(hostname='pc01', ip='DHCP', mac='AA:BB:CC:DD:EE:01'),
+        make_device_row(hostname='pc02', ip='DHCP', mac='AA:BB:CC:DD:EE:02'),
+    ])
+
+    # DHCP is a legal value and two devices may both carry it.
+    assert Devices().check_conf()['valid'] is True
+
+
+def test_check_conf_reports_everything_at_once(make_device_row, write_devices_csv):
+    write_devices_csv([
+        make_device_row(hostname='pc01', ip='999.999.999.999', mac='nope', group='bad group'),
+    ])
+
+    result = Devices().check_conf()
+
+    assert sorted(f['code'] for f in result['findings']) == [
+        'group.invalid', 'ip.invalid', 'mac.invalid',
+    ]
 
 
 def test_check_conf_duplicate_ip(make_device_row, write_devices_csv):
@@ -433,22 +473,136 @@ def test_check_conf_duplicate_ip(make_device_row, write_devices_csv):
         make_device_row(hostname='pc02', ip='10.0.0.1', mac='AA:BB:CC:DD:EE:02'),
     ])
 
-    devicesmgr = Devices()
+    result = Devices().check_conf()
 
-    report = devicesmgr.check_conf()
-    assert any('have the same ip 10.0.0.1' in line for line in report)
+    finding = result['findings'][0]
+    assert finding['code'] == 'ip.duplicate'
+    assert finding['subject'] == 'pc01'
+    assert [o['subject'] for o in finding['related']] == ['pc02']
+    assert any('have the same ip 10.0.0.1' in line for line in result['report'])
 
 
 def test_check_conf_duplicate_mac(make_device_row, write_devices_csv):
     write_devices_csv([
         make_device_row(hostname='pc01', ip='10.0.0.1', mac='AA:BB:CC:DD:EE:01'),
-        make_device_row(hostname='pc02', ip='10.0.0.2', mac='AA:BB:CC:DD:EE:01'),
+        make_device_row(hostname='pc02', ip='10.0.0.2', mac='aa:bb:cc:dd:ee:01'),
     ])
 
-    devicesmgr = Devices()
+    result = Devices().check_conf()
 
-    report = devicesmgr.check_conf()
-    assert any('have the same mac AA:BB:CC:DD:EE:01' in line for line in report)
+    assert [f['code'] for f in result['findings']] == ['mac.duplicate']
+    assert any('have the same mac AA:BB:CC:DD:EE:01' in line for line in result['report'])
+
+
+def test_check_conf_duplicate_hostname_ignores_case(make_device_row, write_devices_csv):
+    # sophomorix lower cases the dns node and upper cases the machine
+    # account out of the same field, so these are the same host.
+    write_devices_csv([
+        make_device_row(hostname='pc01', ip='10.0.0.1', mac='AA:BB:CC:DD:EE:01'),
+        make_device_row(hostname='PC01', ip='10.0.0.2', mac='AA:BB:CC:DD:EE:02'),
+    ])
+
+    result = Devices().check_conf()
+
+    assert [f['code'] for f in result['findings']] == ['hostname.duplicate']
+
+
+def test_check_conf_reports_the_line_to_fix(make_device_row, write_devices_csv):
+    write_devices_csv([
+        ['# a comment line'],
+        make_device_row(hostname='pc01', ip='10.0.0.1', mac='AA:BB:CC:DD:EE:01'),
+        make_device_row(hostname='pc02', ip='999.999.999.999', mac='AA:BB:CC:DD:EE:02'),
+    ])
+
+    result = Devices().check_conf()
+
+    finding = result['findings'][0]
+    assert finding['line'] == 3
+    assert finding['subject'] == 'pc02'
+    assert finding['file'].endswith('default-school/devices.csv')
+    assert result['report'][0] == (
+        f"ERROR: pc02: 999.999.999.999 is not a valid ip address ({finding['file']}, line 3)"
+    )
+
+
+def test_check_conf_report_names_a_duplicate_once_with_every_line(make_device_row, write_devices_csv):
+    write_devices_csv([
+        make_device_row(hostname='pc01', ip='10.0.0.1', mac='AA:BB:CC:DD:EE:01'),
+        make_device_row(hostname='pc01', ip='10.0.0.2', mac='AA:BB:CC:DD:EE:02'),
+    ])
+
+    result = Devices().check_conf()
+
+    finding = result['findings'][0]
+    assert finding['message'] == 'pc01 is used 2 times'
+    assert result['report'][0] == f"ERROR: pc01 is used 2 times ({finding['file']}, lines 1, 2)"
+
+
+# ---------------------------------------------------------------------------
+# list_schools() / check_all_schools()
+# ---------------------------------------------------------------------------
+
+def test_list_schools_finds_the_schools_holding_an_inventory(tmp_path):
+    root = tmp_path / 'sophomorix'
+    (root / 'default-school').mkdir(parents=True)
+    (root / 'default-school' / 'devices.csv').write_text('')
+    (root / 'school2').mkdir()
+    (root / 'school2' / 'school2.devices.csv').write_text('')
+    # A school directory without an inventory, and a stray file
+    (root / 'school3').mkdir()
+    (root / 'sophomorix.conf').write_text('')
+
+    assert list_schools(root) == ['default-school', 'school2']
+
+
+def test_list_schools_on_a_missing_directory_returns_nothing(tmp_path):
+    assert list_schools(tmp_path / 'nowhere') == []
+
+
+def test_check_all_schools_sees_a_mac_used_in_two_schools(make_device_row, write_devices_csv):
+    write_devices_csv([
+        make_device_row(hostname='pc01', ip='10.0.0.1', mac='AA:BB:CC:DD:EE:01'),
+    ])
+    write_devices_csv([
+        make_device_row(hostname='pc02', ip='10.0.0.2', mac='AA:BB:CC:DD:EE:01'),
+    ], school='school2')
+
+    result = check_all_schools(['default-school', 'school2'])
+
+    assert result['counts'] == {
+        'schools': 2, 'devices': 2, 'errors': 1, 'warnings': 0,
+    }
+    finding = result['findings'][0]
+    assert finding['code'] == 'mac.duplicate'
+    assert finding['school'] == 'default-school'
+    assert finding['related'][0]['school'] == 'school2'
+
+
+def test_check_all_schools_warns_on_an_ip_shared_between_schools(make_device_row, write_devices_csv):
+    # A fileserver legitimately carries the same address in every school.
+    write_devices_csv([
+        make_device_row(hostname='nas', ip='10.0.0.1', mac='AA:BB:CC:DD:EE:01'),
+    ])
+    write_devices_csv([
+        make_device_row(hostname='nas', ip='10.0.0.1', mac='AA:BB:CC:DD:EE:02'),
+    ], school='school2')
+
+    result = check_all_schools(['default-school', 'school2'])
+
+    assert result['valid'] is True
+    assert [f['code'] for f in result['findings']] == ['ip.duplicate_across_schools']
+
+
+def test_check_all_schools_keeps_the_same_hostname_in_two_schools(make_device_row, write_devices_csv):
+    # pc01 of school2 is school2-pc01 in the AD: not the same name.
+    write_devices_csv([
+        make_device_row(hostname='pc01', ip='10.0.0.1', mac='AA:BB:CC:DD:EE:01'),
+    ])
+    write_devices_csv([
+        make_device_row(hostname='pc01', ip='10.0.0.2', mac='AA:BB:CC:DD:EE:02'),
+    ], school='school2')
+
+    assert check_all_schools(['default-school', 'school2'])['valid'] is True
 
 
 # ---------------------------------------------------------------------------
