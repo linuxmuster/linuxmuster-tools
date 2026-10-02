@@ -43,7 +43,7 @@ class LinboRemote:
         'partition': {'nr': False, 'msg': False},
         'label': {'nr': False, 'msg': False},
         'format': {'nr': True, 'msg': False},
-        'initcache': {'nr': False, 'msg': False, 'type': ['rsync', 'multicast', 'torrent']},
+        'initcache': {'nr': True, 'msg': False, 'type': ['rsync', 'multicast', 'torrent']},
         'sync': {'nr': True, 'msg': False},
         'new': {'nr': True, 'msg': False},
         'postsync': {'nr': True, 'msg': False},
@@ -212,7 +212,8 @@ class LinboRemote:
             if msg and not self.SUPPORTED_COMMANDS[name]['msg']:
                 raise LinboRemoteParameterError(f'Command {name} does not accept a message.')
 
-            if name == 'initcache' and nr not in self.SUPPORTED_COMMANDS['initcache']['type']:
+            # Without a type, linbo-remote takes the one of start.conf.
+            if name == 'initcache' and nr is not None and nr not in self.SUPPORTED_COMMANDS['initcache']['type']:
                 raise LinboRemoteParameterError(f'Wrong type {nr} for the command initcache.')
 
             if nr and name != 'initcache':

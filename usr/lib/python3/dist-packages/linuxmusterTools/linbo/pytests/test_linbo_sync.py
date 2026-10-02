@@ -41,6 +41,17 @@ def test_build_rejects_no_target():
         remote.build()
 
 
+@pytest.mark.parametrize("cmd", ["initcache", "initcache:rsync", "initcache:multicast", "initcache:torrent"])
+def test_build_accepts_initcache_with_or_without_a_type(cmd):
+    # Without a type, linbo-remote takes the one of start.conf (#42).
+    LinboRemote(clients=['10.0.0.5'], cmd=cmd)._check_cmd()
+
+
+def test_build_rejects_initcache_with_an_unknown_type():
+    with pytest.raises(LinboRemoteParameterError):
+        LinboRemote(clients=['10.0.0.5'], cmd='initcache:ftp')._check_cmd()
+
+
 def test_build_rejects_unknown_command():
     remote = LinboRemote(clients=['10.0.0.5'], cmd='frobnicate:1')
 
