@@ -8,6 +8,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+import linuxmusterTools.linbo.linbo_sync as linbo_sync_module
+
 from linuxmusterTools.linbo.linbo_sync import (
     LinboRemote,
     LinboRemoteParameterError,
@@ -271,3 +273,66 @@ def test_list_running_sessions_empty_when_no_sessions():
 def test_list_running_sessions_empty_when_no_tmux_binary():
     with patch('linuxmusterTools.linbo.linbo_sync.subprocess.run', side_effect=FileNotFoundError):
         assert list_running_sessions() == []
+
+
+# ---------------------------------------------------------------------------
+# onboot commands (linbocmd/<hostname>.cmd)
+# ---------------------------------------------------------------------------
+
+@pytest.fixture
+def onboot_dir(tmp_path, monkeypatch):
+    monkeypatch.setattr(linbo_sync_module, "ONBOOT_CMD_PATH", tmp_path)
+    (tmp_path / "pc02.cmd").write_text("sync:1,start:1\n")
+    (tmp_path / "pc01.cmd").write_text(",noauto\n")
+    (tmp_path / "README").write_text("not a command file")
+    return tmp_path
+
+
+def test_list_onboot_commands_reads_every_cmd_file(onboot_dir):
+    assert linbo_sync_module.list_onboot_commands() == [
+        {"hostname": "pc01", "commands": ["noauto"]},
+        {"hostname": "pc02", "commands": ["sync:1", "start:1"]},
+    ]
+
+
+def test_list_onboot_commands_without_any_file(tmp_path, monkeypatch):
+    monkeypatch.setattr(linbo_sync_module, "ONBOOT_CMD_PATH", tmp_path / "missing")
+    assert linbo_sync_module.list_onboot_commands() == []
+
+
+def test_list_onboot_commands_skips_a_file_not_named_after_a_host(onboot_dir):
+    (onboot_dir / "not a host.cmd").write_text("sync:1\n")
+    assert [p["hostname"] for p in linbo_sync_module.list_onboot_commands()] == ["pc01", "pc02"]
+
+
+def test_get_onboot_command_reads_one_host(onboot_dir):
+    assert linbo_sync_module.get_onboot_command("pc02") == {
+        "hostname": "pc02", "commands": ["sync:1", "start:1"],
+    }
+
+
+def test_get_onboot_command_without_pending_command(onboot_dir):
+    with pytest.raises(FileNotFoundError):
+        linbo_sync_module.get_onboot_command("pc03")
+
+
+def test_get_onboot_command_rejects_an_invalid_hostname(onboot_dir):
+    with pytest.raises(ValueError):
+        linbo_sync_module.get_onboot_command("../start.conf")
+
+
+def test_delete_onboot_command_removes_the_host_file(onboot_dir):
+    linbo_sync_module.delete_onboot_command("pc01")
+    assert not (onboot_dir / "pc01.cmd").exists()
+    assert (onboot_dir / "pc02.cmd").exists()
+
+
+def test_delete_onboot_command_without_pending_command(onboot_dir):
+    with pytest.raises(FileNotFoundError):
+        linbo_sync_module.delete_onboot_command("pc03")
+
+
+@pytest.mark.parametrize("hostname", ["../start.conf", "pc01/x", "", "pc 01"])
+def test_delete_onboot_command_rejects_an_invalid_hostname(onboot_dir, hostname):
+    with pytest.raises(ValueError):
+        linbo_sync_module.delete_onboot_command(hostname)

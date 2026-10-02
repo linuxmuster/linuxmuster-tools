@@ -176,6 +176,17 @@ future terminal-in-browser feature the exact session name to use.
 'tmux attach -t pc001_linbo-remote'
 ```
 
+`onboot=True` (`linbo-remote -p`) does not reach the host at once: it leaves the commands in `/srv/linbo/linbocmd/<hostname>.cmd`, which LINBO removes once the client has downloaded it at boot. `list_onboot_commands()` lists the files still waiting, `get_onboot_command()` reads one host's, and `delete_onboot_command()` withdraws it before the host boots. The hostname is validated before the path is built, and a host without a pending command raises `FileNotFoundError`.
+
+```python
+>>> from linuxmusterTools.linbo import list_onboot_commands, get_onboot_command, delete_onboot_command
+>>> list_onboot_commands()
+[{'hostname': 'pc001', 'commands': ['sync:1', 'start:1']}]
+>>> get_onboot_command('pc001')
+{'hostname': 'pc001', 'commands': ['sync:1', 'start:1']}
+>>> delete_onboot_command('pc001')
+```
+
 ---
 
 ## Host status

@@ -8,13 +8,21 @@ named "<hostname>.linbo-remote".
 
 import subprocess
 from datetime import datetime, timezone
+from pathlib import Path
 
+from ..common.checks import NameChecker
 from ..devices import Devices
 from ..ldapconnector import LMNLdapReader as lr
-from .config import LinboConfigManager, read_config
+from .config import LINBO_PATH, LinboConfigManager, read_config
 
 
 SESSION_SUFFIX = '_linbo-remote'
+
+# Where linbo-remote -p leaves a host's onboot commands: one <hostname>.cmd
+# file each, removed by LINBO once the client has downloaded it at boot.
+ONBOOT_CMD_PATH = Path(LINBO_PATH) / 'linbocmd'
+
+name_checker = NameChecker()
 
 
 class LinboRemoteParameterError(ValueError):
@@ -334,3 +342,58 @@ def attach_command(hostname: str) -> str:
     """
 
     return f'tmux attach -t {hostname}{SESSION_SUFFIX}'
+
+
+def list_onboot_commands() -> list[dict]:
+    """
+    List the onboot commands waiting for a host's next boot.
+
+    :return: List of {hostname, commands} dicts, commands being the
+        comma separated list written by linbo-remote -p, e.g.
+        ['sync:1', 'start:1']. Empty list if nothing is pending.
+    :rtype: list of dict
+    """
+
+    pending = []
+    for path in sorted(ONBOOT_CMD_PATH.glob('*.cmd')):
+        try:
+            pending.append(get_onboot_command(path.stem))
+        except ValueError:
+            # Not written by linbo-remote, whose file names are host names.
+            continue
+    return pending
+
+
+def get_onboot_command(hostname: str) -> dict:
+    """
+    Read the onboot commands waiting for one host's next boot.
+
+    :param hostname: Hostname whose <hostname>.cmd file to read
+    :type hostname: str
+    :return: {hostname, commands}, commands being the comma separated list
+        written by linbo-remote -p, e.g. ['sync:1', 'start:1']
+    :rtype: dict
+    :raises ValueError: if the hostname is not a valid host name
+    :raises FileNotFoundError: if no command is pending for this host
+    """
+
+    name_checker.validate_host_name(hostname)
+    content = (ONBOOT_CMD_PATH / f'{hostname}.cmd').read_text()
+    return {
+        'hostname': hostname,
+        'commands': [cmd for cmd in content.strip().split(',') if cmd],
+    }
+
+
+def delete_onboot_command(hostname: str) -> None:
+    """
+    Withdraw a host's onboot commands before its next boot.
+
+    :param hostname: Hostname whose <hostname>.cmd file to delete
+    :type hostname: str
+    :raises ValueError: if the hostname is not a valid host name
+    :raises FileNotFoundError: if no command is pending for this host
+    """
+
+    name_checker.validate_host_name(hostname)
+    (ONBOOT_CMD_PATH / f'{hostname}.cmd').unlink()
