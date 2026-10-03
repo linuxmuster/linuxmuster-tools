@@ -29,6 +29,89 @@ IMAGES_DIR = Path(os.environ.get("LINBO_DIR", "/srv/linbo")) / "images"
 IMAGE_EXTS = {".qcow2", ".qdiff", ".cloop"}
 INCOMING_DIR_NAME = ".incoming"
 
+# The .macct file of an image holds the Samba secrets (unicodePwd,
+# supplementalCredentials) of the client the image was taken from. The
+# [linbo] rsync module serves the whole LINBO directory without login, as
+# nobody, so this file has to stay root:root 0600, like linuxmuster-linbo7
+# keeps it (rsync-post-upload.sh, linbo-torrent). The staging directory lies
+# in that module too, and is closed as a whole while an upload waits there.
+MACCT_EXT = ".macct"
+MACCT_MODE = 0o600
+STAGING_DIR_MODE = 0o700
+
+
+def _restrict(path: Path, mode: int) -> None:
+    """Set the mode of a path, and make it root's when running as root."""
+
+
+    os.chmod(path, mode)
+    if os.geteuid() == 0:
+        os.chown(path, 0, 0)
+
+
+def _staging_dir(images_dir: Path, image_name: str) -> Path:
+    """Create the staging directory of an image, closed to other users.
+
+    Both .incoming and its image subdirectory are set on every call, so a
+    directory created before, or opened again by a recursive chown, is
+    closed again.
+    """
+
+
+    incoming_dir = images_dir / INCOMING_DIR_NAME
+    staging_dir = incoming_dir / image_name
+    staging_dir.mkdir(mode=STAGING_DIR_MODE, parents=True, exist_ok=True)
+    for directory in (incoming_dir, staging_dir):
+        _restrict(directory, STAGING_DIR_MODE)
+    return staging_dir
+
+
+def _open_for_write(file_path: Path, flags: int):
+    """Open a file for writing, a .macct one created and kept 0600.
+
+    The mode is given to os.open() so a new .macct file never exists with a
+    wider one, then set again on the descriptor for a file that already
+    existed, or a umask that took the owner bits away.
+    """
+
+
+    flags |= os.O_WRONLY
+    if file_path.suffix != MACCT_EXT:
+        return os.fdopen(os.open(file_path, flags, 0o666), "wb")
+
+    fd = os.open(file_path, flags, MACCT_MODE)
+    try:
+        os.fchmod(fd, MACCT_MODE)
+        if os.geteuid() == 0:
+            os.fchown(fd, 0, 0)
+    except OSError:
+        os.close(fd)
+        raise
+    return os.fdopen(fd, "wb")
+
+
+def _copy_file(source: str | Path, target: str | Path) -> None:
+    """Copy a file like shutil.copy2(), a .macct one without widening its mode.
+
+    shutil.copy2() creates the copy with the umask default and copies the
+    mode of the source afterwards: a .macct would be readable while it is
+    written, and stay so if the source was. It is copied into a file opened
+    0600 instead, keeping the times like copy2() does. Used for the backup,
+    and by shutil.move() when the staged file lies on another filesystem.
+    """
+
+
+    source, target = Path(source), Path(target)
+    if source.suffix != MACCT_EXT:
+        shutil.copy2(str(source), str(target))
+        return
+
+    with open(source, "rb") as src, \
+            _open_for_write(target, os.O_CREAT | os.O_TRUNC) as dst:
+        shutil.copyfileobj(src, dst)
+    stat = source.stat()
+    os.utime(target, ns=(stat.st_atime_ns, stat.st_mtime_ns))
+
 
 def resolve_image_file(images_dir: Path, image_name: str, filename: str) -> Path:
     """Resolve and validate an image file path.
@@ -89,8 +172,7 @@ def receive_upload_chunk(
     image_name = name_checker.validate_linbo_image_name(image_name)
     filename = name_checker.validate_linbo_image_name(filename)
 
-    staging_dir = images_dir / INCOMING_DIR_NAME / image_name
-    staging_dir.mkdir(parents=True, exist_ok=True)
+    staging_dir = _staging_dir(images_dir, image_name)
     file_path = staging_dir / filename
 
     if offset is not None and offset > 0:
@@ -99,11 +181,12 @@ def receive_upload_chunk(
         current_size = file_path.stat().st_size
         if current_size != offset:
             raise ValueError(f"Offset mismatch: expected {current_size}, got {offset}")
-        with open(file_path, "r+b") as f:
+        with _open_for_write(file_path, 0) as f:
             f.seek(offset)
             f.write(data)
     else:
-        file_path.write_bytes(data)
+        with _open_for_write(file_path, os.O_CREAT | os.O_TRUNC) as f:
+            f.write(data)
 
     return {"received": len(data), "offset": (offset or 0) + len(data)}
 
@@ -158,7 +241,7 @@ def finalize_upload(images_dir: Path, image_name: str) -> dict:
         for f in target_dir.iterdir():
             if f.is_file():
                 try:
-                    shutil.copy2(str(f), str(backup_dir / f.name))
+                    _copy_file(f, backup_dir / f.name)
                 except OSError as e:
                     logger.warning("Backup failed for %s: %s", f.name, e)
 
@@ -169,8 +252,17 @@ def finalize_upload(images_dir: Path, image_name: str) -> dict:
     for f in staging_dir.iterdir():
         if f.is_file():
             target = target_dir / f.name
-            shutil.move(str(f), str(target))
+            # Before the move, which keeps the mode: a file staged before
+            # the staging directory was closed can still be wider.
+            if f.suffix == MACCT_EXT:
+                _restrict(f, MACCT_MODE)
+            shutil.move(str(f), str(target), copy_function=_copy_file)
             moved.append(f.name)
+
+    # A .macct left from an earlier upload or an older version is closed too.
+    for f in target_dir.iterdir():
+        if f.is_file() and f.suffix == MACCT_EXT:
+            _restrict(f, MACCT_MODE)
 
     try:
         staging_dir.rmdir()
