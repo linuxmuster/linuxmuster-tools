@@ -188,7 +188,7 @@ Each finding carries:
 | `hostname.trailing_hyphen` | error | Must not end with a hyphen |
 | `hostname.too_long` | error | `<school>-<hostname>` over 15 characters, for the roles whose `COMPUTER_ACCOUNT` is `TRUE` in `sophomorix.ini` |
 | `hostname.duplicate` | error | Same name twice, globally, compared on the prefixed name ignoring case |
-| `group.invalid` | error | LINBO group name: `^[a-z0-9+\-_.]*$`, case-insensitive |
+| `group.invalid` | error | LINBO group name: `^[a-z0-9_\-]+$`, case-insensitive (no `.` nor `+`, refused by sophomorix and LINBO) |
 | `mac.invalid` | error | None of the three accepted forms (`AA:BB:…`, `AA-BB-…`, `AABB…`) |
 | `mac.duplicate` | error | Same address twice, globally, compared normalized |
 | `ip.invalid` | error | Not an IPv4 address, `DHCP` excepted |
