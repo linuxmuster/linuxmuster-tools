@@ -143,6 +143,25 @@ def test_derived_lists_are_populated(make_device_row, write_devices_csv):
     assert set(devicesmgr.rooms) == {'r101', 'r102'}
 
 
+def test_derived_lists_are_naturally_sorted(make_device_row, write_devices_csv):
+    """
+    Built from sets, the lists used to come out in an order changing from one
+    process to the next (hash randomization).
+    """
+    write_devices_csv([
+        make_device_row(hostname='r10-pc10', room='r10', group='g10', ip='10.0.0.10'),
+        make_device_row(hostname='r2-pc1', room='r2', group='g2', ip='10.0.0.2'),
+        make_device_row(hostname='r10-pc5', room='r10', group='g10', ip='10.0.0.5'),
+    ])
+
+    devicesmgr = Devices()
+
+    assert devicesmgr.hostnames == ['r2-pc1', 'r10-pc5', 'r10-pc10']
+    assert devicesmgr.rooms == ['r2', 'r10']
+    assert devicesmgr.groups == ['g2', 'g10']
+    assert devicesmgr.ips == ['10.0.0.2', '10.0.0.5', '10.0.0.10']
+
+
 # ---------------------------------------------------------------------------
 # mac normalization
 # ---------------------------------------------------------------------------

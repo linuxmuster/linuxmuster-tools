@@ -3,6 +3,7 @@ from pathlib import Path
 
 from ..lmnfile import LMNFile
 from ..common.checks import NameChecker
+from ..common.sorting import sort_naturally
 from ..common.timestamps import get_utc_mtime
 from ..lmnconfig import SophomorixIni
 from .validator import InventoryValidator
@@ -63,11 +64,11 @@ class Devices:
             # No devices.csv yet, e.g. fresh install not provisioned yet
             pass
 
-        self.groups = list(set([d['group'] for d in self.devices if d.get('group', False)]))
-        self.macs = list(set([d['mac'] for d in self.devices if d.get('mac', False)]))
-        self.ips = list(set([d['ip'] for d in self.devices if d.get('ip', False)]))
-        self.rooms = list(set([d['room'] for d in self.devices if d.get('room', False)]))
-        self.hostnames = list(set([d['hostname'] for d in self.devices if d.get('hostname', False)]))
+        self.groups = sort_naturally({d['group'] for d in self.devices if d.get('group', False)})
+        self.macs = sort_naturally({d['mac'] for d in self.devices if d.get('mac', False)})
+        self.ips = sort_naturally({d['ip'] for d in self.devices if d.get('ip', False)})
+        self.rooms = sort_naturally({d['room'] for d in self.devices if d.get('room', False)})
+        self.hostnames = sort_naturally({d['hostname'] for d in self.devices if d.get('hostname', False)})
         # Same hosts, named as anything school-agnostic writes them: LINBO
         # logs, hwinfo files, AD objects. Answers "is this host mine?" for a
         # caller holding a name that came from outside the school.

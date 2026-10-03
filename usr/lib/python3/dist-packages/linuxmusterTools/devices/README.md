@@ -41,11 +41,11 @@ devicesmgr = Devices(school='default-school')
 | Attribute | Type | Description |
 |---|---|---|
 | `devices` | `list[dict]` | All rows of `devices.csv`, enriched (see below); comment lines (`room` starting with `#`) are skipped |
-| `groups` | `list[str]` | Unique LINBO groups found in the inventory |
-| `macs` | `list[str]` | Unique normalized MAC addresses |
-| `ips` | `list[str]` | Unique IP addresses |
-| `rooms` | `list[str]` | Unique room names |
-| `hostnames` | `list[str]` | Unique host names, as written in the inventory |
+| `groups` | `list[str]` | Unique LINBO groups found in the inventory, in natural order |
+| `macs` | `list[str]` | Unique normalized MAC addresses, in natural order |
+| `ips` | `list[str]` | Unique IP addresses, in natural order (`10.0.0.2` before `10.0.0.10`) |
+| `rooms` | `list[str]` | Unique room names, in natural order |
+| `hostnames` | `list[str]` | Unique host names, as written in the inventory, in natural order (`r1-pc5` before `r1-pc10`, see `common.sort_naturally`) |
 | `prefixed_hostnames` | `set[str]` | The same hosts named `<school>-<hostname>`, the form used outside their own school (LINBO logs, hwinfo files, AD objects); identical to `hostnames` for `default-school` |
 | `hostname_prefix` | `str` | `'<school>-'`, or `''` for `default-school` |
 | `clients` | `list[dict]` | Devices whose `sophomorixRole` is a client role (from `sophomorix.ini`) |
