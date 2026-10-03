@@ -79,21 +79,6 @@ class TestStudentParents:
         assert kwargs['subdn'] == f'OU={school},OU=SCHOOLS,'
 
 
-class TestCheckSchoolclassNumber:
-
-    def test_numeric_prefix_returns_int(self):
-        assert LMNUserMixin._check_schoolclass_number('7a') == 7
-
-    def test_numeric_only_returns_int(self):
-        assert LMNUserMixin._check_schoolclass_number('10') == 10
-
-    def test_no_digit_returns_large_number(self):
-        assert LMNUserMixin._check_schoolclass_number('attic') == 10000000
-
-    def test_no_digit_at_all_returns_large_number(self):
-        assert LMNUserMixin._check_schoolclass_number('abc') == 10000000
-
-
 class TestExtractSchoolclasses:
 
     def setup_method(self):
@@ -144,6 +129,14 @@ class TestExtractSchoolclasses:
         assert result.index('7a') < result.index('7b')
         assert result.index('7b') < result.index('10a')
 
+    def test_sorts_digitless_schoolclasses_last(self):
+        membership = [
+            f'CN={cn},OU={cn},OU=Students,OU=default-school,OU=SCHOOLS,DC=test,DC=lan'
+            for cn in ['abitur', '10a', 'k1', '7b']
+        ]
+        result = self.user.extract_schoolclasses(membership)
+        assert result == ['7b', '10a', 'k1', 'abitur']
+
 
 class TestExtractProjects:
 
@@ -164,6 +157,14 @@ class TestExtractProjects:
         result = self.user.extract_projects(membership)
         assert result == []
 
+    def test_sorts_naturally(self):
+        membership = [
+            f'CN={cn},OU=Projects,OU=default-school,OU=SCHOOLS,DC=test,DC=lan'
+            for cn in ['p_ag10', 'p_ag2', 'p_Chor']
+        ]
+        result = self.user.extract_projects(membership)
+        assert result == ['p_ag2', 'p_ag10', 'p_Chor']
+
 
 class TestExtractPrinters:
 
@@ -183,6 +184,14 @@ class TestExtractPrinters:
         ]
         result = self.user.extract_printers(membership)
         assert result == []
+
+    def test_sorts_naturally(self):
+        membership = [
+            f'CN={cn},OU=printer-groups,OU=default-school,OU=SCHOOLS,DC=test,DC=lan'
+            for cn in ['r10-printer', 'r2-printer', 'R3-printer']
+        ]
+        result = self.user.extract_printers(membership)
+        assert result == ['r2-printer', 'R3-printer', 'r10-printer']
 
 
 class TestExtractManagement:

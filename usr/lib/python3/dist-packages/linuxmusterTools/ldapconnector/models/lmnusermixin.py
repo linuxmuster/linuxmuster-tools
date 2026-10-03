@@ -1,6 +1,6 @@
-import re
 from .lmnsession import LMNSessionModel
 from linuxmusterTools.common import WEBUI_IMPORT
+from linuxmusterTools.common.sorting import sort_naturally
 
 
 class LMNUserMixin:
@@ -8,14 +8,6 @@ class LMNUserMixin:
     Methods shared between LMNUserModel and LMNRawUserModel.
     """
 
-
-    @staticmethod
-    def _check_schoolclass_number(s):
-        n = re.findall(r'\d+', s)
-        if n:
-            return int(n[0])
-        else:
-            return 10000000 # just a big number to come after all schoolclasses
 
     def extract_schoolclasses(self, membership):
         schoolclasses = []
@@ -27,8 +19,7 @@ class LMNUserMixin:
                 schoolclass = self.common_name(dn)
                 if schoolclass:
                     schoolclasses.append(schoolclass)
-        schoolclasses = sorted(schoolclasses, key=lambda s: (self._check_schoolclass_number(s), s))
-        return schoolclasses
+        return sort_naturally(schoolclasses, digitless_last=True)
 
     def extract_projects(self, membership):
         projects = []
@@ -37,8 +28,7 @@ class LMNUserMixin:
                 project = self.common_name(dn)
                 if project:
                     projects.append(project)
-        projects.sort()
-        return projects
+        return sort_naturally(projects)
 
     def extract_printers(self, membership):
         printers = []
@@ -47,8 +37,7 @@ class LMNUserMixin:
                 printer = self.common_name(dn)
                 if printer:
                     printers.append(printer)
-        printers.sort()
-        return printers
+        return sort_naturally(printers)
 
     def extract_management(self):
         school_prefix = ""
