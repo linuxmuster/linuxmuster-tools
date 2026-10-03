@@ -21,6 +21,7 @@ values seen so far that uniqueness is checked against.
 
 
 import logging
+from pathlib import Path
 from dataclasses import dataclass, field as dataclass_field, asdict
 
 from ..common.checks import NameChecker
@@ -33,6 +34,9 @@ name_checker = NameChecker()
 
 ERROR = 'error'
 WARNING = 'warning'
+
+# Prefix of a line of the flat report, shorter than the severity itself.
+SEVERITY_ICONS = {ERROR: '❌', WARNING: '⚠️'}
 
 # A machine account is a sAMAccountName, whose sixteenth byte is the service
 # suffix - the trailing '$'. Fifteen characters are left for the name itself,
@@ -147,14 +151,14 @@ def validate_hostname(hostname, role='', school='default-school', roles=None):
 
     if not hostname[0].isalnum():
         findings.append(Finding(
-            ERROR, 'hostname.leading_character',
+            ERROR, 'hostname.first_char',
             f"{hostname} is not a valid hostname: it must start with a letter or a digit",
             field='hostname', value=hostname,
         ))
 
     if hostname.endswith('-'):
         findings.append(Finding(
-            ERROR, 'hostname.trailing_hyphen',
+            ERROR, 'hostname.last_char',
             f"{hostname} is not a valid hostname: it must not end with a hyphen",
             field='hostname', value=hostname,
         ))
@@ -476,7 +480,7 @@ class InventoryValidator:
 
             if len(per_school) > 1:
                 findings.append(self._duplicate(
-                    WARNING, 'ip.duplicate_across_schools', 'ip', ip,
+                    WARNING, 'ip.multischool', 'ip', ip,
                     occurrences, suffix=' in different schools',
                 ))
 
@@ -518,30 +522,31 @@ class InventoryValidator:
 
     def _text(self, finding):
         """
-        One finding as the single line of the flat report.
+        One finding as the single short line of the flat report, e.g.
+        "❌ hostname.too_long pc0123456789 (school2.devices.csv:12)".
+
+        The code and the offending value say what is wrong, the README lists
+        what each code means; the full sentence stays in the finding.
 
         :rtype: string
         """
 
 
         # Every place to fix, grouped by file: in a multi-school run, a line
-        # number alone does not say which devices.csv it is in.
+        # number alone does not say which devices.csv it is in. The file name
+        # is enough, it carries the school prefix.
         lines_per_file = {}
         for occurrence in [{'file': finding.file, 'line': finding.line}] + finding.related:
             if occurrence['line']:
-                lines_per_file.setdefault(occurrence['file'], []).append(str(occurrence['line']))
-        places = []
-        for file, lines in lines_per_file.items():
-            numbers = f"line {lines[0]}" if len(lines) == 1 else f"lines {', '.join(lines)}"
-            places.append(f"{file}, {numbers}" if file else numbers)
-        location = f" ({'; '.join(places)})" if places else ""
+                name = Path(occurrence['file']).name if occurrence['file'] else ''
+                lines_per_file.setdefault(name, []).append(str(occurrence['line']))
+        places = [
+            f"{file}:{','.join(lines)}" if file else ','.join(lines)
+            for file, lines in lines_per_file.items()
+        ]
+        location = f" ({', '.join(places)})" if places else ""
 
-        # The subject is only added when the message does not already start
-        # with it, as the hostname rules and the duplicates do.
-        host = ""
-        if finding.subject:
-            name = prefixed_hostname(finding.subject, finding.school)
-            if not finding.message.startswith((f"{name} ", f"{name},")):
-                host = f"{name}: "
+        icon = SEVERITY_ICONS[finding.severity]
+        value = finding.value if finding.value != '' else "''"
 
-        return f"{finding.severity.upper()}: {host}{finding.message}{location}"
+        return f"{icon} {finding.code} {value}{location}"

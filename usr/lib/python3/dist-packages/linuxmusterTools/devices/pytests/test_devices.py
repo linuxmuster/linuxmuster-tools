@@ -394,7 +394,7 @@ def test_check_conf_invalid_ip(make_device_row, write_devices_csv):
 
     assert result['valid'] is False
     assert [f['code'] for f in result['findings']] == ['ip.invalid']
-    assert any('is not a valid ip address' in line for line in result['report'])
+    assert result['report'] == ['❌ ip.invalid 999.999.999.999 (devices.csv:1)']
 
 
 def test_check_conf_invalid_mac_names_the_raw_address(make_device_row, write_devices_csv):
@@ -498,7 +498,7 @@ def test_check_conf_duplicate_ip(make_device_row, write_devices_csv):
     assert finding['code'] == 'ip.duplicate'
     assert finding['subject'] == 'pc01'
     assert [o['subject'] for o in finding['related']] == ['pc02']
-    assert any('have the same ip 10.0.0.1' in line for line in result['report'])
+    assert result['report'] == ['❌ ip.duplicate 10.0.0.1 (devices.csv:1,2)']
 
 
 def test_check_conf_duplicate_mac(make_device_row, write_devices_csv):
@@ -510,7 +510,7 @@ def test_check_conf_duplicate_mac(make_device_row, write_devices_csv):
     result = Devices().check_conf()
 
     assert [f['code'] for f in result['findings']] == ['mac.duplicate']
-    assert any('have the same mac AA:BB:CC:DD:EE:01' in line for line in result['report'])
+    assert result['report'] == ['❌ mac.duplicate AA:BB:CC:DD:EE:01 (devices.csv:1,2)']
 
 
 def test_check_conf_duplicate_hostname_ignores_case(make_device_row, write_devices_csv):
@@ -539,9 +539,7 @@ def test_check_conf_reports_the_line_to_fix(make_device_row, write_devices_csv):
     assert finding['line'] == 3
     assert finding['subject'] == 'pc02'
     assert finding['file'].endswith('default-school/devices.csv')
-    assert result['report'][0] == (
-        f"ERROR: pc02: 999.999.999.999 is not a valid ip address ({finding['file']}, line 3)"
-    )
+    assert result['report'][0] == '❌ ip.invalid 999.999.999.999 (devices.csv:3)'
 
 
 def test_check_conf_report_names_a_duplicate_once_with_every_line(make_device_row, write_devices_csv):
@@ -554,7 +552,7 @@ def test_check_conf_report_names_a_duplicate_once_with_every_line(make_device_ro
 
     finding = result['findings'][0]
     assert finding['message'] == 'pc01 is used 2 times'
-    assert result['report'][0] == f"ERROR: pc01 is used 2 times ({finding['file']}, lines 1, 2)"
+    assert result['report'][0] == '❌ hostname.duplicate pc01 (devices.csv:1,2)'
 
 
 # ---------------------------------------------------------------------------
@@ -609,7 +607,11 @@ def test_check_all_schools_warns_on_an_ip_shared_between_schools(make_device_row
     result = check_all_schools(['default-school', 'school2'])
 
     assert result['valid'] is True
-    assert [f['code'] for f in result['findings']] == ['ip.duplicate_across_schools']
+    assert [f['code'] for f in result['findings']] == ['ip.multischool']
+    # One file name per school, each with its own lines.
+    assert result['report'] == [
+        '⚠️ ip.multischool 10.0.0.1 (devices.csv:1, school2.devices.csv:1)'
+    ]
 
 
 def test_check_all_schools_keeps_the_same_hostname_in_two_schools(make_device_row, write_devices_csv):

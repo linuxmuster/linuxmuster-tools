@@ -149,7 +149,7 @@ checker.check(groups=['g-pcs'])
 | `valid` | `bool` | `True` when no finding has the `error` severity; warnings do not make an inventory invalid |
 | `counts` | `dict` | `schools`, `devices`, `errors`, `warnings` |
 | `findings` | `list[dict]` | One entry per problem, see below |
-| `report` | `list[str]` | The same problems as flat strings, for a caller that only prints what it gets |
+| `report` | `list[str]` | The same problems as short lines, for a caller that only prints what it gets, see below |
 
 ```python
 >>> from linuxmusterTools.devices import Devices, check_all_schools
@@ -159,10 +159,20 @@ False
 >>> result['counts']
 {'schools': 1, 'devices': 45, 'errors': 1, 'warnings': 0}
 >>> result['report'][0]
-'ERROR: pc02: 999.999.999.999 is not a valid ip address (/etc/linuxmuster/sophomorix/default-school/devices.csv, line 12)'
+'❌ ip.invalid 999.999.999.999 (devices.csv:12)'
 >>> result['findings'][0]['code']
 'ip.invalid'
 ```
+
+A line of `report` is short enough for a terminal (`linuxmuster-import-devices` prints it as is): `❌` for an error or `⚠️` for a warning, the code of the rule (see [Rules](#rules) for what each code means), the offending value (`''` if empty), then every place to fix as `<file name>:<lines>`, grouped by file. The file name alone is enough, it carries the school prefix:
+
+```
+❌ hostname.too_long pc0123456789 (school2.devices.csv:12)
+❌ mac.duplicate AA:BB:CC:DD:EE:01 (devices.csv:3,8)
+⚠️ ip.multischool 10.0.0.1 (devices.csv:1, school2.devices.csv:1)
+```
+
+The full sentence of a problem stays in the `message` of its finding.
 
 Each finding carries:
 
@@ -184,8 +194,8 @@ Each finding carries:
 | `room.invalid` | error | `^[a-zA-Z0-9\-]+$` |
 | `hostname.invalid` | error | `^[a-zA-Z0-9\-]+$` |
 | `hostname.all_digits` | error | A name may not consist only of digits |
-| `hostname.leading_character` | error | Must start with a letter or a digit |
-| `hostname.trailing_hyphen` | error | Must not end with a hyphen |
+| `hostname.first_char` | error | Must start with a letter or a digit |
+| `hostname.last_char` | error | Must not end with a hyphen |
 | `hostname.too_long` | error | `<school>-<hostname>` over 15 characters, for the roles whose `COMPUTER_ACCOUNT` is `TRUE` in `sophomorix.ini` |
 | `hostname.duplicate` | error | Same name twice, globally, compared on the prefixed name ignoring case |
 | `group.invalid` | error | LINBO group name: `^[a-z0-9_\-]+$`, case-insensitive (no `.` nor `+`, refused by sophomorix and LINBO) |
@@ -193,7 +203,7 @@ Each finding carries:
 | `mac.duplicate` | error | Same address twice, globally, compared normalized |
 | `ip.invalid` | error | Not an IPv4 address, `DHCP` excepted |
 | `ip.duplicate` | error | Same address twice **within one school** |
-| `ip.duplicate_across_schools` | warning | Same address in two schools — a fileserver legitimately carries the same one in each |
+| `ip.multischool` | warning | Same address in two schools — a fileserver legitimately carries the same one in each |
 | `pxe.invalid` | error | Not a digit, `ml`, or empty |
 | `role.unknown` | error | Not a `computerrole.*` of `sophomorix.ini`; an empty field means `COMPUTERROLE_DEFAULT` |
 

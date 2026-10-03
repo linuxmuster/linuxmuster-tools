@@ -71,11 +71,11 @@ def test_an_all_digits_hostname_is_refused():
 
 
 def test_a_hostname_starting_with_a_hyphen_is_refused():
-    assert codes(validate_hostname('-pc01')) == ['hostname.leading_character']
+    assert codes(validate_hostname('-pc01')) == ['hostname.first_char']
 
 
 def test_a_hostname_ending_with_a_hyphen_is_refused():
-    assert codes(validate_hostname('pc01-')) == ['hostname.trailing_hyphen']
+    assert codes(validate_hostname('pc01-')) == ['hostname.last_char']
 
 
 def test_a_hostname_of_fifteen_characters_is_valid():
@@ -114,7 +114,7 @@ def test_an_unknown_role_is_treated_as_having_no_account():
 
 def test_every_hostname_problem_is_reported_at_once():
     assert sorted(codes(validate_hostname('-pc01-', role='staffcomputer'))) == [
-        'hostname.leading_character', 'hostname.trailing_hyphen',
+        'hostname.first_char', 'hostname.last_char',
     ]
 
 
