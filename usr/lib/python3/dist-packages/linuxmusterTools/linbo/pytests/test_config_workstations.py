@@ -1,5 +1,5 @@
 """
-Tests for group_os(), last_sync_all() and get_host_image_status() in
+Tests for list_workstations(), group_os(), last_sync_all() and get_host_image_status() in
 linuxmusterTools.linbo.config.
 """
 
@@ -11,7 +11,7 @@ import pytest
 
 import linuxmusterTools.linbo.config as config_module
 from linuxmusterTools.common.timestamps import linbo_timestamp_to_epoch
-from linuxmusterTools.linbo.config import group_os, last_sync, last_sync_all, get_host_image_status
+from linuxmusterTools.linbo.config import group_os, last_sync, last_sync_all, get_host_image_status, list_workstations
 
 
 @pytest.fixture
@@ -36,6 +36,35 @@ StartEnabled=yes
 
 def write_start_conf(tmp_path, group='grp1'):
     (tmp_path / f'start.conf.{group}').write_text(START_CONF)
+
+
+# ── list_workstations ───────────────────────────────────────────────────
+
+
+def test_list_workstations_sorts_groups_and_hosts_naturally(tmp_path, monkeypatch):
+    for group in ['grp10', 'grp2']:
+        write_start_conf(tmp_path, group=group)
+    devices = [
+        {'hostname': hostname, 'group': group, 'pxeFlag': '1'}
+        for hostname, group in [
+            ('r1-pc10', 'grp2'), ('r10-pc1', 'grp10'), ('r1-pc5', 'grp2'), ('r2-pc1', 'grp10'),
+        ]
+    ]
+
+    class FakeDevices:
+        def __init__(self, school):
+            pass
+
+        def filter(self, groups):
+            return devices
+
+    monkeypatch.setattr(config_module, 'Devices', FakeDevices)
+
+    workstations = list_workstations()
+
+    assert list(workstations) == ['grp2', 'grp10']
+    assert [h['hostname'] for h in workstations['grp2']['hosts']] == ['r1-pc5', 'r1-pc10']
+    assert [h['hostname'] for h in workstations['grp10']['hosts']] == ['r2-pc1', 'r10-pc1']
 
 
 # ── group_os ─────────────────────────────────────────────────────────────

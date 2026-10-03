@@ -242,6 +242,7 @@ in `/var/log/linuxmuster/linbo/<hostname>_image.status` (written by
 |---|---|
 | `last_sync(workstation, image, timestamp=True)` | Epoch of the most recent entry for that image, or `False` if the host never synced it. With `timestamp=False`, the whole `{timestamp, action, image, image_timestamp}` entry is returned instead, to also get the version of the image which was applied. The image name is matched exactly, along with its `.qdiff` variant: `last_sync('client1', 'jammy.qcow2')` does *not* report a sync of `data-jammy.qcow2`. The file name is matched **case insensitively**, see below. |
 | `get_host_image_status(log_dir=None)` | Last logged status of **every** host found in the log directory, without knowing beforehand which image a host is supposed to run. Returns `{}` if the directory is missing. |
+| `list_workstations(school='default-school', groups=[])` | `{group: {'grp', 'hosts', 'os', ...}}` of the PXE-enabled hosts whose group has a `start.conf`. Groups, and hosts inside each group, come in natural order (`grp2` before `grp10`, `r1-pc5` before `r1-pc10`, see `common.sort_naturally`). |
 | `last_sync_all(workstations)` | Enriches a `list_workstations()` dict: each host gets an `image` list of `{date, image, imageVersion, status}`. `imageVersion` is the creation timestamp of the image the host actually runs (`None` if it never synced it), not the date of the sync. `status` is the bootstrap class `success`/`warning`/`danger` (fresher than 7 days, older than 7 days, older than 30 days or never). |
 
 ```python

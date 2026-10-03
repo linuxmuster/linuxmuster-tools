@@ -13,6 +13,7 @@ from .grub import GRUB_DIR_DEFAULT
 from ..devices import Devices
 from ..lmnfile import LMNFile
 from ..common.checks import NameChecker
+from ..common.sorting import natural_key
 from ..common.timestamps import get_utc_mtime, linbo_timestamp_to_epoch
 
 
@@ -694,6 +695,9 @@ def list_workstations(school='default-school', groups=[]):
     devices_dict = {}
     devices_manager = Devices(school=school)
     devices = devices_manager.filter(groups=groups)
+    # The dict keeps the insertion order: sorting the devices first gives the
+    # groups, and the hosts inside each group, in natural order.
+    devices = sorted(devices, key=lambda d: (natural_key(d['group']), natural_key(d['hostname'])))
 
     for device in devices:
         if school != 'default-school':
@@ -722,7 +726,7 @@ def last_sync_all(workstations):
 
     today = time.mktime(datetime.now().timetuple())
 
-    for group, grpDict in sorted(workstations.items()):
+    for group, grpDict in workstations.items():
             for host in grpDict['hosts']:
                 host['image'] = []
                 for image in workstations[group]['os']:
