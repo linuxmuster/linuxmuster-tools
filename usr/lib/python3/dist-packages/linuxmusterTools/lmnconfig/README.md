@@ -45,14 +45,14 @@ print(SAMBA_DOMAIN)      # 'server.school.lan'
 print(LDAP_CONTEXT)      # 'OU=SCHOOLS,DC=SCHOOL,DC=LAN'
 ```
 
-If `/etc/samba/smb.conf` is missing or unreadable, all constants above default to `''` (or `{}`/`[]`) and a warning/error is logged — the module never raises on import.
+If `/etc/samba/smb.conf` is missing or unreadable, the constants read from it default to `''` (or `{}`) and a warning/error is logged. `net conf list` is not guarded: if it fails (Samba not provisioned yet, process not running as root), importing the module raises `subprocess.CalledProcessError`.
 
 ### `server.py` — module-level constants
 
 | Name | Type | Description |
 |---|---|---|
 | `SERVER_HOSTNAME` | `str` | Result of `socket.gethostname()` |
-| `SERVER_IP` | `str` | First non-loopback IP of the server, or an error string if none is found |
+| `SERVER_IP` | `str` | First non-loopback IP of the server, or an error string if none is found. If the host name does not resolve, importing the module raises `socket.gaierror` |
 
 ### `setup.py` — `SetupConfig`
 
@@ -92,7 +92,7 @@ conf.data['global']['LANG']
 | `SophomorixConf` | `/etc/linuxmuster/sophomorix/sophomorix.conf` | Global sophomorix settings, `.data` dict |
 | `MultiOrderedDict` | — | `OrderedDict` variant used by `SophomorixIni`: re-assigning a list key extends it instead of overwriting it |
 
-All three config classes fall back to an empty dict (`.config`/`.data` == `{}`) and log a warning if their file is missing.
+`SchoolConfig` and `SophomorixConf` fall back to an empty dict (`.config`/`.data` == `{}`) and log a warning if their file is missing. `SophomorixIni` logs a warning too, then raises `KeyError: 'ROLE_USER'`.
 
 `SophomorixIni.computer_roles` is a frozen `ComputerRoles` dataclass: the `[computerrole.*]` sections, prefix stripped, split on their `COMPUTER_ACCOUNT` flag, in the order of the file.
 
