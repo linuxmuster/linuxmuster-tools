@@ -203,3 +203,40 @@ class TestCustomFieldsConfigSchoolWiring:
         self.reader.get_collection(_SimpleModel, 'filter', school='global')
 
         assert seen_schools == ['default-school']
+
+
+class TestGetCollectionSortkey:
+    """
+    sortkey orders the results naturally, names without any digit last
+    (the order used for schoolclasses).
+    """
+
+    def setup_method(self):
+        self.reader = LdapReader.__new__(LdapReader)
+        self.reader.lc = MagicMock()
+        self.reader.lc._get.return_value = [
+            _raw(cn=cn, dn=f'CN={cn},OU=default-school,DC=test,DC=lan', name=cn)
+            for cn in ['abitur', '10b', '5b', '5a', 'kurs1']
+        ]
+
+    @pytest.fixture(autouse=True)
+    def _no_custom_fields(self, monkeypatch):
+        monkeypatch.setattr(
+            ldap_reader_module, 'CustomFieldsConfig',
+            lambda school: SimpleNamespace(config={})
+        )
+
+    def test_sortkey_as_dict(self):
+        result = self.reader.get_collection(_SimpleModel, 'filter', sortkey='cn')
+
+        assert [r['cn'] for r in result] == ['5a', '5b', '10b', 'kurs1', 'abitur']
+
+    def test_sortkey_as_objects(self):
+        result = self.reader.get_collection(_SimpleModel, 'filter', sortkey='cn', as_dict=False)
+
+        assert [r.cn for r in result] == ['5a', '5b', '10b', 'kurs1', 'abitur']
+
+    def test_no_sortkey_keeps_ldap_order(self):
+        result = self.reader.get_collection(_SimpleModel, 'filter')
+
+        assert [r['cn'] for r in result] == ['abitur', '10b', '5b', '5a', 'kurs1']

@@ -36,7 +36,7 @@ lr.get(url, attributes=[], sortkey=None, as_dict=True, school='default-school')
 |---|---|---|
 | `url` | `str` | URL path (see [Available routes](#available-routes)) |
 | `attributes` | `list[str]` | Restrict returned fields (default: all) |
-| `sortkey` | `str` | Sort results by this attribute |
+| `sortkey` | `str` | Sort results by this attribute, in natural order, values without any digit last (`5a`, `5b`, `10b`, `abitur`; see `common.sort_naturally`) |
 | `as_dict` | `bool` | `True` → dict(s), `False` → dataclass object(s) |
 | `school` | `str` | Target school in multi-school setups (default: `'default-school'`, `'global'` for global admins) |
 

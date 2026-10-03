@@ -1,9 +1,9 @@
 import logging
-import re
 import ldap
 from dataclasses import fields, asdict
 
 from .connector import LdapConnector
+from ..common.sorting import sort_naturally
 from ..lmnconfig import CustomFieldsConfig
 
 
@@ -115,16 +115,6 @@ class LdapReader:
         :typee attributes: list
         """
 
-        def _check_schoolclass_number(s):
-            if not isinstance(s, str):
-                return s
-
-            n = re.findall(r'\d+', s)
-            if n:
-                return int(n[0])
-            else:
-                return 10000000  # just a big number to come after all schoolclasses
-
         results = self.lc._get(ldap_filter, scope=scope, subdn=subdn)
         response = []
 
@@ -143,9 +133,9 @@ class LdapReader:
                 response.append(formatted_obj)
         if sortkey is not None:
             if kwargs.get('as_dict', True):
-                return sorted(response, key=lambda d: _check_schoolclass_number(d.get(sortkey, None)))
+                return sort_naturally(response, key=lambda d: d.get(sortkey, None), digitless_last=True)
             else:
-                return sorted(response, key=lambda d: _check_schoolclass_number(getattr(d, sortkey)))
+                return sort_naturally(response, key=lambda d: getattr(d, sortkey), digitless_last=True)
         return response
 
     @staticmethod
