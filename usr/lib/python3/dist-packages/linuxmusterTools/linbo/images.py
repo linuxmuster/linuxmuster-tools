@@ -4,6 +4,7 @@ import subprocess
 import logging
 from datetime import datetime, timezone
 
+from ..common.sorting import sort_naturally
 from ..lmnfile import LMNFile
 # Keep the existing images-module constants importable after their owner moved.
 from .drivers import (
@@ -651,7 +652,9 @@ class LinboImageManager:
         self.groups = {}
         if not os.path.isdir(LINBO_PATH):
             return
-        for dir in os.listdir(LINBO_PATH):
+        # The dict keeps the insertion order: callers get the images in
+        # natural order, without sorting them again.
+        for dir in sort_naturally(os.listdir(LINBO_PATH)):
             if os.path.isdir(os.path.join(LINBO_PATH, dir)):
                 for file in os.listdir(os.path.join(LINBO_PATH, dir)):
                     if file == f'{dir}.{IMAGE}':

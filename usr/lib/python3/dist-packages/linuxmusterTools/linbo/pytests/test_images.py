@@ -142,6 +142,16 @@ def test_broken_image_does_not_crash_manager_list(environment):
     assert images.groups["broken"].base is None
 
 
+
+def test_list_returns_images_in_natural_order(environment):
+    images_root, images = environment
+    for name in ["win10", "Debian", "win2", "ubuntu"]:
+        _create_image(images_root, name)
+
+    images.list()
+
+    assert list(images.groups) == ["Debian", "ubuntu", "win2", "win10"]
+
 def test_broken_image_group_to_dict_reports_error_without_crashing(environment):
     images_root, images = environment
     _create_broken_image(images_root, "broken")

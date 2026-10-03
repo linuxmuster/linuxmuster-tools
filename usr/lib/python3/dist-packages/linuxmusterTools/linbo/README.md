@@ -91,7 +91,7 @@ config - a group without one simply has VDI disabled.
 ## Image manager
 
 `LinboImageManager` provides an object to manage all linbo images, backups and extra files (rename, delete, ... ).
-The manager contains a dict of all groups in the attributes `groups`. Each group is a `LinboImageGroup` which lists all files, backups contained in the directory. You can get a dict of this description with the method `to_dict()` like bellow:
+The manager contains a dict of all groups in the attributes `groups`, filled by `list()` in natural order (`win2` before `win10`, see `common.sort_naturally`). Each group is a `LinboImageGroup` which lists all files, backups contained in the directory. You can get a dict of this description with the method `to_dict()` like bellow:
 
 ```Console
 >>> from linuxmusterTools.linbo import LinboImageManager
