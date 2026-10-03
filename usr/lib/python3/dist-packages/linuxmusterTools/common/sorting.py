@@ -84,13 +84,15 @@ def natural_key(value):
 
     return (0, segments, text)
 
-def sort_naturally(items, key=None, reverse=False):
+def sort_naturally(items, key=None, reverse=False, digitless_last=False):
     """
     Sort a list of names, or of objects holding a name, in human order.
 
     >>> sort_naturally(['m10', 'm5'])
     ['m5', 'm10']
     >>> sort_naturally(hosts, key=lambda host: host['hostname'])
+    >>> sort_naturally(['abitur', '10b', '5a'], digitless_last=True)
+    ['5a', '10b', 'abitur']
 
     :param items: Values to sort
     :type items: iterable
@@ -100,12 +102,28 @@ def sort_naturally(items, key=None, reverse=False):
     :param reverse: Sort in descending order. None values, sorted last by
                     natural_key(), then come first.
     :type reverse: bool
+    :param digitless_last: Move the values holding no digit at all after the
+                           others, each group in natural order. Schoolclasses
+                           are listed this way: '5a', '10b', then 'abitur'.
+                           With reverse, these values come first.
+    :type digitless_last: bool
     :return: Sorted list
     :rtype: list
     """
 
 
     if key is None:
-        return sorted(items, key=natural_key, reverse=reverse)
+        key = lambda item: item
 
-    return sorted(items, key=lambda item: natural_key(key(item)), reverse=reverse)
+    if digitless_last:
+        def sort_key(item):
+            value = key(item)
+            # None holds no digit either: it stays last, behind the digitless
+            # names, as natural_key() orders it.
+            digitless = value is None or not _DIGITS.search(str(value))
+            return (digitless, natural_key(value))
+    else:
+        def sort_key(item):
+            return natural_key(key(item))
+
+    return sorted(items, key=sort_key, reverse=reverse)

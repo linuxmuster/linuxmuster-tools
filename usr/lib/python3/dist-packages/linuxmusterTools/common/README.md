@@ -153,13 +153,14 @@ sort_naturally(['m1', 'm05', 'm0020', 'm010', 'm5'])        # ['m0020', 'm05', '
 sort_naturally(['r100-pc10', 'r100-pc5'])                   # ['r100-pc5', 'r100-pc10']
 sort_naturally(['10.0.0.10', '10.0.0.2'])                   # ['10.0.0.2', '10.0.0.10']
 sort_naturally(hosts, key=lambda host: host['hostname'])     # list of dicts
+sort_naturally(['abitur', '10b', '5a'], digitless_last=True) # ['5a', '10b', 'abitur']
 sorted(devices, key=lambda d: natural_key(d.hostname))       # or as a sorted() key
 ```
 
 | Function | Description |
 |---|---|
 | `natural_key(value)` | Comparable key to pass to `sorted()`/`min()`/`max()`. Splits the string into text and number segments, compares numbers as numbers and text case-insensitively, deeper padding first. `None` sorts last, anything which is not a string is sorted on its `str()`. |
-| `sort_naturally(items, key=None, reverse=False)` | Returns a new sorted list. `key` is a callable returning the value to sort an item on, like `sorted()`'s own. |
+| `sort_naturally(items, key=None, reverse=False, digitless_last=False)` | Returns a new sorted list. `key` is a callable returning the value to sort an item on, like `sorted()`'s own. With `digitless_last=True`, values holding no digit at all come after the others, each group in natural order (the order used for schoolclasses: `5a`, `10b`, then `abitur`). |
 
 Every segment is compared, not only the first number, so `r100-pc5` and
 `r100-pc10` are ordered on the part which actually differs.

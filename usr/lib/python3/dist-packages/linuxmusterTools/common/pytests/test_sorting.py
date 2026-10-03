@@ -127,6 +127,26 @@ def test_sort_naturally_is_stable_on_equal_keys():
     assert result[1] is second
 
 
+def test_sort_naturally_digitless_last():
+    names = ['abitur', '10b', 'Kurs', '5a', 'm05']
+    assert sort_naturally(names, digitless_last=True) == ['5a', '10b', 'm05', 'abitur', 'Kurs']
+
+def test_sort_naturally_digitless_last_off_by_default():
+    assert sort_naturally(['5a', 'abitur', '10b']) == ['5a', '10b', 'abitur']
+    assert sort_naturally(['5a', 'abitur', '10b', 'aa1']) == ['5a', '10b', 'aa1', 'abitur']
+
+def test_sort_naturally_digitless_last_with_a_key():
+    classes = [{'cn': 'abitur'}, {'cn': '10b'}, {'cn': '5a'}]
+    result = sort_naturally(classes, key=lambda c: c['cn'], digitless_last=True)
+    assert [c['cn'] for c in result] == ['5a', '10b', 'abitur']
+
+def test_sort_naturally_digitless_last_keeps_none_last():
+    assert sort_naturally(['abitur', None, '5a'], digitless_last=True) == ['5a', 'abitur', None]
+
+def test_sort_naturally_digitless_last_reverse():
+    assert sort_naturally(['5a', 'abitur', '10b'], digitless_last=True, reverse=True) == ['abitur', '10b', '5a']
+
+
 # --- public API ----------------------------------------------------------
 
 def test_helpers_are_reexported_by_common():
