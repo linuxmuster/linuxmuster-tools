@@ -1,3 +1,4 @@
+import ldap
 import pytest
 from copy import deepcopy
 from unittest.mock import MagicMock
@@ -396,3 +397,155 @@ class TestFindLegacyGroups:
 
         legacy = find_legacy_groups()
         assert [g['cn'] for g in legacy] == ['robotics']
+
+
+MEMBERGROUP_DNS = {
+    '7a': GROUP_DN,
+    'teachers': 'CN=teachers,OU=Teachers,OU=default-school,OU=SCHOOLS,DC=linuxmuster,DC=lan',
+    'robotics': SOPHOMORIX_GROUP_DN,
+}
+
+
+def _membergroups_getval(lookups):
+    def getval(url, attr, **kw):
+        if url == '/ou':
+            return ['LMNGroups']
+
+        if url.startswith('/units/'):
+            lookups.append((url, kw.get('school')))
+            return MEMBERGROUP_DNS.get(url.rsplit('/', 1)[-1])
+
+        return None
+
+    return getval
+
+
+def _lmngroup(monkeypatch, members, school='default-school'):
+    sample = dict(SAMPLE_SOPHOMORIX_GROUP, member=list(members), sophomorixType='lmngroup')
+    lookups = []
+    monkeypatch.setattr(router, 'get', lambda url, **kw: deepcopy(sample))
+    monkeypatch.setattr(router, 'getval', _membergroups_getval(lookups))
+    return LMNGroup('robotics', school=school), lookups
+
+
+def _ldif(mock_connect):
+    """Return the ldif of the single modify which was applied."""
+
+    assert mock_connect.modify_s.call_count == 1
+    return mock_connect.modify_s.call_args[0][1]
+
+
+class TestLMNGroupAddMembergroups:
+
+    def test_a_group_is_added_with_one_targeted_modify(self, monkeypatch, mock_connect):
+        g, _ = _lmngroup(monkeypatch, [USER_DN])
+
+        assert g.add_membergroups(['7a', 'teachers']) == []
+
+        ldif = _ldif(mock_connect)
+        assert [op for op, _, _ in ldif] == [ldap.MOD_ADD, ldap.MOD_ADD]
+        assert [value for _, _, value in ldif] == [[GROUP_DN.encode()], [MEMBERGROUP_DNS['teachers'].encode()]]
+
+    def test_the_users_already_in_the_list_are_not_deleted_first(self, monkeypatch, mock_connect):
+        g, _ = _lmngroup(monkeypatch, [USER_DN])
+
+        g.add_membergroups(['7a'])
+
+        # No MOD_DELETE: the direct members stay, whatever the list holds at that moment.
+        assert ldap.MOD_DELETE not in [op for op, _, _ in _ldif(mock_connect)]
+
+    def test_a_group_already_in_the_list_is_skipped(self, monkeypatch, mock_connect):
+        g, _ = _lmngroup(monkeypatch, [USER_DN, GROUP_DN])
+
+        assert g.add_membergroups(['7a']) == []
+
+        # A MOD_ADD on a value already present makes the whole modify fail.
+        assert not mock_connect.modify_s.called
+
+    def test_a_group_given_twice_is_added_once(self, monkeypatch, mock_connect):
+        g, _ = _lmngroup(monkeypatch, [])
+
+        g.add_membergroups(['7a', '7a'])
+
+        assert len(_ldif(mock_connect)) == 1
+
+    def test_an_unknown_group_is_reported_and_the_rest_applied(self, monkeypatch, mock_connect):
+        g, _ = _lmngroup(monkeypatch, [])
+
+        failures = g.add_membergroups(['ghost', '7a'])
+
+        assert [name for name, _ in failures] == ['ghost']
+        assert 'was not found in ldap' in failures[0][1]
+        assert len(_ldif(mock_connect)) == 1
+
+    def test_the_group_can_not_contain_itself(self, monkeypatch, mock_connect):
+        g, _ = _lmngroup(monkeypatch, [])
+
+        failures = g.add_membergroups(['robotics'])
+
+        assert [name for name, _ in failures] == ['robotics']
+        assert 'can not be a member of itself' in failures[0][1]
+        assert not mock_connect.modify_s.called
+
+    def test_only_the_school_of_the_group_is_searched(self, monkeypatch, mock_connect):
+        g, lookups = _lmngroup(monkeypatch, [], school='agy')
+
+        g.add_membergroups(['7a'])
+
+        assert lookups == [('/units/7a', 'agy')]
+
+    def test_a_failed_write_is_reported_for_every_group(self, monkeypatch, mock_connect):
+        g, _ = _lmngroup(monkeypatch, [])
+        mock_connect.modify_s.side_effect = Exception('insufficient access')
+
+        failures = g.add_membergroups(['7a', 'teachers'])
+
+        assert [name for name, _ in failures] == ['7a', 'teachers']
+        assert all('insufficient access' in message for _, message in failures)
+
+    def test_add_membergroup_raises_on_a_failure(self, monkeypatch, mock_connect):
+        g, _ = _lmngroup(monkeypatch, [])
+
+        with pytest.raises(Exception, match='was not found in ldap'):
+            g.add_membergroup('ghost')
+
+
+class TestLMNGroupRemoveMembergroups:
+
+    def test_removing_is_one_targeted_modify(self, monkeypatch, mock_connect):
+        g, _ = _lmngroup(monkeypatch, [USER_DN, GROUP_DN])
+
+        assert g.remove_membergroups(['7a']) == []
+
+        # Only the group leaves: johndoe stays a direct member, even though he is in 7a.
+        ldif = _ldif(mock_connect)
+        assert [op for op, _, _ in ldif] == [ldap.MOD_DELETE]
+        assert [value for _, _, value in ldif] == [GROUP_DN.encode()]
+
+    def test_a_group_not_in_the_list_is_skipped(self, monkeypatch, mock_connect):
+        g, _ = _lmngroup(monkeypatch, [USER_DN])
+
+        assert g.remove_membergroups(['7a']) == []
+        assert not mock_connect.modify_s.called
+
+    def test_an_unknown_group_is_reported_and_the_rest_applied(self, monkeypatch, mock_connect):
+        g, _ = _lmngroup(monkeypatch, [GROUP_DN])
+
+        failures = g.remove_membergroups(['ghost', '7a'])
+
+        assert [name for name, _ in failures] == ['ghost']
+        assert len(_ldif(mock_connect)) == 1
+
+    def test_a_failed_write_is_reported_for_every_group(self, monkeypatch, mock_connect):
+        g, _ = _lmngroup(monkeypatch, [GROUP_DN, MEMBERGROUP_DNS['teachers']])
+        mock_connect.modify_s.side_effect = Exception('insufficient access')
+
+        failures = g.remove_membergroups(['7a', 'teachers'])
+
+        assert [name for name, _ in failures] == ['7a', 'teachers']
+
+    def test_remove_membergroup_raises_on_a_failure(self, monkeypatch, mock_connect):
+        g, _ = _lmngroup(monkeypatch, [])
+
+        with pytest.raises(Exception, match='was not found in ldap'):
+            g.remove_membergroup('ghost')

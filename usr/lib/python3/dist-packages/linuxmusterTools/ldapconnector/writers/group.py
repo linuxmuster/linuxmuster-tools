@@ -233,6 +233,139 @@ class LMNGroup(LMNGroupCommon):
         else:
             print(f"Group {self.cn} already exists in LDAP.")
 
+    def _get_membergroup_dn(self, group):
+        """
+        Resolve the dn of a group which should be a member of this group.
+        Only the units of the school of this group are searched, so a
+        schoolclass, a project or another group of the same school.
+
+        :param group: cn of a group
+        :type group: basestring
+        :return: The dn of the group, None if no unit matches
+        :rtype: basestring or None
+        """
+
+
+        return self.lr.getval(f'/units/{group}', 'dn', school=self.school)
+
+    def add_membergroup(self, group):
+        failures = self.add_membergroups([group])
+
+        if failures:
+            raise Exception(failures[0][1])
+
+    def add_membergroups(self, groups):
+        """
+        Add groups as members of this group, in a single ldap modify.
+
+        The dn of each group is added to the member attribute, like a user,
+        so the directory resolves the nested membership itself. Targeted
+        MOD_ADD operations keep a concurrent change of the member list, and
+        groups already in the list are filtered out first, because the whole
+        modify fails if a value is added twice.
+
+        One invalid cn doesn't abort the rest of the batch: it's skipped and
+        reported.
+
+        :param groups: List of valid cn of groups
+        :type groups: list
+        :return: list of (group, error message) tuples for entries that
+        could not be added
+        :rtype: list
+        """
+
+
+        failures = []
+        members_list = []
+        to_add = []
+
+        for group in groups:
+            group_dn = self._get_membergroup_dn(group)
+
+            if not group_dn:
+                logger.info(f"The group {group} was not found in ldap.")
+                failures.append((group, f"The group {group} was not found in ldap."))
+                continue
+
+            if group_dn.lower() == self.data['distinguishedName'].lower():
+                failures.append((group, f"The group {self.cn} can not be a member of itself."))
+                continue
+
+            if group_dn in self.data['member'] or group_dn in members_list:
+                logger.info(f"{group} is already a member of {self.cn}")
+                continue
+
+            members_list.append(group_dn)
+            to_add.append(group)
+
+        if not members_list:
+            return failures
+
+        try:
+            self.lw._setattr(self, data={'member': members_list}, add=True)
+            self.load_data()
+        except Exception as e:
+            logger.warning(f"Could not add member groups {members_list} to {self.cn}: {str(e)}")
+            failures.extend((group, str(e)) for group in to_add)
+
+        return failures
+
+    def remove_membergroup(self, group):
+        failures = self.remove_membergroups([group])
+
+        if failures:
+            raise Exception(failures[0][1])
+
+    def remove_membergroups(self, groups):
+        """
+        Remove groups from the members of this group, in a single ldap modify.
+
+        See add_membergroups() about why the member list is not rewritten as
+        a whole. The users which are direct members are not touched, even if
+        they are also members of a removed group.
+
+        One invalid cn doesn't abort the rest of the batch: it's skipped and
+        reported.
+
+        :param groups: List of valid cn of groups
+        :type groups: list
+        :return: list of (group, error message) tuples for entries that
+        could not be removed
+        :rtype: list
+        """
+
+
+        failures = []
+        members_list = []
+        to_remove = []
+
+        for group in groups:
+            group_dn = self._get_membergroup_dn(group)
+
+            if not group_dn:
+                logger.info(f"The group {group} was not found in ldap.")
+                failures.append((group, f"The group {group} was not found in ldap."))
+                continue
+
+            if group_dn not in self.data['member']:
+                logger.info(f"{group} is not a member of {self.cn}")
+                continue
+
+            members_list.append(group_dn)
+            to_remove.append(group)
+
+        if not members_list:
+            return failures
+
+        try:
+            self.lw._delattr(self, data={'member': members_list})
+            self.load_data()
+        except Exception as e:
+            logger.warning(f"Could not remove member groups {members_list} from {self.cn}: {str(e)}")
+            failures.extend((group, str(e)) for group in to_remove)
+
+        return failures
+
     def migrate(self):
         """
         Migrate a legacy sophomorix-group entry (living in OU=Projects) to OU=LMNGroups,
