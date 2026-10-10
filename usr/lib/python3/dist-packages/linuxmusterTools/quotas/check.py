@@ -195,8 +195,8 @@ def get_user_quotas(user):
             # Default school
             share_path = f'//{SAMBA_DOMAIN}/{share}'
 
-        cmd = ['smbcquotas', '-U', f'administrator%{pw}', '-u', user, share_path]
-        smbc_output = subprocess.run(cmd, capture_output=True)
+        cmd = ['smbcquotas', '-U', 'administrator', '-u', user, share_path]
+        smbc_output = subprocess.run(cmd, capture_output=True, env={**os.environ, 'PASSWD': pw})
         out, err = smbc_output.stdout.decode().strip(),  smbc_output.stderr.decode().strip()
         if smbc_output.returncode > 0:
             # Catch Samba error

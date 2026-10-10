@@ -352,14 +352,16 @@ def _fake_lr_get(attributes):
 def _fake_run_factory(out, returncode=0, err=''):
     calls = []
 
-    def fake_run(cmd, capture_output=True):
+    def fake_run(cmd, capture_output=True, env=None):
         calls.append(cmd)
+        fake_run.envs.append(env)
         return types.SimpleNamespace(
             returncode=returncode,
             stdout=out.encode(),
             stderr=err.encode(),
         )
 
+    fake_run.envs = []
     return fake_run, calls
 
 
@@ -392,7 +394,9 @@ def test_get_user_quotas_non_admin_success(check, monkeypatch):
     # Non-DFS share path is built as //SAMBA_DOMAIN/share
     joined = [' '.join(c) for c in calls]
     assert any('//testdom.example.org/default-school' in c for c in joined)
-    assert any('administrator%testpw123' in c for c in joined)
+    # The password goes through the environment, never the argv (visible in ps)
+    assert not any('testpw123' in c for c in joined)
+    assert all(env['PASSWD'] == 'testpw123' for env in fake_run.envs)
 
 
 def test_get_user_quotas_admin_role_uses_shares_list(check, monkeypatch):
