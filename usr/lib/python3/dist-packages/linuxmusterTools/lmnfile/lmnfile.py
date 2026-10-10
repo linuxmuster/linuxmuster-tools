@@ -62,7 +62,7 @@ class LMNFile(metaclass=abc.ABCMeta):
         the file.
 
         :param file: File to open
-        :type file: string
+        :type file: string or pathlib.Path
         :param mode: Read, write, e.g. 'r' or 'wb'
         :type mode: string
         :param delimiter: Useful for CSV files
@@ -72,6 +72,8 @@ class LMNFile(metaclass=abc.ABCMeta):
         :param convert_values: Convert ConfigLoader values to Python types
         :type convert_values: bool
         """
+
+        file = os.fspath(file)
 
         # Cannot filter start.conf with extension
         if file.split('/')[-1].startswith('start.conf') and os.path.splitext(file)[-1] != '.vdi':
@@ -95,7 +97,7 @@ class LMNFile(metaclass=abc.ABCMeta):
     def __init__(
         self, file, mode, delimiter=';', fieldnames=None, convert_values=True
     ):
-        self.file = file
+        self.file = os.fspath(file)
         self.opened = ''
         self.data = ''
         self.mode  = mode

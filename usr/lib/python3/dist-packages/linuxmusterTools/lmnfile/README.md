@@ -46,7 +46,7 @@ LMNFile(file, mode, delimiter=';', fieldnames=None, convert_values=True)
 
 | Parameter | Type | Description |
 |---|---|---|
-| `file` | `str` | Absolute path to the file |
+| `file` | `str` or `pathlib.Path` | Absolute path to the file |
 | `mode` | `str` | Open mode: `'r'` (read), `'w'` (write), `'r+'` (read+write) |
 | `delimiter` | `str` | Delimiter for CSV files (default: `';'`) |
 | `fieldnames` | `list[str]` | Column names for CSV files without a header row |

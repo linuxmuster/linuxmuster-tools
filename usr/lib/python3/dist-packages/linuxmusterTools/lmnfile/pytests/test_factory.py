@@ -52,6 +52,20 @@ def test_start_conf_with_numeric_suffix_routes_to_startconf_loader(tmp_path):
     assert isinstance(LMNFile(str(f), 'r'), StartConfLoader)
 
 
+def test_path_object_is_accepted(tmp_path):
+    f = tmp_path / 'config.yml'
+    f.write_text('key: value\n')
+    with LMNFile(f, 'r') as loaded:
+        assert loaded.file == str(f)
+        assert loaded.read() == {'key': 'value'}
+
+
+def test_start_conf_path_object_routes_to_startconf_loader(tmp_path):
+    f = tmp_path / 'start.conf.101'
+    f.write_text('[LINBO]\nServer = 10.0.0.1\n')
+    assert isinstance(LMNFile(f, 'r'), StartConfLoader)
+
+
 def test_start_conf_vdi_routes_to_yaml_loader(tmp_path):
     # start.conf.vdi has .vdi extension → YAMLLoader, not StartConfLoader
     f = tmp_path / 'start.conf.vdi'
