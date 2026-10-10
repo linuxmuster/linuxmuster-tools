@@ -135,6 +135,8 @@ Each of `globaladministrators`, `schooladministrators`, `students`, `teachers` i
 
 > When `linuxmusterTools.common.WEBUI_IMPORT` is `True` (module imported from inside the webui process), `__init__` returns immediately with `config = {}` and none of the per-role attributes are set.
 
+The parsed file is cached per school and read again only when its mtime changes, so an edit from the webui is seen by a running lmnapi at its next request. The ldapconnector instantiates this class on every request: parsing the yaml file each time cost 12-19 ms per request (13 s to list all users with `/users`). `config` is shared between instances and must not be modified.
+
 ---
 
 ## Import-time side effects
