@@ -78,3 +78,13 @@ def test_linbo_extensions_route_to_linbo_loader(tmp_path, ext):
     f = tmp_path / f'image{ext}'
     f.write_text('some content\n')
     assert isinstance(LMNFile(str(f), 'r'), LinboLoader)
+
+
+@pytest.mark.parametrize('name', ['test.yml', 'start.conf.group'])
+def test_init_runs_once(tmp_path, monkeypatch, name):
+    calls = []
+    monkeypatch.setattr(LMNFile, 'detect_encoding', lambda self: calls.append(1) or 'utf-8')
+    f = tmp_path / name
+    f.write_text('')
+    LMNFile(f, 'r')
+    assert len(calls) == 1

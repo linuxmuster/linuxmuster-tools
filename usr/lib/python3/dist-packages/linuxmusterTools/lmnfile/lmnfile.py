@@ -77,22 +77,12 @@ class LMNFile(metaclass=abc.ABCMeta):
 
         # Cannot filter start.conf with extension
         if file.split('/')[-1].startswith('start.conf') and os.path.splitext(file)[-1] != '.vdi':
-            obj = object.__new__(StartConfLoader)
-            obj.__init__(
-                file, mode, delimiter=delimiter, fieldnames=fieldnames,
-                convert_values=convert_values
-            )
-            return obj
+            return object.__new__(StartConfLoader)
 
         ext = os.path.splitext(file)[-1]
         for child in cls.__subclasses__():
             if child.hasExtension(ext):
-                obj = object.__new__(child)
-                obj.__init__(
-                    file, mode, delimiter=delimiter, fieldnames=fieldnames,
-                    convert_values=convert_values
-                )
-                return obj
+                return object.__new__(child)
 
     def __init__(
         self, file, mode, delimiter=';', fieldnames=None, convert_values=True
