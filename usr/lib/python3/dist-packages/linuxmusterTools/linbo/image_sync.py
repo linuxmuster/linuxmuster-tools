@@ -91,6 +91,8 @@ def receive_upload_chunk(
 
     staging_dir = images_dir / INCOMING_DIR_NAME / image_name
     staging_dir.mkdir(parents=True, exist_ok=True)
+    for directory in (staging_dir.parent, staging_dir):
+        directory.chmod(0o700)
     file_path = staging_dir / filename
 
     if offset is not None and offset > 0:
@@ -171,6 +173,10 @@ def finalize_upload(images_dir: Path, image_name: str) -> dict:
             target = target_dir / f.name
             shutil.move(str(f), str(target))
             moved.append(f.name)
+
+    for directory in filter(None, (target_dir, backup_dir)):
+        for f in directory.glob("*.macct"):
+            f.chmod(0o600)
 
     try:
         staging_dir.rmdir()
