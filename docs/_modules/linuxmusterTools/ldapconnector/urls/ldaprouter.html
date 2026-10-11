@@ -43,7 +43,22 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
+              <p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/common.html">common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/devices.html">devices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/ldapconnector.html">ldapconnector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/linbo.html">linbo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/lmnconfig.html">lmnconfig</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/lmnfile.html">lmnfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/passwords.html">passwords</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/print.html">print</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/quotas.html">quotas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/samba_util.html">samba_util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/smbclient.html">smbclient</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/subnets.html">subnets</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../autoapi/index.html">API Reference</a></li>
 </ul>
 
@@ -84,26 +99,26 @@
 
 
 <div class="viewcode-block" id="logger">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.logger">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.urls.ldaprouter.logger">[docs]</a>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
 
 
 <span class="c1"># This marker will be replaced by the selected school, or default-school</span>
 <div class="viewcode-block" id="SCHOOL_MARKER">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.SCHOOL_MARKER">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.urls.ldaprouter.SCHOOL_MARKER">[docs]</a>
 <span class="n">SCHOOL_MARKER</span> <span class="o">=</span> <span class="s2">&quot;##SCHOOL_MARKER##&quot;</span></div>
 
 
 <div class="viewcode-block" id="LMNLdapRouter">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.LMNLdapRouter">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.urls.ldaprouter.LMNLdapRouter">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">LMNLdapRouter</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <div class="viewcode-block" id="LMNLdapRouter.lr">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.LMNLdapRouter.lr">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.urls.ldaprouter.LMNLdapRouter.lr">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">LdapReader</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="LMNLdapRouter.urls">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.LMNLdapRouter.urls">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.urls.ldaprouter.LMNLdapRouter.urls">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">urls</span> <span class="o">=</span> <span class="p">{}</span></div>
 
 
@@ -116,7 +131,7 @@
        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Requested search </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s1"> unknown&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="LMNLdapRouter.get">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.LMNLdapRouter.get">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.urls.ldaprouter.LMNLdapRouter.get">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parse all urls and find the right method to handle the request.</span>
@@ -153,7 +168,7 @@
 
 
 <div class="viewcode-block" id="LMNLdapRouter.getval">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.LMNLdapRouter.getval">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.urls.ldaprouter.LMNLdapRouter.getval">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">attribute</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attribute</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -171,7 +186,7 @@
 
 
 <div class="viewcode-block" id="LMNLdapRouter.getvalues">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.LMNLdapRouter.getvalues">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.urls.ldaprouter.LMNLdapRouter.getvalues">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getvalues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attributes</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
@@ -195,7 +210,7 @@
 
 
 <div class="viewcode-block" id="LMNLdapRouter.print_urls">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.LMNLdapRouter.print_urls">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.urls.ldaprouter.LMNLdapRouter.print_urls">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">print_urls</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">urls</span> <span class="o">=</span> <span class="p">[</span> <span class="n">url</span><span class="o">.</span><span class="n">pattern</span> <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">urls</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">]</span>
         <span class="n">urls</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
@@ -227,7 +242,7 @@
 
 
 <div class="viewcode-block" id="LMNLdapRouter.ascsv">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.LMNLdapRouter.ascsv">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.urls.ldaprouter.LMNLdapRouter.ascsv">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">ascsv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="n">csvfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">[],</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">csvfile</span><span class="p">:</span>
             <span class="c1"># TODO: find a better path</span>
@@ -255,7 +270,7 @@
 
 
 <div class="viewcode-block" id="LMNLdapRouter.add_url">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.LMNLdapRouter.add_url">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.urls.ldaprouter.LMNLdapRouter.add_url">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check collisions between URLs before adding to self.urls.</span>
@@ -273,7 +288,7 @@
 
 
 <div class="viewcode-block" id="LMNLdapRouter.single">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.LMNLdapRouter.single">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.urls.ldaprouter.LMNLdapRouter.single">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">single</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">subdn</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">dn_filter</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s2">&quot;subtree&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Search a single entry in the whole subtree of the base dn.</span>
@@ -300,7 +315,7 @@
 
 
 <div class="viewcode-block" id="LMNLdapRouter.collection">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.LMNLdapRouter.collection">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.urls.ldaprouter.LMNLdapRouter.collection">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">collection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">subdn</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">dn_filter</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s2">&quot;subtree&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Search multiple entries in the whole subtree of the base dn.</span>
@@ -328,7 +343,7 @@
 
 
 <div class="viewcode-block" id="router">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.router">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/ldaprouter/index.html#linuxmusterTools.ldapconnector.urls.ldaprouter.router">[docs]</a>
 <span class="n">router</span> <span class="o">=</span> <span class="n">LMNLdapRouter</span><span class="p">()</span></div>
 
 </pre></div>

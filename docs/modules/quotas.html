@@ -1,0 +1,219 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>quotas &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/translations.js?v=8fd896e3"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="samba_util" href="samba_util.html" />
+    <link rel="prev" title="print" href="print.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="common.html">common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devices.html">devices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ldapconnector.html">ldapconnector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linbo.html">linbo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lmnconfig.html">lmnconfig</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lmnfile.html">lmnfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="passwords.html">passwords</a></li>
+<li class="toctree-l1"><a class="reference internal" href="print.html">print</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">quotas</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#import">Import</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#list-user-files-user"><code class="docutils literal notranslate"><span class="pre">list_user_files(user)</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-user-quotas-user"><code class="docutils literal notranslate"><span class="pre">get_user_quotas(user)</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#samba-root-tree-user"><code class="docutils literal notranslate"><span class="pre">samba_root_tree(user)</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#samba-dir-size-user-path-none-raw-false"><code class="docutils literal notranslate"><span class="pre">samba_dir_size(user,</span> <span class="pre">path=None,</span> <span class="pre">raw=False)</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="samba_util.html">samba_util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="smbclient.html">smbclient</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subnets.html">subnets</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">quotas</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/modules/quotas.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="quotas">
+<h1>quotas<a class="headerlink" href="#quotas" title="Link to this heading"></a></h1>
+<p>Utility functions to inspect disk usage and Samba share quotas for <a class="reference external" href="https://www.linuxmuster.net">linuxmuster.net</a> users.</p>
+<hr class="docutils" />
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Python 3.8+</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/smbclient/"><code class="docutils literal notranslate"><span class="pre">smbclient</span></code></a> and <a class="reference external" href="https://pypi.org/project/smbprotocol/"><code class="docutils literal notranslate"><span class="pre">smbprotocol</span></code></a> (SMB access, Kerberos-authenticated)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">smbcquotas</span></code> (Samba client tools) available on <code class="docutils literal notranslate"><span class="pre">$PATH</span></code></p></li>
+<li><p>A readable <code class="docutils literal notranslate"><span class="pre">/etc/linuxmuster/.secret/administrator</span></code> password file</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<section id="import">
+<h3>Import<a class="headerlink" href="#import" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.quotas</span><span class="w"> </span><span class="kn">import</span> <span class="n">list_user_files</span><span class="p">,</span> <span class="n">get_user_quotas</span><span class="p">,</span> <span class="n">samba_root_tree</span><span class="p">,</span> <span class="n">samba_dir_size</span>
+</pre></div>
+</div>
+</section>
+<section id="list-user-files-user">
+<h3><code class="docutils literal notranslate"><span class="pre">list_user_files(user)</span></code><a class="headerlink" href="#list-user-files-user" title="Link to this heading"></a></h3>
+<p>Walks <code class="docutils literal notranslate"><span class="pre">/srv/samba</span></code> on the local filesystem and returns every file owned by <code class="docutils literal notranslate"><span class="pre">user</span></code>, grouped by directory.</p>
+<div class="highlight-Console notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt; from linuxmusterTools.quotas import list_user_files</span>
+<span class="go">&gt;&gt;&gt; list_user_files(&#39;kiar&#39;)</span>
+<span class="go">{</span>
+<span class="go">    &#39;directories&#39;: {</span>
+<span class="go">        &#39;/srv/samba/default-school/students/8a&#39;: {</span>
+<span class="go">            &#39;files&#39;: {&#39;report.odt&#39;: &#39;128.0 KB&#39;, &#39;photo.jpg&#39;: &#39;2.3 MB&#39;},</span>
+<span class="go">            &#39;total&#39;: &#39;2.4 MB&#39;</span>
+<span class="go">        },</span>
+<span class="go">    },</span>
+<span class="go">    &#39;total&#39;: &#39;2.4 MB&#39;,</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</section>
+<section id="get-user-quotas-user">
+<h3><code class="docutils literal notranslate"><span class="pre">get_user_quotas(user)</span></code><a class="headerlink" href="#get-user-quotas-user" title="Link to this heading"></a></h3>
+<p>Runs <code class="docutils literal notranslate"><span class="pre">smbcquotas</span></code> against every share relevant to <code class="docutils literal notranslate"><span class="pre">user</span></code> (all shares for administrators, the user’s own school and <code class="docutils literal notranslate"><span class="pre">linuxmuster-global</span></code> otherwise), plus the cloud and mail quotas read from LDAP.</p>
+<div class="highlight-Console notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt; from linuxmusterTools.quotas import get_user_quotas</span>
+<span class="go">&gt;&gt;&gt; get_user_quotas(&#39;jdupont&#39;)</span>
+<span class="go">{</span>
+<span class="go">    &#39;default-school&#39;: {&#39;used&#39;: 12.34, &#39;soft_limit&#39;: 500.0, &#39;hard_limit&#39;: 550.0},</span>
+<span class="go">    &#39;linuxmuster-global&#39;: {&#39;used&#39;: 0.5, &#39;soft_limit&#39;: &#39;NO LIMIT&#39;, &#39;hard_limit&#39;: &#39;NO LIMIT&#39;},</span>
+<span class="go">    &#39;cloud&#39;: &#39;0&#39;,</span>
+<span class="go">    &#39;mail&#39;: &#39;1024&#39;,</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+<p>Raises an <code class="docutils literal notranslate"><span class="pre">Exception</span></code> if <code class="docutils literal notranslate"><span class="pre">user</span></code> is not found in LDAP. A share whose <code class="docutils literal notranslate"><span class="pre">smbcquotas</span></code> call fails is reported as <code class="docutils literal notranslate"><span class="pre">{'ERROR':</span> <span class="pre">{'output':</span> <span class="pre">...,</span> <span class="pre">'error':</span> <span class="pre">...,</span> <span class="pre">'code':</span> <span class="pre">...}}</span></code> instead of raising.</p>
+</section>
+<section id="samba-root-tree-user">
+<h3><code class="docutils literal notranslate"><span class="pre">samba_root_tree(user)</span></code><a class="headerlink" href="#samba-root-tree-user" title="Link to this heading"></a></h3>
+<p>Recursively lists files and folders of <code class="docutils literal notranslate"><span class="pre">user</span></code>’s school root share over SMB, with size and last-modified metadata for every entry. Requires a valid Kerberos ticket for the calling process; returns <code class="docutils literal notranslate"><span class="pre">None</span></code> (and logs a message) if authentication fails.</p>
+<div class="highlight-Console notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt; from linuxmusterTools.quotas import samba_root_tree</span>
+<span class="go">&gt;&gt;&gt; samba_root_tree(&#39;jdupont&#39;)</span>
+<span class="go">{</span>
+<span class="go">    &#39;name&#39;: &#39;default-school&#39;,</span>
+<span class="go">    &#39;type&#39;: &#39;directory&#39;,</span>
+<span class="go">    &#39;size&#39;: 5242880,</span>
+<span class="go">    &#39;lastModified&#39;: &#39;2026-07-20T08:12:00&#39;,</span>
+<span class="go">    &#39;contents&#39;: [...],</span>
+<span class="go">    &#39;path&#39;: &#39;//SAMBA-NETBIOS/default-school&#39;,</span>
+<span class="go">    &#39;school&#39;: &#39;default-school&#39;,</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</section>
+<section id="samba-dir-size-user-path-none-raw-false">
+<h3><code class="docutils literal notranslate"><span class="pre">samba_dir_size(user,</span> <span class="pre">path=None,</span> <span class="pre">raw=False)</span></code><a class="headerlink" href="#samba-dir-size-user-path-none-raw-false" title="Link to this heading"></a></h3>
+<p>Returns the total size of <code class="docutils literal notranslate"><span class="pre">path</span></code> over SMB (defaults to <code class="docutils literal notranslate"><span class="pre">user</span></code>’s school root share). Returns a human-readable string by default; pass <code class="docutils literal notranslate"><span class="pre">raw=True</span></code> to get the size in bytes.</p>
+<div class="highlight-Console notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt; from linuxmusterTools.quotas import samba_dir_size</span>
+<span class="go">&gt;&gt;&gt; samba_dir_size(&#39;jdupont&#39;)</span>
+<span class="go">&#39;5.0 MB&#39;</span>
+<span class="go">&gt;&gt;&gt; samba_dir_size(&#39;jdupont&#39;, raw=True)</span>
+<span class="go">5242880</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="print.html" class="btn btn-neutral float-left" title="print" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="samba_util.html" class="btn btn-neutral float-right" title="samba_util" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

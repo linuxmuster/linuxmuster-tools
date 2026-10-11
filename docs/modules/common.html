@@ -1,0 +1,546 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>common &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/translations.js?v=8fd896e3"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="devices" href="devices.html" />
+    <link rel="prev" title="Linuxmuster-tools7’s documentation" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">common</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#name-validation-validator">Name validation — <code class="docutils literal notranslate"><span class="pre">Validator</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#certificate-expiry-domcert">Certificate expiry — <code class="docutils literal notranslate"><span class="pre">DomCert</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#colored-shell-output-lcolor-lprint">Colored shell output — <code class="docutils literal notranslate"><span class="pre">lcolor</span></code> / <code class="docutils literal notranslate"><span class="pre">lprint</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#terminal-spinner-spinner">Terminal spinner — <code class="docutils literal notranslate"><span class="pre">spinner</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#value-conversion">Value conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#natural-sorting-natural-key-sort-naturally">Natural sorting — <code class="docutils literal notranslate"><span class="pre">natural_key</span></code> / <code class="docutils literal notranslate"><span class="pre">sort_naturally</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sophomorix-log-parsing">Sophomorix log parsing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exceptions">Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#provisioning-status">Provisioning status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#webui-integration-flag">Webui integration flag</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#temp-directory-helper">Temp directory helper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#submodules-not-re-exported-at-package-level">Submodules not re-exported at package level</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#common-attic"><code class="docutils literal notranslate"><span class="pre">common.attic</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#common-timestamps"><code class="docutils literal notranslate"><span class="pre">common.timestamps</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="devices.html">devices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ldapconnector.html">ldapconnector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linbo.html">linbo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lmnconfig.html">lmnconfig</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lmnfile.html">lmnfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="passwords.html">passwords</a></li>
+<li class="toctree-l1"><a class="reference internal" href="print.html">print</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quotas.html">quotas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="samba_util.html">samba_util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="smbclient.html">smbclient</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subnets.html">subnets</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">common</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/modules/common.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="common">
+<h1>common<a class="headerlink" href="#common" title="Link to this heading"></a></h1>
+<p>Shared low-level helpers for <a class="reference external" href="https://www.linuxmuster.net">linuxmuster.net</a>: name/certificate validation, colored shell output, value conversion, natural sorting, sophomorix log parsing and a couple of small utilities used across the other <code class="docutils literal notranslate"><span class="pre">linuxmusterTools</span></code> modules.</p>
+<p><code class="docutils literal notranslate"><span class="pre">common</span></code> has no single entry point like <code class="docutils literal notranslate"><span class="pre">LMNLdapReader</span></code> or <code class="docutils literal notranslate"><span class="pre">LMNFile</span></code>. Instead, its <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> re-exports a handful of ready-to-use instances and helper functions directly under <code class="docutils literal notranslate"><span class="pre">linuxmusterTools.common</span></code>.</p>
+<hr class="docutils" />
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Python 3.8+</p></li>
+<li><p>No third-party dependencies — only the standard library is used (<code class="docutils literal notranslate"><span class="pre">re</span></code>, <code class="docutils literal notranslate"><span class="pre">ssl</span></code>, <code class="docutils literal notranslate"><span class="pre">socket</span></code>, <code class="docutils literal notranslate"><span class="pre">logging</span></code>, <code class="docutils literal notranslate"><span class="pre">itertools</span></code>, <code class="docutils literal notranslate"><span class="pre">threading</span></code>, <code class="docutils literal notranslate"><span class="pre">time</span></code>, <code class="docutils literal notranslate"><span class="pre">math</span></code>, <code class="docutils literal notranslate"><span class="pre">datetime</span></code>, <code class="docutils literal notranslate"><span class="pre">pathlib</span></code>, <code class="docutils literal notranslate"><span class="pre">functools</span></code>, <code class="docutils literal notranslate"><span class="pre">os</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">common/attic.py</span></code> additionally imports <code class="docutils literal notranslate"><span class="pre">lmnconfig</span></code>, <code class="docutils literal notranslate"><span class="pre">ldapconnector</span></code> and <code class="docutils literal notranslate"><span class="pre">smbclient</span></code> from <code class="docutils literal notranslate"><span class="pre">linuxmusterTools</span></code> itself (internal, not third-party) to look up user and file information.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">Validator</span><span class="p">,</span> <span class="n">lprint</span><span class="p">,</span> <span class="n">lcolor</span><span class="p">,</span> <span class="n">spinner</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Validator</span></code>, <code class="docutils literal notranslate"><span class="pre">lprint</span></code>, <code class="docutils literal notranslate"><span class="pre">lcolor</span></code> and <code class="docutils literal notranslate"><span class="pre">spinner</span></code> are singleton instances created once in <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>; import and use them directly rather than instantiating the underlying classes again.</p>
+</section>
+<hr class="docutils" />
+<section id="name-validation-validator">
+<h2>Name validation — <code class="docutils literal notranslate"><span class="pre">Validator</span></code><a class="headerlink" href="#name-validation-validator" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Validator</span></code> is a ready-to-use <code class="docutils literal notranslate"><span class="pre">NameChecker</span></code> instance. For every rule declared in <code class="docutils literal notranslate"><span class="pre">NAME_RULES</span></code>, a <code class="docutils literal notranslate"><span class="pre">check_&lt;name&gt;_name(string)</span></code> method is generated automatically.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Validator</span><span class="o">.</span><span class="n">check_login_name</span><span class="p">(</span><span class="s1">&#39;jdoe&#39;</span><span class="p">)</span>                 <span class="c1"># True</span>
+<span class="n">Validator</span><span class="o">.</span><span class="n">check_ip_name</span><span class="p">(</span><span class="s1">&#39;10.0.0.5&#39;</span><span class="p">)</span>                <span class="c1"># True</span>
+<span class="n">Validator</span><span class="o">.</span><span class="n">check_mac1_name</span><span class="p">(</span><span class="s1">&#39;AA:BB:CC:DD:EE:FF&#39;</span><span class="p">)</span>      <span class="c1"># True</span>
+<span class="n">Validator</span><span class="o">.</span><span class="n">normalize_mac</span><span class="p">(</span><span class="s1">&#39;aa-bb-cc-dd-ee-ff&#39;</span><span class="p">)</span>        <span class="c1"># &#39;AA:BB:CC:DD:EE:FF&#39;</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">check(name_type,</span> <span class="pre">string)</span></code> (and its <code class="docutils literal notranslate"><span class="pre">check_*_name</span></code> shortcuts) always reject non-string/empty input and any string containing <code class="docutils literal notranslate"><span class="pre">/</span></code>, <code class="docutils literal notranslate"><span class="pre">\</span></code>, <code class="docutils literal notranslate"><span class="pre">\0</span></code> or <code class="docutils literal notranslate"><span class="pre">..</span></code> (path traversal guard), before matching it against the rule’s regex.</p>
+<p><code class="docutils literal notranslate"><span class="pre">validate(name_type,</span> <span class="pre">string)</span></code> applies the same rules but raises <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> instead of returning <code class="docutils literal notranslate"><span class="pre">False</span></code>, and returns the string so the result can be assigned back. A <code class="docutils literal notranslate"><span class="pre">validate_&lt;name&gt;_name(string)</span></code> shortcut is generated for every rule, exactly like <code class="docutils literal notranslate"><span class="pre">check_*_name</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Validator</span><span class="o">.</span><span class="n">validate_linbo_image_name</span><span class="p">(</span><span class="s1">&#39;ubuntu22.qcow2&#39;</span><span class="p">)</span>   <span class="c1"># &#39;ubuntu22.qcow2&#39;</span>
+<span class="n">Validator</span><span class="o">.</span><span class="n">validate_linbo_image_name</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">)</span>               <span class="c1"># ValueError</span>
+</pre></div>
+</div>
+<p>Prefer <code class="docutils literal notranslate"><span class="pre">validate()</span></code> wherever the name is about to build a filesystem path. A caller that forgets to test the boolean returned by <code class="docutils literal notranslate"><span class="pre">check()</span></code> silently keeps an unchecked name — which is how <code class="docutils literal notranslate"><span class="pre">..</span></code> once reached a <code class="docutils literal notranslate"><span class="pre">shutil.rmtree()</span></code> in <code class="docutils literal notranslate"><span class="pre">linbo/image_sync.py</span></code> — while a forgotten <code class="docutils literal notranslate"><span class="pre">validate()</span></code> cannot go unnoticed.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Rule</p></th>
+<th class="head"><p>Typical use</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">password</span></code></p></td>
+<td><p>Allowed characters in a password</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">strong_password</span></code></p></td>
+<td><p>Password with lower/upper case, digit or symbol, 7+ chars</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">project</span></code> / <code class="docutils literal notranslate"><span class="pre">group</span></code></p></td>
+<td><p>Project or sophomorix group name</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">session</span></code></p></td>
+<td><p>Session name</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">linbo_conf</span></code></p></td>
+<td><p>LINBO group name (<code class="docutils literal notranslate"><span class="pre">start.conf.&lt;group&gt;</span></code>): letters, digits, <code class="docutils literal notranslate"><span class="pre">_</span></code> and <code class="docutils literal notranslate"><span class="pre">-</span></code>, as accepted by <code class="docutils literal notranslate"><span class="pre">sophomorix-device</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">linbo_image</span></code></p></td>
+<td><p>LINBO image name</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">login</span></code></p></td>
+<td><p>User login</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">comment</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sophomorixComment</span></code> field</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">alphanum</span></code></p></td>
+<td><p>Generic config name</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">number</span></code></p></td>
+<td><p>Digits only</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">date</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dd.mm.yyyy</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ip</span></code></p></td>
+<td><p>IPv4 address</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mac1</span></code> / <code class="docutils literal notranslate"><span class="pre">mac2</span></code> / <code class="docutils literal notranslate"><span class="pre">mac3</span></code></p></td>
+<td><p>MAC address, colon-, hyphen- or non-separated</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">host</span></code> / <code class="docutils literal notranslate"><span class="pre">room</span></code></p></td>
+<td><p>Hostname or room name</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">domain</span></code></p></td>
+<td><p>Domain name</p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">normalize_mac(mac)</span></code> accepts any of the three MAC formats and returns it uppercased and colon-separated, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if the input matches none of them.</p>
+</section>
+<hr class="docutils" />
+<section id="certificate-expiry-domcert">
+<h2>Certificate expiry — <code class="docutils literal notranslate"><span class="pre">DomCert</span></code><a class="headerlink" href="#certificate-expiry-domcert" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">DomCert</span>
+
+<span class="n">cert</span> <span class="o">=</span> <span class="n">DomCert</span><span class="p">(</span><span class="s1">&#39;linuxmuster.example.com&#39;</span><span class="p">,</span> <span class="mi">443</span><span class="p">)</span>
+<span class="n">cert</span><span class="o">.</span><span class="n">isvalid</span><span class="p">()</span>    <span class="c1"># True/False, refreshes the certificate first</span>
+<span class="n">cert</span><span class="o">.</span><span class="n">expires</span><span class="p">()</span>    <span class="c1"># &#39;87 days (Jan 15 12:00:00 2027 GMT)&#39; or &#39;Expired since ...&#39;</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">DomCert(hostname,</span> <span class="pre">port)</span></code> fetches the peer certificate over SSL on instantiation; <code class="docutils literal notranslate"><span class="pre">.notAfter</span></code>, <code class="docutils literal notranslate"><span class="pre">.notAfter_timestamp</span></code>, <code class="docutils literal notranslate"><span class="pre">.issuer</span></code> and <code class="docutils literal notranslate"><span class="pre">.valid</span></code> are then available as attributes.</p>
+</section>
+<hr class="docutils" />
+<section id="colored-shell-output-lcolor-lprint">
+<h2>Colored shell output — <code class="docutils literal notranslate"><span class="pre">lcolor</span></code> / <code class="docutils literal notranslate"><span class="pre">lprint</span></code><a class="headerlink" href="#colored-shell-output-lcolor-lprint" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">lcolor</span><span class="p">,</span> <span class="n">lprint</span>
+
+<span class="n">lcolor</span><span class="o">.</span><span class="n">green</span><span class="p">(</span><span class="s1">&#39;OK&#39;</span><span class="p">)</span>          <span class="c1"># wraps the text in an ANSI color, returns a string</span>
+<span class="n">lprint</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s1">&#39;Done&#39;</span><span class="p">)</span>      <span class="c1"># prints the colorized text directly</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">ColorShell</span></code> method</p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">PrintShell</span></code> method</p></th>
+<th class="head"><p>Color</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">red(text)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">danger(result,</span> <span class="pre">end=&quot;\n&quot;)</span></code></p></td>
+<td><p>danger (red)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">orange(text)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">alert(result,</span> <span class="pre">end=&quot;\n&quot;)</span></code></p></td>
+<td><p>alert (orange)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">yellow(text)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">warning(result,</span> <span class="pre">end=&quot;\n&quot;)</span></code></p></td>
+<td><p>warning (yellow)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">blue(text)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">info(result,</span> <span class="pre">end=&quot;\n&quot;)</span></code></p></td>
+<td><p>info (cyan)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">green(text)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">success(result,</span> <span class="pre">end=&quot;\n&quot;)</span></code></p></td>
+<td><p>success (green)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lmn(text)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">lmn(result,</span> <span class="pre">end=&quot;\n&quot;)</span></code></p></td>
+<td><p>linuxmuster brand color (bold orange)</p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">PrintShell.printsh(color,</span> <span class="pre">text,</span> <span class="pre">end=&quot;\n&quot;)</span></code> prints with any raw ANSI escape sequence, for colors not covered above.</p>
+</section>
+<hr class="docutils" />
+<section id="terminal-spinner-spinner">
+<h2>Terminal spinner — <code class="docutils literal notranslate"><span class="pre">spinner</span></code><a class="headerlink" href="#terminal-spinner-spinner" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">spinner</span>
+
+<span class="k">with</span> <span class="n">spinner</span><span class="p">:</span>
+    <span class="n">spinner</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s1">&#39;Updating LDAP entries...&#39;</span><span class="p">)</span>
+    <span class="c1"># long-running work</span>
+    <span class="n">spinner</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s1">&#39;Rebuilding indexes...&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Spinner(color=SHELL_COLOR_WARNING,</span> <span class="pre">progress=False)</span></code> animates a Braille spinner on a background thread. It is a no-op when stdout is not a TTY (e.g. redirected to a file). With <code class="docutils literal notranslate"><span class="pre">progress=True</span></code>, each <code class="docutils literal notranslate"><span class="pre">print()</span></code> call leaves the previous line on screen with a checkmark instead of overwriting it.</p>
+</section>
+<hr class="docutils" />
+<section id="value-conversion">
+<h2>Value conversion<a class="headerlink" href="#value-conversion" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">format_size</span><span class="p">,</span> <span class="n">convert_sophomorix_time</span><span class="p">,</span> <span class="n">convert_sophomorix_status</span>
+
+<span class="n">format_size</span><span class="p">(</span><span class="mi">1536</span><span class="p">)</span>                                <span class="c1"># &#39;1.50 KiB&#39;</span>
+<span class="n">format_size</span><span class="p">(</span><span class="mi">1500</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>                        <span class="c1"># &#39;1.50 KB&#39;</span>
+<span class="n">convert_sophomorix_time</span><span class="p">(</span><span class="s1">&#39;20081030125303.0Z&#39;</span><span class="p">)</span>      <span class="c1"># &#39;30 Oct 2008 12:53:03&#39;</span>
+<span class="n">convert_sophomorix_status</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>                    <span class="c1"># &#39;Tolerated&#39;</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">format_size(num,</span> <span class="pre">suffix='B',</span> <span class="pre">base=2)</span></code></p></td>
+<td><p>Human-readable size, binary (<code class="docutils literal notranslate"><span class="pre">base=2</span></code>, Ki/Mi/Gi…) or decimal (<code class="docutils literal notranslate"><span class="pre">base=10</span></code>, K/M/G…)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">convert_sophomorix_time(t)</span></code></p></td>
+<td><p>Sophomorix timestamp (<code class="docutils literal notranslate"><span class="pre">20081030125303.0Z</span></code>) → readable date; returns the input unchanged if it cannot be parsed</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">convert_sophomorix_status(s)</span></code></p></td>
+<td><p>Sophomorix status letter (<code class="docutils literal notranslate"><span class="pre">T</span></code>, <code class="docutils literal notranslate"><span class="pre">D</span></code>, <code class="docutils literal notranslate"><span class="pre">K</span></code>, …) → readable label; returns <code class="docutils literal notranslate"><span class="pre">'Unknown'</span></code> for unrecognized codes</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<hr class="docutils" />
+<section id="natural-sorting-natural-key-sort-naturally">
+<h2>Natural sorting — <code class="docutils literal notranslate"><span class="pre">natural_key</span></code> / <code class="docutils literal notranslate"><span class="pre">sort_naturally</span></code><a class="headerlink" href="#natural-sorting-natural-key-sort-naturally" title="Link to this heading"></a></h2>
+<p>Names ending with a number (hosts, groups, rooms, schoolclasses, images) come
+out of a plain <code class="docutils literal notranslate"><span class="pre">sorted()</span></code> in the wrong order as soon as the numbers do not have
+the same number of digits: <code class="docutils literal notranslate"><span class="pre">m10</span></code> lands before <code class="docutils literal notranslate"><span class="pre">m5</span></code>. These two helpers sort them
+the way a human reads them.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">natural_key</span><span class="p">,</span> <span class="n">sort_naturally</span>
+
+<span class="n">sort_naturally</span><span class="p">([</span><span class="s1">&#39;m10&#39;</span><span class="p">,</span> <span class="s1">&#39;m5&#39;</span><span class="p">,</span> <span class="s1">&#39;m1&#39;</span><span class="p">])</span>                         <span class="c1"># [&#39;m1&#39;, &#39;m5&#39;, &#39;m10&#39;]</span>
+<span class="n">sort_naturally</span><span class="p">([</span><span class="s1">&#39;m1&#39;</span><span class="p">,</span> <span class="s1">&#39;m05&#39;</span><span class="p">,</span> <span class="s1">&#39;m0020&#39;</span><span class="p">,</span> <span class="s1">&#39;m010&#39;</span><span class="p">,</span> <span class="s1">&#39;m5&#39;</span><span class="p">])</span>        <span class="c1"># [&#39;m0020&#39;, &#39;m05&#39;, &#39;m010&#39;, &#39;m1&#39;, &#39;m5&#39;]</span>
+<span class="n">sort_naturally</span><span class="p">([</span><span class="s1">&#39;r100-pc10&#39;</span><span class="p">,</span> <span class="s1">&#39;r100-pc5&#39;</span><span class="p">])</span>                   <span class="c1"># [&#39;r100-pc5&#39;, &#39;r100-pc10&#39;]</span>
+<span class="n">sort_naturally</span><span class="p">([</span><span class="s1">&#39;10.0.0.10&#39;</span><span class="p">,</span> <span class="s1">&#39;10.0.0.2&#39;</span><span class="p">])</span>                   <span class="c1"># [&#39;10.0.0.2&#39;, &#39;10.0.0.10&#39;]</span>
+<span class="n">sort_naturally</span><span class="p">(</span><span class="n">hosts</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">host</span><span class="p">:</span> <span class="n">host</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">])</span>     <span class="c1"># list of dicts</span>
+<span class="n">sort_naturally</span><span class="p">([</span><span class="s1">&#39;abitur&#39;</span><span class="p">,</span> <span class="s1">&#39;10b&#39;</span><span class="p">,</span> <span class="s1">&#39;5a&#39;</span><span class="p">],</span> <span class="n">digitless_last</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># [&#39;5a&#39;, &#39;10b&#39;, &#39;abitur&#39;]</span>
+<span class="nb">sorted</span><span class="p">(</span><span class="n">devices</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">natural_key</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">hostname</span><span class="p">))</span>       <span class="c1"># or as a sorted() key</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">natural_key(value)</span></code></p></td>
+<td><p>Comparable key to pass to <code class="docutils literal notranslate"><span class="pre">sorted()</span></code>/<code class="docutils literal notranslate"><span class="pre">min()</span></code>/<code class="docutils literal notranslate"><span class="pre">max()</span></code>. Splits the string into text and number segments, compares numbers as numbers and text case-insensitively, deeper padding first. <code class="docutils literal notranslate"><span class="pre">None</span></code> sorts last, anything which is not a string is sorted on its <code class="docutils literal notranslate"><span class="pre">str()</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sort_naturally(items,</span> <span class="pre">key=None,</span> <span class="pre">reverse=False,</span> <span class="pre">digitless_last=False)</span></code></p></td>
+<td><p>Returns a new sorted list. <code class="docutils literal notranslate"><span class="pre">key</span></code> is a callable returning the value to sort an item on, like <code class="docutils literal notranslate"><span class="pre">sorted()</span></code>’s own. With <code class="docutils literal notranslate"><span class="pre">digitless_last=True</span></code>, values holding no digit at all come after the others, each group in natural order (the order used for schoolclasses: <code class="docutils literal notranslate"><span class="pre">5a</span></code>, <code class="docutils literal notranslate"><span class="pre">10b</span></code>, then <code class="docutils literal notranslate"><span class="pre">abitur</span></code>).</p></td>
+</tr>
+</tbody>
+</table>
+<p>Every segment is compared, not only the first number, so <code class="docutils literal notranslate"><span class="pre">r100-pc5</span></code> and
+<code class="docutils literal notranslate"><span class="pre">r100-pc10</span></code> are ordered on the part which actually differs.</p>
+<p>Leading zeros are a naming convention of their own, not noise. Numbers are
+grouped by how deep their padding is, deepest first, and values are compared
+only inside a group, so a site numbering its machines <code class="docutils literal notranslate"><span class="pre">m0020</span></code>, <code class="docutils literal notranslate"><span class="pre">m05</span></code> to <code class="docutils literal notranslate"><span class="pre">m012</span></code>
+and <code class="docutils literal notranslate"><span class="pre">m1</span></code> to <code class="docutils literal notranslate"><span class="pre">m5</span></code> gets one block per padding depth, each block in numeric order:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Block</p></th>
+<th class="head"><p>Names</p></th>
+<th class="head"><p>Ordered on</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>two zeros</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">m0020</span></code></p></td>
+<td><p>value</p></td>
+</tr>
+<tr class="row-odd"><td><p>one zero</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">m05</span></code>, <code class="docutils literal notranslate"><span class="pre">m09</span></code>, <code class="docutils literal notranslate"><span class="pre">m010</span></code>, <code class="docutils literal notranslate"><span class="pre">m012</span></code></p></td>
+<td><p>value</p></td>
+</tr>
+<tr class="row-even"><td><p>unpadded</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">m1</span></code>, <code class="docutils literal notranslate"><span class="pre">m2</span></code>, <code class="docutils literal notranslate"><span class="pre">m5</span></code>, <code class="docutils literal notranslate"><span class="pre">m11</span></code>, <code class="docutils literal notranslate"><span class="pre">m140</span></code></p></td>
+<td><p>value</p></td>
+</tr>
+</tbody>
+</table>
+<p>The rule is applied per segment, so the padding of <code class="docutils literal notranslate"><span class="pre">r01-pc1</span></code> never influences
+its second number, and a run made of zeros only keeps its last zero as its
+value, which makes a bare <code class="docutils literal notranslate"><span class="pre">0</span></code> a value rather than padding. This is deliberate
+and diverges from <code class="docutils literal notranslate"><span class="pre">sort</span> <span class="pre">-V</span></code>, <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">-v</span></code> and JavaScript’s <code class="docutils literal notranslate"><span class="pre">Intl.Collator</span></code>, which all
+read <code class="docutils literal notranslate"><span class="pre">m05</span></code> as the plain number 5: a frontend has to reproduce this rule rather
+than rely on <code class="docutils literal notranslate"><span class="pre">Intl.Collator</span></code>, whose result additionally depends on the browser
+locale.</p>
+<p>Two names holding the same segments (<code class="docutils literal notranslate"><span class="pre">m5</span></code> and <code class="docutils literal notranslate"><span class="pre">M5</span></code>) are
+separated by the original string, which keeps the order total and stable. The
+comparison is pure Unicode case folding with no locale-dependent collation: the
+result never depends on the caller’s locale (<code class="docutils literal notranslate"><span class="pre">ä</span></code> sorts after <code class="docutils literal notranslate"><span class="pre">z</span></code>). A <code class="docutils literal notranslate"><span class="pre">-</span></code> is read
+as a separator, never as a sign.</p>
+</section>
+<hr class="docutils" />
+<section id="sophomorix-log-parsing">
+<h2>Sophomorix log parsing<a class="headerlink" href="#sophomorix-log-parsing" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_kill_log</span><span class="p">,</span> <span class="n">parse_add_log</span><span class="p">,</span> <span class="n">parse_update_log</span>
+
+<span class="n">parse_kill_log</span><span class="p">(</span><span class="n">today</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">parse_add_log</span><span class="p">(</span><span class="n">lastweek</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">parse_update_log</span><span class="p">(</span><span class="nb">all</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">list_changes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Log file</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">parse_kill_log(all=False,</span> <span class="pre">epoch=None,</span> <span class="pre">today=False,</span> <span class="pre">lastweek=False)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/var/log/sophomorix/userlog/user-kill.log</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">parse_add_log(all=False,</span> <span class="pre">epoch=None,</span> <span class="pre">today=False,</span> <span class="pre">lastweek=False)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/var/log/sophomorix/userlog/user-add.log</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">parse_update_log(all=False,</span> <span class="pre">epoch=None,</span> <span class="pre">today=False,</span> <span class="pre">lastweek=False,</span> <span class="pre">list_changes=True)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/var/log/sophomorix/userlog/user-update.log</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>Each function returns a <code class="docutils literal notranslate"><span class="pre">dict</span></code> keyed by timestamp. <code class="docutils literal notranslate"><span class="pre">all</span></code>, <code class="docutils literal notranslate"><span class="pre">today</span></code> and <code class="docutils literal notranslate"><span class="pre">lastweek</span></code> are mutually exclusive (an exception is raised otherwise); without any of them, only entries from the last year are kept. Pass <code class="docutils literal notranslate"><span class="pre">epoch</span></code> to filter on one specific timestamp instead — the result is then a <code class="docutils literal notranslate"><span class="pre">list</span></code> for that timestamp only.</p>
+</section>
+<hr class="docutils" />
+<section id="exceptions">
+<h2>Exceptions<a class="headerlink" href="#exceptions" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.common</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SchoolError</span><span class="p">,</span> <span class="n">LdapNotProvisionedError</span><span class="p">,</span> <span class="n">SchoolclassExistsError</span><span class="p">,</span>
+    <span class="n">UnknownTemplateTypeError</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">raise</span> <span class="n">SchoolError</span><span class="p">(</span><span class="s2">&quot;&#39;global&#39; is not a valid school scope here&quot;</span><span class="p">)</span>
+<span class="k">raise</span> <span class="n">LdapNotProvisionedError</span><span class="p">(</span><span class="s2">&quot;Samba not provisioned yet&quot;</span><span class="p">)</span>
+<span class="k">raise</span> <span class="n">SchoolclassExistsError</span><span class="p">(</span><span class="s2">&quot;The schoolclass 7a still exists in default-school&quot;</span><span class="p">)</span>
+<span class="k">raise</span> <span class="n">UnknownTemplateTypeError</span><span class="p">(</span><span class="s2">&quot;Unknown template type badges&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">SchoolError</span></code> is raised when an operation is given an invalid or unresolvable school scope (e.g. <code class="docutils literal notranslate"><span class="pre">'global'</span></code> where a single, concrete school is required).</p>
+<p><code class="docutils literal notranslate"><span class="pre">LdapNotProvisionedError</span></code> is raised by <a class="reference internal" href="#../ldapconnector/README.md"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">ldapconnector</span></code></span></a> when LDAP/Samba credentials are requested before <code class="docutils literal notranslate"><span class="pre">linuxmuster-setup</span></code> has provisioned the domain (fresh install, setup wizard not completed yet).</p>
+<p><code class="docutils literal notranslate"><span class="pre">SchoolclassExistsError</span></code> is raised by <a class="reference internal" href="#../ldapconnector/README.md"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">ldapconnector</span></code></span></a>’s <code class="docutils literal notranslate"><span class="pre">delete_schoolclass_subgroups()</span></code> when the subgroups of a schoolclass are requested to be deleted while the schoolclass itself still exists.</p>
+<p><code class="docutils literal notranslate"><span class="pre">UnknownTemplateTypeError</span></code> (a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>) is raised by <a class="reference internal" href="#../print/README.md"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">print</span></code></span></a> when a template’s type is none of <code class="docutils literal notranslate"><span class="pre">schoolclass</span></code>, <code class="docutils literal notranslate"><span class="pre">passwords</span></code>, <code class="docutils literal notranslate"><span class="pre">passwordslarge</span></code>.</p>
+</section>
+<hr class="docutils" />
+<section id="provisioning-status">
+<h2>Provisioning status<a class="headerlink" href="#provisioning-status" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_samba_provisioned</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">is_samba_provisioned</span><span class="p">():</span>
+    <span class="o">...</span>  <span class="c1"># redirect to the setup wizard instead of touching LDAP</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">is_samba_provisioned(admin_secret_path='/etc/linuxmuster/.secret/administrator')</span></code> returns whether <code class="docutils literal notranslate"><span class="pre">samba-tool</span> <span class="pre">domain</span> <span class="pre">provision</span></code> has actually run, based on the AD administrator secret it creates. <code class="docutils literal notranslate"><span class="pre">/var/lib/linuxmuster/setup.ini</span></code> (used by the setup wizard to decide whether to show the welcome screen) is not a reliable signal here: it’s written by <code class="docutils literal notranslate"><span class="pre">linuxmuster-setup</span></code>’s very first module, well before Samba is provisioned, so it exists for most of the setup run while LDAP is still unusable.</p>
+</section>
+<hr class="docutils" />
+<section id="webui-integration-flag">
+<h2>Webui integration flag<a class="headerlink" href="#webui-integration-flag" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">WEBUI_IMPORT</span>
+
+<span class="k">if</span> <span class="n">WEBUI_IMPORT</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">params</span>   <span class="c1"># ldap_config from the Ajenti webui plugin</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">WEBUI_IMPORT</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> when <code class="docutils literal notranslate"><span class="pre">common</span></code> is imported from within the Ajenti webui process (i.e. <code class="docutils literal notranslate"><span class="pre">aj.plugins.lmn_common.api</span></code> is importable), <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise (CLI, API). <code class="docutils literal notranslate"><span class="pre">params</span></code> only exists when <code class="docutils literal notranslate"><span class="pre">WEBUI_IMPORT</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</section>
+<hr class="docutils" />
+<section id="temp-directory-helper">
+<h2>Temp directory helper<a class="headerlink" href="#temp-directory-helper" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_tmp_dir</span>
+
+<span class="n">check_tmp_dir</span><span class="p">()</span>   <span class="c1"># ensures /tmp/lmntool exists with mode 0o600</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="submodules-not-re-exported-at-package-level">
+<h2>Submodules not re-exported at package level<a class="headerlink" href="#submodules-not-re-exported-at-package-level" title="Link to this heading"></a></h2>
+<p>The following helpers are not imported into <code class="docutils literal notranslate"><span class="pre">linuxmusterTools.common</span></code>’s namespace and must be imported from their own submodule.</p>
+<section id="common-attic">
+<h3><code class="docutils literal notranslate"><span class="pre">common.attic</span></code><a class="headerlink" href="#common-attic" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.common.attic</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_attic_status</span><span class="p">,</span> <span class="n">check_attic_dir</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">get_attic_status(user)</span></code></p></td>
+<td><p>Status (tolerated/deactivated/killable/killed) and start/end dates of a user in attic. Single-school only.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">check_attic_dir(school='default-school')</span></code></p></td>
+<td><p>Lists all users under <code class="docutils literal notranslate"><span class="pre">students/attic</span></code> for one school (or every school if <code class="docutils literal notranslate"><span class="pre">school</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>) with their attic status. Experimental.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="common-timestamps">
+<h3><code class="docutils literal notranslate"><span class="pre">common.timestamps</span></code><a class="headerlink" href="#common-timestamps" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.common.timestamps</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_utc_mtime</span><span class="p">,</span> <span class="n">linbo_timestamp_to_epoch</span>
+
+<span class="n">get_utc_mtime</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;/etc/linuxmuster/sophomorix/default-school/students.csv&#39;</span><span class="p">))</span>
+<span class="c1"># datetime(..., tzinfo=timezone.utc), or None if the file does not exist</span>
+
+<span class="n">linbo_timestamp_to_epoch</span><span class="p">(</span><span class="s1">&#39;202608071440&#39;</span><span class="p">)</span>
+<span class="c1"># 1786106400.0</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">get_utc_mtime(path)</span></code></p></td>
+<td><p>A file’s mtime as a UTC datetime, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if the file does not exist.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">linbo_timestamp_to_epoch(timestamp)</span></code></p></td>
+<td><p>A LINBO <code class="docutils literal notranslate"><span class="pre">YYYYMMDDHHMI</span></code> timestamp as a Unix epoch. LINBO clients write their local wall clock, which matches the server’s local time, so the timestamp is read as server-local — never as UTC. Raises <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> on a malformed timestamp.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="Linuxmuster-tools7’s documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="devices.html" class="btn btn-neutral float-right" title="devices" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

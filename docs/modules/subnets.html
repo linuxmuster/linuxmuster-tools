@@ -1,0 +1,299 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>subnets &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/translations.js?v=8fd896e3"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API Reference" href="../autoapi/index.html" />
+    <link rel="prev" title="smbclient" href="smbclient.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="common.html">common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devices.html">devices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ldapconnector.html">ldapconnector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linbo.html">linbo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lmnconfig.html">lmnconfig</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lmnfile.html">lmnfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="passwords.html">passwords</a></li>
+<li class="toctree-l1"><a class="reference internal" href="print.html">print</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quotas.html">quotas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="samba_util.html">samba_util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="smbclient.html">smbclient</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">subnets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#import">Import</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">Subnets</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#filter-networks"><code class="docutils literal notranslate"><span class="pre">filter(networks=[])</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-subnet-network"><code class="docutils literal notranslate"><span class="pre">get_subnet(network)</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#check-conf"><code class="docutils literal notranslate"><span class="pre">check_conf()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#import-subnets"><code class="docutils literal notranslate"><span class="pre">import_subnets()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">subnets</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/modules/subnets.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="subnets">
+<h1>subnets<a class="headerlink" href="#subnets" title="Link to this heading"></a></h1>
+<p>Reads and validates the global subnets definition file for <a class="reference external" href="https://www.linuxmuster.net">linuxmuster.net</a>, and triggers its import into DHCP, NTP and netplan configuration.</p>
+<p><code class="docutils literal notranslate"><span class="pre">subnets</span></code> exposes a single class, <code class="docutils literal notranslate"><span class="pre">Subnets</span></code>, for loading and validating <code class="docutils literal notranslate"><span class="pre">/etc/linuxmuster/subnets.csv</span></code>, plus the <code class="docutils literal notranslate"><span class="pre">import_subnets()</span></code> function that runs <code class="docutils literal notranslate"><span class="pre">linuxmuster-import-subnets</span></code> to apply the file to the system.</p>
+<hr class="docutils" />
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Python 3.8+</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">linuxmusterTools.lmnfile</span></code> (used internally to read the CSV file)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">linuxmuster-import-subnets</span></code> available on <code class="docutils literal notranslate"><span class="pre">PATH</span></code> (only required to call <code class="docutils literal notranslate"><span class="pre">import_subnets()</span></code>)</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<section id="import">
+<h3>Import<a class="headerlink" href="#import" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.subnets</span><span class="w"> </span><span class="kn">import</span> <span class="n">Subnets</span><span class="p">,</span> <span class="n">import_subnets</span>
+</pre></div>
+</div>
+</section>
+<section id="id1">
+<h3><code class="docutils literal notranslate"><span class="pre">Subnets</span></code><a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>Unlike <code class="docutils literal notranslate"><span class="pre">devices.csv</span></code>, <code class="docutils literal notranslate"><span class="pre">subnets.csv</span></code> is not per-school: there is exactly one file for the whole server.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Subnets</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;/etc/linuxmuster/subnets.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">path</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Path to the CSV file (default: <code class="docutils literal notranslate"><span class="pre">/etc/linuxmuster/subnets.csv</span></code>)</p></td>
+</tr>
+</tbody>
+</table>
+<p>Loading the file populates these attributes:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">subnets</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">list[dict]</span></code></p></td>
+<td><p>One dict per row (comment and empty lines skipped)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">networks</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">list[str]</span></code></p></td>
+<td><p>Deduplicated list of <code class="docutils literal notranslate"><span class="pre">network</span></code> values</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">csv_mtime</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">datetime</span></code></p></td>
+<td><p>UTC modification time of the CSV file</p></td>
+</tr>
+</tbody>
+</table>
+<p>Each row dict has the following keys, matching the CSV columns:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">network</span></code></p></td>
+<td><p>Network in CIDR notation (e.g. <code class="docutils literal notranslate"><span class="pre">10.0.0.0/24</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">routerIp</span></code></p></td>
+<td><p>Router/gateway IP, must be inside <code class="docutils literal notranslate"><span class="pre">network</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">beginRange</span></code></p></td>
+<td><p>Start of the DHCP range, must be inside <code class="docutils literal notranslate"><span class="pre">network</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">endRange</span></code></p></td>
+<td><p>End of the DHCP range, must be inside <code class="docutils literal notranslate"><span class="pre">network</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">nameServer</span></code></p></td>
+<td><p>Optional DNS server IP</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">nextServer</span></code></p></td>
+<td><p>Optional PXE/next-server IP</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">setupFlag</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'SETUP'</span></code> or empty</p></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">subnets</span> <span class="o">=</span> <span class="n">Subnets</span><span class="p">()</span>
+<span class="n">subnets</span><span class="o">.</span><span class="n">subnets</span>    <span class="c1"># [{&#39;network&#39;: &#39;10.0.0.0/24&#39;, &#39;routerIp&#39;: &#39;10.0.0.1&#39;, ...}, ...]</span>
+<span class="n">subnets</span><span class="o">.</span><span class="n">networks</span>   <span class="c1"># [&#39;10.0.0.0/24&#39;, &#39;10.1.0.0/24&#39;]</span>
+<span class="n">subnets</span><span class="o">.</span><span class="n">csv_mtime</span>  <span class="c1"># datetime(2026, 1, 1, 12, 0, tzinfo=timezone.utc)</span>
+</pre></div>
+</div>
+</section>
+<section id="filter-networks">
+<h3><code class="docutils literal notranslate"><span class="pre">filter(networks=[])</span></code><a class="headerlink" href="#filter-networks" title="Link to this heading"></a></h3>
+<p>Returns the subnets matching the given list of networks, or all subnets if <code class="docutils literal notranslate"><span class="pre">networks</span></code> is empty.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">subnets</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">networks</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;10.0.0.0/24&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="get-subnet-network">
+<h3><code class="docutils literal notranslate"><span class="pre">get_subnet(network)</span></code><a class="headerlink" href="#get-subnet-network" title="Link to this heading"></a></h3>
+<p>Returns the row dict for a single network, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if not found.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">subnets</span><span class="o">.</span><span class="n">get_subnet</span><span class="p">(</span><span class="s1">&#39;10.0.0.0/24&#39;</span><span class="p">)</span>
+<span class="c1"># {&#39;network&#39;: &#39;10.0.0.0/24&#39;, &#39;routerIp&#39;: &#39;10.0.0.1&#39;, ...}</span>
+</pre></div>
+</div>
+</section>
+<section id="check-conf">
+<h3><code class="docutils literal notranslate"><span class="pre">check_conf()</span></code><a class="headerlink" href="#check-conf" title="Link to this heading"></a></h3>
+<p>Validates the loaded content. Returns <code class="docutils literal notranslate"><span class="pre">False</span></code> if everything is valid, otherwise a <code class="docutils literal notranslate"><span class="pre">list[str]</span></code> of human-readable error messages, one per problem found:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">network</span></code> is not a valid CIDR network (or has host bits set)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">routerIp</span></code>, <code class="docutils literal notranslate"><span class="pre">beginRange</span></code>, <code class="docutils literal notranslate"><span class="pre">endRange</span></code> missing, not a valid IP, or outside <code class="docutils literal notranslate"><span class="pre">network</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nameServer</span></code>, <code class="docutils literal notranslate"><span class="pre">nextServer</span></code> set but not a valid IP</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">setupFlag</span></code> not one of <code class="docutils literal notranslate"><span class="pre">''</span></code> or <code class="docutils literal notranslate"><span class="pre">'SETUP'</span></code></p></li>
+<li><p>a <code class="docutils literal notranslate"><span class="pre">network</span></code> defined more than once</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">report</span> <span class="o">=</span> <span class="n">subnets</span><span class="o">.</span><span class="n">check_conf</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">report</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">report</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="import-subnets">
+<h3><code class="docutils literal notranslate"><span class="pre">import_subnets()</span></code><a class="headerlink" href="#import-subnets" title="Link to this heading"></a></h3>
+<p>Runs <code class="docutils literal notranslate"><span class="pre">linuxmuster-import-subnets</span></code>, which regenerates the DHCP, NTP and netplan configuration from <code class="docutils literal notranslate"><span class="pre">/etc/linuxmuster/subnets.csv</span></code> and restarts the affected services.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">import_subnets</span><span class="p">()</span>
+<span class="c1"># {&#39;returncode&#39;: 0, &#39;output&#39;: &#39;...&#39;}</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Key</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">returncode</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p>Exit code of the command</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">output</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Combined stdout/stderr, decoded with <code class="docutils literal notranslate"><span class="pre">errors='replace'</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="smbclient.html" class="btn btn-neutral float-left" title="smbclient" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../autoapi/index.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

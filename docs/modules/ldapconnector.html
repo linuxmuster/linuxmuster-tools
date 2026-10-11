@@ -1,0 +1,772 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ldapconnector &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/translations.js?v=8fd896e3"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="linbo" href="linbo.html" />
+    <link rel="prev" title="devices" href="devices.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="common.html">common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devices.html">devices</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ldapconnector</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reading-lmnldapreader">Reading — <code class="docutils literal notranslate"><span class="pre">LMNLdapReader</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#import">Import</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-url-kwargs"><code class="docutils literal notranslate"><span class="pre">get(url,</span> <span class="pre">**kwargs)</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#getval-url-attribute"><code class="docutils literal notranslate"><span class="pre">getval(url,</span> <span class="pre">attribute)</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#getvalues-url-attributes"><code class="docutils literal notranslate"><span class="pre">getvalues(url,</span> <span class="pre">attributes)</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ascsv-url-delimiter-csvfile-none-attributes-header-true-kwargs"><code class="docutils literal notranslate"><span class="pre">ascsv(url,</span> <span class="pre">delimiter=';',</span> <span class="pre">csvfile=None,</span> <span class="pre">attributes=[],</span> <span class="pre">header=True,</span> <span class="pre">**kwargs)</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#get-all-schoolclasses-names-only-sorted">Get all schoolclasses (names only, sorted)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-a-single-user">Get a single user</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-a-user-as-a-dataclass-object">Get a user as a dataclass object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#search-users">Search users</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#batch-lookup">Batch lookup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#available-routes">Available routes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#users">Users</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#roles">Roles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#schoolclasses">Schoolclasses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#groups">Groups</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#devices">Devices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#schools">Schools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#system-ou">System / OU</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#writing-object-api">Writing — object API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Import</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#common-interface">Common interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#password-management">Password management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#group-management">Group management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#printers">Printers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#students">Students</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#projects">Projects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bulk-iteration">Bulk iteration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#multi-school-support">Multi-school support</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#validating-a-school">Validating a school</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="linbo.html">linbo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lmnconfig.html">lmnconfig</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lmnfile.html">lmnfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="passwords.html">passwords</a></li>
+<li class="toctree-l1"><a class="reference internal" href="print.html">print</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quotas.html">quotas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="samba_util.html">samba_util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="smbclient.html">smbclient</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subnets.html">subnets</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">ldapconnector</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/modules/ldapconnector.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ldapconnector">
+<h1>ldapconnector<a class="headerlink" href="#ldapconnector" title="Link to this heading"></a></h1>
+<p>A URL-based LDAP client for <a class="reference external" href="https://www.linuxmuster.net">linuxmuster.net</a>, providing both a read-only query interface and a high-level object API for writing.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ldapconnector</span></code> exposes two entry points: <code class="docutils literal notranslate"><span class="pre">LMNLdapReader</span></code> for querying the LDAP tree via URL-style paths, and a set of writer classes (<code class="docutils literal notranslate"><span class="pre">LMNUser</span></code>, <code class="docutils literal notranslate"><span class="pre">LMNSchoolclass</span></code>, <code class="docutils literal notranslate"><span class="pre">LMNProject</span></code>, …) for modifying entries.</p>
+<hr class="docutils" />
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Python 3.8+</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/python-ldap/"><code class="docutils literal notranslate"><span class="pre">python-ldap</span></code></a></p></li>
+<li><p>A reachable Samba/AD LDAP server (configured via <code class="docutils literal notranslate"><span class="pre">linuxmuster.net</span></code> setup)</p></li>
+</ul>
+<p>Connecting as root (or outside the webui) requires Samba to already be provisioned (<code class="docutils literal notranslate"><span class="pre">linuxmuster-setup</span></code> run). If it isn’t yet — fresh install, setup wizard not completed — <code class="docutils literal notranslate"><span class="pre">LdapConnector._connect()</span></code> raises <code class="docutils literal notranslate"><span class="pre">linuxmusterTools.common.LdapNotProvisionedError</span></code> instead of a raw <code class="docutils literal notranslate"><span class="pre">FileNotFoundError</span></code> on the missing <code class="docutils literal notranslate"><span class="pre">.secret/administrator</span></code>; catch it to redirect to the setup wizard / return a clear “not provisioned” error instead of a 500.</p>
+</section>
+<hr class="docutils" />
+<section id="reading-lmnldapreader">
+<h2>Reading — <code class="docutils literal notranslate"><span class="pre">LMNLdapReader</span></code><a class="headerlink" href="#reading-lmnldapreader" title="Link to this heading"></a></h2>
+<section id="import">
+<h3>Import<a class="headerlink" href="#import" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.ldapconnector</span><span class="w"> </span><span class="kn">import</span> <span class="n">LMNLdapReader</span> <span class="k">as</span> <span class="n">lr</span>
+</pre></div>
+</div>
+</section>
+<section id="get-url-kwargs">
+<h3><code class="docutils literal notranslate"><span class="pre">get(url,</span> <span class="pre">**kwargs)</span></code><a class="headerlink" href="#get-url-kwargs" title="Link to this heading"></a></h3>
+<p>Main method. Returns a <code class="docutils literal notranslate"><span class="pre">dict</span></code> (single entry) or <code class="docutils literal notranslate"><span class="pre">list[dict]</span></code> (collection) by default.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">[],</span> <span class="n">sortkey</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">url</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>URL path (see <a class="reference internal" href="#available-routes">Available routes</a>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">attributes</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">list[str]</span></code></p></td>
+<td><p>Restrict returned fields (default: all)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sortkey</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Sort results by this attribute, in natural order, values without any digit last (<code class="docutils literal notranslate"><span class="pre">5a</span></code>, <code class="docutils literal notranslate"><span class="pre">5b</span></code>, <code class="docutils literal notranslate"><span class="pre">10b</span></code>, <code class="docutils literal notranslate"><span class="pre">abitur</span></code>; see <code class="docutils literal notranslate"><span class="pre">common.sort_naturally</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">as_dict</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code> → dict(s), <code class="docutils literal notranslate"><span class="pre">False</span></code> → dataclass object(s)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">school</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Target school in multi-school setups (default: <code class="docutils literal notranslate"><span class="pre">'default-school'</span></code>, <code class="docutils literal notranslate"><span class="pre">'global'</span></code> for global admins)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="getval-url-attribute">
+<h3><code class="docutils literal notranslate"><span class="pre">getval(url,</span> <span class="pre">attribute)</span></code><a class="headerlink" href="#getval-url-attribute" title="Link to this heading"></a></h3>
+<p>Returns the value of a single attribute.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lr</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="s1">&#39;/users/johndoe&#39;</span><span class="p">,</span> <span class="s1">&#39;mail&#39;</span><span class="p">)</span>       <span class="c1"># &#39;johndoe@example.com&#39;</span>
+<span class="n">lr</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="s1">&#39;/schoolclasses&#39;</span><span class="p">,</span> <span class="s1">&#39;cn&#39;</span><span class="p">)</span>         <span class="c1"># [&#39;5a&#39;, &#39;7b&#39;, &#39;10a&#39;, ...]</span>
+</pre></div>
+</div>
+</section>
+<section id="getvalues-url-attributes">
+<h3><code class="docutils literal notranslate"><span class="pre">getvalues(url,</span> <span class="pre">attributes)</span></code><a class="headerlink" href="#getvalues-url-attributes" title="Link to this heading"></a></h3>
+<p>Returns a subset of attributes.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lr</span><span class="o">.</span><span class="n">getvalues</span><span class="p">(</span><span class="s1">&#39;/users/johndoe&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">,</span> <span class="s1">&#39;mail&#39;</span><span class="p">,</span> <span class="s1">&#39;sophomorixRole&#39;</span><span class="p">])</span>
+<span class="c1"># {&#39;cn&#39;: &#39;johndoe&#39;, &#39;mail&#39;: &#39;johndoe@example.com&#39;, &#39;sophomorixRole&#39;: &#39;teacher&#39;}</span>
+</pre></div>
+</div>
+</section>
+<section id="ascsv-url-delimiter-csvfile-none-attributes-header-true-kwargs">
+<h3><code class="docutils literal notranslate"><span class="pre">ascsv(url,</span> <span class="pre">delimiter=';',</span> <span class="pre">csvfile=None,</span> <span class="pre">attributes=[],</span> <span class="pre">header=True,</span> <span class="pre">**kwargs)</span></code><a class="headerlink" href="#ascsv-url-delimiter-csvfile-none-attributes-header-true-kwargs" title="Link to this heading"></a></h3>
+<p>Exports results to a CSV file. If <code class="docutils literal notranslate"><span class="pre">csvfile</span></code> is not provided, the file is written to <code class="docutils literal notranslate"><span class="pre">/tmp/</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lr</span><span class="o">.</span><span class="n">ascsv</span><span class="p">(</span><span class="s1">&#39;/users&#39;</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">,</span> <span class="s1">&#39;mail&#39;</span><span class="p">,</span> <span class="s1">&#39;sophomorixRole&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<section id="get-all-schoolclasses-names-only-sorted">
+<h3>Get all schoolclasses (names only, sorted)<a class="headerlink" href="#get-all-schoolclasses-names-only-sorted" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/schoolclasses&#39;</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">],</span> <span class="n">sortkey</span><span class="o">=</span><span class="s1">&#39;cn&#39;</span><span class="p">)</span>
+<span class="c1"># [{&#39;cn&#39;: &#39;5a&#39;}, {&#39;cn&#39;: &#39;7b&#39;}, {&#39;cn&#39;: &#39;10a&#39;}, ...]</span>
+</pre></div>
+</div>
+</section>
+<section id="get-a-single-user">
+<h3>Get a single user<a class="headerlink" href="#get-a-single-user" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/users/johndoe&#39;</span><span class="p">)</span>
+<span class="c1"># {&#39;cn&#39;: &#39;johndoe&#39;, &#39;mail&#39;: &#39;johndoe@example.com&#39;, &#39;sophomorixRole&#39;: &#39;teacher&#39;, ...}</span>
+</pre></div>
+</div>
+</section>
+<section id="get-a-user-as-a-dataclass-object">
+<h3>Get a user as a dataclass object<a class="headerlink" href="#get-a-user-as-a-dataclass-object" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">user</span> <span class="o">=</span> <span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/users/johndoe&#39;</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="c1"># LMNUserModel(cn=&#39;johndoe&#39;, mail=&#39;johndoe@example.com&#39;, ...)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">sophomorixRole</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="search-users">
+<h3>Search users<a class="headerlink" href="#search-users" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Search students whose cn/sn/givenName contains &#39;mueller&#39;</span>
+<span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/users/search/student/mueller&#39;</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">,</span> <span class="s1">&#39;sophomorixAdminClass&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Valid <code class="docutils literal notranslate"><span class="pre">SELECTION</span></code> values: <code class="docutils literal notranslate"><span class="pre">all</span></code>, <code class="docutils literal notranslate"><span class="pre">admins</span></code>, <code class="docutils literal notranslate"><span class="pre">teacher</span></code>, <code class="docutils literal notranslate"><span class="pre">student</span></code>, <code class="docutils literal notranslate"><span class="pre">parent</span></code>, <code class="docutils literal notranslate"><span class="pre">staff</span></code>, <code class="docutils literal notranslate"><span class="pre">globaladministrator</span></code>, <code class="docutils literal notranslate"><span class="pre">schooladministrator</span></code>.</p>
+</section>
+<section id="batch-lookup">
+<h3>Batch lookup<a class="headerlink" href="#batch-lookup" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Multiple users by comma-separated CNs</span>
+<span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/batch_users/johndoe,janedoe,jsmith&#39;</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cn&#39;</span><span class="p">,</span> <span class="s1">&#39;mail&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="available-routes">
+<h2>Available routes<a class="headerlink" href="#available-routes" title="Link to this heading"></a></h2>
+<p>Routes returning a single entry are marked <strong>S</strong>, collections <strong>C</strong>.</p>
+<section id="users">
+<h3>Users<a class="headerlink" href="#users" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>URL</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/users</span></code></p></td>
+<td><p>C</p></td>
+<td><p>All users (full model)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/users/USERNAME</span></code></p></td>
+<td><p>S</p></td>
+<td><p>Single user</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/users/exam</span></code></p></td>
+<td><p>C</p></td>
+<td><p>All exam users</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/users/exam/NAME</span></code></p></td>
+<td><p>S</p></td>
+<td><p>Single exam user (<code class="docutils literal notranslate"><span class="pre">NAME</span></code> or <code class="docutils literal notranslate"><span class="pre">NAME-exam</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/users/search/SELECTION/QUERY</span></code></p></td>
+<td><p>C</p></td>
+<td><p>Search by role and login/name fragment</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/rawusers</span></code></p></td>
+<td><p>C</p></td>
+<td><p>All users (raw model, fewer fields)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/rawusers/USERNAME</span></code></p></td>
+<td><p>S</p></td>
+<td><p>Single user (raw model)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/batch_users/U1,U2,...</span></code></p></td>
+<td><p>C</p></td>
+<td><p>Multiple users by CN list</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/batch_rawusers/U1,U2,...</span></code></p></td>
+<td><p>C</p></td>
+<td><p>Multiple raw users by CN list</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="roles">
+<h3>Roles<a class="headerlink" href="#roles" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>URL</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/roles/ROLE</span></code></p></td>
+<td><p>C</p></td>
+<td><p>All users in a sophomorix role</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/rawroles/ROLE</span></code></p></td>
+<td><p>C</p></td>
+<td><p>Same, raw model</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/globaladministrators</span></code></p></td>
+<td><p>C</p></td>
+<td><p>All global admins</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/globaladministrators/USERNAME</span></code></p></td>
+<td><p>S</p></td>
+<td><p>Single global admin</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/schooladministrators</span></code></p></td>
+<td><p>C</p></td>
+<td><p>All school admins</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/schooladministrators/USERNAME</span></code></p></td>
+<td><p>S</p></td>
+<td><p>Single school admin</p></td>
+</tr>
+</tbody>
+</table>
+<p>Valid <code class="docutils literal notranslate"><span class="pre">ROLE</span></code> values: <code class="docutils literal notranslate"><span class="pre">teacher</span></code>, <code class="docutils literal notranslate"><span class="pre">student</span></code>, <code class="docutils literal notranslate"><span class="pre">parent</span></code>, <code class="docutils literal notranslate"><span class="pre">staff</span></code>, <code class="docutils literal notranslate"><span class="pre">globaladministrator</span></code>, <code class="docutils literal notranslate"><span class="pre">schooladministrator</span></code>, <code class="docutils literal notranslate"><span class="pre">examuser</span></code>.</p>
+</section>
+<section id="schoolclasses">
+<h3>Schoolclasses<a class="headerlink" href="#schoolclasses" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>URL</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/schoolclasses</span></code></p></td>
+<td><p>C</p></td>
+<td><p>All schoolclasses</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/schoolclasses/SCHOOLCLASS</span></code></p></td>
+<td><p>S</p></td>
+<td><p>Single schoolclass</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/schoolclasses/SCHOOLCLASS/students</span></code></p></td>
+<td><p>C</p></td>
+<td><p>Students of a schoolclass</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/schoolclasses/search/QUERY</span></code></p></td>
+<td><p>C</p></td>
+<td><p>Schoolclasses whose name contains QUERY</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/extraclasses</span></code></p></td>
+<td><p>C</p></td>
+<td><p>All extra classes</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/extraclasses/SCHOOLCLASS</span></code></p></td>
+<td><p>S</p></td>
+<td><p>Single extra class</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/empty_schoolclasses</span></code></p></td>
+<td><p>C</p></td>
+<td><p>Schoolclasses with no members</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="groups">
+<h3>Groups<a class="headerlink" href="#groups" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>URL</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/groups</span></code></p></td>
+<td><p>C</p></td>
+<td><p>All sophomorix groups</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/groups/NAME</span></code></p></td>
+<td><p>S</p></td>
+<td><p>Single group</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/managementgroups</span></code></p></td>
+<td><p>C</p></td>
+<td><p>All management groups</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/managementgroups/NAME</span></code></p></td>
+<td><p>S</p></td>
+<td><p>Single management group</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/printers</span></code></p></td>
+<td><p>C</p></td>
+<td><p>All printer groups</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/printers/NAME</span></code></p></td>
+<td><p>S</p></td>
+<td><p>Single printer group</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/projects</span></code></p></td>
+<td><p>C</p></td>
+<td><p>All projects</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/projects/PROJECT</span></code></p></td>
+<td><p>S</p></td>
+<td><p>Single project</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/rooms</span></code></p></td>
+<td><p>C</p></td>
+<td><p>All room groups</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/rooms/NAME</span></code></p></td>
+<td><p>S</p></td>
+<td><p>Single room group</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/empty_rooms</span></code></p></td>
+<td><p>C</p></td>
+<td><p>Rooms with no members</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="devices">
+<h3>Devices<a class="headerlink" href="#devices" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>URL</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/devices</span></code></p></td>
+<td><p>C</p></td>
+<td><p>All devices</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/devices/NAME</span></code></p></td>
+<td><p>S</p></td>
+<td><p>Single device</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/devices/search/SELECTION/QUERY</span></code></p></td>
+<td><p>C</p></td>
+<td><p>Devices matching role and CN fragment</p></td>
+</tr>
+</tbody>
+</table>
+<p>Valid <code class="docutils literal notranslate"><span class="pre">SELECTION</span></code> values: <code class="docutils literal notranslate"><span class="pre">all</span></code>, or a specific role like <code class="docutils literal notranslate"><span class="pre">printer</span></code>.</p>
+</section>
+<section id="schools">
+<h3>Schools<a class="headerlink" href="#schools" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>URL</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/schools</span></code></p></td>
+<td><p>C</p></td>
+<td><p>All schools</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/schools/SCHOOL</span></code></p></td>
+<td><p>S</p></td>
+<td><p>Single school</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="system-ou">
+<h3>System / OU<a class="headerlink" href="#system-ou" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>URL</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/ou</span></code></p></td>
+<td><p>C</p></td>
+<td><p>All OUs</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/ou/parents</span></code></p></td>
+<td><p>S</p></td>
+<td><p>Parents OU</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/ou/rooms</span></code></p></td>
+<td><p>S</p></td>
+<td><p>Rooms OU</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/ou/staff</span></code></p></td>
+<td><p>S</p></td>
+<td><p>Staff OU</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/ou/students</span></code></p></td>
+<td><p>S</p></td>
+<td><p>Students OU</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/units</span></code></p></td>
+<td><p>C</p></td>
+<td><p>All units (catch-all group search)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/units/NAME</span></code></p></td>
+<td><p>S</p></td>
+<td><p>Single unit by CN</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/gpos</span></code></p></td>
+<td><p>C</p></td>
+<td><p>All GPOs</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/gpos/NAME</span></code></p></td>
+<td><p>S</p></td>
+<td><p>Single GPO</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/search/QUERY</span></code></p></td>
+<td><p>C</p></td>
+<td><p>Generic LDAP search</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/dn/DN</span></code></p></td>
+<td><p>S</p></td>
+<td><p>Lookup by full distinguished name</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/globalbindusers</span></code></p></td>
+<td><p>C</p></td>
+<td><p>Global bind users</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/globalbindusers/USERNAME</span></code></p></td>
+<td><p>S</p></td>
+<td><p>Single global bind user</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/schoolbindusers</span></code></p></td>
+<td><p>C</p></td>
+<td><p>School bind users</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/schoolbindusers/USERNAME</span></code></p></td>
+<td><p>S</p></td>
+<td><p>Single school bind user</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<hr class="docutils" />
+<section id="writing-object-api">
+<h2>Writing — object API<a class="headerlink" href="#writing-object-api" title="Link to this heading"></a></h2>
+<p>Writer classes load an LDAP entry on instantiation and expose methods to modify it. All changes are applied immediately.</p>
+<section id="id1">
+<h3>Import<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.ldapconnector</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">LMNUser</span><span class="p">,</span> <span class="n">LMNStudent</span><span class="p">,</span> <span class="n">LMNTeacher</span><span class="p">,</span> <span class="n">LMNParent</span><span class="p">,</span> <span class="n">LMNStaff</span><span class="p">,</span>
+    <span class="n">LMNSchoolAdmin</span><span class="p">,</span> <span class="n">LMNGlobalAdmin</span><span class="p">,</span>
+    <span class="n">LMNSchoolclass</span><span class="p">,</span> <span class="n">LMNSchoolclasses</span><span class="p">,</span>
+    <span class="n">LMNProject</span><span class="p">,</span> <span class="n">LMNProjects</span><span class="p">,</span>
+    <span class="n">LMNGroup</span><span class="p">,</span> <span class="n">LMNPrinter</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="common-interface">
+<h3>Common interface<a class="headerlink" href="#common-interface" title="Link to this heading"></a></h3>
+<p>All writer classes share this interface:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">obj</span> <span class="o">=</span> <span class="n">LMNUser</span><span class="p">(</span><span class="s1">&#39;johndoe&#39;</span><span class="p">)</span>           <span class="c1"># loads entry from LDAP</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">data</span>                           <span class="c1"># dict of all LDAP attributes</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;mail&#39;</span><span class="p">:</span> <span class="s1">&#39;new@example.com&#39;</span><span class="p">})</span>   <span class="c1"># modify attributes</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">delattr</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;mail&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">})</span>                  <span class="c1"># delete attributes</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">getattr</span><span class="p">(</span><span class="s1">&#39;mail&#39;</span><span class="p">)</span>                             <span class="c1"># read one attribute</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>                                    <span class="c1"># delete the entry</span>
+</pre></div>
+</div>
+</section>
+<section id="password-management">
+<h3>Password management<a class="headerlink" href="#password-management" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">user</span> <span class="o">=</span> <span class="n">LMNUser</span><span class="p">(</span><span class="s1">&#39;johndoe&#39;</span><span class="p">)</span>
+<span class="n">user</span><span class="o">.</span><span class="n">test_first_password</span><span class="p">()</span>               <span class="c1"># True / False</span>
+
+<span class="n">user</span><span class="o">.</span><span class="n">set_actual_password</span><span class="p">(</span><span class="s1">&#39;N3wP@ssw0rd&#39;</span><span class="p">)</span>  <span class="c1"># sets the current password (unicodePwd) only</span>
+<span class="n">user</span><span class="o">.</span><span class="n">set_first_password</span><span class="p">(</span><span class="s1">&#39;N3wP@ssw0rd&#39;</span><span class="p">)</span>   <span class="c1"># sets sophomorixFirstPassword *and* the current password</span>
+<span class="n">user</span><span class="o">.</span><span class="n">set_random_first_password</span><span class="p">()</span>         <span class="c1"># generates a policy-compliant password, returns it</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">test_first_password()</span></code> performs a real LDAP bind against <code class="docutils literal notranslate"><span class="pre">user.dn</span></code> using the stored <code class="docutils literal notranslate"><span class="pre">sophomorixFirstPassword</span></code>, to check whether the user is still using their initial password. It does not read or modify <code class="docutils literal notranslate"><span class="pre">unicodePwd</span></code>. Raises if the bind itself cannot be attempted (e.g. LDAP unreachable) rather than returning <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">set_actual_password()</span></code>/<code class="docutils literal notranslate"><span class="pre">set_first_password()</span></code>/<code class="docutils literal notranslate"><span class="pre">set_random_first_password()</span></code> write the account’s real password directly via Samba’s <code class="docutils literal notranslate"><span class="pre">SamDB</span></code> (<code class="docutils literal notranslate"><span class="pre">unicodePwd</span></code>), bypassing <code class="docutils literal notranslate"><span class="pre">sophomorix-passwd</span></code>/<code class="docutils literal notranslate"><span class="pre">smbpasswd</span></code> entirely — no password ever transits through a subprocess argv or a shell pipe. This requires root (opens <code class="docutils literal notranslate"><span class="pre">/var/lib/samba/private/sam.ldb</span></code>): call these from an already-privileged process (e.g. lmnapi), never from a demoted webui worker. <code class="docutils literal notranslate"><span class="pre">set_random_first_password()</span></code> resolves the applicable policy via <a class="reference internal" href="#../passwords/README.md"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">passwords.PasswordPolicyProvider</span></code></span></a> (domain policy + per-school/role config) and generates a password exactly at that policy’s minimum length — there’s no length argument, the policy is the only source of truth for it. Raises <code class="docutils literal notranslate"><span class="pre">RuntimeError</span></code> if no candidate satisfies the policy after 100 attempts.</p>
+</section>
+<section id="group-management">
+<h3>Group management<a class="headerlink" href="#group-management" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">LMNGroup</span></code>, <code class="docutils literal notranslate"><span class="pre">LMNSchoolclass</span></code>, and <code class="docutils literal notranslate"><span class="pre">LMNProject</span></code> also expose:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">group</span> <span class="o">=</span> <span class="n">LMNSchoolclass</span><span class="p">(</span><span class="s1">&#39;7b&#39;</span><span class="p">)</span>
+<span class="n">group</span><span class="o">.</span><span class="n">add_member</span><span class="p">(</span><span class="s1">&#39;johndoe&#39;</span><span class="p">)</span>
+<span class="n">group</span><span class="o">.</span><span class="n">remove_member</span><span class="p">(</span><span class="s1">&#39;johndoe&#39;</span><span class="p">)</span>
+<span class="n">group</span><span class="o">.</span><span class="n">add_members</span><span class="p">([</span><span class="s1">&#39;johndoe&#39;</span><span class="p">,</span> <span class="s1">&#39;janedoe&#39;</span><span class="p">])</span>
+<span class="n">group</span><span class="o">.</span><span class="n">remove_members</span><span class="p">([</span><span class="s1">&#39;johndoe&#39;</span><span class="p">,</span> <span class="s1">&#39;janedoe&#39;</span><span class="p">])</span>
+<span class="n">group</span><span class="o">.</span><span class="n">remove_all_members</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">LMNSchoolclass</span></code> automatically keeps the <code class="docutils literal notranslate"><span class="pre">7b-students</span></code>, <code class="docutils literal notranslate"><span class="pre">7b-teachers</span></code>, and <code class="docutils literal notranslate"><span class="pre">7b-parents</span></code> subgroups in sync after every membership change, and <code class="docutils literal notranslate"><span class="pre">fill_admins()</span></code> keeps <code class="docutils literal notranslate"><span class="pre">sophomorixAdmins</span></code> — where sophomorix stores the teachers of a class, as sAMAccountNames — equal to the members under <code class="docutils literal notranslate"><span class="pre">OU=Teachers</span></code>.</p>
+<p>That second sync matters because sophomorix treats <code class="docutils literal notranslate"><span class="pre">sophomorixMembers</span></code>/<code class="docutils literal notranslate"><span class="pre">sophomorixAdmins</span></code> as the source of truth and rebuilds <code class="docutils literal notranslate"><span class="pre">member</span></code> from them: a teacher written only into <code class="docutils literal notranslate"><span class="pre">member</span></code> is invisible to the webui and API permissions, to <code class="docutils literal notranslate"><span class="pre">lmncli</span> <span class="pre">schoolclass</span> <span class="pre">teachers</span></code> and to first passwords printing, and is silently dropped from the class by the next sophomorix run. Students are not handled this way: putting one in a class is not only an LDAP membership, it needs the share management which lives in sophomorix.</p>
+<p>Those subgroups belong to <code class="docutils literal notranslate"><span class="pre">linuxmusterTools</span></code>, not to sophomorix:
+<code class="docutils literal notranslate"><span class="pre">sophomorix-class</span> <span class="pre">--kill</span></code> only deletes the schoolclass group itself and leaves
+them, and the OU of the schoolclass, in the directory. Two functions clean
+that up (both used by <code class="docutils literal notranslate"><span class="pre">lmncli</span> <span class="pre">schoolclass</span> <span class="pre">cleanup</span></code>, which <code class="docutils literal notranslate"><span class="pre">sophomorix-class</span></code>
+calls after a kill):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.ldapconnector</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">delete_schoolclass_subgroups</span><span class="p">,</span> <span class="n">orphan_schoolclass_subgroups</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">orphan_schoolclass_subgroups</span><span class="p">()</span>
+<span class="c1"># [&#39;16e&#39;]  schoolclasses which are gone but whose subgroups are still there</span>
+
+<span class="n">delete_schoolclass_subgroups</span><span class="p">(</span><span class="s1">&#39;16e&#39;</span><span class="p">)</span>
+<span class="c1"># [&#39;CN=16e-students,OU=16e,...&#39;, ..., &#39;OU=16e,OU=Students,...&#39;]</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">delete_schoolclass_subgroups()</span></code> raises <code class="docutils literal notranslate"><span class="pre">SchoolclassExistsError</span></code> if the
+schoolclass still exists, and deletes the OU of the schoolclass only once
+nothing is left in it — a class killed while its students still existed keeps
+their accounts there until the next import. That OU is located as the parent
+of the subgroups, so an OU which is left alone is not cleaned up.</p>
+<p><code class="docutils literal notranslate"><span class="pre">add_member()</span></code> is idempotent: adding a cn which already is a member is a no-op, not an error. A failed LDAP write raises, it is never reported as a success.</p>
+<p><code class="docutils literal notranslate"><span class="pre">add_members()</span></code>/<code class="docutils literal notranslate"><span class="pre">remove_members()</span></code> never abort partway through the list: an entry which fails — an invalid cn as well as a rejected LDAP write — is skipped rather than stopping the batch, and the call returns a list of <code class="docutils literal notranslate"><span class="pre">(cn,</span> <span class="pre">error_message)</span></code> tuples for the entries that failed (empty list if everything succeeded).</p>
+</section>
+<section id="printers">
+<h3>Printers<a class="headerlink" href="#printers" title="Link to this heading"></a></h3>
+<p>A printer is a group whose members are printing rights. Members are users
+<strong>or</strong> groups, so both are given as plain cn and resolved on either side:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">printer</span> <span class="o">=</span> <span class="n">LMNPrinter</span><span class="p">(</span><span class="s1">&#39;printer1&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">add_members</span><span class="p">([</span><span class="s1">&#39;johndoe&#39;</span><span class="p">,</span> <span class="s1">&#39;7a-students&#39;</span><span class="p">])</span>     <span class="c1"># users and groups alike</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">remove_members</span><span class="p">([</span><span class="s1">&#39;johndoe&#39;</span><span class="p">,</span> <span class="s1">&#39;7a-students&#39;</span><span class="p">])</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">add_member</span><span class="p">(</span><span class="s1">&#39;johndoe&#39;</span><span class="p">)</span>                       <span class="c1"># raises on failure</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">remove_member</span><span class="p">(</span><span class="s1">&#39;johndoe&#39;</span><span class="p">)</span>
+<span class="n">printer</span><span class="o">.</span><span class="n">remove_all_members</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">add_members()</span></code>/<code class="docutils literal notranslate"><span class="pre">remove_members()</span></code> apply <strong>one</strong> targeted LDAP modify for the
+whole list (<code class="docutils literal notranslate"><span class="pre">MOD_ADD</span></code>/<code class="docutils literal notranslate"><span class="pre">MOD_DELETE</span></code> per value), never a rewrite of <code class="docutils literal notranslate"><span class="pre">member</span></code>.
+That matters beyond speed: a rewritten list carries whatever the caller read
+a moment earlier, so two requests changing the members at the same time — the
+webui sends one per kind when users and groups are applied together — would
+silently drop one of the two changes. They return the same
+<code class="docutils literal notranslate"><span class="pre">(cn,</span> <span class="pre">error_message)</span></code> failure list as the group writers, and skip a cn which
+is already (or not) a member rather than failing the whole modify on it.</p>
+<p>Removing every member needs no special case: the last <code class="docutils literal notranslate"><span class="pre">MOD_DELETE</span></code> leaves no
+value behind and the directory drops the attribute on its own.</p>
+</section>
+<section id="students">
+<h3>Students<a class="headerlink" href="#students" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">student</span> <span class="o">=</span> <span class="n">LMNStudent</span><span class="p">(</span><span class="s1">&#39;johndoe&#39;</span><span class="p">)</span>
+<span class="n">student</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="s1">&#39;8a&#39;</span><span class="p">)</span>                           <span class="c1"># move to another schoolclass</span>
+<span class="n">student</span><span class="o">.</span><span class="n">add_parent</span><span class="p">(</span><span class="s1">&#39;johndoe-parent&#39;</span><span class="p">)</span>         <span class="c1"># link a parent account</span>
+<span class="n">student</span><span class="o">.</span><span class="n">remove_parent</span><span class="p">(</span><span class="s1">&#39;johndoe-parent&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="projects">
+<h3>Projects<a class="headerlink" href="#projects" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">project</span> <span class="o">=</span> <span class="n">LMNProject</span><span class="p">(</span><span class="s1">&#39;robotics&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">project</span><span class="o">.</span><span class="n">new</span><span class="p">:</span>
+    <span class="n">project</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>                         <span class="c1"># create if not yet in LDAP</span>
+<span class="n">project</span><span class="o">.</span><span class="n">add_member</span><span class="p">(</span><span class="s1">&#39;johndoe&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="bulk-iteration">
+<h3>Bulk iteration<a class="headerlink" href="#bulk-iteration" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">cn</span><span class="p">,</span> <span class="n">schoolclass</span> <span class="ow">in</span> <span class="n">LMNSchoolclasses</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">cn</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">schoolclass</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;member&#39;</span><span class="p">]))</span>
+
+<span class="k">for</span> <span class="n">cn</span><span class="p">,</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">LMNUsers</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sophomorixRole&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Available collection classes: <code class="docutils literal notranslate"><span class="pre">LMNUsers</span></code>, <code class="docutils literal notranslate"><span class="pre">LMNStudents</span></code>, <code class="docutils literal notranslate"><span class="pre">LMNTeachers</span></code>, <code class="docutils literal notranslate"><span class="pre">LMNParents</span></code>, <code class="docutils literal notranslate"><span class="pre">LMNStaffs</span></code>, <code class="docutils literal notranslate"><span class="pre">LMNSchoolAdmins</span></code>, <code class="docutils literal notranslate"><span class="pre">LMNGlobalAdmins</span></code>, <code class="docutils literal notranslate"><span class="pre">LMNSchoolclasses</span></code>, <code class="docutils literal notranslate"><span class="pre">LMNProjects</span></code>.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="multi-school-support">
+<h2>Multi-school support<a class="headerlink" href="#multi-school-support" title="Link to this heading"></a></h2>
+<p>Most routes and writer classes accept a <code class="docutils literal notranslate"><span class="pre">school</span></code> parameter. Use <code class="docutils literal notranslate"><span class="pre">'global'</span></code> to search across all schools (valid for global administrators only).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/schoolclasses&#39;</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;secondary&#39;</span><span class="p">)</span>
+<span class="n">LMNSchoolclass</span><span class="p">(</span><span class="s1">&#39;7b&#39;</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;secondary&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Always pass <code class="docutils literal notranslate"><span class="pre">school</span></code> explicitly on a multi-school server.</strong> What omitting it does depends on the route:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Route kind</p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">school</span></code> omitted</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Route with a school-scoped subdn (<code class="docutils literal notranslate"><span class="pre">/units</span></code>, <code class="docutils literal notranslate"><span class="pre">/groups</span></code>, <code class="docutils literal notranslate"><span class="pre">/printers</span></code>, <code class="docutils literal notranslate"><span class="pre">/rooms</span></code>, <code class="docutils literal notranslate"><span class="pre">/ou</span></code>, …)</p></td>
+<td><p>searched under <code class="docutils literal notranslate"><span class="pre">OU=default-school</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Any other route (<code class="docutils literal notranslate"><span class="pre">/schoolclasses</span></code>, <code class="docutils literal notranslate"><span class="pre">/users</span></code>, <code class="docutils literal notranslate"><span class="pre">/projects</span></code>, …)</p></td>
+<td><p><strong>no filtering at all</strong> — entries of every school are returned</p></td>
+</tr>
+</tbody>
+</table>
+<p>The reason is that the reader filters on the DN only when it actually receives a <code class="docutils literal notranslate"><span class="pre">school</span></code> (<code class="docutils literal notranslate"><span class="pre">school_node</span> <span class="pre">=</span> <span class="pre">f&quot;OU={school},&quot;</span></code>); the default <code class="docutils literal notranslate"><span class="pre">'default-school'</span></code> is used to substitute the subdn marker, not to filter the results. So <code class="docutils literal notranslate"><span class="pre">lr.getval('/schoolclasses',</span> <span class="pre">'cn')</span></code> lists the schoolclasses of <em>all</em> schools, while <code class="docutils literal notranslate"><span class="pre">lr.getval('/schoolclasses',</span> <span class="pre">'cn',</span> <span class="pre">school='default-school')</span></code> lists only that school’s ones.</p>
+<section id="validating-a-school">
+<h3>Validating a school<a class="headerlink" href="#validating-a-school" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.ldapconnector.checks</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_valid_school</span><span class="p">,</span> <span class="n">valid_schools</span>
+
+<span class="n">valid_schools</span><span class="p">()</span>                     <span class="c1"># [&#39;default-school&#39;, &#39;secondary&#39;]</span>
+<span class="n">is_valid_school</span><span class="p">(</span><span class="s1">&#39;secondary&#39;</span><span class="p">)</span>        <span class="c1"># True</span>
+<span class="n">is_valid_school</span><span class="p">(</span><span class="s1">&#39;global&#39;</span><span class="p">)</span>           <span class="c1"># False, &#39;global&#39; is a routing marker, not a school</span>
+</pre></div>
+</div>
+<p>Both read <code class="docutils literal notranslate"><span class="pre">/schools</span></code> on each call (no caching). <code class="docutils literal notranslate"><span class="pre">'global'</span></code> is never a valid school: it is the marker telling that a global administrator is not scoped to a single school, and passing it to a writer instead of a real school name writes bogus school-scoped attributes.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="devices.html" class="btn btn-neutral float-left" title="devices" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="linbo.html" class="btn btn-neutral float-right" title="linbo" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

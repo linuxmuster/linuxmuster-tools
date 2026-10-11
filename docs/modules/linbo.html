@@ -1,0 +1,521 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linbo &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/translations.js?v=8fd896e3"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lmnconfig" href="lmnconfig.html" />
+    <link rel="prev" title="ldapconnector" href="ldapconnector.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="common.html">common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devices.html">devices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ldapconnector.html">ldapconnector</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">linbo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#group-configs">Group configs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#image-manager">Image manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#remote-commands">Remote commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#change-tracker">Change tracker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#host-status">Host status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#image-status">Image status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hardware-inventories">Hardware inventories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#windows-driver-profiles">Windows driver profiles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#image-assignments">Image assignments</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lmnconfig.html">lmnconfig</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lmnfile.html">lmnfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="passwords.html">passwords</a></li>
+<li class="toctree-l1"><a class="reference internal" href="print.html">print</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quotas.html">quotas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="samba_util.html">samba_util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="smbclient.html">smbclient</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subnets.html">subnets</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">linbo</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/modules/linbo.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="linbo">
+<h1>linbo<a class="headerlink" href="#linbo" title="Link to this heading"></a></h1>
+<p>Manages <a class="reference external" href="https://www.linuxmuster.net">LINBO</a> images, backups, hardware inventories, Windows driver profiles, and remote commands/sessions on a linuxmuster.net server.</p>
+<hr class="docutils" />
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Python 3.8+</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/configobj/"><code class="docutils literal notranslate"><span class="pre">configobj</span></code></a> (via <code class="docutils literal notranslate"><span class="pre">linuxmusterTools.lmnfile</span></code>, used to read/write <code class="docutils literal notranslate"><span class="pre">match.conf</span></code>/<code class="docutils literal notranslate"><span class="pre">image.conf</span></code>)</p></li>
+<li><p>A LINBO server layout: <code class="docutils literal notranslate"><span class="pre">/srv/linbo/images</span></code>, <code class="docutils literal notranslate"><span class="pre">/srv/linbo/drivers</span></code>, <code class="docutils literal notranslate"><span class="pre">/var/log/linuxmuster/linbo</span></code></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="group-configs">
+<h2>Group configs<a class="headerlink" href="#group-configs" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">LinboConfigManager</span></code> owns the per-group files in <code class="docutils literal notranslate"><span class="pre">/srv/linbo</span></code>: the
+<code class="docutils literal notranslate"><span class="pre">start.conf.&lt;group&gt;</span></code> itself and its optional VDI companion
+<code class="docutils literal notranslate"><span class="pre">start.conf.&lt;group&gt;.vdi</span></code>. Every method validates the group id before it
+builds a path, so an id coming from a request cannot escape <code class="docutils literal notranslate"><span class="pre">/srv/linbo</span></code>.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Method</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">load_raw_startconfs(group_ids)</span></code></p></td>
+<td><p>Raw text, sha256 and mtime of each requested <code class="docutils literal notranslate"><span class="pre">start.conf</span></code>, skipping the ids that are invalid or have no file</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">write_raw_startconf(group_id,</span> <span class="pre">content)</span></code></p></td>
+<td><p>Writes the text verbatim, comments and formatting preserved, creating the file if needed</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">delete_startconf(group_id)</span></code></p></td>
+<td><p>Deletes the <code class="docutils literal notranslate"><span class="pre">start.conf</span></code> and the group’s GRUB config</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">read_vdi_config(group_id)</span></code></p></td>
+<td><p>Parsed VDI config, <code class="docutils literal notranslate"><span class="pre">{}</span></code> if the file is empty</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">write_vdi_config(group_id,</span> <span class="pre">config)</span></code></p></td>
+<td><p>Creates or replaces the VDI config as a whole</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">delete_vdi_config(group_id)</span></code></p></td>
+<td><p>Deletes the VDI config, which disables VDI for that group</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">list_examples()</span></code></p></td>
+<td><p>The ready-made configs in <code class="docutils literal notranslate"><span class="pre">/srv/linbo/examples</span></code>, with kind, size and mtime</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">read_example(name)</span></code></p></td>
+<td><p>Content of one of them, by a name the listing reports</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">list_startconf_backups(group_id)</span></code></p></td>
+<td><p>The group’s <code class="docutils literal notranslate"><span class="pre">start.conf</span></code> backups, newest first, with epoch, size and date</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">restore_startconf_backup(group_id,</span> <span class="pre">timestamp)</span></code></p></td>
+<td><p>Puts one back in place, saving the current file first</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">delete_startconf_backup(group_id,</span> <span class="pre">timestamp)</span></code></p></td>
+<td><p>Deletes one backup, irreversibly</p></td>
+</tr>
+</tbody>
+</table>
+<p>Every write path leaves a backup behind, named
+<code class="docutils literal notranslate"><span class="pre">.start.conf.&lt;group&gt;.bak.&lt;epoch&gt;</span></code> by <code class="docutils literal notranslate"><span class="pre">LMNFile.backup()</span></code>, and that is the
+history <code class="docutils literal notranslate"><span class="pre">list_startconf_backups()</span></code> reports. It is a short one: <code class="docutils literal notranslate"><span class="pre">backup()</span></code>
+keeps the ten previous versions and drops the oldest when it writes an
+eleventh, so it is a way back from a bad edit, not an archive. Matching is
+exact - group names prefix each other on a real server (<code class="docutils literal notranslate"><span class="pre">101</span></code>, <code class="docutils literal notranslate"><span class="pre">101-test</span></code>,
+<code class="docutils literal notranslate"><span class="pre">101b</span></code>), and a group’s VDI config keeps backups of its own under
+<code class="docutils literal notranslate"><span class="pre">.start.conf.&lt;group&gt;.vdi.bak.&lt;epoch&gt;</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">restore_startconf_backup()</span></code> reads the backup before saving the current
+<code class="docutils literal notranslate"><span class="pre">start.conf</span></code>, because saving it rotates the oldest backup out and the oldest
+may be the very one being restored. The file is then copied byte for byte
+rather than parsed and rewritten: the comments are what makes a backup worth
+restoring.</p>
+<p><code class="docutils literal notranslate"><span class="pre">list_examples()</span></code> and <code class="docutils literal notranslate"><span class="pre">read_example(name)</span></code> complete the set with the
+ready-made configs LINBO ships in <code class="docutils literal notranslate"><span class="pre">/srv/linbo/examples</span></code>: the <code class="docutils literal notranslate"><span class="pre">start.conf.*</span></code>
+templates and the <code class="docutils literal notranslate"><span class="pre">.reg</span></code>/<code class="docutils literal notranslate"><span class="pre">.postsync</span></code>/<code class="docutils literal notranslate"><span class="pre">.prestart</span></code> sidecars, each reported with
+its kind (<code class="docutils literal notranslate"><span class="pre">config</span></code>, <code class="docutils literal notranslate"><span class="pre">reg</span></code>, <code class="docutils literal notranslate"><span class="pre">postsync</span></code>, <code class="docutils literal notranslate"><span class="pre">prestart</span></code>), size and mtime. Anything
+else in that directory - the README, for one - is left out, and the listing
+doubles as the whitelist: <code class="docutils literal notranslate"><span class="pre">read_example()</span></code> only accepts a name the listing
+reports, so a name coming from a request cannot walk out of the directory. A
+server without the directory lists nothing rather than raising.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">.vdi</span></code> file is YAML, not a <code class="docutils literal notranslate"><span class="pre">start.conf</span></code>: <code class="docutils literal notranslate"><span class="pre">LMNFile</span></code> excludes the extension
+from its start.conf handler and routes it to the YAML loader, so booleans,
+integers and lists survive a round trip. It holds what the group editor’s
+VDI tab shows - <code class="docutils literal notranslate"><span class="pre">activated</span></code>, <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">bios</span></code>, <code class="docutils literal notranslate"><span class="pre">ostype</span></code>, <code class="docutils literal notranslate"><span class="pre">boot</span></code>, <code class="docutils literal notranslate"><span class="pre">hostname</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ip</span></code>, <code class="docutils literal notranslate"><span class="pre">mac</span></code>, <code class="docutils literal notranslate"><span class="pre">bridge</span></code>, <code class="docutils literal notranslate"><span class="pre">tag</span></code>, <code class="docutils literal notranslate"><span class="pre">cores</span></code>, <code class="docutils literal notranslate"><span class="pre">memory</span></code>, <code class="docutils literal notranslate"><span class="pre">size</span></code>, <code class="docutils literal notranslate"><span class="pre">storage</span></code> and the
+reserved <code class="docutils literal notranslate"><span class="pre">vmids</span></code> - and is consumed by <code class="docutils literal notranslate"><span class="pre">edulution-linbo-vdi</span></code>, which owns that
+schema: the manager reads and writes the mapping without interpreting it.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.linbo</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinboConfigManager</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">LinboConfigManager</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span><span class="o">.</span><span class="n">write_vdi_config</span><span class="p">(</span><span class="s1">&#39;win11&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;activated&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;vmids&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">101</span><span class="p">,</span> <span class="mi">102</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span><span class="o">.</span><span class="n">read_vdi_config</span><span class="p">(</span><span class="s1">&#39;win11&#39;</span><span class="p">)</span>
+<span class="go">{&#39;activated&#39;: True, &#39;cores&#39;: 4, &#39;vmids&#39;: [101, 102]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span><span class="o">.</span><span class="n">delete_vdi_config</span><span class="p">(</span><span class="s1">&#39;win11&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Do not confuse this file with an image’s <code class="docutils literal notranslate"><span class="pre">.vdi</span></code> sidecar
+(<code class="docutils literal notranslate"><span class="pre">&lt;image&gt;.qcow2.vdi</span></code>, free text, managed by <code class="docutils literal notranslate"><span class="pre">LinboImageManager</span></code> along with
+<code class="docutils literal notranslate"><span class="pre">.desc</span></code>/<code class="docutils literal notranslate"><span class="pre">.reg</span></code>/<code class="docutils literal notranslate"><span class="pre">.postsync</span></code>): same extension, unrelated object.</p>
+<p><code class="docutils literal notranslate"><span class="pre">write_raw_startconf()</span></code> keeps the <code class="docutils literal notranslate"><span class="pre">start.conf</span></code> at mode 755, like the other
+files LINBO itself reads, while <code class="docutils literal notranslate"><span class="pre">write_vdi_config()</span></code> leaves the VDI config at
+600 - what these files have on a server, and what the YAML loader sets before
+its own final rename would drop it back to the umask default. Both back the
+previous version up. <code class="docutils literal notranslate"><span class="pre">read_vdi_config()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">delete_vdi_config()</span></code> raise <code class="docutils literal notranslate"><span class="pre">FileNotFoundError</span></code> when the group has no VDI
+config - a group without one simply has VDI disabled.</p>
+</section>
+<hr class="docutils" />
+<section id="image-manager">
+<h2>Image manager<a class="headerlink" href="#image-manager" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">LinboImageManager</span></code> provides an object to manage all linbo images, backups and extra files (rename, delete, … ).
+The manager contains a dict of all groups in the attributes <code class="docutils literal notranslate"><span class="pre">groups</span></code>, filled by <code class="docutils literal notranslate"><span class="pre">list()</span></code> in natural order (<code class="docutils literal notranslate"><span class="pre">win2</span></code> before <code class="docutils literal notranslate"><span class="pre">win10</span></code>, see <code class="docutils literal notranslate"><span class="pre">common.sort_naturally</span></code>). Each group is a <code class="docutils literal notranslate"><span class="pre">LinboImageGroup</span></code> which lists all files, backups contained in the directory. You can get a dict of this description with the method <code class="docutils literal notranslate"><span class="pre">to_dict()</span></code> like bellow:</p>
+<div class="highlight-Console notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt; from linuxmusterTools.linbo import LinboImageManager</span>
+<span class="go">&gt;&gt;&gt; lim = LinboImageManager()</span>
+<span class="go">&gt;&gt;&gt; lim.groups</span>
+<span class="go">{&#39;ubuntu&#39;: &lt;linuxmusterTools.linbo.images.LinboImageGroup object at 0x7f579b6443a0&gt;, &#39;focal&#39;: &lt;linuxmusterTools.linbo.images.LinboImageGroup object at 0x7f579b645f00&gt;, &#39;test-linbo42&#39;: &lt;linuxmusterTools.linbo.images.LinboImageGroup object at 0x7f579b25f7f0&gt;, &#39;data&#39;: &lt;linuxmusterTools.linbo.images.LinboImageGroup object at 0x7f579b25f7c0&gt;}</span>
+<span class="go">&gt;&gt;&gt; lim.rename(&#39;test-linbo42&#39;, &#39;test-linbo101&#39;)</span>
+<span class="go">&gt;&gt;&gt; lim.groups</span>
+<span class="go">{&#39;ubuntu&#39;: &lt;linuxmusterTools.linbo.images.LinboImageGroup object at 0x7f579b6443a0&gt;, &#39;focal&#39;: &lt;linuxmusterTools.linbo.images.LinboImageGroup object at 0x7f579b645f00&gt;, &#39;data&#39;: &lt;linuxmusterTools.linbo.images.LinboImageGroup object at 0x7f579b25f7c0&gt;, &#39;test-linbo101&#39;: &lt;linuxmusterTools.linbo.images.LinboImageGroup object at 0x7f579b61a500&gt;}</span>
+<span class="go">&gt;&gt;&gt; lim.groups[&#39;ubuntu&#39;].to_dict()</span>
+<span class="go">{&#39;name&#39;: &#39;ubuntu&#39;, &#39;size&#39;: 2609718272, &#39;desc&#39;: &#39;Install LaTeX and update&#39;, &#39;info&#39;: &#39;[&quot;ubuntu.qcow2&quot; Info File]\ntimestamp=&quot;202108291639&quot;\nimage=&quot;ubuntu.qcow2&quot;\nimagesize=&quot;2609718272&quot;\npartition=&quot;/dev/sda1&quot;\npartitionsize=&quot;31457280&quot;\n&#39;, &#39;reg&#39;: None, &#39;postsync&#39;: None, &#39;vdi&#39;: None, &#39;prestart&#39;: &#39;#! /bin/bash\n\necho &quot;ok&quot;\n&#39;, &#39;backup&#39;: False, &#39;diff&#39;: False, &#39;torrent&#39;: True, &#39;timestamp&#39;: &#39;202108291639&#39;, &#39;date&#39;: &#39;29/08/2021 16:39&#39;, &#39;diff_image&#39;: {}, &#39;backups&#39;: {&#39;03/03/2022 19:03&#39;: {&#39;name&#39;: &#39;ubuntu&#39;, &#39;size&#39;: 0, &#39;desc&#39;: &#39;&#39;, &#39;info&#39;: &#39;timestamp=202203031903\ndate=voila&#39;, &#39;reg&#39;: None, &#39;postsync&#39;: None, &#39;vdi&#39;: None, &#39;prestart&#39;: None, &#39;backup&#39;: True, &#39;diff&#39;: False, &#39;torrent&#39;: False, &#39;timestamp&#39;: &#39;202203031903&#39;, &#39;date&#39;: &#39;03/03/2022 19:03&#39;}, &#39;29/08/2021 16:22&#39;: {&#39;name&#39;: &#39;ubuntu&#39;, &#39;size&#39;: 3233778176, &#39;desc&#39;: &#39;Install ZSH&#39;, &#39;info&#39;: &#39;[ubuntu.qcow2 Info File]\ntimestamp=202108291622\nimage=ubuntu.qcow2\nbaseimage=/dev/sda1\npartitionsize=31457159\nimagesize=3233778176\n&#39;, &#39;reg&#39;: None, &#39;postsync&#39;: None, &#39;vdi&#39;: None, &#39;prestart&#39;: &#39;#! /bin/bash\n\necho &quot;ok&quot;\n&#39;, &#39;backup&#39;: True, &#39;diff&#39;: False, &#39;torrent&#39;: False, &#39;timestamp&#39;: &#39;202108291622&#39;, &#39;date&#39;: &#39;29/08/2021 16:22&#39;}, &#39;29/08/2021 16:17&#39;: {&#39;name&#39;: &#39;ubuntu&#39;, &#39;size&#39;: 3233778176, &#39;desc&#39;: &#39;Install ZSH&#39;, &#39;info&#39;: &#39;[ubuntu.qcow2 Info File]\ntimestamp=202108291617\nimage=ubuntu.qcow2\nbaseimage=/dev/sda1\npartitionsize=31457159\nimagesize=3233778176\n&#39;, &#39;reg&#39;: None, &#39;postsync&#39;: None, &#39;vdi&#39;: None, &#39;prestart&#39;: &#39;#! /bin/bash\n\necho &quot;ok&quot;\n&#39;, &#39;backup&#39;: True, &#39;diff&#39;: False, &#39;torrent&#39;: False, &#39;timestamp&#39;: &#39;202108291617&#39;, &#39;date&#39;: &#39;29/08/2021 16:17&#39;}}, &#39;selected&#39;: False}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">delete()</span></code>, <code class="docutils literal notranslate"><span class="pre">duplicate()</span></code> and <code class="docutils literal notranslate"><span class="pre">restore()</span></code> raise rather than fail silently:
+a directory that cannot be removed propagates the underlying <code class="docutils literal notranslate"><span class="pre">OSError</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">duplicate()</span></code>/<code class="docutils literal notranslate"><span class="pre">restore()</span></code> raise <code class="docutils literal notranslate"><span class="pre">ImageExistsError</span></code> (a <code class="docutils literal notranslate"><span class="pre">FileExistsError</span></code>
+subclass, importable from <code class="docutils literal notranslate"><span class="pre">linuxmusterTools.linbo</span></code>) if the target image or
+backup directory already exists.</p>
+<p><code class="docutils literal notranslate"><span class="pre">.torrent</span></code> and its <code class="docutils literal notranslate"><span class="pre">.hash</span></code> are the one pair that is <strong>not</strong> renamed along
+with the other extras. A torrent embeds the file name it describes, and the
+hash describes that torrent, so <code class="docutils literal notranslate"><span class="pre">rename()</span></code> deletes both and <code class="docutils literal notranslate"><span class="pre">duplicate()</span></code>
+leaves them out of the copy. They are rebuilt afterwards by
+<code class="docutils literal notranslate"><span class="pre">linbo-torrent</span> <span class="pre">create</span></code>, launched in the background: <code class="docutils literal notranslate"><span class="pre">buildtorrent</span></code> hashes the
+whole image, which would otherwise hold the caller — and the HTTP request
+behind it — for the length of the build.</p>
+<p>The rebuild runs only once the image directory has its final name, and never
+for backups: <code class="docutils literal notranslate"><span class="pre">linbo-torrent</span></code> only looks two levels below <code class="docutils literal notranslate"><span class="pre">/srv/linbo/images</span></code>
+and never sees them. Its output goes to
+<code class="docutils literal notranslate"><span class="pre">/var/log/linuxmuster/linbo/torrent-create-&lt;image&gt;.log</span></code>. There is nothing else
+to follow: <code class="docutils literal notranslate"><span class="pre">&lt;image&gt;.torrent</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;image&gt;.hash</span></code> appear when the build is done,
+<code class="docutils literal notranslate"><span class="pre">to_dict()</span></code> reports the torrent’s presence, and <code class="docutils literal notranslate"><span class="pre">linbo-torrent</span> <span class="pre">status</span></code> lists
+the seeding session.</p>
+<p>A missing or incomplete <code class="docutils literal notranslate"><span class="pre">.info</span></code> file (an existing image whose required
+fields aren’t all present) raises <code class="docutils literal notranslate"><span class="pre">IncompleteImageInfoError</span></code> (a
+<code class="docutils literal notranslate"><span class="pre">ValueError</span></code> subclass) when the manager loads it. Rather than taking the
+whole listing down with it, <code class="docutils literal notranslate"><span class="pre">LinboImageManager</span></code> catches this per group: a
+broken group still appears in <code class="docutils literal notranslate"><span class="pre">to_dict()</span></code>’s output, as
+<code class="docutils literal notranslate"><span class="pre">{'name':</span> <span class="pre">&lt;group&gt;,</span> <span class="pre">'error':</span> <span class="pre">&lt;message&gt;,</span> <span class="pre">'selected':</span> <span class="pre">False}</span></code>, instead of a
+full image description.</p>
+<p><code class="docutils literal notranslate"><span class="pre">restart_image_services()</span></code> restarts <code class="docutils literal notranslate"><span class="pre">linbo-multicast</span></code> and <code class="docutils literal notranslate"><span class="pre">linbo-torrent</span></code>, so that they distribute the new version of a changed image. Both services are global, they are restarted for every school. It raises <code class="docutils literal notranslate"><span class="pre">subprocess.CalledProcessError</span></code> (with systemctl’s <code class="docutils literal notranslate"><span class="pre">stderr</span></code>) or <code class="docutils literal notranslate"><span class="pre">subprocess.TimeoutExpired</span></code> (60 seconds by default) rather than failing silently.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.linbo</span><span class="w"> </span><span class="kn">import</span> <span class="n">restart_image_services</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">restart_image_services</span><span class="p">()</span>
+<span class="go">[&#39;linbo-multicast.service&#39;, &#39;linbo-torrent.service&#39;]</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="remote-commands">
+<h2>Remote commands<a class="headerlink" href="#remote-commands" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">LinboRemote</span></code> builds and runs a <code class="docutils literal notranslate"><span class="pre">linbo-remote</span></code> command against a group, a
+room, or a list of clients (an ip or a hostname). It validates its
+parameters (mutually exclusive target, <code class="docutils literal notranslate"><span class="pre">wait</span></code>/<code class="docutils literal notranslate"><span class="pre">wol</span></code> pairing, valid school)
+and the position/partition number (<code class="docutils literal notranslate"><span class="pre">nr</span></code>) against the target’s
+<code class="docutils literal notranslate"><span class="pre">start.conf</span></code> before running anything, raising <code class="docutils literal notranslate"><span class="pre">LinboRemoteParameterError</span></code>
+(a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> subclass) instead of silently building - or running - a
+wrong command.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.linbo</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinboRemote</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">remote</span> <span class="o">=</span> <span class="n">LinboRemote</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="s1">&#39;win10&#39;</span><span class="p">,</span> <span class="n">cmd</span><span class="o">=</span><span class="s1">&#39;sync:1&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">remote</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="go">{&#39;status&#39;: 0, &#39;msg&#39;: &#39;Started with PID 1234. Log see /var/log/linuxmuster/linbo/pc001_linbo-remote_20261011101500.log.\n&#39;}</span>
+</pre></div>
+</div>
+<p>Since linuxmuster-linbo7 7.4.18, every run writes its own log, <code class="docutils literal notranslate"><span class="pre">&lt;hostname&gt;_linbo-remote_&lt;YYYYmmddHHMMSS&gt;.log</span></code>, where older versions overwrote a single <code class="docutils literal notranslate"><span class="pre">&lt;hostname&gt;.linbo-remote</span></code>. <code class="docutils literal notranslate"><span class="pre">LinboBootLogs().latest_remote_log()</span></code> gives the name of a host’s last one, ordered on the timestamp of its name, falling back on the old name; a running session writes into it live. It returns <code class="docutils literal notranslate"><span class="pre">None</span></code> if the host has no linbo-remote log, and raises <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> on an unsafe hostname.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.linbo</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinboBootLogs</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">logs</span> <span class="o">=</span> <span class="n">LinboBootLogs</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">logs</span><span class="o">.</span><span class="n">latest_remote_log</span><span class="p">(</span><span class="s1">&#39;pc001&#39;</span><span class="p">)</span>
+<span class="go">&#39;pc001_linbo-remote_20261011101500.log&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">logs</span><span class="o">.</span><span class="n">read_log</span><span class="p">(</span><span class="n">logs</span><span class="o">.</span><span class="n">latest_remote_log</span><span class="p">(</span><span class="s1">&#39;pc001&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">list_running_sessions()</span></code> lists the tmux sessions <code class="docutils literal notranslate"><span class="pre">linbo-remote</span></code> currently
+has running (one per targeted host), and <code class="docutils literal notranslate"><span class="pre">attach_command()</span></code> builds the
+<code class="docutils literal notranslate"><span class="pre">tmux</span> <span class="pre">attach</span></code> command for a given hostname - not meant to be run through a
+web request (<code class="docutils literal notranslate"><span class="pre">tmux</span> <span class="pre">attach</span></code> needs an interactive terminal), only to give a
+future terminal-in-browser feature the exact session name to use.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.linbo</span><span class="w"> </span><span class="kn">import</span> <span class="n">list_running_sessions</span><span class="p">,</span> <span class="n">attach_command</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">list_running_sessions</span><span class="p">()</span>
+<span class="go">[{&#39;hostname&#39;: &#39;pc001&#39;, &#39;session&#39;: &#39;pc001_linbo-remote&#39;, &#39;created&#39;: &#39;2026-08-07T11:49:15+00:00&#39;}]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">attach_command</span><span class="p">(</span><span class="s1">&#39;pc001&#39;</span><span class="p">)</span>
+<span class="go">&#39;tmux attach -t pc001_linbo-remote&#39;</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">onboot=True</span></code> (<code class="docutils literal notranslate"><span class="pre">linbo-remote</span> <span class="pre">-p</span></code>) does not reach the host at once: it leaves the commands in <code class="docutils literal notranslate"><span class="pre">/srv/linbo/linbocmd/&lt;hostname&gt;.cmd</span></code>, which LINBO removes once the client has downloaded it at boot. <code class="docutils literal notranslate"><span class="pre">list_onboot_commands()</span></code> lists the files still waiting, <code class="docutils literal notranslate"><span class="pre">get_onboot_command()</span></code> reads one host’s, and <code class="docutils literal notranslate"><span class="pre">delete_onboot_command()</span></code> withdraws it before the host boots. The hostname is validated before the path is built, and a host without a pending command raises <code class="docutils literal notranslate"><span class="pre">FileNotFoundError</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.linbo</span><span class="w"> </span><span class="kn">import</span> <span class="n">list_onboot_commands</span><span class="p">,</span> <span class="n">get_onboot_command</span><span class="p">,</span> <span class="n">delete_onboot_command</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">list_onboot_commands</span><span class="p">()</span>
+<span class="go">[{&#39;hostname&#39;: &#39;pc001&#39;, &#39;commands&#39;: [&#39;sync:1&#39;, &#39;start:1&#39;]}]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_onboot_command</span><span class="p">(</span><span class="s1">&#39;pc001&#39;</span><span class="p">)</span>
+<span class="go">{&#39;hostname&#39;: &#39;pc001&#39;, &#39;commands&#39;: [&#39;sync:1&#39;, &#39;start:1&#39;]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">delete_onboot_command</span><span class="p">(</span><span class="s1">&#39;pc001&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="change-tracker">
+<h2>Change tracker<a class="headerlink" href="#change-tracker" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">LinboChangeTracker(school).get_changes(since_cursor)</span></code> tells a client what changed since its last call, from the files’ mtimes only: the hosts (<code class="docutils literal notranslate"><span class="pre">devices.csv</span></code>), the start.conf and GRUB cfg of the school’s groups, and the DHCP configuration (<code class="docutils literal notranslate"><span class="pre">devices.csv</span></code> or <code class="docutils literal notranslate"><span class="pre">subnets.conf</span></code>). <code class="docutils literal notranslate"><span class="pre">'0'</span></code> returns a full snapshot; the returned <code class="docutils literal notranslate"><span class="pre">nextCursor</span></code> is the value to pass next time.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.linbo</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinboChangeTracker</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">changes</span> <span class="o">=</span> <span class="n">LinboChangeTracker</span><span class="p">(</span><span class="s1">&#39;default-school&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get_changes</span><span class="p">(</span><span class="s1">&#39;1759430000&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">sorted</span><span class="p">(</span><span class="n">changes</span><span class="p">)</span>
+<span class="go">[&#39;allConfigIds&#39;, &#39;allHostMacs&#39;, &#39;allStartConfIds&#39;, &#39;configsChanged&#39;, &#39;dhcpChanged&#39;, &#39;hostsChanged&#39;, &#39;nextCursor&#39;, &#39;startConfsChanged&#39;]</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">nextCursor</span></code> is taken before the files are read, so a file written during the call is reported by the next one: a change can be reported twice, never lost.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hostsChanged</span></code> lists every host of the school as soon as <code class="docutils literal notranslate"><span class="pre">devices.csv</span></code> changed, the mtime of a single file cannot tell which line was edited.</p></li>
+<li><p>Nothing is remembered between two calls: a deleted host or start.conf is the entry missing from <code class="docutils literal notranslate"><span class="pre">allHostMacs</span></code> or <code class="docutils literal notranslate"><span class="pre">allStartConfIds</span></code> compared to the previous call. The former <code class="docutils literal notranslate"><span class="pre">deletedHosts</span></code> and <code class="docutils literal notranslate"><span class="pre">deletedStartConfs</span></code> fields, which were always empty, were removed.</p></li>
+<li><p>A file whose mtime cannot be read counts as changed.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="host-status">
+<h2>Host status<a class="headerlink" href="#host-status" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">classify_host(hostname_or_ip)</span></code> probes ports 2222/22/135 with plain
+blocking sockets (no <code class="docutils literal notranslate"><span class="pre">nmap</span></code>, no asyncio - safe to call from gevent-based
+code) and reports one of <code class="docutils literal notranslate"><span class="pre">'Off'</span></code>, <code class="docutils literal notranslate"><span class="pre">'Linbo'</span></code>, <code class="docutils literal notranslate"><span class="pre">'OS</span> <span class="pre">Linux'</span></code>, <code class="docutils literal notranslate"><span class="pre">'OS</span> <span class="pre">Windows'</span></code>,
+<code class="docutils literal notranslate"><span class="pre">'OS</span> <span class="pre">Unknown'</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.linbo.host_status</span><span class="w"> </span><span class="kn">import</span> <span class="n">classify_host</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">classify_host</span><span class="p">(</span><span class="s1">&#39;pc001&#39;</span><span class="p">)</span>
+<span class="go">&#39;Linbo&#39;</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">probe_host()</span></code>/<code class="docutils literal notranslate"><span class="pre">scan_hosts()</span></code>/<code class="docutils literal notranslate"><span class="pre">scan_hosts_sync()</span></code> (same module) answer a
+narrower question - is a host reachable on LINBO’s port 2222 - concurrently
+across many hosts via asyncio; used where a full boot-state classification
+isn’t needed.</p>
+</section>
+<hr class="docutils" />
+<section id="image-status">
+<h2>Image status<a class="headerlink" href="#image-status" title="Link to this heading"></a></h2>
+<p>Every sync or image creation makes the LINBO client overwrite a single line
+in <code class="docutils literal notranslate"><span class="pre">/var/log/linuxmuster/linbo/&lt;hostname&gt;_image.status</span></code> (written by
+<code class="docutils literal notranslate"><span class="pre">log_image_status()</span></code> in linuxmuster-linbo7’s <code class="docutils literal notranslate"><span class="pre">shell_functions</span></code>):</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>202608071440 applied: data-jammy.qcow2 &quot;202507051609&quot;
+202601271107 created: win11.qcow2 202601271107
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">last_sync(workstation,</span> <span class="pre">image,</span> <span class="pre">timestamp=True)</span></code></p></td>
+<td><p>Epoch of the most recent entry for that image, or <code class="docutils literal notranslate"><span class="pre">False</span></code> if the host never synced it. With <code class="docutils literal notranslate"><span class="pre">timestamp=False</span></code>, the whole <code class="docutils literal notranslate"><span class="pre">{timestamp,</span> <span class="pre">action,</span> <span class="pre">image,</span> <span class="pre">image_timestamp}</span></code> entry is returned instead, to also get the version of the image which was applied. The image name is matched exactly, along with its <code class="docutils literal notranslate"><span class="pre">.qdiff</span></code> variant: <code class="docutils literal notranslate"><span class="pre">last_sync('client1',</span> <span class="pre">'jammy.qcow2')</span></code> does <em>not</em> report a sync of <code class="docutils literal notranslate"><span class="pre">data-jammy.qcow2</span></code>. The file name is matched <strong>case insensitively</strong>, see below.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">get_host_image_status(log_dir=None)</span></code></p></td>
+<td><p>Last logged status of <strong>every</strong> host found in the log directory, without knowing beforehand which image a host is supposed to run. Returns <code class="docutils literal notranslate"><span class="pre">{}</span></code> if the directory is missing.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">list_workstations(school='default-school',</span> <span class="pre">groups=[])</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">{group:</span> <span class="pre">{'grp',</span> <span class="pre">'hosts',</span> <span class="pre">'os',</span> <span class="pre">...}}</span></code> of the PXE-enabled hosts whose group has a <code class="docutils literal notranslate"><span class="pre">start.conf</span></code>. Groups, and hosts inside each group, come in natural order (<code class="docutils literal notranslate"><span class="pre">grp2</span></code> before <code class="docutils literal notranslate"><span class="pre">grp10</span></code>, <code class="docutils literal notranslate"><span class="pre">r1-pc5</span></code> before <code class="docutils literal notranslate"><span class="pre">r1-pc10</span></code>, see <code class="docutils literal notranslate"><span class="pre">common.sort_naturally</span></code>). A missing <code class="docutils literal notranslate"><span class="pre">SyncEnabled</span></code>, <code class="docutils literal notranslate"><span class="pre">NewEnabled</span></code> or <code class="docutils literal notranslate"><span class="pre">StartEnabled</span></code> counts as <code class="docutils literal notranslate"><span class="pre">yes</span></code>, as LINBO reads it.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">last_sync_all(workstations)</span></code></p></td>
+<td><p>Enriches a <code class="docutils literal notranslate"><span class="pre">list_workstations()</span></code> dict: each host gets an <code class="docutils literal notranslate"><span class="pre">image</span></code> list of <code class="docutils literal notranslate"><span class="pre">{date,</span> <span class="pre">image,</span> <span class="pre">imageVersion,</span> <span class="pre">status}</span></code>. <code class="docutils literal notranslate"><span class="pre">imageVersion</span></code> is the creation timestamp of the image the host actually runs (<code class="docutils literal notranslate"><span class="pre">None</span></code> if it never synced it), not the date of the sync. <code class="docutils literal notranslate"><span class="pre">status</span></code> is the bootstrap class <code class="docutils literal notranslate"><span class="pre">success</span></code>/<code class="docutils literal notranslate"><span class="pre">warning</span></code>/<code class="docutils literal notranslate"><span class="pre">danger</span></code> (fresher than 7 days, older than 7 days, older than 30 days or never).</p></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.linbo</span><span class="w"> </span><span class="kn">import</span> <span class="n">last_sync</span><span class="p">,</span> <span class="n">get_host_image_status</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">last_sync</span><span class="p">(</span><span class="s1">&#39;client1&#39;</span><span class="p">,</span> <span class="s1">&#39;data-jammy.qcow2&#39;</span><span class="p">)</span>
+<span class="go">1786106400.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">last_sync</span><span class="p">(</span><span class="s1">&#39;client1&#39;</span><span class="p">,</span> <span class="s1">&#39;win11.qcow2&#39;</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_host_image_status</span><span class="p">()</span>
+<span class="go">{&#39;client1&#39;: {&#39;lastSync&#39;: &#39;2026-08-07T12:40:00+00:00&#39;, &#39;action&#39;: &#39;applied&#39;, &#39;image&#39;: &#39;data-jammy.qcow2&#39;, &#39;imageVersion&#39;: &#39;202507051609&#39;},</span>
+<span class="go"> &#39;client3&#39;: {&#39;lastSync&#39;: &#39;2026-03-26T11:26:00+00:00&#39;, &#39;action&#39;: &#39;applied&#39;, &#39;image&#39;: &#39;win11.qcow2&#39;, &#39;imageVersion&#39;: &#39;202603251539&#39;}}</span>
+</pre></div>
+</div>
+<p>The file is named by <code class="docutils literal notranslate"><span class="pre">rsync-pre-download.sh</span></code> after the reverse DNS resolution
+made by rsyncd, not after <code class="docutils literal notranslate"><span class="pre">devices.csv</span></code>, and DNS is case insensitive: the same
+host can end up with <code class="docutils literal notranslate"><span class="pre">PC-001_image.status</span></code> and <code class="docutils literal notranslate"><span class="pre">pc-001_image.status</span></code> side by
+side, only one of them still being written to. <code class="docutils literal notranslate"><span class="pre">last_sync()</span></code> therefore reads
+every case variant of the name and keeps the most recent entry.
+<code class="docutils literal notranslate"><span class="pre">get_host_image_status()</span></code> still reports each host under the exact case of its
+file name.</p>
+<p>Both functions read their timestamps through
+<code class="docutils literal notranslate"><span class="pre">linuxmusterTools.common.timestamps.linbo_timestamp_to_epoch()</span></code>: LINBO
+clients write their own local wall clock, which matches the server’s local
+time, so <code class="docutils literal notranslate"><span class="pre">last_sync()</span></code> returns a server-local epoch and
+<code class="docutils literal notranslate"><span class="pre">get_host_image_status()</span></code> serializes real UTC - <code class="docutils literal notranslate"><span class="pre">2026-08-07T12:40:00+00:00</span></code>
+for a client that logged <code class="docutils literal notranslate"><span class="pre">202608071440</span></code> in CEST.</p>
+<p>An unreadable status file is handled differently by the two entry points, on
+purpose: <code class="docutils literal notranslate"><span class="pre">last_sync()</span></code> propagates the <code class="docutils literal notranslate"><span class="pre">OSError</span></code>, because answering “Never”
+for a file it could not read would be indistinguishable from a host that
+really never synced, while <code class="docutils literal notranslate"><span class="pre">get_host_image_status()</span></code> logs a warning and skips
+that host rather than losing the whole report.</p>
+</section>
+<hr class="docutils" />
+<section id="hardware-inventories">
+<h2>Hardware inventories<a class="headerlink" href="#hardware-inventories" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">LinboHardwareInventoryManager</span></code> reads the <code class="docutils literal notranslate"><span class="pre">*_hwinfo.gz</span></code> files uploaded by
+LINBO clients from <code class="docutils literal notranslate"><span class="pre">/var/log/linuxmuster/linbo</span></code>. Its <code class="docutils literal notranslate"><span class="pre">list()</span></code> and <code class="docutils literal notranslate"><span class="pre">get()</span></code>
+methods combine DMI vendor and product information with the school-scoped
+client records provided by <code class="docutils literal notranslate"><span class="pre">Devices</span></code>.</p>
+<p>The manager is read-only. It does not create driver profiles or modify LINBO
+images and can therefore be used independently by API and CLI consumers.</p>
+</section>
+<hr class="docutils" />
+<section id="windows-driver-profiles">
+<h2>Windows driver profiles<a class="headerlink" href="#windows-driver-profiles" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">LinboDriverManager</span></code> manages the metadata for hardware-specific Windows
+driver profiles below <code class="docutils literal notranslate"><span class="pre">/srv/linbo/drivers</span></code>. This first, deliberately small
+interface owns only profile directories and their <code class="docutils literal notranslate"><span class="pre">match.conf</span></code>; inventory,
+image assignments, postsync generation and driver imports are separate
+features.</p>
+<p>Each profile contains exactly one DMI vendor and one product substring:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[match]</span>
+<span class="na">vendor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">LENOVO</span>
+<span class="na">product</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">21L4</span>
+</pre></div>
+</div>
+<p>The values use the same case-sensitive semantics as LINBO: the vendor must
+match exactly and <code class="docutils literal notranslate"><span class="pre">product</span></code> must occur in the client’s DMI product name. An
+explicit <code class="docutils literal notranslate"><span class="pre">*</span></code> can be used as a wildcard. A short product such as <code class="docutils literal notranslate"><span class="pre">21L4</span></code> can
+therefore cover multiple variants of the same hardware class.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.linbo</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinboDriverManager</span>
+
+<span class="n">drivers</span> <span class="o">=</span> <span class="n">LinboDriverManager</span><span class="p">()</span>
+<span class="n">drivers</span><span class="o">.</span><span class="n">create_profile</span><span class="p">(</span><span class="s2">&quot;lenovo-21l4&quot;</span><span class="p">,</span> <span class="s2">&quot;LENOVO&quot;</span><span class="p">,</span> <span class="s2">&quot;21L4&quot;</span><span class="p">)</span>
+<span class="n">drivers</span><span class="o">.</span><span class="n">update_match</span><span class="p">(</span><span class="s2">&quot;lenovo-21l4&quot;</span><span class="p">,</span> <span class="s2">&quot;LENOVO&quot;</span><span class="p">,</span> <span class="s2">&quot;21L4S&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This creates <code class="docutils literal notranslate"><span class="pre">/srv/linbo/drivers/lenovo-21l4/match.conf</span></code>. Administrators may
+place an already prepared INF driver payload next to that file. Profile
+updates change only <code class="docutils literal notranslate"><span class="pre">match.conf</span></code> and leave those payload files untouched. This
+manager does not upload, extract, inspect or publish the payload yet.</p>
+<section id="image-assignments">
+<h3>Image assignments<a class="headerlink" href="#image-assignments" title="Link to this heading"></a></h3>
+<p>Each <code class="docutils literal notranslate"><span class="pre">LinboImageGroup</span></code> delegates its optional <code class="docutils literal notranslate"><span class="pre">image.conf</span></code> assignments and
+<code class="docutils literal notranslate"><span class="pre">.driverpostsync</span></code> dispatcher to a bound <code class="docutils literal notranslate"><span class="pre">WindowsDrivers</span></code> object.
+<code class="docutils literal notranslate"><span class="pre">LinboDriverManager</span></code> continues to own the image-independent profile
+directories and <code class="docutils literal notranslate"><span class="pre">match.conf</span></code>. Both metadata files remain physically stored
+with the profile; only their logical ownership differs:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/srv/linbo/drivers/&lt;profile&gt;/match.conf
+/srv/linbo/drivers/&lt;profile&gt;/image.conf
+/srv/linbo/images/&lt;image&gt;/&lt;image&gt;.driverpostsync
+</pre></div>
+</div>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[image]</span>
+<span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">win11</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.linbo</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinboDriverManager</span><span class="p">,</span> <span class="n">LinboImageManager</span>
+
+<span class="n">drivers</span> <span class="o">=</span> <span class="n">LinboDriverManager</span><span class="p">()</span>
+<span class="n">images</span> <span class="o">=</span> <span class="n">LinboImageManager</span><span class="p">(</span><span class="n">driver_manager</span><span class="o">=</span><span class="n">drivers</span><span class="p">)</span>
+<span class="n">images</span><span class="o">.</span><span class="n">assign_driver_profile</span><span class="p">(</span><span class="s2">&quot;lenovo-21l4&quot;</span><span class="p">,</span> <span class="s2">&quot;win11&quot;</span><span class="p">)</span>
+<span class="n">images</span><span class="o">.</span><span class="n">get_driver_profile_image</span><span class="p">(</span><span class="s2">&quot;lenovo-21l4&quot;</span><span class="p">)</span>
+<span class="n">images</span><span class="o">.</span><span class="n">get_image_driver_profiles</span><span class="p">(</span><span class="s2">&quot;win11&quot;</span><span class="p">)</span>
+<span class="n">dispatcher</span> <span class="o">=</span> <span class="n">images</span><span class="o">.</span><span class="n">render_driverpostsync</span><span class="p">(</span><span class="s2">&quot;win11&quot;</span><span class="p">)</span>
+<span class="n">images</span><span class="o">.</span><span class="n">unassign_driver_profile</span><span class="p">(</span><span class="s2">&quot;lenovo-21l4&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>These public manager methods resolve the named <code class="docutils literal notranslate"><span class="pre">LinboImageGroup</span></code> and delegate
+the image-specific work to its bound <code class="docutils literal notranslate"><span class="pre">WindowsDrivers</span></code> object.</p>
+<p>The former standalone package’s flat <code class="docutils literal notranslate"><span class="pre">image</span> <span class="pre">=</span> <span class="pre">win11</span></code> form remains readable for
+upgrades and is rewritten in the canonical form by the next assignment.
+Assigned profile names can be resolved in deterministic order. The
+renderer returns the small <code class="docutils literal notranslate"><span class="pre">.driverpostsync</span></code> dispatcher expected by LINBO’s
+static <code class="docutils literal notranslate"><span class="pre">linbo_driverpostsync</span></code> runtime. The publisher atomically writes that
+dispatcher into the image directory with LINBO’s standard postsync mode. It
+refuses to replace symlinks, non-regular files or hooks without its exact
+managed header. The exact standalone v1.1.1 generator markers remain accepted
+for an in-place migration. Assigning, moving or removing a profile publishes
+all affected dispatchers under the same mutation lock. If publication fails,
+the previous assignment is restored and the affected dispatchers are
+regenerated to match it.
+<code class="docutils literal notranslate"><span class="pre">publish_driverpostsync()</span></code> remains available as an explicit repair operation.
+Assigned profiles must be unassigned before their profile directory can be
+deleted, preventing a dispatcher from retaining a stale profile name.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ldapconnector.html" class="btn btn-neutral float-left" title="ldapconnector" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lmnconfig.html" class="btn btn-neutral float-right" title="lmnconfig" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

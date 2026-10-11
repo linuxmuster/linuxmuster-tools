@@ -1,0 +1,355 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lmnconfig &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/translations.js?v=8fd896e3"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lmnfile" href="lmnfile.html" />
+    <link rel="prev" title="linbo" href="linbo.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="common.html">common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devices.html">devices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ldapconnector.html">ldapconnector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linbo.html">linbo</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">lmnconfig</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#samba-py-module-level-constants"><code class="docutils literal notranslate"><span class="pre">samba.py</span></code> — module-level constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#server-py-module-level-constants"><code class="docutils literal notranslate"><span class="pre">server.py</span></code> — module-level constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setup-py-setupconfig"><code class="docutils literal notranslate"><span class="pre">setup.py</span></code> — <code class="docutils literal notranslate"><span class="pre">SetupConfig</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sophomorix-py-school-and-sophomorix-configuration"><code class="docutils literal notranslate"><span class="pre">sophomorix.py</span></code> — school and sophomorix configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#webui-py-customfieldsconfig"><code class="docutils literal notranslate"><span class="pre">webui.py</span></code> — <code class="docutils literal notranslate"><span class="pre">CustomFieldsConfig</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#import-time-side-effects">Import-time side effects</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lmnfile.html">lmnfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="passwords.html">passwords</a></li>
+<li class="toctree-l1"><a class="reference internal" href="print.html">print</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quotas.html">quotas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="samba_util.html">samba_util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="smbclient.html">smbclient</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subnets.html">subnets</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">lmnconfig</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/modules/lmnconfig.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="lmnconfig">
+<h1>lmnconfig<a class="headerlink" href="#lmnconfig" title="Link to this heading"></a></h1>
+<p>System configuration loader for <a class="reference external" href="https://www.linuxmuster.net">linuxmuster.net</a>, exposing Samba, sophomorix, setup, server and webui settings as ready-to-use Python constants and small config objects.</p>
+<p><code class="docutils literal notranslate"><span class="pre">lmnconfig</span></code> has no factory or single entry point: each submodule reads its own configuration source (<code class="docutils literal notranslate"><span class="pre">smb.conf</span></code>, <code class="docutils literal notranslate"><span class="pre">setup.ini</span></code>, <code class="docutils literal notranslate"><span class="pre">sophomorix.conf</span></code>, …) at import time or on instantiation, and everything is re-exported at the package level via <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">linuxmusterTools.lmnconfig</span> <span class="pre">import</span> <span class="pre">...</span></code>.</p>
+<hr class="docutils" />
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Python 3.8+</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/configobj/"><code class="docutils literal notranslate"><span class="pre">configobj</span></code></a></p></li>
+<li><p>A configured Samba/AD server (<code class="docutils literal notranslate"><span class="pre">/etc/samba/smb.conf</span></code>, <code class="docutils literal notranslate"><span class="pre">net</span> <span class="pre">conf</span> <span class="pre">list</span></code>) for <code class="docutils literal notranslate"><span class="pre">samba.py</span></code></p></li>
+<li><p>A running <a class="reference external" href="https://www.linuxmuster.net">linuxmuster.net</a> setup for <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> and <code class="docutils literal notranslate"><span class="pre">sophomorix.py</span></code> (<code class="docutils literal notranslate"><span class="pre">/var/lib/linuxmuster/setup.ini</span></code>, <code class="docutils literal notranslate"><span class="pre">/etc/linuxmuster/sophomorix/</span></code>)</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.lmnconfig</span><span class="w"> </span><span class="kn">import</span> <span class="n">SAMBA_REALM</span><span class="p">,</span> <span class="n">SAMBA_DOMAIN</span><span class="p">,</span> <span class="n">LDAP_CONTEXT</span>
+</pre></div>
+</div>
+<section id="samba-py-module-level-constants">
+<h3><code class="docutils literal notranslate"><span class="pre">samba.py</span></code> — module-level constants<a class="headerlink" href="#samba-py-module-level-constants" title="Link to this heading"></a></h3>
+<p>Computed once at import time by parsing <code class="docutils literal notranslate"><span class="pre">/etc/samba/smb.conf</span></code> and the output of <code class="docutils literal notranslate"><span class="pre">net</span> <span class="pre">conf</span> <span class="pre">list</span></code>.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SAMBA_REALM</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Kerberos realm, lowercased (<code class="docutils literal notranslate"><span class="pre">school.lan</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SAMBA_WORKGROUP</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Samba workgroup</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SAMBA_NETBIOS</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>NetBIOS name, lowercased</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SAMBA_DOMAIN</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">f'{SAMBA_NETBIOS}.{SAMBA_REALM}'</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SAMBA_TLD</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Top-level domain component of the realm, uppercased</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">LDAP_DC</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Realm as LDAP <code class="docutils literal notranslate"><span class="pre">DC=</span></code> components (<code class="docutils literal notranslate"><span class="pre">DC=SCHOOL,DC=LAN</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">LDAP_CONTEXT</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">f'OU=SCHOOLS,{LDAP_DC}'</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">LOG_LEVEL</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
+<td><p>Parsed <code class="docutils literal notranslate"><span class="pre">log</span> <span class="pre">level</span></code> directive, e.g. <code class="docutils literal notranslate"><span class="pre">{'general':</span> <span class="pre">1,</span> <span class="pre">'auth_audit':</span> <span class="pre">3}</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SHARES_LIST</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">list[str]</span></code></p></td>
+<td><p>All share names from <code class="docutils literal notranslate"><span class="pre">net</span> <span class="pre">conf</span> <span class="pre">list</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">DFS</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p></td>
+<td><p>Shares with <code class="docutils literal notranslate"><span class="pre">msdfs</span> <span class="pre">root</span> <span class="pre">=</span> <span class="pre">yes</span></code>, mapped to their <code class="docutils literal notranslate"><span class="pre">dfs_proxy</span></code> (UNC form)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.lmnconfig</span><span class="w"> </span><span class="kn">import</span> <span class="n">SAMBA_REALM</span><span class="p">,</span> <span class="n">SAMBA_DOMAIN</span><span class="p">,</span> <span class="n">LDAP_CONTEXT</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">SAMBA_DOMAIN</span><span class="p">)</span>      <span class="c1"># &#39;server.school.lan&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">LDAP_CONTEXT</span><span class="p">)</span>      <span class="c1"># &#39;OU=SCHOOLS,DC=SCHOOL,DC=LAN&#39;</span>
+</pre></div>
+</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">/etc/samba/smb.conf</span></code> is missing or unreadable, the constants read from it default to <code class="docutils literal notranslate"><span class="pre">''</span></code> (or <code class="docutils literal notranslate"><span class="pre">{}</span></code>) and a warning/error is logged. <code class="docutils literal notranslate"><span class="pre">net</span> <span class="pre">conf</span> <span class="pre">list</span></code> is not guarded: if it fails (Samba not provisioned yet, process not running as root), importing the module raises <code class="docutils literal notranslate"><span class="pre">subprocess.CalledProcessError</span></code>.</p>
+</section>
+<section id="server-py-module-level-constants">
+<h3><code class="docutils literal notranslate"><span class="pre">server.py</span></code> — module-level constants<a class="headerlink" href="#server-py-module-level-constants" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SERVER_HOSTNAME</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>Result of <code class="docutils literal notranslate"><span class="pre">socket.gethostname()</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SERVER_IP</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>First non-loopback IP of the server, or an error string if none is found. If the host name does not resolve, importing the module raises <code class="docutils literal notranslate"><span class="pre">socket.gaierror</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="setup-py-setupconfig">
+<h3><code class="docutils literal notranslate"><span class="pre">setup.py</span></code> — <code class="docutils literal notranslate"><span class="pre">SetupConfig</span></code><a class="headerlink" href="#setup-py-setupconfig" title="Link to this heading"></a></h3>
+<p>Reads <code class="docutils literal notranslate"><span class="pre">/var/lib/linuxmuster/setup.ini</span></code> (installer configuration).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.lmnconfig</span><span class="w"> </span><span class="kn">import</span> <span class="n">SetupConfig</span>
+
+<span class="n">setup</span> <span class="o">=</span> <span class="n">SetupConfig</span><span class="p">(</span><span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">)</span>
+<span class="n">setup</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;setup&#39;</span><span class="p">][</span><span class="s1">&#39;schoolname&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">config</span></code> is <code class="docutils literal notranslate"><span class="pre">{}</span></code> if the school is not <code class="docutils literal notranslate"><span class="pre">'default-school'</span></code> or the file does not exist.</p>
+</section>
+<section id="sophomorix-py-school-and-sophomorix-configuration">
+<h3><code class="docutils literal notranslate"><span class="pre">sophomorix.py</span></code> — school and sophomorix configuration<a class="headerlink" href="#sophomorix-py-school-and-sophomorix-configuration" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.lmnconfig</span><span class="w"> </span><span class="kn">import</span> <span class="n">SchoolConfig</span><span class="p">,</span> <span class="n">SophomorixIni</span><span class="p">,</span> <span class="n">SophomorixConf</span>
+
+<span class="n">school</span> <span class="o">=</span> <span class="n">SchoolConfig</span><span class="p">(</span><span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">)</span>
+<span class="n">school</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;global&#39;</span><span class="p">][</span><span class="s1">&#39;SCHOOLNAME&#39;</span><span class="p">]</span>
+
+<span class="n">ini</span> <span class="o">=</span> <span class="n">SophomorixIni</span><span class="p">()</span>
+<span class="n">ini</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ROLE_USER&#39;</span><span class="p">,</span> <span class="s1">&#39;teacher&#39;</span><span class="p">)</span>
+<span class="n">ini</span><span class="o">.</span><span class="n">userrole</span>          <span class="c1"># [&#39;teacher&#39;, &#39;student&#39;, ...], keys of section ROLE_USER</span>
+<span class="n">ini</span><span class="o">.</span><span class="n">computer_roles</span>     <span class="c1"># ComputerRoles, see below</span>
+<span class="n">ini</span><span class="o">.</span><span class="n">clientrole</span>         <span class="c1"># hardcoded list of LINBO client roles</span>
+
+<span class="n">conf</span> <span class="o">=</span> <span class="n">SophomorixConf</span><span class="p">()</span>
+<span class="n">conf</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;global&#39;</span><span class="p">][</span><span class="s1">&#39;LANG&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Class</p></th>
+<th class="head"><p>Source file</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SchoolConfig</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/etc/linuxmuster/sophomorix/{school}/[{school}.]school.conf</span></code></p></td>
+<td><p>Per-school sophomorix settings, <code class="docutils literal notranslate"><span class="pre">.config</span></code> dict</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SophomorixIni</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/usr/share/sophomorix/devel/sophomorix.ini</span></code></p></td>
+<td><p>Parsed sophomorix reference INI: roles, computer roles, sections</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SophomorixConf</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/etc/linuxmuster/sophomorix/sophomorix.conf</span></code></p></td>
+<td><p>Global sophomorix settings, <code class="docutils literal notranslate"><span class="pre">.data</span></code> dict</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MultiOrderedDict</span></code></p></td>
+<td><p>—</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OrderedDict</span></code> variant used by <code class="docutils literal notranslate"><span class="pre">SophomorixIni</span></code>: re-assigning a list key extends it instead of overwriting it</p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">SchoolConfig</span></code> and <code class="docutils literal notranslate"><span class="pre">SophomorixConf</span></code> fall back to an empty dict (<code class="docutils literal notranslate"><span class="pre">.config</span></code>/<code class="docutils literal notranslate"><span class="pre">.data</span></code> == <code class="docutils literal notranslate"><span class="pre">{}</span></code>) and log a warning if their file is missing. <code class="docutils literal notranslate"><span class="pre">SophomorixIni</span></code> logs a warning too, then raises <code class="docutils literal notranslate"><span class="pre">KeyError:</span> <span class="pre">'ROLE_USER'</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">SophomorixIni.computer_roles</span></code> is a frozen <code class="docutils literal notranslate"><span class="pre">ComputerRoles</span></code> dataclass: the <code class="docutils literal notranslate"><span class="pre">[computerrole.*]</span></code> sections, prefix stripped, split on their <code class="docutils literal notranslate"><span class="pre">COMPUTER_ACCOUNT</span></code> flag, in the order of the file.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Content</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">accounts</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tuple[str]</span></code></p></td>
+<td><p>Roles getting a real machine account in the AD</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">dns_only</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tuple[str]</span></code></p></td>
+<td><p>Roles getting a DNS node only; a role declaring no <code class="docutils literal notranslate"><span class="pre">COMPUTER_ACCOUNT</span></code> lands here, with a warning</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">default</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+<td><p>The role sophomorix substitutes for an empty role field (<code class="docutils literal notranslate"><span class="pre">COMPUTERROLE_DEFAULT</span></code> of <code class="docutils literal notranslate"><span class="pre">[GLOBAL]</span></code>); <code class="docutils literal notranslate"><span class="pre">classroom-studentcomputer</span></code> with a warning if the key is missing</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">roles</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tuple[str]</span></code></p></td>
+<td><p>Property: <code class="docutils literal notranslate"><span class="pre">accounts</span> <span class="pre">+</span> <span class="pre">dns_only</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>The split is what decides whether the NetBIOS limits apply to the hostname of a device — an account name is a <code class="docutils literal notranslate"><span class="pre">sAMAccountName</span></code>, <a class="reference external" href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/naming-conventions-for-computer-domain-site-ou">capped at 15 characters plus the trailing <code class="docutils literal notranslate"><span class="pre">$</span></code></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">roles</span> <span class="o">=</span> <span class="n">SophomorixIni</span><span class="p">()</span><span class="o">.</span><span class="n">computer_roles</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;printer&#39;</span> <span class="ow">in</span> <span class="n">roles</span>                <span class="c1"># known role, in either tuple</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;thinclient&#39;</span> <span class="ow">in</span> <span class="n">roles</span><span class="o">.</span><span class="n">accounts</span>    <span class="c1"># gets a machine account?</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">ComputerRoles</span></code> can also be built by hand, to pin what a caller reads: <code class="docutils literal notranslate"><span class="pre">ComputerRoles(accounts=('staffcomputer',),</span> <span class="pre">dns_only=('printer',),</span> <span class="pre">default='staffcomputer')</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">SophomorixIni.computerrole</span></code> is deprecated in favour of <code class="docutils literal notranslate"><span class="pre">computer_roles.roles</span></code>, and raises a <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code>. <code class="docutils literal notranslate"><span class="pre">SophomorixIni.computer_account</span></code> was removed.</p>
+<p>The file is read with its tabs expanded to eight columns. <code class="docutils literal notranslate"><span class="pre">sophomorix.ini</span></code> indents its keys with a tabulation in most sections and with eight spaces in others, sometimes within the same section, and <code class="docutils literal notranslate"><span class="pre">configparser</span></code> reads a line indented deeper than the previous key as a continuation of its value — 53 keys of the shipped file were lost that way, the <code class="docutils literal notranslate"><span class="pre">COMPUTER_ACCOUNT</span></code> of all 15 computer roles among them. Genuine continuation lines, indented further than eight columns, are unaffected. The path is the module-level <code class="docutils literal notranslate"><span class="pre">SOPHOMORIX_INI_PATH</span></code>.</p>
+</section>
+<section id="webui-py-customfieldsconfig">
+<h3><code class="docutils literal notranslate"><span class="pre">webui.py</span></code> — <code class="docutils literal notranslate"><span class="pre">CustomFieldsConfig</span></code><a class="headerlink" href="#webui-py-customfieldsconfig" title="Link to this heading"></a></h3>
+<p>Reads <code class="docutils literal notranslate"><span class="pre">/etc/linuxmuster/sophomorix/{school}/custom_fields.yml</span></code> and splits it per role.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.lmnconfig</span><span class="w"> </span><span class="kn">import</span> <span class="n">CustomFieldsConfig</span>
+
+<span class="n">fields</span> <span class="o">=</span> <span class="n">CustomFieldsConfig</span><span class="p">(</span><span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">)</span>
+<span class="n">fields</span><span class="o">.</span><span class="n">students</span><span class="p">[</span><span class="s1">&#39;custom&#39;</span><span class="p">]</span>              <span class="c1"># {&#39;field1&#39;: &#39;value1&#39;, ...}</span>
+<span class="n">fields</span><span class="o">.</span><span class="n">teachers</span><span class="p">[</span><span class="s1">&#39;passwordTemplates&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Each of <code class="docutils literal notranslate"><span class="pre">globaladministrators</span></code>, <code class="docutils literal notranslate"><span class="pre">schooladministrators</span></code>, <code class="docutils literal notranslate"><span class="pre">students</span></code>, <code class="docutils literal notranslate"><span class="pre">teachers</span></code> is set as an attribute holding a dict with the keys <code class="docutils literal notranslate"><span class="pre">custom</span></code>, <code class="docutils literal notranslate"><span class="pre">customDisplay</span></code>, <code class="docutils literal notranslate"><span class="pre">customMulti</span></code>, <code class="docutils literal notranslate"><span class="pre">passwordTemplates</span></code>, <code class="docutils literal notranslate"><span class="pre">proxyAddresses</span></code> — missing entries default to <code class="docutils literal notranslate"><span class="pre">{}</span></code>.</p>
+<blockquote>
+<div><p>When <code class="docutils literal notranslate"><span class="pre">linuxmusterTools.common.WEBUI_IMPORT</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> (module imported from inside the webui process), <code class="docutils literal notranslate"><span class="pre">__init__</span></code> returns immediately with <code class="docutils literal notranslate"><span class="pre">config</span> <span class="pre">=</span> <span class="pre">{}</span></code> and none of the per-role attributes are set.</p>
+</div></blockquote>
+<p>The parsed file is cached per school and read again only when its mtime changes, so an edit from the webui is seen by a running lmnapi at its next request. The ldapconnector instantiates this class on every request: parsing the yaml file each time cost 12-19 ms per request (13 s to list all users with <code class="docutils literal notranslate"><span class="pre">/users</span></code>). <code class="docutils literal notranslate"><span class="pre">config</span></code> is shared between instances and must not be modified.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="import-time-side-effects">
+<h2>Import-time side effects<a class="headerlink" href="#import-time-side-effects" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">samba.py</span></code> and <code class="docutils literal notranslate"><span class="pre">server.py</span></code> perform their reads at <strong>import time</strong>, not on instantiation — importing <code class="docutils literal notranslate"><span class="pre">linuxmusterTools.lmnconfig</span></code> (or any of its constants) triggers a <code class="docutils literal notranslate"><span class="pre">smb.conf</span></code> parse, a <code class="docutils literal notranslate"><span class="pre">net</span> <span class="pre">conf</span> <span class="pre">list</span></code> subprocess call, and a hostname/IP lookup. <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>, <code class="docutils literal notranslate"><span class="pre">sophomorix.py</span></code> and <code class="docutils literal notranslate"><span class="pre">webui.py</span></code> only read their files when their classes are instantiated.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="linbo.html" class="btn btn-neutral float-left" title="linbo" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lmnfile.html" class="btn btn-neutral float-right" title="lmnfile" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

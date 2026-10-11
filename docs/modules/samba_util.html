@@ -1,0 +1,242 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>samba_util &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/translations.js?v=8fd896e3"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="smbclient" href="smbclient.html" />
+    <link rel="prev" title="quotas" href="quotas.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Modules</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="common.html">common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devices.html">devices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ldapconnector.html">ldapconnector</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linbo.html">linbo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lmnconfig.html">lmnconfig</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lmnfile.html">lmnfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="passwords.html">passwords</a></li>
+<li class="toctree-l1"><a class="reference internal" href="print.html">print</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quotas.html">quotas</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">samba_util</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#domain-password-policy-domainpasswordsettingsmanager">Domain password policy — <code class="docutils literal notranslate"><span class="pre">DomainPasswordSettingsManager</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gpos-and-drive-maps-gpomanager">GPOs and drive maps — <code class="docutils literal notranslate"><span class="pre">GPOManager</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#group-user-and-device-management">Group, user and device management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dns-sambatooldns">DNS — <code class="docutils literal notranslate"><span class="pre">SambaToolDNS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#smb-connections-smbstatus">SMB connections — <code class="docutils literal notranslate"><span class="pre">smbstatus</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authentication-logs-samba-util-log">Authentication logs — <code class="docutils literal notranslate"><span class="pre">samba_util.log</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="smbclient.html">smbclient</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subnets.html">subnets</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">samba_util</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/modules/samba_util.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="samba-util">
+<h1>samba_util<a class="headerlink" href="#samba-util" title="Link to this heading"></a></h1>
+<p>Read and write access to the Samba 4 AD backend of a <a class="reference external" href="https://www.linuxmuster.net">linuxmuster.net</a> server: domain password policy, GPOs and drive maps, DNS zone, group/user/device management, and <code class="docutils literal notranslate"><span class="pre">smbstatus</span></code> connections.</p>
+<hr class="docutils" />
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Python 3.8+</p></li>
+<li><p>Samba’s own <code class="docutils literal notranslate"><span class="pre">samba</span></code> Python bindings (<code class="docutils literal notranslate"><span class="pre">samba.auth</span></code>, <code class="docutils literal notranslate"><span class="pre">samba.credentials</span></code>, <code class="docutils literal notranslate"><span class="pre">samba.samdb</span></code>, <code class="docutils literal notranslate"><span class="pre">samba.netcmd.gpo</span></code>, <code class="docutils literal notranslate"><span class="pre">ldb</span></code>) — only available on a provisioned linuxmuster.net server</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/pexpect/"><code class="docutils literal notranslate"><span class="pre">pexpect</span></code></a> (used by <code class="docutils literal notranslate"><span class="pre">SambaToolDNS</span></code> to drive <code class="docutils literal notranslate"><span class="pre">samba-tool</span> <span class="pre">dns</span></code>)</p></li>
+<li><p>Read access to <code class="docutils literal notranslate"><span class="pre">/var/lib/samba/private/sam.ldb</span></code> and <code class="docutils literal notranslate"><span class="pre">/etc/linuxmuster/.secret/administrator</span></code> — most classes require root</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="domain-password-policy-domainpasswordsettingsmanager">
+<h2>Domain password policy — <code class="docutils literal notranslate"><span class="pre">DomainPasswordSettingsManager</span></code><a class="headerlink" href="#domain-password-policy-domainpasswordsettingsmanager" title="Link to this heading"></a></h2>
+<p>Reads and writes the domain-wide Samba AD password policy (minimum length, complexity, min/max password age) directly via <code class="docutils literal notranslate"><span class="pre">SamDB</span></code>, equivalent to <code class="docutils literal notranslate"><span class="pre">samba-tool</span> <span class="pre">domain</span> <span class="pre">passwordsettings</span> <span class="pre">show</span></code>/<code class="docutils literal notranslate"><span class="pre">set</span></code> without shelling out.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.samba_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">DomainPasswordSettingsManager</span>
+
+<span class="n">mgr</span> <span class="o">=</span> <span class="n">DomainPasswordSettingsManager</span><span class="p">()</span>
+<span class="n">settings</span> <span class="o">=</span> <span class="n">mgr</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<span class="c1"># DomainPasswordSettings(min_pwd_length=7, complexity=True, min_pwd_age=1, max_pwd_age=43)</span>
+
+<span class="n">mgr</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">min_pwd_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">complexity</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Only the domain-wide policy is read — Fine-Grained Password Policies (PSOs) are not accounted for. See <a class="reference internal" href="#../passwords/README.md"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">passwords/README.md</span></code></span></a> for the full writeup of this limitation and how it interacts with <code class="docutils literal notranslate"><span class="pre">PasswordPolicyProvider</span></code>.</p>
+</section>
+<hr class="docutils" />
+<section id="gpos-and-drive-maps-gpomanager">
+<h2>GPOs and drive maps — <code class="docutils literal notranslate"><span class="pre">GPOManager</span></code><a class="headerlink" href="#gpos-and-drive-maps-gpomanager" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.samba_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">GPOManager</span>
+
+<span class="n">mgr</span> <span class="o">=</span> <span class="n">GPOManager</span><span class="p">()</span>
+<span class="n">mgr</span><span class="o">.</span><span class="n">gpos</span>
+<span class="c1"># {&#39;Default Domain Policy&#39;: GPO(dn=&#39;...&#39;, gpo=&#39;{31B2F340-...}&#39;, name=&#39;Default Domain Policy&#39;,</span>
+<span class="c1">#                                path=&#39;\\\\linuxmuster.lan\\sysvol\\...&#39;, unix_path=&#39;/var/lib/samba/sysvol/...&#39;,</span>
+<span class="c1">#                                drivemgr=&lt;DriveManager&gt;), ...}</span>
+
+<span class="n">mgr</span><span class="o">.</span><span class="n">gpos</span><span class="p">[</span><span class="s1">&#39;Default Domain Policy&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unix_path</span>
+<span class="n">mgr</span><span class="o">.</span><span class="n">gpos</span><span class="p">[</span><span class="s1">&#39;Default Domain Policy&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">drivemgr</span><span class="o">.</span><span class="n">drives</span>
+<span class="c1"># [Drive(disabled=False, filters={}, label=&#39;Programs&#39;, letter=&#39;K&#39;, ...), ...]</span>
+</pre></div>
+</div>
+<p>Each <code class="docutils literal notranslate"><span class="pre">GPO</span></code> bundles a <code class="docutils literal notranslate"><span class="pre">DriveManager</span></code>, which parses that policy’s <code class="docutils literal notranslate"><span class="pre">Drives.xml</span></code> into <code class="docutils literal notranslate"><span class="pre">Drive</span></code> dataclass instances.</p>
+</section>
+<hr class="docutils" />
+<section id="group-user-and-device-management">
+<h2>Group, user and device management<a class="headerlink" href="#group-user-and-device-management" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.samba_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">GroupManager</span><span class="p">,</span> <span class="n">DeviceManager</span>
+
+<span class="n">groups</span> <span class="o">=</span> <span class="n">GroupManager</span><span class="p">(</span><span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">)</span>
+<span class="n">groups</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>                              <span class="c1"># {sophomorixType: [cn, ...], ...}</span>
+<span class="n">groups</span><span class="o">.</span><span class="n">add_members</span><span class="p">(</span><span class="s1">&#39;7b&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;jdupont&#39;</span><span class="p">])</span>
+<span class="n">groups</span><span class="o">.</span><span class="n">remove_members</span><span class="p">(</span><span class="s1">&#39;7b&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;jdupont&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">GroupManager</span></code> runs every script in <code class="docutils literal notranslate"><span class="pre">/etc/linuxmuster/tools/hooks/group-manager/</span></code> after each membership change.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">devices</span> <span class="o">=</span> <span class="n">DeviceManager</span><span class="p">()</span>
+<span class="n">creds</span> <span class="o">=</span> <span class="n">devices</span><span class="o">.</span><span class="n">get_credentials</span><span class="p">(</span><span class="s1">&#39;client01&#39;</span><span class="p">)</span>       <span class="c1"># base64-encoded unicodePwd / supplementalCredentials</span>
+<span class="n">devices</span><span class="o">.</span><span class="n">set_credentials</span><span class="p">(</span><span class="s1">&#39;client01&#39;</span><span class="p">,</span> <span class="n">hash_pwd_b64</span><span class="p">,</span> <span class="n">hash_supplemental_b64</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>User password management (setting <code class="docutils literal notranslate"><span class="pre">unicodePwd</span></code>/<code class="docutils literal notranslate"><span class="pre">sophomorixFirstPassword</span></code>) has moved to <code class="docutils literal notranslate"><span class="pre">LMNUser</span></code> in <a class="reference internal" href="#../ldapconnector/README.md#password-management"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">ldapconnector</span></code></span></a> — see <code class="docutils literal notranslate"><span class="pre">set_actual_password()</span></code>/<code class="docutils literal notranslate"><span class="pre">set_first_password()</span></code>/<code class="docutils literal notranslate"><span class="pre">set_random_first_password()</span></code>. <code class="docutils literal notranslate"><span class="pre">load_samba_bindings()</span></code> (this module) is what <code class="docutils literal notranslate"><span class="pre">LMNUser</span></code> calls internally to open its own <code class="docutils literal notranslate"><span class="pre">SamDB</span></code> connection, since <code class="docutils literal notranslate"><span class="pre">ldapconnector</span></code> can’t import <code class="docutils literal notranslate"><span class="pre">samba_util</span></code> at module level without creating a cycle.</p>
+</section>
+<hr class="docutils" />
+<section id="dns-sambatooldns">
+<h2>DNS — <code class="docutils literal notranslate"><span class="pre">SambaToolDNS</span></code><a class="headerlink" href="#dns-sambatooldns" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.samba_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">SambaToolDNS</span>
+
+<span class="n">dns</span> <span class="o">=</span> <span class="n">SambaToolDNS</span><span class="p">()</span>
+<span class="n">dns</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+<span class="c1"># {&#39;root&#39;: [{&#39;host&#39;: &#39;&#39;, &#39;type&#39;: &#39;SOA&#39;, &#39;value&#39;: &#39;...&#39;}, ...],</span>
+<span class="c1">#  &#39;sub&#39;:  [{&#39;host&#39;: &#39;mail&#39;, &#39;type&#39;: &#39;A&#39;, &#39;value&#39;: &#39;10.0.0.3&#39;}, ...]}</span>
+
+<span class="n">dns</span><span class="o">.</span><span class="n">add</span><span class="p">({</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;10.0.1.1&#39;</span><span class="p">})</span>
+<span class="n">dns</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;10.0.1.1&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="s1">&#39;10.0.1.2&#39;</span><span class="p">})</span>
+<span class="n">dns</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;10.0.1.2&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">list()</span></code> drives <code class="docutils literal notranslate"><span class="pre">samba-tool</span> <span class="pre">dns</span> <span class="pre">query</span></code> and filters out entries belonging to known linuxmuster devices (from <code class="docutils literal notranslate"><span class="pre">devices.csv</span></code>), since that list would otherwise be too long to be useful. If <code class="docutils literal notranslate"><span class="pre">devices.csv</span></code> doesn’t exist yet (fresh install, school not provisioned yet), the ignore list is simply left empty instead of raising.</p>
+</section>
+<hr class="docutils" />
+<section id="smb-connections-smbstatus">
+<h2>SMB connections — <code class="docutils literal notranslate"><span class="pre">smbstatus</span></code><a class="headerlink" href="#smb-connections-smbstatus" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.samba_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">smbstatus</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">smbstatus</span><span class="o">.</span><span class="n">SMBConnections</span><span class="p">()</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">users</span>
+<span class="c1"># {&#39;kiar&#39;: SMBConnection(username=&#39;LINUXMUSTER\\kiar&#39;, ip4=&#39;10.0.0.1:38402&#39;, machine=&#39;10.0.0.1&#39;,</span>
+<span class="c1">#                         protocol=&#39;SMB3_11&#39;, signing=&#39;AES-128-GMAC&#39;, ...)}</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">get_machines</span><span class="p">()</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">machines</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="authentication-logs-samba-util-log">
+<h2>Authentication logs — <code class="docutils literal notranslate"><span class="pre">samba_util.log</span></code><a class="headerlink" href="#authentication-logs-samba-util-log" title="Link to this heading"></a></h2>
+<p>Not re-exported from <code class="docutils literal notranslate"><span class="pre">samba_util/__init__.py</span></code>; import it directly from the submodule.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.samba_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
+
+<span class="n">log</span><span class="o">.</span><span class="n">last_login</span><span class="p">(</span><span class="s1">&#39;jdupont&#39;</span><span class="p">)</span>             <span class="c1"># sorted list of {&#39;user&#39;, &#39;datetime&#39;, &#39;ip&#39;}, most recent first</span>
+<span class="n">log</span><span class="o">.</span><span class="n">last_login</span><span class="p">(</span><span class="s1">&#39;jdupont&#39;</span><span class="p">,</span> <span class="n">include_gz</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>   <span class="c1"># also scan rotated, gzipped logs</span>
+</pre></div>
+</div>
+<p>Requires Samba’s <code class="docutils literal notranslate"><span class="pre">auth_audit</span></code> (or <code class="docutils literal notranslate"><span class="pre">general</span></code>) log level set to at least <code class="docutils literal notranslate"><span class="pre">3</span></code> in <code class="docutils literal notranslate"><span class="pre">smb.conf</span></code> — <code class="docutils literal notranslate"><span class="pre">check_audit_level()</span></code> returns <code class="docutils literal notranslate"><span class="pre">False</span></code> and logs an error otherwise.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="quotas.html" class="btn btn-neutral float-left" title="quotas" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="smbclient.html" class="btn btn-neutral float-right" title="smbclient" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
