@@ -1,3 +1,83 @@
+linuxmuster-tools7 (7.4.19) lmn74; urgency=medium
+
+  * [security] [quotas] get_user_quotas() passes the administrator
+    password to smbcquotas through the PASSWD environment variable
+    instead of its argv, where any local user could read it in the
+    process list.
+  * [security] [linbo] The .macct files of an uploaded image, which hold
+    the Samba secrets of a client, are set to 0600 in the image
+    directory and in its backups, and the .incoming staging directory
+    to 0700: the [linbo] rsync module serves the LINBO directory
+    without login. See #44, reported by @TomlDev.
+  * [devices] New validator for devices.csv. Devices.check_conf()
+    reports every problem instead of a flat list of sentences, and
+    returns a dict (valid, counts, findings, report) instead of a list
+    of strings or False: callers have to adapt. Each finding carries a
+    stable code to branch on (e.g. hostname.too_long), the offending
+    value, and the file and line to fix. The report holds one short
+    line per problem, e.g. "❌ ip.invalid 999.999.999.999
+    (devices.csv:12)". The 15 characters limit of a hostname only
+    applies to the roles getting a machine account. The new
+    check_all_schools() validates every school at once, the only way to
+    see a host name or a mac address used in two schools; an ip address
+    shared between two schools is a warning only (ip.multischool), a
+    fileserver legitimately carries the same one in each. The
+    module-level COMPUTER_ROLES variable is removed.
+  * [devices] Each device exposes macRaw, the address as written in the
+    file (mac is None for a malformed one), and csvLine, its physical
+    line in devices.csv.
+  * [lmnconfig] sophomorix.ini is read with its tabs expanded:
+    configparser read a key indented deeper than the previous one as a
+    continuation of its value, and 53 keys of the shipped file were
+    lost that way, among them the COMPUTER_ACCOUNT of all 15 computer
+    roles.
+  * [lmnconfig] New SophomorixIni.computer_roles: the computer roles
+    split on their COMPUTER_ACCOUNT flag (accounts, dns_only), the
+    default role and the full list (roles). SophomorixIni.computerrole
+    is deprecated in favour of computer_roles.roles.
+  * [lmnconfig] custom_fields.yml is cached per school and read again
+    only when its mtime changes. The ldapconnector parsed it on every
+    request: listing all users with /users went from 13 s to under a
+    second.
+  * [common] New natural sorting helpers, natural_key() and
+    sort_naturally(): m5 comes before m10, and r100-pc5 before
+    r100-pc10. With digitless_last=True, names without any digit come
+    last (5a, 10b, abitur). Applied to the sortkey of the ldap_reader,
+    the schoolclasses, projects and printers of a user, the lists of
+    Devices, the LINBO images and list_workstations().
+  * [common] A LINBO group name may only hold letters, digits, _ and -,
+    as sophomorix-device accepts it: . and + are refused.
+  * [linbo] initcache is accepted with or without a download type;
+    without one, linbo-remote takes the one of the start.conf. It
+    could never pass the command check before. Fix #42, reported by
+    @TomlDev.
+  * [linbo] LINBO change tracker: a file changed in the same second as
+    the cursor or during the scan was never reported; it now can be
+    reported twice, never lost. A file whose mtime can not be read
+    counts as changed. The deletedHosts and deletedStartConfs fields,
+    always empty, are removed: a deleted entry is the one missing from
+    allHostMacs or allStartConfIds. Fix #38, reported by @TomlDev.
+  * [linbo] New list_onboot_commands(), get_onboot_command() and
+    delete_onboot_command(), to read and withdraw the commands
+    linbo-remote -p leaves for a host's next boot.
+  * [linbo] New restart_image_services(), restarting linbo-multicast and
+    linbo-torrent after a change on an image, and raising on failure
+    instead of failing silently.
+  * [lmnfile] LMNFile accepts a pathlib.Path as well as a str, and its
+    __init__ runs once instead of twice per instantiation.
+  * [lmnfile] CSV files expose line_numbers, the physical line of each
+    row returned by read().
+  * [ldapconnector] Creating the Student-Parents OU failed when the
+    Parents OU of the school had no child OU yet; its DN is now built
+    from the school instead of the DN of the student.
+  * [packaging] postinst no longer runs create_students_groups.py on
+    every upgrade: the subgroups of the schoolclasses are kept in sync
+    by sophomorix, and the sweep was slow and failed the whole package
+    configuration whenever LDAP was down. The script is deprecated, use
+    "lmncli schoolclass sync" to repair a class.
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sun, 11 Oct 2026 10:30:00 +0200
+
 linuxmuster-tools7 (7.4.18) lmn74; urgency=medium
 
   * [linbo] last_sync() takes a timestamp parameter. Left to its default
