@@ -15,7 +15,7 @@ def get_all_units():
     return ldap_filter
 
 @router.single(r'/units/(?P<name>[\w\-_. ]*)', models.LMNGroupModel, subdn=f'OU={SCHOOL_MARKER},OU=SCHOOLS,')
-def get_group(name=''):
+def get_unit(name=''):
     """
     Get a unit specified by its name. The terminology "unit" was chosen in order to differenciate with a "group" from
     sophomorix-group. A unit can be a schoolclass, a project, a group, etc ...
