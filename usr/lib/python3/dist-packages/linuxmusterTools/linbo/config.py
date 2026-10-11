@@ -667,13 +667,14 @@ def group_os(workstations):
             partitions = [p.Dev for p in linbo_config.Partitions] if linbo_config else []
 
             for osConfig in config:
-                if osConfig['SyncEnabled'] or osConfig['NewEnabled']:
+                # LINBO reads a missing *Enabled key as yes (linbo_split_startconf)
+                if osConfig.get('SyncEnabled', True) or osConfig.get('NewEnabled', True):
                     root = osConfig['Root']
                     tmpDict = {
                                 'baseimage': osConfig['BaseImage'],
                                 'partition': partitions.index(root) + 1 if root in partitions else None,
-                                'new_enabled': osConfig['NewEnabled'],
-                                'start_enabled': osConfig['StartEnabled'],
+                                'new_enabled': osConfig.get('NewEnabled', True),
+                                'start_enabled': osConfig.get('StartEnabled', True),
                                 'run_format': 0,
                                 'run_sync':0,
                                 'run_start':0,

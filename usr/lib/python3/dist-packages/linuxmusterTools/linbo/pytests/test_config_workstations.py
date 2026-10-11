@@ -88,6 +88,20 @@ def test_group_os_extracts_baseimage(tmp_path):
     assert workstations['grp1']['os'][0]['baseimage'] == 'ubuntu.qcow2'
 
 
+def test_group_os_reads_missing_enabled_keys_as_yes(tmp_path):
+    # LINBO itself treats a missing SyncEnabled/NewEnabled/StartEnabled as yes.
+    (tmp_path / 'start.conf.grp1').write_text(
+        '[OS]\nBaseImage=ubuntu.qcow2\nRoot=/dev/sda1\n'
+    )
+    workstations = {'grp1': {'hosts': []}}
+
+    group_os(workstations)
+
+    os_entry = workstations['grp1']['os'][0]
+    assert os_entry['new_enabled'] is True
+    assert os_entry['start_enabled'] is True
+
+
 def test_group_os_no_startconf_leaves_empty_os(tmp_path):
     workstations = {'grp1': {'hosts': []}}
 
