@@ -2,8 +2,10 @@
 LINBO remote commands — build, run and track linbo-remote sessions.
 
 linbo-remote sends actions (format/sync/start/halt/...) to hosts over ssh.
-Each run happens in a detached tmux session, in a script-visible variable
-named "<hostname>.linbo-remote".
+Each run happens in a detached tmux session named "<hostname>_linbo-remote",
+and logs to LINBO's log directory: one <hostname>_linbo-remote_<YYYYmmddHHMMSS>.log
+per run since linuxmuster-linbo7 7.4.18, a single <hostname>.linbo-remote
+overwritten by each run before (see LinboBootLogs.latest_remote_log()).
 """
 
 import subprocess
