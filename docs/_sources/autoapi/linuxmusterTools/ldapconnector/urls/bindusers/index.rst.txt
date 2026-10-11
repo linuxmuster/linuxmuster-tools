@@ -1,0 +1,35 @@
+linuxmusterTools.ldapconnector.urls.bindusers
+=============================================
+
+.. py:module:: linuxmusterTools.ldapconnector.urls.bindusers
+
+
+
+
+Module Contents
+---------------
+
+.. py:function:: get_all_globalbindusers()
+
+   Get all details from all globalbindusers.
+   Return a list of LMNUserModel data object.
+
+
+.. py:function:: get_globalbinduser(username)
+
+   Get all details from a specific globalbinduser.
+   Return a list of LMNUserModel data object.
+
+
+.. py:function:: get_all_schoolbindusers()
+
+   Get all details from all schoolbindusers.
+   Return a list of LMNUserModel data object.
+
+
+.. py:function:: get_schoolbinduser(username)
+
+   Get all details from a specific schoolbinduser.
+   Return a list of LMNUserModel data object.
+
+

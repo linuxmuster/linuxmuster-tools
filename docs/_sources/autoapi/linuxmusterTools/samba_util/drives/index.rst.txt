@@ -4,21 +4,8 @@ linuxmusterTools.samba_util.drives
 .. py:module:: linuxmusterTools.samba_util.drives
 
 
-Attributes
-----------
-
-.. autoapisummary::
-
-   linuxmusterTools.samba_util.drives.logger
 
 
-Classes
--------
-
-.. autoapisummary::
-
-   linuxmusterTools.samba_util.drives.Drive
-   linuxmusterTools.samba_util.drives.DriveManager
 
 
 Module Contents
@@ -73,16 +60,6 @@ Module Contents
 
       Parse the Drives.xml in the policy directory in order to get all shares
       properties.
-
-
-
-   .. py:method:: _parseProperties(drive)
-      :staticmethod:
-
-
-
-   .. py:method:: _parseFilters(drive)
-      :staticmethod:
 
 
 

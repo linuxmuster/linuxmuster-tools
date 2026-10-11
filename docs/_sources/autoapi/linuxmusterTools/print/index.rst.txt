@@ -1,0 +1,18 @@
+linuxmusterTools.print
+======================
+
+.. py:module:: linuxmusterTools.print
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/linuxmusterTools/print/passwords/index
+   /autoapi/linuxmusterTools/print/render/index
+   /autoapi/linuxmusterTools/print/schoolclasses/index
+   /autoapi/linuxmusterTools/print/templates/index
+
+

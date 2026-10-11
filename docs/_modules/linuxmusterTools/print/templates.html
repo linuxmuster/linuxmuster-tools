@@ -1,0 +1,261 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.print.templates &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../linuxmusterTools.html">linuxmusterTools</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.print.templates</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for linuxmusterTools.print.templates</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..ldapconnector</span><span class="w"> </span><span class="kn">import</span> <span class="n">LMNLdapReader</span> <span class="k">as</span> <span class="n">lr</span>
+
+
+<div class="viewcode-block" id="GLOBAL_FILENAME_REGEX">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/print/templates/index.html#linuxmusterTools.print.templates.GLOBAL_FILENAME_REGEX">[docs]</a>
+<span class="n">GLOBAL_FILENAME_REGEX</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(?P&lt;type&gt;[a-z]+)\-(?P&lt;lang&gt;[A-Z]+)\-(?P&lt;count&gt;\d+)\-template\.tex&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LMNTOOLS_TEMPLATES_DIR">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/print/templates/index.html#linuxmusterTools.print.templates.LMNTOOLS_TEMPLATES_DIR">[docs]</a>
+<span class="n">LMNTOOLS_TEMPLATES_DIR</span> <span class="o">=</span> <span class="s2">&quot;/var/lib/lmntools/templates/&quot;</span></div>
+
+<div class="viewcode-block" id="SOPHOMORIX_TEMPLATES_DIR">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/print/templates/index.html#linuxmusterTools.print.templates.SOPHOMORIX_TEMPLATES_DIR">[docs]</a>
+<span class="n">SOPHOMORIX_TEMPLATES_DIR</span> <span class="o">=</span> <span class="s2">&quot;/usr/share/sophomorix/lang/latex/templates/&quot;</span></div>
+
+<div class="viewcode-block" id="SOPHOMORIX_CONFIG_DIR">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/print/templates/index.html#linuxmusterTools.print.templates.SOPHOMORIX_CONFIG_DIR">[docs]</a>
+<span class="n">SOPHOMORIX_CONFIG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/etc/linuxmuster/sophomorix&quot;</span></div>
+
+
+<span class="nd">@dataclass</span>
+<div class="viewcode-block" id="LatexTemplate">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/print/templates/index.html#linuxmusterTools.print.templates.LatexTemplate">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LatexTemplate</span><span class="p">():</span>
+<div class="viewcode-block" id="LatexTemplate.count">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/print/templates/index.html#linuxmusterTools.print.templates.LatexTemplate.count">[docs]</a>
+    <span class="n">count</span><span class="p">:</span> <span class="nb">int</span></div>
+
+<div class="viewcode-block" id="LatexTemplate.filename">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/print/templates/index.html#linuxmusterTools.print.templates.LatexTemplate.filename">[docs]</a>
+    <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LatexTemplate.fullpath">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/print/templates/index.html#linuxmusterTools.print.templates.LatexTemplate.fullpath">[docs]</a>
+    <span class="n">fullpath</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LatexTemplate.lang">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/print/templates/index.html#linuxmusterTools.print.templates.LatexTemplate.lang">[docs]</a>
+    <span class="n">lang</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LatexTemplate.package">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/print/templates/index.html#linuxmusterTools.print.templates.LatexTemplate.package">[docs]</a>
+    <span class="n">package</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LatexTemplate.school">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/print/templates/index.html#linuxmusterTools.print.templates.LatexTemplate.school">[docs]</a>
+    <span class="n">school</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="LatexTemplate.type">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/print/templates/index.html#linuxmusterTools.print.templates.LatexTemplate.type">[docs]</a>
+    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="LatexTemplate.__post_init__">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/print/templates/index.html#linuxmusterTools.print.templates.LatexTemplate.__post_init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s1">&#39;datalist&#39;</span> <span class="k">else</span> <span class="s1">&#39;passwords&#39;</span></div>
+</div>
+
+
+<div class="viewcode-block" id="LatexTemplates">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/print/templates/index.html#linuxmusterTools.print.templates.LatexTemplates">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LatexTemplates</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to handle all LaTeX templates.</span>
+<span class="sd">    There&#39;s currently three sources of templates to print users lists (passwords, schoolclasses, etc ...):</span>
+<span class="sd">    - Sophomorix&#39;s package directory: /usr/share/sophomorix/lang/latex/templates/</span>
+<span class="sd">    - Sophomorix per school user&#39;s defined directory: /etc/linuxmuster/sophomorix/{school}/latex-templates/</span>
+<span class="sd">    - LMNTools&#39; package directory: /var/lib/lmntools/templates/</span>
+
+<span class="sd">    In both package&#39;s directory the filenames should be like (&lt;type&gt;-&lt;lang&gt;-&lt;count&gt;-template.tex):</span>
+<span class="sd">     - passwords-DE-1-template.tex</span>
+<span class="sd">     - passwords-EN-36-template.tex</span>
+<span class="sd">     - schoolclass-DE-32-template.tex</span>
+<span class="sd">     - schoolclass-FR-32-template.tex</span>
+<span class="sd">     - datalist-DE-1-template.tex</span>
+<span class="sd">     - datalist-EN-36-template.tex</span>
+
+<span class="sd">     In /etc/linuxmuster/sophomorix/{school}/latex-templates/, each filename should have the schoolname as prefix, i.e.</span>
+<span class="sd">     something like: &lt;schoolname&gt;.&lt;type&gt;-&lt;lang&gt;-&lt;count&gt;-template.tex</span>
+
+<span class="sd">    See https://github.com/linuxmuster/sophomorix4/blob/bionic/sophomorix-samba/lang/latex/README.latextemplates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LatexTemplates.templates">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/print/templates/index.html#linuxmusterTools.print.templates.LatexTemplates.templates">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">templates</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+<div class="viewcode-block" id="LatexTemplates.load">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/print/templates/index.html#linuxmusterTools.print.templates.LatexTemplates.load">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c1"># Load packages templates</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">LMNTOOLS_TEMPLATES_DIR</span><span class="si">}</span><span class="s1">/*.tex&#39;</span><span class="p">):</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">data</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">GLOBAL_FILENAME_REGEX</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">templates</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span> <span class="o">=</span> <span class="n">LatexTemplate</span><span class="p">(</span>
+                    <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+                    <span class="n">package</span><span class="o">=</span><span class="s2">&quot;lmntools&quot;</span><span class="p">,</span>
+                    <span class="n">school</span><span class="o">=</span><span class="s2">&quot;global&quot;</span><span class="p">,</span>
+                    <span class="n">fullpath</span><span class="o">=</span><span class="n">path</span><span class="p">,</span>
+                    <span class="o">**</span><span class="n">data</span><span class="o">.</span><span class="n">groupdict</span><span class="p">()</span>
+                <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">SOPHOMORIX_TEMPLATES_DIR</span><span class="si">}</span><span class="s1">/*.tex&#39;</span><span class="p">):</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">data</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">GLOBAL_FILENAME_REGEX</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">templates</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span> <span class="o">=</span> <span class="n">LatexTemplate</span><span class="p">(</span>
+                    <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+                    <span class="n">package</span><span class="o">=</span><span class="s2">&quot;sophomorix&quot;</span><span class="p">,</span>
+                    <span class="n">school</span><span class="o">=</span><span class="s2">&quot;global&quot;</span><span class="p">,</span>
+                    <span class="n">fullpath</span><span class="o">=</span><span class="n">path</span><span class="p">,</span>
+                    <span class="o">**</span><span class="n">data</span><span class="o">.</span><span class="n">groupdict</span><span class="p">()</span>
+                <span class="p">)</span>
+
+        <span class="c1"># School&#39;s and user&#39;s specific templates</span>
+        <span class="n">schools</span> <span class="o">=</span> <span class="n">lr</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="s1">&#39;/schools&#39;</span><span class="p">,</span> <span class="s2">&quot;ou&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">school</span> <span class="ow">in</span> <span class="n">schools</span><span class="p">:</span>
+            <span class="n">school_filename_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">school</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;\.?(?P&lt;type&gt;[^-]*)-(?P&lt;lang&gt;[A-Z]+)-(?P&lt;count&gt;\d+)-template\.tex&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">SOPHOMORIX_CONFIG_DIR</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">school</span><span class="si">}</span><span class="s1">/latex-templates/*.tex&#39;</span><span class="p">):</span>
+                <span class="n">filename</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">data</span> <span class="o">:=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">school_filename_regex</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">templates</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span> <span class="o">=</span> <span class="n">LatexTemplate</span><span class="p">(</span>
+                        <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+                        <span class="n">package</span><span class="o">=</span><span class="s2">&quot;school defined&quot;</span><span class="p">,</span>
+                        <span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">,</span>
+                        <span class="n">fullpath</span><span class="o">=</span><span class="n">path</span><span class="p">,</span>
+                        <span class="o">**</span><span class="n">data</span><span class="o">.</span><span class="n">groupdict</span><span class="p">()</span>
+                    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LatexTemplates.__str__">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/print/templates/index.html#linuxmusterTools.print.templates.LatexTemplates.__str__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Filename&#39;</span><span class="si">:</span><span class="s2">45</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;Count&#39;</span><span class="si">:</span><span class="s2">5</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;Lang&#39;</span><span class="si">:</span><span class="s2">4</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;Type&#39;</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;School&#39;</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2"> | Package</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">result</span> <span class="o">+=</span> <span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="mi">105</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">for</span> <span class="n">filename</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">templates</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">:</span><span class="s2">45</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">count</span><span class="si">:</span><span class="s2">5</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">lang</span><span class="si">:</span><span class="s2">4</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">type</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">school</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">package</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

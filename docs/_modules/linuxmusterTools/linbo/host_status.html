@@ -1,0 +1,297 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.linbo.host_status &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../linuxmusterTools.html">linuxmusterTools</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.linbo.host_status</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for linuxmusterTools.linbo.host_status</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">LINBO Host Status Scanner — TCP port probing for online detection.</span>
+
+<span class="sd">Probes port 2222 (Dropbear SSH on LINBO clients) to determine</span>
+<span class="sd">if a host is online. Supports concurrent scanning.</span>
+
+<span class="sd">Also classifies a host&#39;s boot state (Off, Linbo, OS Linux, OS Windows,</span>
+<span class="sd">OS Unknown) from the state of ports 2222/22/135, without depending on</span>
+<span class="sd">nmap. Since there is no separate host-discovery/ping step here (unlike</span>
+<span class="sd">nmap), a host that doesn&#39;t answer on any of the three ports is reported</span>
+<span class="sd">as &#39;Off&#39; directly, instead of the &#39;Off&#39; vs &#39;No response&#39; distinction the</span>
+<span class="sd">nmap-based webui implementation made.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">socket</span>
+
+<div class="viewcode-block" id="logger">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/host_status/index.html#linuxmusterTools.linbo.host_status.logger">[docs]</a>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DEFAULT_PORT">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/host_status/index.html#linuxmusterTools.linbo.host_status.DEFAULT_PORT">[docs]</a>
+<span class="n">DEFAULT_PORT</span> <span class="o">=</span> <span class="mi">2222</span></div>
+
+<div class="viewcode-block" id="DEFAULT_TIMEOUT">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/host_status/index.html#linuxmusterTools.linbo.host_status.DEFAULT_TIMEOUT">[docs]</a>
+<span class="n">DEFAULT_TIMEOUT</span> <span class="o">=</span> <span class="mf">2.0</span></div>
+
+<div class="viewcode-block" id="DEFAULT_CONCURRENCY">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/host_status/index.html#linuxmusterTools.linbo.host_status.DEFAULT_CONCURRENCY">[docs]</a>
+<span class="n">DEFAULT_CONCURRENCY</span> <span class="o">=</span> <span class="mi">20</span></div>
+
+
+
+<div class="viewcode-block" id="probe_host">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/host_status/index.html#linuxmusterTools.linbo.host_status.probe_host">[docs]</a>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">probe_host</span><span class="p">(</span><span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_PORT</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">DEFAULT_TIMEOUT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test if a host is reachable via TCP connect.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ip: Target IP address</span>
+<span class="sd">        port: TCP port to probe (default: 2222)</span>
+<span class="sd">        timeout: Connection timeout in seconds (default: 2.0)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        True if host is reachable, False otherwise</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">writer</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span>
+            <span class="n">asyncio</span><span class="o">.</span><span class="n">open_connection</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">),</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">await</span> <span class="n">writer</span><span class="o">.</span><span class="n">wait_closed</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">TimeoutError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="scan_hosts">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/host_status/index.html#linuxmusterTools.linbo.host_status.scan_hosts">[docs]</a>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">scan_hosts</span><span class="p">(</span>
+    <span class="n">hosts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span>
+    <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_PORT</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">DEFAULT_TIMEOUT</span><span class="p">,</span>
+    <span class="n">concurrency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_CONCURRENCY</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scan multiple hosts concurrently for online status.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        hosts: List of host dicts with at least &#39;ip&#39; and &#39;mac&#39; keys</span>
+<span class="sd">        port: TCP port to probe</span>
+<span class="sd">        timeout: Per-host connection timeout</span>
+<span class="sd">        concurrency: Max concurrent probes</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List of {mac, ip, hostname, online} dicts</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">semaphore</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="n">concurrency</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_probe</span><span class="p">(</span><span class="n">host</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">semaphore</span><span class="p">:</span>
+            <span class="n">ip</span> <span class="o">=</span> <span class="n">host</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ip&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">ip</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="n">host</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mac&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="s2">&quot;hostname&quot;</span><span class="p">:</span> <span class="n">host</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hostname&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;online&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="n">online</span> <span class="o">=</span> <span class="k">await</span> <span class="n">probe_host</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;mac&quot;</span><span class="p">:</span> <span class="n">host</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mac&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="n">ip</span><span class="p">,</span>
+                <span class="s2">&quot;hostname&quot;</span><span class="p">:</span> <span class="n">host</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hostname&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;online&quot;</span><span class="p">:</span> <span class="n">online</span><span class="p">,</span>
+            <span class="p">}</span>
+
+    <span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span><span class="n">_probe</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">hosts</span><span class="p">]</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">tasks</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="scan_hosts_sync">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/host_status/index.html#linuxmusterTools.linbo.host_status.scan_hosts_sync">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">scan_hosts_sync</span><span class="p">(</span>
+    <span class="n">hosts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span>
+    <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_PORT</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">DEFAULT_TIMEOUT</span><span class="p">,</span>
+    <span class="n">concurrency</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_CONCURRENCY</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Synchronous wrapper for scan_hosts (for use outside async context).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">scan_hosts</span><span class="p">(</span><span class="n">hosts</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="n">concurrency</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="CLASSIFY_PORTS">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/host_status/index.html#linuxmusterTools.linbo.host_status.CLASSIFY_PORTS">[docs]</a>
+<span class="n">CLASSIFY_PORTS</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2222</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">135</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="probe_port_state">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/host_status/index.html#linuxmusterTools.linbo.host_status.probe_port_state">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">probe_port_state</span><span class="p">(</span><span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">DEFAULT_TIMEOUT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Probe a single TCP port and classify its state.</span>
+
+<span class="sd">    Plain blocking socket, not asyncio: this is meant to be called from</span>
+<span class="sd">    gevent-monkey-patched code (e.g. the webui), where a blocking</span>
+<span class="sd">    socket.create_connection() is cooperative for free, while an asyncio</span>
+<span class="sd">    event loop would not be.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        &#39;open&#39; if the connection succeeds, &#39;closed&#39; if the host actively</span>
+<span class="sd">        refuses it, &#39;filtered&#39; if it doesn&#39;t respond at all (timeout or</span>
+<span class="sd">        unreachable) — mirroring nmap&#39;s port states without shelling out to it.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">socket</span><span class="o">.</span><span class="n">create_connection</span><span class="p">((</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">),</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;open&quot;</span>
+    <span class="k">except</span> <span class="ne">ConnectionRefusedError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;closed&quot;</span>
+    <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;filtered&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="classify_os">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/host_status/index.html#linuxmusterTools.linbo.host_status.classify_os">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">classify_os</span><span class="p">(</span><span class="n">ports</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Classify a host&#39;s boot state from its port states.</span>
+
+<span class="sd">    :param ports: Dict mapping port number (2222, 22, 135) to its state</span>
+<span class="sd">        (&#39;open&#39;, &#39;closed&#39; or &#39;filtered&#39;).</span>
+<span class="sd">    :return: One of &#39;Off&#39;, &#39;Linbo&#39;, &#39;OS Linux&#39;, &#39;OS Windows&#39;, &#39;OS Unknown&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;filtered&quot;</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">ports</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+        <span class="k">return</span> <span class="s2">&quot;Off&quot;</span>
+
+    <span class="k">if</span> <span class="p">{</span><span class="n">port</span> <span class="k">for</span> <span class="n">port</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">ports</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;open&quot;</span><span class="p">}</span> <span class="o">==</span> <span class="p">{</span><span class="mi">2222</span><span class="p">}:</span>
+        <span class="k">return</span> <span class="s2">&quot;Linbo&quot;</span>
+    <span class="k">if</span> <span class="n">ports</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">22</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;open&quot;</span><span class="p">,</span> <span class="s2">&quot;filtered&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">ports</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">135</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;open&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;OS Linux&quot;</span>
+    <span class="k">if</span> <span class="n">ports</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">135</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;open&quot;</span><span class="p">,</span> <span class="s2">&quot;filtered&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">ports</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">22</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;open&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;OS Windows&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;OS Unknown&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="classify_host">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/host_status/index.html#linuxmusterTools.linbo.host_status.classify_host">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">classify_host</span><span class="p">(</span><span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">DEFAULT_TIMEOUT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Probe a host on ports 2222/22/135 and classify its boot state.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        One of &#39;Off&#39;, &#39;Linbo&#39;, &#39;OS Linux&#39;, &#39;OS Windows&#39;, &#39;OS Unknown&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ports</span> <span class="o">=</span> <span class="p">{</span><span class="n">port</span><span class="p">:</span> <span class="n">probe_port_state</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span> <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="n">CLASSIFY_PORTS</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">classify_os</span><span class="p">(</span><span class="n">ports</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

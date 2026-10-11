@@ -1,0 +1,60 @@
+linuxmusterTools.linbo.wol
+==========================
+
+.. py:module:: linuxmusterTools.linbo.wol
+
+.. autoapi-nested-parse::
+
+   LINBO Wake-on-LAN — send magic packets to wake up hosts.
+
+   Supports direct UDP broadcast and optional Networkbox API proxy.
+
+
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:data:: logger
+
+.. py:function:: create_magic_packet(mac_address: str) -> bytes
+
+   Create IEEE 802.3 Wake-on-LAN magic packet.
+
+   6 bytes of 0xFF followed by the MAC address repeated 16 times = 102 bytes.
+
+   Args:
+       mac_address: MAC address (XX:XX:XX:XX:XX:XX or XX-XX-XX-XX-XX-XX)
+
+   Returns:
+       102-byte magic packet
+
+   Raises:
+       ValueError: If MAC address is invalid
+
+
+.. py:function:: send_wol(mac_address: str, broadcast: str | None = None, port: int = 9, count: int = 3) -> dict
+
+   Send Wake-on-LAN packet via UDP broadcast.
+
+   Args:
+       mac_address: Target MAC address
+       broadcast: Broadcast address (default: WOL_BROADCAST_ADDRESS env or 255.255.255.255)
+       port: UDP port (default: 9)
+       count: Number of packets to send (default: 3)
+
+   Returns:
+       Dict with macAddress, packetsSent, broadcastAddress, port
+
+
+.. py:function:: send_wol_bulk(mac_addresses: list[str], broadcast: str | None = None, port: int = 9, count: int = 3) -> dict
+
+   Send Wake-on-LAN to multiple hosts.
+
+   Returns:
+       Dict with total, successful, failed, and per-host results
+
+

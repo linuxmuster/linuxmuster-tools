@@ -4,22 +4,8 @@ linuxmusterTools.ldapconnector.writers.project
 .. py:module:: linuxmusterTools.ldapconnector.writers.project
 
 
-Attributes
-----------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.writers.project.logger
-   linuxmusterTools.ldapconnector.writers.project.name_checker
 
 
-Classes
--------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.writers.project.LMNProject
-   linuxmusterTools.ldapconnector.writers.project.LMNProjects
 
 
 Module Contents
@@ -42,6 +28,9 @@ Module Contents
 
 
    .. py:method:: load_data()
+
+
+   .. py:method:: create()
 
 
 .. py:class:: LMNProjects(school='default-school')

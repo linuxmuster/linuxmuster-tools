@@ -4,23 +4,10 @@ linuxmusterTools.ldapconnector.writers.schoolclass
 .. py:module:: linuxmusterTools.ldapconnector.writers.schoolclass
 
 
-Attributes
-----------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.writers.schoolclass.logger
-   linuxmusterTools.ldapconnector.writers.schoolclass.name_checker
 
 
-Classes
--------
 
-.. autoapisummary::
 
-   linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclassGroup
-   linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclass
-   linuxmusterTools.ldapconnector.writers.schoolclass.LMNSchoolclasses
 
 
 Module Contents
@@ -29,6 +16,10 @@ Module Contents
 .. py:data:: logger
 
 .. py:data:: name_checker
+
+.. py:data:: SCHOOLCLASS_SUBGROUP_SUFFIXES
+   :value: ('-students', '-teachers', '-parents')
+
 
 .. py:class:: LMNSchoolclassGroup(cn, suffix='', schoolclass_data={})
 
@@ -60,6 +51,9 @@ Module Contents
 
    .. py:method:: delete()
 
+      Delete the object directly in Ldap.
+
+
 
    .. py:method:: fill_members()
 
@@ -89,9 +83,12 @@ Module Contents
 
    .. py:method:: add_members(userlist)
 
-      Shortcut to add all members from a given list
+      Shortcut to add all members from a given list. One invalid cn
+      doesn't abort the rest of the batch: it's skipped and reported.
 
       :param userlist: List of valid cn
+      :return: list of (user, error message) tuples for entries that
+          could not be added
 
 
 
@@ -100,9 +97,12 @@ Module Contents
 
    .. py:method:: remove_members(userlist)
 
-      Shortcut to remove all members from a given list
+      Shortcut to remove all members from a given list. One invalid cn
+      doesn't abort the rest of the batch: it's skipped and reported.
 
       :param userlist: List of valid cn
+      :return: list of (user, error message) tuples for entries that
+          could not be removed
 
 
 
@@ -114,6 +114,25 @@ Module Contents
       This method is only intended to populate subgroups like 7a-teachers,
       7a-parents and 7a-students, and will fill the membership through the
       memberships stored in CN=7a,OU=7a or OU=Student-Parents,OU=Parents.
+
+
+
+   .. py:method:: fill_admins()
+
+      Set sophomorixAdmins to the teachers of the schoolclass, read from the
+      same member list as the 7a-teachers subgroup.
+
+      sophomorix stores the teachers of a class in sophomorixAdmins (as
+      sAMAccountNames) and rebuilds the member attribute from it: a teacher
+      who is only in member is invisible to everything reading
+      sophomorixAdmins (webui and api permissions, lmncli, first passwords
+      printing), and is dropped from member by the next sophomorix run
+      touching this class (AD_project_sync_members). Writing both keeps the
+      two views of the same fact identical.
+
+      Students are deliberately not handled here: adding one to a class is
+      not only an LDAP membership, it needs the share management which lives
+      in sophomorix.
 
 
 
@@ -135,5 +154,40 @@ Module Contents
 
 
    .. py:method:: __getitem__(schoolclass_cn)
+
+
+.. py:function:: delete_schoolclass_subgroups(cn, school='default-school')
+
+   Delete the subgroups <cn>-students, <cn>-teachers and <cn>-parents of a
+   schoolclass which does not exist anymore, and the organizational unit of
+   this schoolclass if nothing is left in it. That OU is the parent of the
+   subgroups, so an OU left alone, without any subgroup to locate it, is not
+   handled here.
+
+   sophomorix-class --kill (and --delete-all-empty-classes) only deletes the
+   schoolclass group itself: the subgroups created by LMNSchoolclassGroup are
+   unknown to sophomorix and stay in LDAP with their members and their mail
+   addresses, invisible to every listing (those filter sophomorixType on the
+   exact value 'adminclass'), and would be reused as they are if the
+   schoolclass was created again.
+
+   :param cn: Name of the deleted schoolclass, e.g. 7a
+   :type cn: string
+   :param school: School of the deleted schoolclass
+   :type school: string
+   :return: DN of each deleted object
+   :rtype: list
+
+
+.. py:function:: orphan_schoolclass_subgroups(school='default-school')
+
+   List the schoolclasses whose subgroups are still in LDAP while the
+   schoolclass itself is gone, e.g. after a sophomorix-class --kill run
+   before lmncli was called to clean up behind it.
+
+   :param school: School to scan
+   :type school: string
+   :return: Sorted list of the names of the deleted schoolclasses
+   :rtype: list
 
 

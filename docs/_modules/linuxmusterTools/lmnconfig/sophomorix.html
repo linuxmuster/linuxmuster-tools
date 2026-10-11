@@ -5,18 +5,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.lmnconfig.sophomorix &mdash; linuxmuster-tools7 7.3.26 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+  <title>linuxmusterTools.lmnconfig.sophomorix &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=ac320c09"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/translations.js?v=8fd896e3"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -73,24 +73,38 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.lmnconfig.sophomorix</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
-<span class="kn">from</span> <span class="nn">configparser</span> <span class="kn">import</span> <span class="n">ConfigParser</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">configparser</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">from</span> <span class="nn">linuxmusterTools.lmnfile</span> <span class="kn">import</span> <span class="n">LMNFile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.lmnfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">LMNFile</span>
 
 
 <div class="viewcode-block" id="logger">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.devices.logger">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.logger">[docs]</a>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="SchoolConfig">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.devices.SchoolConfig">[docs]</a>
-<span class="k">class</span> <span class="nc">SchoolConfig</span><span class="p">:</span>
+<div class="viewcode-block" id="SOPHOMORIX_INI_PATH">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SOPHOMORIX_INI_PATH">[docs]</a>
+<span class="n">SOPHOMORIX_INI_PATH</span> <span class="o">=</span> <span class="s2">&quot;/usr/share/sophomorix/devel/sophomorix.ini&quot;</span></div>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+
+<span class="c1"># What an installation without COMPUTERROLE_DEFAULT is assumed to mean.</span>
+<div class="viewcode-block" id="FALLBACK_DEFAULT_ROLE">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.FALLBACK_DEFAULT_ROLE">[docs]</a>
+<span class="n">FALLBACK_DEFAULT_ROLE</span> <span class="o">=</span> <span class="s1">&#39;classroom-studentcomputer&#39;</span></div>
+
+
+<div class="viewcode-block" id="SchoolConfig">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SchoolConfig">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SchoolConfig</span><span class="p">:</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
         <span class="n">prefix</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">if</span> <span class="n">school</span> <span class="o">!=</span> <span class="s1">&#39;default-school&#39;</span><span class="p">:</span>
             <span class="n">prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">school</span><span class="si">}</span><span class="s2">.&quot;</span>
@@ -105,12 +119,13 @@
 
 
 <div class="viewcode-block" id="MultiOrderedDict">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.devices.MultiOrderedDict">[docs]</a>
-<span class="k">class</span> <span class="nc">MultiOrderedDict</span><span class="p">(</span><span class="n">OrderedDict</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.MultiOrderedDict">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MultiOrderedDict</span><span class="p">(</span><span class="n">OrderedDict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An OrderedDict whose repeated keys accumulate their values in a list.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="MultiOrderedDict.__setitem__">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.devices.MultiOrderedDict.__setitem__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.MultiOrderedDict.__setitem__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -118,27 +133,69 @@
 </div>
 
 
-<div class="viewcode-block" id="SophomorixIni">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.devices.SophomorixIni">[docs]</a>
-<span class="k">class</span> <span class="nc">SophomorixIni</span><span class="p">:</span>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="ComputerRoles">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.ComputerRoles">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComputerRoles</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    What sophomorix.ini says about computer roles: the ones getting a</span>
+<span class="sd">    machine account in the AD, the ones getting a DNS node only, and the one</span>
+<span class="sd">    an empty role field means.</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="sd">    Read by SophomorixIni into its computer_roles attribute, or built by hand</span>
+<span class="sd">    to pin what a caller reads - a test, or a check run against an inventory</span>
+<span class="sd">    coming from somewhere else.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ComputerRoles.accounts">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.ComputerRoles.accounts">[docs]</a>
+    <span class="n">accounts</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">()</span></div>
+
+<div class="viewcode-block" id="ComputerRoles.dns_only">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.ComputerRoles.dns_only">[docs]</a>
+    <span class="n">dns_only</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">()</span></div>
+
+<div class="viewcode-block" id="ComputerRoles.default">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.ComputerRoles.default">[docs]</a>
+    <span class="n">default</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">FALLBACK_DEFAULT_ROLE</span></div>
+
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="ComputerRoles.roles">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.ComputerRoles.roles">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">roles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">accounts</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dns_only</span></div>
+
+
+<div class="viewcode-block" id="ComputerRoles.__contains__">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.ComputerRoles.__contains__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">role</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">accounts</span> <span class="ow">or</span> <span class="n">role</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dns_only</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SophomorixIni">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SophomorixIni">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SophomorixIni</span><span class="p">:</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <div class="viewcode-block" id="SophomorixIni.path">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.devices.SophomorixIni.path">[docs]</a>
-        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;/usr/share/sophomorix/devel/sophomorix.ini&quot;</span></div>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.path">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">SOPHOMORIX_INI_PATH</span></div>
 
 <div class="viewcode-block" id="SophomorixIni.data">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.devices.SophomorixIni.data">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.data">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">ConfigParser</span><span class="p">(</span><span class="n">delimiters</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">,),</span> <span class="n">dict_type</span><span class="o">=</span><span class="n">MultiOrderedDict</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">read_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_read_expanded</span><span class="p">())</span>
 <div class="viewcode-block" id="SophomorixIni.sections">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.devices.SophomorixIni.sections">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.sections">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">sections</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
 
 
 <div class="viewcode-block" id="SophomorixIni.dict">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.devices.SophomorixIni.dict">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.dict">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">dict</span> <span class="o">=</span> <span class="p">{}</span></div>
 
         <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">:</span>
@@ -146,14 +203,43 @@
             <span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">section</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="n">section</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitize</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-<div class="viewcode-block" id="SophomorixIni.computerrole">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.devices.SophomorixIni.computerrole">[docs]</a>
-        <span class="bp">self</span><span class="o">.</span><span class="n">computerrole</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;computerrole.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sections</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;computerrole&#39;</span><span class="p">)]</span></div>
+        <span class="c1"># Whether a computer role gets a real machine account in the AD, as</span>
+        <span class="c1"># opposed to a DNS node only. This is what decides if the NetBIOS</span>
+        <span class="c1"># limits apply to the hostname of a device: an account name is a</span>
+        <span class="c1"># sAMAccountName, capped at 15 characters plus the trailing &#39;$&#39;.</span>
+        <span class="c1"># https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/naming-conventions-for-computer-domain-site-ou</span>
+        <span class="n">accounts</span><span class="p">,</span> <span class="n">dns_only</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">section</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;computerrole.&#39;</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="n">role</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;computerrole.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="n">section</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;computer_account&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">section</span><span class="si">}</span><span class="s2"> has no COMPUTER_ACCOUNT in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">, assuming FALSE&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;TRUE&#39;</span><span class="p">:</span>
+                <span class="n">accounts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">role</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dns_only</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">role</span><span class="p">)</span>
+
+        <span class="c1"># The role sophomorix substitutes for an empty role field.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">default</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;GLOBAL&#39;</span><span class="p">,</span> <span class="s1">&#39;COMPUTERROLE_DEFAULT&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">default</span> <span class="o">=</span> <span class="n">FALLBACK_DEFAULT_ROLE</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;No COMPUTERROLE_DEFAULT in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">, assuming </span><span class="si">{</span><span class="n">FALLBACK_DEFAULT_ROLE</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+<div class="viewcode-block" id="SophomorixIni.computer_roles">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.computer_roles">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">computer_roles</span> <span class="o">=</span> <span class="n">ComputerRoles</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">accounts</span><span class="p">),</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">dns_only</span><span class="p">),</span> <span class="n">default</span><span class="p">)</span></div>
 
 
         <span class="c1"># TODO: should be loaded, not hardcoded</span>
 <div class="viewcode-block" id="SophomorixIni.clientrole">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.devices.SophomorixIni.clientrole">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.clientrole">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">clientrole</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s1">&#39;classroom-teachercomputer&#39;</span><span class="p">,</span>
             <span class="s1">&#39;classroom-studentcomputer&#39;</span><span class="p">,</span>
@@ -164,14 +250,59 @@
         <span class="p">]</span></div>
 
 <div class="viewcode-block" id="SophomorixIni.userrole">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.devices.SophomorixIni.userrole">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.userrole">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">userrole</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s1">&#39;ROLE_USER&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_read_expanded</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read sophomorix.ini and expand its tabs.</span>
+
+<span class="sd">        The file indents its keys with a tabulation in most sections and</span>
+<span class="sd">        with eight spaces in others, sometimes within the same section.</span>
+<span class="sd">        configparser reads a line indented deeper than the previous key as</span>
+<span class="sd">        a continuation of its value, so a space indented key following a</span>
+<span class="sd">        tab indented one is swallowed into the value above it: 53 keys of</span>
+<span class="sd">        the shipped file are lost that way, the COMPUTER_ACCOUNT of all 15</span>
+<span class="sd">        computer roles among them. Expanding tabs to eight columns puts</span>
+<span class="sd">        both forms at the same level, and leaves genuine continuation</span>
+<span class="sd">        lines - indented further than eight columns - untouched.</span>
+
+<span class="sd">        :return: The content of the file, empty if it can not be read</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span><span class="o">.</span><span class="n">expandtabs</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not read </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="SophomorixIni.computerrole">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.computerrole">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">computerrole</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deprecated, use computer_roles.roles.</span>
+
+<span class="sd">        :return: Every computer role, &#39;computerrole.&#39; prefix stripped</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;SophomorixIni.computerrole is deprecated, use SophomorixIni.computer_roles.roles&quot;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">computer_roles</span><span class="o">.</span><span class="n">roles</span><span class="p">)</span></div>
 
 
     <span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="SophomorixIni.sanitize">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.devices.SophomorixIni.sanitize">[docs]</a>
-    <span class="k">def</span> <span class="nf">sanitize</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.sanitize">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sanitize</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">idx</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
@@ -182,8 +313,8 @@
 
 
 <div class="viewcode-block" id="SophomorixIni.get">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.devices.SophomorixIni.get">[docs]</a>
-    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.get">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">section</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Section </span><span class="si">{</span><span class="n">section</span><span class="si">}</span><span class="s2"> not found in sophomorix.ini.&quot;</span><span class="p">)</span>
 
@@ -198,12 +329,12 @@
 
 
 <div class="viewcode-block" id="SophomorixConf">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.devices.SophomorixConf">[docs]</a>
-<span class="k">class</span> <span class="nc">SophomorixConf</span><span class="p">:</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SophomorixConf">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SophomorixConf</span><span class="p">:</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <div class="viewcode-block" id="SophomorixConf.path">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.devices.SophomorixConf.path">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SophomorixConf.path">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;/etc/linuxmuster/sophomorix/sophomorix.conf&#39;</span></div>
 
 
@@ -223,7 +354,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

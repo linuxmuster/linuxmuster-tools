@@ -1,0 +1,72 @@
+linuxmusterTools.subnets.subnets
+================================
+
+.. py:module:: linuxmusterTools.subnets.subnets
+
+
+
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:data:: logger
+
+.. py:data:: SUBNETS_PATH
+   :value: '/etc/linuxmuster/subnets.csv'
+
+
+.. py:data:: IMPORT_COMMAND
+   :value: 'linuxmuster-import-subnets'
+
+
+.. py:data:: SETUP_FLAGS
+   :value: ['', 'SETUP']
+
+
+.. py:class:: Subnets(path=SUBNETS_PATH)
+
+   Read and validate the global subnets definition file
+   (/etc/linuxmuster/subnets.csv), which is imported into the DHCP, ntp and
+   netplan configuration by linuxmuster-import-subnets.
+
+   Unlike devices.csv, subnets.csv is not per-school: there is exactly one file
+   for the whole server.
+
+
+   .. py:attribute:: path
+      :value: '/etc/linuxmuster/subnets.csv'
+
+
+
+   .. py:method:: load()
+
+
+   .. py:method:: filter(networks=[])
+
+      Filter the subnets list by network (e.g. '10.0.0.0/16').
+
+
+
+   .. py:method:: get_subnet(network)
+
+
+   .. py:method:: check_conf()
+
+      Validate the content of subnets.csv. Returns a list of human readable
+      error messages, or False if everything is valid.
+
+
+
+.. py:function:: import_subnets()
+
+   Run linuxmuster-import-subnets, which regenerates the DHCP, ntp and netplan
+   configuration from /etc/linuxmuster/subnets.csv and restarts the affected
+   services.
+
+   Returns a dict with the return code and the captured stdout/stderr.
+
+

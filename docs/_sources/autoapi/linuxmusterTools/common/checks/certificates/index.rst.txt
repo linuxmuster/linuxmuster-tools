@@ -1,0 +1,28 @@
+linuxmusterTools.common.checks.certificates
+===========================================
+
+.. py:module:: linuxmusterTools.common.checks.certificates
+
+
+
+
+Module Contents
+---------------
+
+.. py:class:: DomCert(hostname, port)
+
+   .. py:attribute:: hostname
+
+
+   .. py:attribute:: port
+
+
+   .. py:method:: load()
+
+
+   .. py:method:: isvalid()
+
+
+   .. py:method:: expires()
+
+

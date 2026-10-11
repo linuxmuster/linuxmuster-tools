@@ -1,0 +1,35 @@
+linuxmusterTools.ldapconnector.urls.admins
+==========================================
+
+.. py:module:: linuxmusterTools.ldapconnector.urls.admins
+
+
+
+
+Module Contents
+---------------
+
+.. py:function:: get_all_globaladministrators()
+
+   Get all details from all globaladministrators.
+   Return a list of LMNUserModel data object.
+
+
+.. py:function:: get_globaladministrator(username)
+
+   Get all details from a specific globaladministrator.
+   Return a list of LMNUserModel data object.
+
+
+.. py:function:: get_all_schooladministrators()
+
+   Get all details from all schooladministrators.
+   Return a list of LMNUserModel data object.
+
+
+.. py:function:: get_schooladministrator(username)
+
+   Get all details from a specific schooladministrator.
+   Return a list of LMNUserModel data object.
+
+

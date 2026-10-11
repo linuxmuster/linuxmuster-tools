@@ -4,12 +4,6 @@ linuxmusterTools.ldapconnector.models.lmnschoolclass
 .. py:module:: linuxmusterTools.ldapconnector.models.lmnschoolclass
 
 
-Classes
--------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.models.lmnschoolclass.LMNSchoolClassModel
 
 
 Module Contents
@@ -81,6 +75,46 @@ Module Contents
 
    .. py:attribute:: sophomorixCreationDate
       :type:  str
+
+
+   .. py:attribute:: sophomorixCustom1
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom2
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom3
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom4
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom5
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustomMulti1
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti2
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti3
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti4
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti5
+      :type:  list
 
 
    .. py:attribute:: sophomorixHidden

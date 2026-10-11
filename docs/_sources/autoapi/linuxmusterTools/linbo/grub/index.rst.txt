@@ -1,0 +1,67 @@
+linuxmusterTools.linbo.grub
+===========================
+
+.. py:module:: linuxmusterTools.linbo.grub
+
+.. autoapi-nested-parse::
+
+   LINBO GRUB Config Reader — reads existing GRUB config files from disk.
+
+   Does NOT generate GRUB configs — that is done by the linbo-api locally.
+   This module only reads what linuxmuster-import-devices or linbo-api has written.
+
+
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:data:: logger
+
+.. py:data:: GRUB_DIR_DEFAULT
+   :value: '/srv/linbo/boot/grub'
+
+
+.. py:class:: LinboGrubReader(grub_dir: str = GRUB_DIR_DEFAULT)
+
+   Read-only access to GRUB config files.
+
+
+   .. py:attribute:: grub_dir
+
+
+   .. py:method:: list_grub_cfg_ids() -> list[str]
+
+      Return sorted list of GRUB config group IDs (stems of ``*.cfg`` files).
+
+
+
+   .. py:method:: get_configs_by_ids(ids: list[str]) -> list[dict]
+
+      Return GRUB config content and mtime for given group IDs.
+
+      Returns list of {id, content, updatedAt} dicts.
+      Skips IDs whose .cfg file does not exist.
+
+
+
+   .. py:method:: get_all_grub_configs(school_groups: set[str] | None = None) -> list[dict]
+
+      Return all GRUB configs, optionally filtered by school groups.
+
+      Always includes main grub.cfg. Group configs are filtered by
+      school_groups if provided.
+
+      Returns list of {id, filename, content, updatedAt} dicts.
+
+
+
+   .. py:method:: get_cfg_mtime(group_id: str) -> datetime.datetime | None
+
+      Return mtime for a specific GRUB config file.
+
+
+

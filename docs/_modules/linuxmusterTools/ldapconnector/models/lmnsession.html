@@ -5,18 +5,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.models.lmnsession &mdash; linuxmuster-tools7 7.3.26 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+  <title>linuxmusterTools.ldapconnector.models.lmnsession &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/theme_overrides.css?v=472cca7c" />
 
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=ac320c09"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/translations.js?v=8fd896e3"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
@@ -74,38 +74,38 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.ldapconnector.models.lmnsession</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span> <span class="nn">..urls</span> <span class="kn">import</span> <span class="n">router</span> <span class="k">as</span> <span class="n">lr</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">router</span> <span class="k">as</span> <span class="n">lr</span>
 
 
 <span class="nd">@dataclass</span>
 <div class="viewcode-block" id="LMNSessionModel">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnsession/index.html#linuxmusterTools.ldapconnector.models.LMNSessionModel">[docs]</a>
-<span class="k">class</span> <span class="nc">LMNSessionModel</span><span class="p">:</span>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnsession/index.html#linuxmusterTools.ldapconnector.models.lmnsession.LMNSessionModel">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LMNSessionModel</span><span class="p">:</span>
 <div class="viewcode-block" id="LMNSessionModel.sid">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnsession/index.html#linuxmusterTools.ldapconnector.models.LMNSessionModel.sid">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnsession/index.html#linuxmusterTools.ldapconnector.models.lmnsession.LMNSessionModel.sid">[docs]</a>
     <span class="n">sid</span><span class="p">:</span> <span class="nb">str</span></div>
 
 <div class="viewcode-block" id="LMNSessionModel.name">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnsession/index.html#linuxmusterTools.ldapconnector.models.LMNSessionModel.name">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnsession/index.html#linuxmusterTools.ldapconnector.models.lmnsession.LMNSessionModel.name">[docs]</a>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span></div>
 
 <div class="viewcode-block" id="LMNSessionModel.members">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnsession/index.html#linuxmusterTools.ldapconnector.models.LMNSessionModel.members">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnsession/index.html#linuxmusterTools.ldapconnector.models.lmnsession.LMNSessionModel.members">[docs]</a>
     <span class="n">members</span><span class="p">:</span> <span class="nb">list</span></div>
 
 <div class="viewcode-block" id="LMNSessionModel.membersCount">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnsession/index.html#linuxmusterTools.ldapconnector.models.LMNSessionModel.membersCount">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnsession/index.html#linuxmusterTools.ldapconnector.models.lmnsession.LMNSessionModel.membersCount">[docs]</a>
     <span class="n">membersCount</span><span class="p">:</span> <span class="nb">int</span></div>
 
 
 <div class="viewcode-block" id="LMNSessionModel.get_first_passwords">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnsession/index.html#linuxmusterTools.ldapconnector.models.LMNSessionModel.get_first_passwords">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_first_passwords</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnsession/index.html#linuxmusterTools.ldapconnector.models.lmnsession.LMNSessionModel.get_first_passwords">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_first_passwords</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">response</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="p">:</span>
-            <span class="n">lmnuser</span> <span class="o">=</span> <span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/users/</span><span class="si">{</span><span class="n">member</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">lmnuser</span> <span class="o">=</span> <span class="n">lr</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/users/</span><span class="si">{</span><span class="n">member</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="n">response</span><span class="p">[</span><span class="n">member</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s1">&#39;firstPassword&#39;</span><span class="p">:</span> <span class="n">lmnuser</span><span class="o">.</span><span class="n">sophomorixFirstPassword</span><span class="p">,</span>
                 <span class="s1">&#39;firstPasswordStillSet&#39;</span><span class="p">:</span> <span class="n">lmnuser</span><span class="o">.</span><span class="n">test_first_password</span><span class="p">(),</span>
@@ -114,8 +114,8 @@
 
 
 <div class="viewcode-block" id="LMNSessionModel.__str__">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnsession/index.html#linuxmusterTools.ldapconnector.models.LMNSessionModel.__str__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/lmnsession/index.html#linuxmusterTools.ldapconnector.models.lmnsession.LMNSessionModel.__str__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sid</span><span class="si">}</span><span class="s2">;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">;</span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="p">)</span><span class="si">}</span><span class="s2">;&quot;</span></div>
 </div>
 
@@ -128,7 +128,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -4,13 +4,6 @@ linuxmusterTools.ldapconnector.urls.schools
 .. py:module:: linuxmusterTools.ldapconnector.urls.schools
 
 
-Functions
----------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.urls.schools.get_all_schools
-   linuxmusterTools.ldapconnector.urls.schools.get_specific_school
 
 
 Module Contents

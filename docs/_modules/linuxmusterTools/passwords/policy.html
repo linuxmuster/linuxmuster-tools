@@ -1,0 +1,503 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.passwords.policy &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../linuxmusterTools.html">linuxmusterTools</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.passwords.policy</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for linuxmusterTools.passwords.policy</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Password constraint policies for linuxmuster.net.</span>
+
+<span class="sd">Resolves, per school and per role, the set of rules a password must satisfy.</span>
+<span class="sd">Resolution order: school-specific override in the YAML config &gt; per-role</span>
+<span class="sd">default in the same config &gt; live Samba AD domain policy (used entirely when</span>
+<span class="sd">the config file is absent).</span>
+
+<span class="sd">The live Samba policy is also used as a FLOOR even when a YAML config exists:</span>
+<span class="sd">Samba enforces its own minimum length/complexity at write time regardless of</span>
+<span class="sd">what this module thinks is acceptable, so a config weaker than Samba would</span>
+<span class="sd">only produce a confusing failure downstream (accepted here, rejected by</span>
+<span class="sd">Samba). Resolved policies are therefore always at least as strict as Samba&#39;s.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.lmnfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">LMNFile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.samba_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">DomainPasswordSettings</span><span class="p">,</span> <span class="n">DomainPasswordSettingsManager</span>
+
+<div class="viewcode-block" id="logger">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.logger">[docs]</a>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CONFIG_PATH">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.CONFIG_PATH">[docs]</a>
+<span class="n">CONFIG_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/etc/linuxmuster/tools/password_constraints.yml&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="CharClass">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.CharClass">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CharClass</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="CharClass.LOWER">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.CharClass.LOWER">[docs]</a>
+    <span class="n">LOWER</span> <span class="o">=</span> <span class="s2">&quot;lower&quot;</span></div>
+
+<div class="viewcode-block" id="CharClass.UPPER">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.CharClass.UPPER">[docs]</a>
+    <span class="n">UPPER</span> <span class="o">=</span> <span class="s2">&quot;upper&quot;</span></div>
+
+<div class="viewcode-block" id="CharClass.DIGIT">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.CharClass.DIGIT">[docs]</a>
+    <span class="n">DIGIT</span> <span class="o">=</span> <span class="s2">&quot;digit&quot;</span></div>
+
+<div class="viewcode-block" id="CharClass.SPECIAL">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.CharClass.SPECIAL">[docs]</a>
+    <span class="n">SPECIAL</span> <span class="o">=</span> <span class="s2">&quot;special&quot;</span></div>
+
+
+<div class="viewcode-block" id="CharClass.matches">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.CharClass.matches">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">char</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span> <span class="ow">is</span> <span class="n">CharClass</span><span class="o">.</span><span class="n">LOWER</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">char</span><span class="o">.</span><span class="n">islower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span> <span class="ow">is</span> <span class="n">CharClass</span><span class="o">.</span><span class="n">UPPER</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">char</span><span class="o">.</span><span class="n">isupper</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span> <span class="ow">is</span> <span class="n">CharClass</span><span class="o">.</span><span class="n">DIGIT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">char</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="n">char</span><span class="o">.</span><span class="n">isalnum</span><span class="p">()</span></div>
+</div>
+
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="MinLengthRule">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.MinLengthRule">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MinLengthRule</span><span class="p">:</span>
+<div class="viewcode-block" id="MinLengthRule.length">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.MinLengthRule.length">[docs]</a>
+    <span class="n">length</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+<div class="viewcode-block" id="MinLengthRule.check">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.MinLengthRule.check">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">password</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span></div>
+
+
+<div class="viewcode-block" id="MinLengthRule.describe">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.MinLengthRule.describe">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">describe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;at least </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="si">}</span><span class="s2"> characters&quot;</span></div>
+</div>
+
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="RequireClassesRule">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.RequireClassesRule">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RequireClassesRule</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    At least `count` of `classes` must appear at least once.</span>
+
+<span class="sd">    count=1 with two classes expresses an &quot;or&quot; (e.g. digit OR uppercase).</span>
+<span class="sd">    Omitting count (or setting it to len(classes)) expresses an &quot;and&quot; (one</span>
+<span class="sd">    of each listed class) — this is the default, since it&#39;s the only one</span>
+<span class="sd">    that&#39;s always valid regardless of how many classes are listed (a fixed</span>
+<span class="sd">    number like Samba&#39;s &quot;3 of 4&quot; only makes sense for exactly 4 classes).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="RequireClassesRule.classes">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.RequireClassesRule.classes">[docs]</a>
+    <span class="n">classes</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">CharClass</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="RequireClassesRule.count">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.RequireClassesRule.count">[docs]</a>
+    <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="RequireClassesRule.__post_init__">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.RequireClassesRule.__post_init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;RequireClassesRule: count (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="si">}</span><span class="s2">) cannot exceed &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;the number of listed classes (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RequireClassesRule.check">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.RequireClassesRule.check">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">satisfied</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">any</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">matches</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">password</span><span class="p">)</span> <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">satisfied</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span></div>
+
+
+<div class="viewcode-block" id="RequireClassesRule.describe">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.RequireClassesRule.describe">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">describe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;at least one of: </span><span class="si">{</span><span class="s1">&#39; or &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">names</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;at least </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="si">}</span><span class="s2"> of: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">names</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span></div>
+</div>
+
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="ForbidUsernameRule">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.ForbidUsernameRule">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ForbidUsernameRule</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Rejects passwords containing the target account&#39;s username.</span>
+
+<span class="sd">    Always applied by `PasswordPolicyProvider`, independently of Samba&#39;s</span>
+<span class="sd">    complexity setting and not exposed as a config rule type: there&#39;s no</span>
+<span class="sd">    legitimate reason for a school to want this off.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ForbidUsernameRule.check">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.ForbidUsernameRule.check">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">username</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">username</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">password</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ForbidUsernameRule.describe">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.ForbidUsernameRule.describe">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">describe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;must not contain the account&#39;s username&quot;</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="PasswordRules">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.PasswordRules">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PasswordRules</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Pure rule construction and combination logic — no I/O, no state.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_CLASS_ALIASES</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;lower&quot;</span><span class="p">:</span> <span class="n">CharClass</span><span class="o">.</span><span class="n">LOWER</span><span class="p">,</span> <span class="s2">&quot;lowercase&quot;</span><span class="p">:</span> <span class="n">CharClass</span><span class="o">.</span><span class="n">LOWER</span><span class="p">,</span>
+        <span class="s2">&quot;upper&quot;</span><span class="p">:</span> <span class="n">CharClass</span><span class="o">.</span><span class="n">UPPER</span><span class="p">,</span> <span class="s2">&quot;uppercase&quot;</span><span class="p">:</span> <span class="n">CharClass</span><span class="o">.</span><span class="n">UPPER</span><span class="p">,</span>
+        <span class="s2">&quot;digit&quot;</span><span class="p">:</span> <span class="n">CharClass</span><span class="o">.</span><span class="n">DIGIT</span><span class="p">,</span> <span class="s2">&quot;number&quot;</span><span class="p">:</span> <span class="n">CharClass</span><span class="o">.</span><span class="n">DIGIT</span><span class="p">,</span>
+        <span class="s2">&quot;special&quot;</span><span class="p">:</span> <span class="n">CharClass</span><span class="o">.</span><span class="n">SPECIAL</span><span class="p">,</span> <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="n">CharClass</span><span class="o">.</span><span class="n">SPECIAL</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="PasswordRules.build">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.PasswordRules.build">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span><span class="n">entry</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">rule_type</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rule_type</span> <span class="o">==</span> <span class="s2">&quot;min_length&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MinLengthRule</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">rule_type</span> <span class="o">==</span> <span class="s2">&quot;require_classes&quot;</span><span class="p">:</span>
+            <span class="n">classes</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">PasswordRules</span><span class="o">.</span><span class="n">_CLASS_ALIASES</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;classes&quot;</span><span class="p">])</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">])</span> <span class="k">if</span> <span class="s2">&quot;count&quot;</span> <span class="ow">in</span> <span class="n">entry</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="n">RequireClassesRule</span><span class="p">(</span><span class="n">classes</span><span class="o">=</span><span class="n">classes</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rule_type</span> <span class="o">==</span> <span class="s2">&quot;forbid_username&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;forbid_username is always applied automatically and is not a &quot;</span>
+                <span class="s2">&quot;configurable rule type — remove it from the config&quot;</span>
+            <span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown password rule type: </span><span class="si">{</span><span class="n">rule_type</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_dedup_key</span><span class="p">(</span><span class="n">rule</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Canonical key used to drop exact duplicates when merging rule sets.</span>
+
+<span class="sd">        Ignores the order `classes` was listed in, so a config rule and a</span>
+<span class="sd">        Samba floor rule expressing the same constraint don&#39;t both show up</span>
+<span class="sd">        as separate (duplicate) violations. `MinLengthRule` isn&#39;t covered</span>
+<span class="sd">        here — it&#39;s merged by taking the maximum length instead, see `merge`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">RequireClassesRule</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;require_classes&quot;</span><span class="p">,</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">rule</span><span class="o">.</span><span class="n">classes</span><span class="p">),</span> <span class="n">rule</span><span class="o">.</span><span class="n">count</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">ForbidUsernameRule</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;forbid_username&quot;</span><span class="p">,)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="PasswordRules.merge">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.PasswordRules.merge">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span><span class="o">*</span><span class="n">rule_groups</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Combine several rule groups into one, keeping the strictest of each.</span>
+
+<span class="sd">        `MinLengthRule`s collapse to a single rule with their maximum length.</span>
+<span class="sd">        Everything else is kept, with exact duplicates (by `_dedup_key`)</span>
+<span class="sd">        removed so a rule already covered by one group isn&#39;t reported twice.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">all_rules</span> <span class="o">=</span> <span class="p">[</span><span class="n">rule</span> <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">rule_groups</span> <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">group</span><span class="p">]</span>
+        <span class="n">lengths</span> <span class="o">=</span> <span class="p">[</span><span class="n">rule</span><span class="o">.</span><span class="n">length</span> <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">all_rules</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">MinLengthRule</span><span class="p">)]</span>
+
+        <span class="n">merged</span> <span class="o">=</span> <span class="p">[</span><span class="n">MinLengthRule</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">lengths</span><span class="p">))]</span> <span class="k">if</span> <span class="n">lengths</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">all_rules</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">MinLengthRule</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">PasswordRules</span><span class="o">.</span><span class="n">_dedup_key</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="n">merged</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">merged</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="PasswordValidationResult">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.PasswordValidationResult">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PasswordValidationResult</span><span class="p">:</span>
+<div class="viewcode-block" id="PasswordValidationResult.ok">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.PasswordValidationResult.ok">[docs]</a>
+    <span class="n">ok</span><span class="p">:</span> <span class="nb">bool</span></div>
+
+<div class="viewcode-block" id="PasswordValidationResult.violations">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.PasswordValidationResult.violations">[docs]</a>
+    <span class="n">violations</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PasswordValidationResult.as_dict">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.PasswordValidationResult.as_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;ok&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ok</span><span class="p">,</span> <span class="s2">&quot;violations&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">violations</span><span class="p">)}</span></div>
+</div>
+
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="PasswordPolicy">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.PasswordPolicy">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PasswordPolicy</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An immutable, ordered set of rules a password must satisfy.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PasswordPolicy.rules">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.PasswordPolicy.rules">[docs]</a>
+    <span class="n">rules</span><span class="p">:</span> <span class="nb">tuple</span></div>
+
+<div class="viewcode-block" id="PasswordPolicy.source">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.PasswordPolicy.source">[docs]</a>
+    <span class="n">source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;config&quot;</span>  <span class="c1"># e.g. &quot;config:school-x/student&quot; or &quot;samba-fallback&quot;</span></div>
+
+
+<div class="viewcode-block" id="PasswordPolicy.validate">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.PasswordPolicy.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PasswordValidationResult</span><span class="p">:</span>
+        <span class="n">violations</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="n">rule</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span> <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">rule</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="n">password</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">PasswordValidationResult</span><span class="p">(</span><span class="n">ok</span><span class="o">=</span><span class="ow">not</span> <span class="n">violations</span><span class="p">,</span> <span class="n">violations</span><span class="o">=</span><span class="n">violations</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PasswordPolicy.as_dict">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.PasswordPolicy.as_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="s2">&quot;rules&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">]}</span></div>
+
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="PasswordPolicy.from_samba">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.PasswordPolicy.from_samba">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_samba</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">settings</span><span class="p">:</span> <span class="n">DomainPasswordSettings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;PasswordPolicy&quot;</span><span class="p">:</span>
+        <span class="c1"># ForbidUsernameRule is unconditional — unlike the 3-of-4 classes</span>
+        <span class="c1"># rule, it doesn&#39;t depend on Samba&#39;s complexity flag, see</span>
+        <span class="c1"># ForbidUsernameRule.</span>
+        <span class="n">rules</span> <span class="o">=</span> <span class="p">[</span><span class="n">MinLengthRule</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">min_pwd_length</span><span class="p">),</span> <span class="n">ForbidUsernameRule</span><span class="p">()]</span>
+        <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">complexity</span><span class="p">:</span>
+            <span class="c1"># Mirrors Microsoft&#39;s fixed algorithm: 3 of the 4 character classes.</span>
+            <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">RequireClassesRule</span><span class="p">(</span>
+                <span class="n">classes</span><span class="o">=</span><span class="p">(</span><span class="n">CharClass</span><span class="o">.</span><span class="n">LOWER</span><span class="p">,</span> <span class="n">CharClass</span><span class="o">.</span><span class="n">UPPER</span><span class="p">,</span> <span class="n">CharClass</span><span class="o">.</span><span class="n">DIGIT</span><span class="p">,</span> <span class="n">CharClass</span><span class="o">.</span><span class="n">SPECIAL</span><span class="p">),</span>
+                <span class="n">count</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="p">))</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">rules</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">rules</span><span class="p">),</span> <span class="n">source</span><span class="o">=</span><span class="s2">&quot;samba-fallback&quot;</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="PasswordPolicyProvider">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.PasswordPolicyProvider">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PasswordPolicyProvider</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Resolves the applicable password policy for a given role and school.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">CONFIG_PATH</span><span class="p">):</span>
+<div class="viewcode-block" id="PasswordPolicyProvider.config_path">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.PasswordPolicyProvider.config_path">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span></div>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_samba_settings</span><span class="p">:</span> <span class="n">DomainPasswordSettings</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raw_config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_config</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">PasswordPolicy</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="c1"># Check existence ourselves: YAMLLoader creates an empty file on open</span>
+        <span class="c1"># when running as root (lmnfile/lmnfile.py:229-234) — never call</span>
+        <span class="c1"># LMNFile on a path we haven&#39;t confirmed exists.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">&quot;No password constraints config at </span><span class="si">%s</span><span class="s2">, using Samba policy only&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="p">{}</span>
+        <span class="k">with</span> <span class="n">LMNFile</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_path</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">config</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">()</span> <span class="ow">or</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_samba_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PasswordPolicy</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_samba_settings</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_samba_settings</span> <span class="o">=</span> <span class="n">DomainPasswordSettingsManager</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">PasswordPolicy</span><span class="o">.</span><span class="n">from_samba</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_samba_settings</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PasswordPolicyProvider.get_policy">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.PasswordPolicyProvider.get_policy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">school</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default-school&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PasswordPolicy</span><span class="p">:</span>
+        <span class="n">cache_key</span> <span class="o">=</span> <span class="p">(</span><span class="n">school</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cache_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span>
+
+        <span class="n">entries</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_config</span><span class="p">:</span>
+            <span class="n">entries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;schools&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">school</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">role</span><span class="p">)</span>
+            <span class="n">source</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;config:</span><span class="si">{</span><span class="n">school</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">role</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">if</span> <span class="n">entries</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">entries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">role</span><span class="p">)</span>
+                <span class="n">source</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;config:default/</span><span class="si">{</span><span class="n">role</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="n">samba_policy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_samba_policy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">entries</span><span class="p">:</span>
+            <span class="n">config_rules</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">PasswordRules</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">)</span>
+            <span class="c1"># Samba is always applied as a floor: a config weaker than the</span>
+            <span class="c1"># live domain policy would otherwise validate here and still be</span>
+            <span class="c1"># rejected by Samba at write time.</span>
+            <span class="n">merged_rules</span> <span class="o">=</span> <span class="n">PasswordRules</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">config_rules</span><span class="p">,</span> <span class="n">samba_policy</span><span class="o">.</span><span class="n">rules</span><span class="p">)</span>
+            <span class="n">policy</span> <span class="o">=</span> <span class="n">PasswordPolicy</span><span class="p">(</span><span class="n">rules</span><span class="o">=</span><span class="n">merged_rules</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">+samba-floor&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">policy</span> <span class="o">=</span> <span class="n">samba_policy</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache</span><span class="p">[</span><span class="n">cache_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">policy</span>
+        <span class="k">return</span> <span class="n">policy</span></div>
+
+
+<div class="viewcode-block" id="PasswordPolicyProvider.validate">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/passwords/policy/index.html#linuxmusterTools.passwords.policy.PasswordPolicyProvider.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">school</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default-school&quot;</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PasswordValidationResult</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_policy</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="n">school</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">password</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

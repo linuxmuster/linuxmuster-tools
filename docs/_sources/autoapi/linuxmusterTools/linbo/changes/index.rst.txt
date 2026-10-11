@@ -1,0 +1,66 @@
+linuxmusterTools.linbo.changes
+==============================
+
+.. py:module:: linuxmusterTools.linbo.changes
+
+.. autoapi-nested-parse::
+
+   LINBO Change Tracker — cursor-based delta detection via filesystem mtimes.
+
+   Compares file modification times against a unix-timestamp cursor to
+   determine which hosts, start.confs, and configs have changed.
+
+
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:data:: logger
+
+.. py:class:: LinboChangeTracker(school: str = 'default-school')
+
+   Cursor-based change detection using filesystem mtimes.
+
+
+   .. py:attribute:: school
+      :value: 'default-school'
+
+
+
+   .. py:attribute:: devices_mgr
+
+
+   .. py:attribute:: config_manager
+
+
+   .. py:attribute:: grub_reader
+
+
+   .. py:method:: get_changes(since_cursor: str = '0') -> dict
+
+      Compare filesystem state against cursor, return delta.
+
+      Args:
+          since_cursor: Unix timestamp string. '0' = full snapshot.
+
+      Returns:
+          Dict with nextCursor, hostsChanged, startConfsChanged,
+          configsChanged, dhcpChanged, allHostMacs, allStartConfIds,
+          allConfigIds.
+
+      hostsChanged lists every host of the school as soon as devices.csv
+      changed: all hosts live in this one file, its mtime cannot tell which
+      line was edited.
+
+      Nothing is remembered between two calls, so a deleted host or
+      start.conf cannot be reported as such: it is the entry missing from
+      allHostMacs or allStartConfIds compared to the previous call.
+
+      A file whose mtime cannot be read counts as changed.
+
+
+

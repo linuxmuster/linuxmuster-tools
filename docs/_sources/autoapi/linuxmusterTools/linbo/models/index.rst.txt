@@ -1,0 +1,247 @@
+linuxmusterTools.linbo.models
+=============================
+
+.. py:module:: linuxmusterTools.linbo.models
+
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:data:: logger
+
+.. py:class:: ImageInfo
+
+   Object to handle info file of a linbo image.
+
+
+   .. py:attribute:: timestamp
+      :type:  str
+
+
+   .. py:attribute:: image
+      :type:  str
+
+
+   .. py:attribute:: imagesize
+      :type:  str
+
+
+   .. py:attribute:: partition
+      :type:  str
+
+
+   .. py:attribute:: partitionsize
+      :type:  str
+
+
+   .. py:method:: as_dict()
+
+
+.. py:class:: Partition
+
+   Object to handle a partition stanza in a start.conf file.
+
+
+   .. py:attribute:: Bootable
+      :type:  bool
+
+
+   .. py:attribute:: Dev
+      :type:  str
+
+
+   .. py:attribute:: FSType
+      :type:  str
+
+
+   .. py:attribute:: Id
+      :type:  int
+
+
+   .. py:attribute:: Label
+      :type:  str
+
+
+   .. py:attribute:: Size
+      :type:  str
+
+
+   .. py:method:: from_dict(kwargs)
+      :classmethod:
+
+
+
+.. py:class:: OS
+
+   Object to handle a OS stanza in a start.conf file.
+
+
+   .. py:attribute:: Append
+      :type:  str
+
+
+   .. py:attribute:: BaseImage
+      :type:  str
+
+
+   .. py:attribute:: DefaultAction
+      :type:  str
+
+
+   .. py:attribute:: Description
+      :type:  str
+
+
+   .. py:attribute:: IconName
+      :type:  str
+
+
+   .. py:attribute:: Initrd
+      :type:  str
+
+
+   .. py:attribute:: Kernel
+      :type:  str
+
+
+   .. py:attribute:: Name
+      :type:  str
+
+
+   .. py:attribute:: Root
+      :type:  str
+
+
+   .. py:attribute:: Autostart
+      :type:  bool
+      :value: False
+
+
+
+   .. py:attribute:: AutostartTimeout
+      :type:  int
+      :value: 5
+
+
+
+   .. py:attribute:: NewEnabled
+      :type:  bool
+      :value: True
+
+
+
+   .. py:attribute:: StartEnabled
+      :type:  bool
+      :value: True
+
+
+
+   .. py:attribute:: SyncEnabled
+      :type:  bool
+      :value: True
+
+
+
+   .. py:method:: from_dict(kwargs)
+      :classmethod:
+
+
+
+.. py:class:: Linbo
+
+   Class top handle the first stanza of a start.conf. file.
+   Cache and Group are mandatory.
+
+
+   .. py:attribute:: Cache
+      :type:  str
+
+
+   .. py:attribute:: Group
+      :type:  str
+
+
+   .. py:attribute:: AutoFormat
+      :type:  bool
+      :value: False
+
+
+
+   .. py:attribute:: AutoInitCache
+      :type:  bool
+      :value: False
+
+
+
+   .. py:attribute:: AutoPartition
+      :type:  bool
+      :value: False
+
+
+
+   .. py:attribute:: GuiDisabled
+      :type:  bool
+      :value: False
+
+
+
+   .. py:attribute:: KernelOptions
+      :type:  str
+      :value: ''
+
+
+
+   .. py:attribute:: Locale
+      :type:  str
+      :value: 'de-de'
+
+
+
+   .. py:attribute:: RootTimeout
+      :type:  int
+      :value: 600
+
+
+
+   .. py:attribute:: DownloadType
+      :type:  str
+      :value: 'torrent'
+
+
+
+   .. py:attribute:: UseMinimalLayout
+      :type:  bool
+      :value: False
+
+
+
+   .. py:method:: from_dict(kwargs)
+      :classmethod:
+
+
+
+.. py:class:: LinboConfig
+
+   Full object for a start.conf file.
+
+
+   .. py:attribute:: LINBO
+      :type:  Linbo
+
+
+   .. py:attribute:: Partitions
+      :type:  list
+
+
+   .. py:attribute:: path
+      :type:  str
+
+
+   .. py:attribute:: OS
+      :type:  list
+
+

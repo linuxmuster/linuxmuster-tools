@@ -1,0 +1,37 @@
+linuxmusterTools.ldapconnector.models.lmnusermixin
+==================================================
+
+.. py:module:: linuxmusterTools.ldapconnector.models.lmnusermixin
+
+
+
+
+Module Contents
+---------------
+
+.. py:class:: LMNUserMixin
+
+   Methods shared between LMNUserModel and LMNRawUserModel.
+
+
+   .. py:method:: extract_schoolclasses(membership)
+
+
+   .. py:method:: extract_projects(membership)
+
+
+   .. py:method:: extract_printers(membership)
+
+
+   .. py:method:: extract_management()
+
+
+   .. py:method:: parse_sessions()
+
+
+   .. py:method:: parse_exam()
+
+
+   .. py:method:: create_custom_fields_objects(custom_config={})
+
+

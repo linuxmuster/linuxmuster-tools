@@ -4,13 +4,6 @@ linuxmusterTools.common.convert
 .. py:module:: linuxmusterTools.common.convert
 
 
-Functions
----------
-
-.. autoapisummary::
-
-   linuxmusterTools.common.convert.format_size
-   linuxmusterTools.common.convert.convert_sophomorix_time
 
 
 Module Contents
@@ -26,5 +19,12 @@ Module Contents
    :type t: basestring
    :return: Human-readable date like 30 Oct 2008 12:53:30
    :rtype:
+
+
+.. py:function:: convert_sophomorix_status(s)
+
+   Convert a sophomorix status like 'T' in human readable output 'Tolerated (T)'.
+
+   :param s: statut read in sophomorixStatus.
 
 

@@ -1,0 +1,87 @@
+linuxmusterTools.linbo.image_sync
+=================================
+
+.. py:module:: linuxmusterTools.linbo.image_sync
+
+.. autoapi-nested-parse::
+
+   LINBO image serving — serve images to caching servers.
+
+   Resolve, upload, stage and finalize image files under the LINBO images
+   directory. The client-side download counterpart lives in WIP/.
+
+
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:data:: name_checker
+
+.. py:data:: logger
+
+.. py:data:: IMAGES_DIR
+
+.. py:data:: IMAGE_EXTS
+
+.. py:data:: INCOMING_DIR_NAME
+   :value: '.incoming'
+
+
+.. py:function:: resolve_image_file(images_dir: pathlib.Path, image_name: str, filename: str) -> pathlib.Path
+
+   Resolve and validate an image file path.
+
+   Returns the absolute Path if valid and file exists.
+   Raises ValueError for invalid paths, FileNotFoundError if missing.
+
+
+.. py:function:: get_image_file_info(file_path: pathlib.Path) -> dict
+
+   Get metadata for an image file.
+
+   Returns {size, mtime_ts, etag, last_modified}.
+
+
+.. py:function:: receive_upload_chunk(images_dir: pathlib.Path, image_name: str, filename: str, data: bytes, offset: int | None = None) -> dict
+
+   Write a chunk of upload data to the staging directory.
+
+   Args:
+       images_dir: Base images directory
+       image_name: Target image name
+       filename: Target filename
+       data: Chunk bytes
+       offset: Byte offset for ranged writes (None = overwrite)
+
+   Returns {received, offset}.
+
+
+.. py:function:: get_upload_status(images_dir: pathlib.Path, image_name: str, filename: str) -> dict
+
+   Check how many bytes have been received for a staged upload.
+
+   Returns {bytesReceived, complete}.
+
+
+.. py:function:: finalize_upload(images_dir: pathlib.Path, image_name: str) -> dict
+
+   Move staged files to final directory with backup.
+
+   Backs up existing image files to a timestamped subdirectory
+   before replacing them.
+
+   Returns {finalized, files, backup}.
+   Raises FileNotFoundError if no staged files exist.
+
+
+.. py:function:: cancel_upload(images_dir: pathlib.Path, image_name: str) -> dict
+
+   Clean up staged upload files.
+
+   Returns {cleaned, detail?}.
+
+

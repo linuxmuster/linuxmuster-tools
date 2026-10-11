@@ -1,0 +1,207 @@
+linuxmusterTools.passwords.policy
+=================================
+
+.. py:module:: linuxmusterTools.passwords.policy
+
+.. autoapi-nested-parse::
+
+   Password constraint policies for linuxmuster.net.
+
+   Resolves, per school and per role, the set of rules a password must satisfy.
+   Resolution order: school-specific override in the YAML config > per-role
+   default in the same config > live Samba AD domain policy (used entirely when
+   the config file is absent).
+
+   The live Samba policy is also used as a FLOOR even when a YAML config exists:
+   Samba enforces its own minimum length/complexity at write time regardless of
+   what this module thinks is acceptable, so a config weaker than Samba would
+   only produce a confusing failure downstream (accepted here, rejected by
+   Samba). Resolved policies are therefore always at least as strict as Samba's.
+
+
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:data:: logger
+
+.. py:data:: CONFIG_PATH
+
+.. py:class:: CharClass
+
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+
+
+   str(object='') -> str
+   str(bytes_or_buffer[, encoding[, errors]]) -> str
+
+   Create a new string object from the given object. If encoding or
+   errors is specified, then the object must expose a data buffer
+   that will be decoded using the given encoding and error handler.
+   Otherwise, returns the result of object.__str__() (if defined)
+   or repr(object).
+   encoding defaults to 'utf-8'.
+   errors defaults to 'strict'.
+
+
+   .. py:attribute:: LOWER
+      :value: 'lower'
+
+
+
+   .. py:attribute:: UPPER
+      :value: 'upper'
+
+
+
+   .. py:attribute:: DIGIT
+      :value: 'digit'
+
+
+
+   .. py:attribute:: SPECIAL
+      :value: 'special'
+
+
+
+   .. py:method:: matches(char: str) -> bool
+
+
+.. py:class:: MinLengthRule
+
+   .. py:attribute:: length
+      :type:  int
+
+
+   .. py:method:: check(password: str, *, username: str | None = None) -> bool
+
+
+   .. py:method:: describe() -> str
+
+
+.. py:class:: RequireClassesRule
+
+   At least `count` of `classes` must appear at least once.
+
+   count=1 with two classes expresses an "or" (e.g. digit OR uppercase).
+   Omitting count (or setting it to len(classes)) expresses an "and" (one
+   of each listed class) — this is the default, since it's the only one
+   that's always valid regardless of how many classes are listed (a fixed
+   number like Samba's "3 of 4" only makes sense for exactly 4 classes).
+
+
+   .. py:attribute:: classes
+      :type:  tuple[CharClass, ...]
+
+
+   .. py:attribute:: count
+      :type:  int | None
+      :value: None
+
+
+
+   .. py:method:: __post_init__()
+
+
+   .. py:method:: check(password: str, *, username: str | None = None) -> bool
+
+
+   .. py:method:: describe() -> str
+
+
+.. py:class:: ForbidUsernameRule
+
+   Rejects passwords containing the target account's username.
+
+   Always applied by `PasswordPolicyProvider`, independently of Samba's
+   complexity setting and not exposed as a config rule type: there's no
+   legitimate reason for a school to want this off.
+
+
+   .. py:method:: check(password: str, *, username: str | None = None) -> bool
+
+
+   .. py:method:: describe() -> str
+
+
+.. py:class:: PasswordRules
+
+   Pure rule construction and combination logic — no I/O, no state.
+
+
+   .. py:method:: build(entry: dict)
+      :staticmethod:
+
+
+
+   .. py:method:: merge(*rule_groups)
+      :staticmethod:
+
+
+      Combine several rule groups into one, keeping the strictest of each.
+
+      `MinLengthRule`s collapse to a single rule with their maximum length.
+      Everything else is kept, with exact duplicates (by `_dedup_key`)
+      removed so a rule already covered by one group isn't reported twice.
+
+
+
+.. py:class:: PasswordValidationResult
+
+   .. py:attribute:: ok
+      :type:  bool
+
+
+   .. py:attribute:: violations
+      :type:  tuple[str, ...]
+      :value: ()
+
+
+
+   .. py:method:: as_dict() -> dict
+
+
+.. py:class:: PasswordPolicy
+
+   An immutable, ordered set of rules a password must satisfy.
+
+
+   .. py:attribute:: rules
+      :type:  tuple
+
+
+   .. py:attribute:: source
+      :type:  str
+      :value: 'config'
+
+
+
+   .. py:method:: validate(password: str, *, username: str | None = None) -> PasswordValidationResult
+
+
+   .. py:method:: as_dict() -> dict
+
+
+   .. py:method:: from_samba(settings: linuxmusterTools.samba_util.DomainPasswordSettings) -> PasswordPolicy
+      :classmethod:
+
+
+
+.. py:class:: PasswordPolicyProvider(config_path: pathlib.Path | str = CONFIG_PATH)
+
+   Resolves the applicable password policy for a given role and school.
+
+
+   .. py:attribute:: config_path
+
+
+   .. py:method:: get_policy(role: str, school: str = 'default-school') -> PasswordPolicy
+
+
+   .. py:method:: validate(password: str, role: str, school: str = 'default-school', *, username: str | None = None) -> PasswordValidationResult
+
+

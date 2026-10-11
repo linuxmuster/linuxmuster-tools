@@ -6,18 +6,18 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools &mdash; linuxmuster-tools7 7.3.26 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+  <title>linuxmusterTools &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../_static/theme_overrides.css?v=472cca7c" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=ac320c09"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/translations.js?v=8fd896e3"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -56,22 +56,23 @@
 <li class="toctree-l4"><a class="reference internal" href="linbo/index.html">linuxmusterTools.linbo</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lmnconfig/index.html">linuxmusterTools.lmnconfig</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lmnfile/index.html">linuxmusterTools.lmnfile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="passwords/index.html">linuxmusterTools.passwords</a></li>
+<li class="toctree-l4"><a class="reference internal" href="print/index.html">linuxmusterTools.print</a></li>
 <li class="toctree-l4"><a class="reference internal" href="quotas/index.html">linuxmusterTools.quotas</a></li>
 <li class="toctree-l4"><a class="reference internal" href="samba_util/index.html">linuxmusterTools.samba_util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smbclient/index.html">linuxmusterTools.smbclient</a></li>
+<li class="toctree-l4"><a class="reference internal" href="subnets/index.html">linuxmusterTools.subnets</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#attributes">Attributes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#classes">Classes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#package-contents">Package Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#linuxmusterTools.LMNToolsLoggingFormatter"><code class="docutils literal notranslate"><span class="pre">LMNToolsLoggingFormatter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#linuxmusterTools.LMNFileHandler"><code class="docutils literal notranslate"><span class="pre">LMNFileHandler</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#linuxmusterTools.logger"><code class="docutils literal notranslate"><span class="pre">logger</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#linuxmusterTools.logger_handler"><code class="docutils literal notranslate"><span class="pre">logger_handler</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#linuxmusterTools.LMNToolsFormatter"><code class="docutils literal notranslate"><span class="pre">LMNToolsFormatter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#linuxmusterTools.setup_logging"><code class="docutils literal notranslate"><span class="pre">setup_logging()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../create_students_groups/index.html">create_students_groups</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../00-update-schoolclasses-groups/index.html">00-update-schoolclasses-groups</a></li>
 </ul>
 </li>
 </ul>
@@ -113,163 +114,116 @@
 <li class="toctree-l1"><a class="reference internal" href="linbo/index.html">linuxmusterTools.linbo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lmnconfig/index.html">linuxmusterTools.lmnconfig</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lmnfile/index.html">linuxmusterTools.lmnfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="passwords/index.html">linuxmusterTools.passwords</a></li>
+<li class="toctree-l1"><a class="reference internal" href="print/index.html">linuxmusterTools.print</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quotas/index.html">linuxmusterTools.quotas</a></li>
 <li class="toctree-l1"><a class="reference internal" href="samba_util/index.html">linuxmusterTools.samba_util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="smbclient/index.html">linuxmusterTools.smbclient</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subnets/index.html">linuxmusterTools.subnets</a></li>
 </ul>
 </div>
 </section>
-<section id="attributes">
-<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.logger" title="linuxmusterTools.logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logger</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.logger_handler" title="linuxmusterTools.logger_handler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logger_handler</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="classes">
-<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.LMNToolsFormatter" title="linuxmusterTools.LMNToolsFormatter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNToolsFormatter</span></code></a></p></td>
-<td><p>Formatter instances are used to convert a LogRecord to text.</p></td>
-</tr>
-</tbody>
-</table>
-</section>
 <section id="package-contents">
 <h2>Package Contents<a class="headerlink" href="#package-contents" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsLoggingFormatter">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.</span></span><span class="sig-name descname"><span class="pre">LMNToolsLoggingFormatter</span></span><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsLoggingFormatter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsLoggingFormatter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Formatter" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logging.Formatter</span></code></a></p>
+<p>Colored log formatter for console output, one color per level.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsLoggingFormatter.grey">
+<span class="sig-name descname"><span class="pre">grey</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[38;5;245m'</span></span><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsLoggingFormatter.grey"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsLoggingFormatter.grey" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsLoggingFormatter.green">
+<span class="sig-name descname"><span class="pre">green</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[38;5;82m'</span></span><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsLoggingFormatter.green"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsLoggingFormatter.green" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsLoggingFormatter.orange">
+<span class="sig-name descname"><span class="pre">orange</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[38;5;214m'</span></span><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsLoggingFormatter.orange"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsLoggingFormatter.orange" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsLoggingFormatter.red">
+<span class="sig-name descname"><span class="pre">red</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[38;5;196m'</span></span><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsLoggingFormatter.red"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsLoggingFormatter.red" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsLoggingFormatter.bold_red">
+<span class="sig-name descname"><span class="pre">bold_red</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[31;1m'</span></span><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsLoggingFormatter.bold_red"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsLoggingFormatter.bold_red" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsLoggingFormatter.violet">
+<span class="sig-name descname"><span class="pre">violet</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[38;5;129m'</span></span><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsLoggingFormatter.violet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsLoggingFormatter.violet" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsLoggingFormatter.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[0m'</span></span><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsLoggingFormatter.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsLoggingFormatter.reset" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsLoggingFormatter.fmtprefix">
+<span class="sig-name descname"><span class="pre">fmtprefix</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%(asctime)s</span> <span class="pre">%(name)60s\x1b[38;5;129m</span> <span class="pre">%(filename)20s:%(lineno)d</span> <span class="pre">\x1b[0m'</span></span><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsLoggingFormatter.fmtprefix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsLoggingFormatter.fmtprefix" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsLoggingFormatter.fmt">
+<span class="sig-name descname"><span class="pre">fmt</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%(levelname)8s</span> <span class="pre">-</span> <span class="pre">%(message)s'</span></span><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsLoggingFormatter.fmt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsLoggingFormatter.fmt" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsLoggingFormatter.FORMATS">
+<span class="sig-name descname"><span class="pre">FORMATS</span></span><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsLoggingFormatter.FORMATS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsLoggingFormatter.FORMATS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsLoggingFormatter.format">
+<span class="sig-name descname"><span class="pre">format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsLoggingFormatter.format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsLoggingFormatter.format" title="Link to this definition"></a></dt>
+<dd><p>Render the record with the color of its level.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.LMNFileHandler">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.</span></span><span class="sig-name descname"><span class="pre">LMNFileHandler</span></span><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNFileHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNFileHandler" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Handler" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logging.Handler</span></code></a></p>
+<p>Routes log records to per-submodule files under /var/log/linuxmuster/lmntools/.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.LMNFileHandler.LOG_DIR">
+<span class="sig-name descname"><span class="pre">LOG_DIR</span></span><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNFileHandler.LOG_DIR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNFileHandler.LOG_DIR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.LMNFileHandler.file_formatter">
+<span class="sig-name descname"><span class="pre">file_formatter</span></span><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNFileHandler.file_formatter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNFileHandler.file_formatter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.LMNFileHandler.emit">
+<span class="sig-name descname"><span class="pre">emit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNFileHandler.emit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNFileHandler.emit" title="Link to this definition"></a></dt>
+<dd><p>Route the record to the file of its submodule.</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="py data">
 <dt class="sig sig-object py" id="linuxmusterTools.logger">
 <span class="sig-prename descclassname"><span class="pre">linuxmusterTools.</span></span><span class="sig-name descname"><span class="pre">logger</span></span><a class="reference internal" href="../../_modules/linuxmusterTools.html#logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.logger" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py data">
-<dt class="sig sig-object py" id="linuxmusterTools.logger_handler">
-<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.</span></span><span class="sig-name descname"><span class="pre">logger_handler</span></span><a class="reference internal" href="../../_modules/linuxmusterTools.html#logger_handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.logger_handler" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsFormatter">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.</span></span><span class="sig-name descname"><span class="pre">LMNToolsFormatter</span></span><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsFormatter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsFormatter" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Formatter" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logging.Formatter</span></code></a></p>
-<p>Formatter instances are used to convert a LogRecord to text.</p>
-<p>Formatters need to know how a LogRecord is constructed. They are
-responsible for converting a LogRecord to (usually) a string which can
-be interpreted by either a human or an external system. The base Formatter
-allows a formatting string to be specified. If none is supplied, the
-style-dependent default value, “%(message)s”, “{message}”, or
-“${message}”, is used.</p>
-<p>The Formatter can be initialized with a format string which makes use of
-knowledge of the LogRecord attributes - e.g. the default value mentioned
-above makes use of the fact that the user’s message and arguments are pre-
-formatted into a LogRecord’s message attribute. Currently, the useful
-attributes in a LogRecord are described by:</p>
-<p>%(name)s            Name of the logger (logging channel)
-%(levelno)s         Numeric logging level for the message (DEBUG, INFO,</p>
-<blockquote>
-<div><p>WARNING, ERROR, CRITICAL)</p>
-</div></blockquote>
-<dl class="simple">
-<dt>%(levelname)s       Text logging level for the message (“DEBUG”, “INFO”,</dt><dd><p>“WARNING”, “ERROR”, “CRITICAL”)</p>
-</dd>
-<dt>%(pathname)s        Full pathname of the source file where the logging</dt><dd><p>call was issued (if available)</p>
-</dd>
-</dl>
-<p>%(filename)s        Filename portion of pathname
-%(module)s          Module (name portion of filename)
-%(lineno)d          Source line number where the logging call was issued</p>
-<blockquote>
-<div><p>(if available)</p>
-</div></blockquote>
-<p>%(funcName)s        Function name
-%(created)f         Time when the LogRecord was created (time.time()</p>
-<blockquote>
-<div><p>return value)</p>
-</div></blockquote>
-<p>%(asctime)s         Textual time when the LogRecord was created
-%(msecs)d           Millisecond portion of the creation time
-%(relativeCreated)d Time in milliseconds when the LogRecord was created,</p>
-<blockquote>
-<div><p>relative to the time the logging module was loaded
-(typically at application startup time)</p>
-</div></blockquote>
-<p>%(thread)d          Thread ID (if available)
-%(threadName)s      Thread name (if available)
-%(taskName)s        Task name (if available)
-%(process)d         Process ID (if available)
-%(message)s         The result of record.getMessage(), computed just as</p>
-<blockquote>
-<div><p>the record is emitted</p>
-</div></blockquote>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsFormatter.grey">
-<span class="sig-name descname"><span class="pre">grey</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[38;5;245m'</span></em><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsFormatter.grey"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsFormatter.grey" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsFormatter.green">
-<span class="sig-name descname"><span class="pre">green</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[38;5;82m'</span></em><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsFormatter.green"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsFormatter.green" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsFormatter.orange">
-<span class="sig-name descname"><span class="pre">orange</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[38;5;214m'</span></em><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsFormatter.orange"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsFormatter.orange" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsFormatter.red">
-<span class="sig-name descname"><span class="pre">red</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[38;5;196m'</span></em><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsFormatter.red"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsFormatter.red" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsFormatter.bold_red">
-<span class="sig-name descname"><span class="pre">bold_red</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[31;1m'</span></em><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsFormatter.bold_red"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsFormatter.bold_red" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsFormatter.violet">
-<span class="sig-name descname"><span class="pre">violet</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[38;5;129m'</span></em><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsFormatter.violet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsFormatter.violet" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsFormatter.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[0m'</span></em><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsFormatter.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsFormatter.reset" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsFormatter.fmtprefix">
-<span class="sig-name descname"><span class="pre">fmtprefix</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%(asctime)s</span> <span class="pre">%(name)60s\x1b[38;5;129m</span> <span class="pre">%(filename)20s:%(lineno)d</span> <span class="pre">\x1b[0m'</span></em><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsFormatter.fmtprefix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsFormatter.fmtprefix" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsFormatter.fmt">
-<span class="sig-name descname"><span class="pre">fmt</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%(levelname)8s</span> <span class="pre">-</span> <span class="pre">%(message)s'</span></em><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsFormatter.fmt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsFormatter.fmt" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsFormatter.FORMATS">
-<span class="sig-name descname"><span class="pre">FORMATS</span></span><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsFormatter.FORMATS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsFormatter.FORMATS" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="linuxmusterTools.LMNToolsFormatter.format">
-<span class="sig-name descname"><span class="pre">format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/linuxmusterTools.html#LMNToolsFormatter.format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.LMNToolsFormatter.format" title="Link to this definition"></a></dt>
-<dd><p>Format the specified record as text.</p>
-<p>The record’s attribute dictionary is used as the operand to a
-string formatting operation which yields the returned string.
-Before formatting the dictionary, a couple of preparatory steps
-are carried out. The message attribute of the record is computed
-using LogRecord.getMessage(). If the formatting string uses the
-time (as determined by a call to usesTime(), formatTime() is
-called to format the event time. If there is exception information,
-it is formatted using formatException() and appended to the message.</p>
-</dd></dl>
-
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.setup_logging">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.</span></span><span class="sig-name descname"><span class="pre">setup_logging</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'file'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/linuxmusterTools.html#setup_logging"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.setup_logging" title="Link to this definition"></a></dt>
+<dd><p>Configure logging for linuxmusterTools:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mode='file'</span></code>    : log to /var/log/linuxmuster/lmntools/&lt;submodule&gt;.log</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mode='console'</span></code> : log to stderr with colored output</p></li>
+</ul>
 </dd></dl>
 
 </section>
@@ -286,7 +240,7 @@ it is formatted using formatException() and appended to the message.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

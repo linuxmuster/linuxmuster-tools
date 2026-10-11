@@ -1,0 +1,91 @@
+linuxmusterTools.print.templates
+================================
+
+.. py:module:: linuxmusterTools.print.templates
+
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:data:: GLOBAL_FILENAME_REGEX
+
+.. py:data:: LMNTOOLS_TEMPLATES_DIR
+   :value: '/var/lib/lmntools/templates/'
+
+
+.. py:data:: SOPHOMORIX_TEMPLATES_DIR
+   :value: '/usr/share/sophomorix/lang/latex/templates/'
+
+
+.. py:data:: SOPHOMORIX_CONFIG_DIR
+   :value: '/etc/linuxmuster/sophomorix'
+
+
+.. py:class:: LatexTemplate
+
+   .. py:attribute:: count
+      :type:  int
+
+
+   .. py:attribute:: filename
+      :type:  str
+
+
+   .. py:attribute:: fullpath
+      :type:  str
+
+
+   .. py:attribute:: lang
+      :type:  str
+
+
+   .. py:attribute:: package
+      :type:  str
+
+
+   .. py:attribute:: school
+      :type:  str
+
+
+   .. py:attribute:: type
+      :type:  str
+
+
+   .. py:method:: __post_init__()
+
+
+.. py:class:: LatexTemplates
+
+   Class to handle all LaTeX templates.
+   There's currently three sources of templates to print users lists (passwords, schoolclasses, etc ...):
+   - Sophomorix's package directory: /usr/share/sophomorix/lang/latex/templates/
+   - Sophomorix per school user's defined directory: /etc/linuxmuster/sophomorix/{school}/latex-templates/
+   - LMNTools' package directory: /var/lib/lmntools/templates/
+
+   In both package's directory the filenames should be like (<type>-<lang>-<count>-template.tex):
+    - passwords-DE-1-template.tex
+    - passwords-EN-36-template.tex
+    - schoolclass-DE-32-template.tex
+    - schoolclass-FR-32-template.tex
+    - datalist-DE-1-template.tex
+    - datalist-EN-36-template.tex
+
+    In /etc/linuxmuster/sophomorix/{school}/latex-templates/, each filename should have the schoolname as prefix, i.e.
+    something like: <schoolname>.<type>-<lang>-<count>-template.tex
+
+   See https://github.com/linuxmuster/sophomorix4/blob/bionic/sophomorix-samba/lang/latex/README.latextemplates.
+
+
+   .. py:attribute:: templates
+
+
+   .. py:method:: load()
+
+
+   .. py:method:: __str__()
+
+

@@ -4,22 +4,10 @@ linuxmusterTools.ldapconnector.writers.group
 .. py:module:: linuxmusterTools.ldapconnector.writers.group
 
 
-Attributes
-----------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.writers.group.logger
-   linuxmusterTools.ldapconnector.writers.group.name_checker
 
 
-Classes
--------
 
-.. autoapisummary::
 
-   linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon
-   linuxmusterTools.ldapconnector.writers.group.LMNGroup
 
 
 Module Contents
@@ -55,6 +43,11 @@ Module Contents
 
 
 
+   .. py:attribute:: new
+      :value: False
+
+
+
    .. py:method:: load_data()
 
 
@@ -80,6 +73,12 @@ Module Contents
 
 
 
+   .. py:method:: delete()
+
+      Delete the object directly in Ldap.
+
+
+
    .. py:method:: remove_member(user)
 
 
@@ -91,17 +90,23 @@ Module Contents
 
    .. py:method:: add_members(userlist)
 
-      Shortcut to add all members from a given list
+      Shortcut to add all members from a given list. One invalid cn
+      doesn't abort the rest of the batch: it's skipped and reported.
 
       :param userlist: List of valid cn
+      :return: list of (user, error message) tuples for entries that
+          could not be added
 
 
 
    .. py:method:: remove_members(userlist)
 
-      Shortcut to remove all members from a given list
+      Shortcut to remove all members from a given list. One invalid cn
+      doesn't abort the rest of the batch: it's skipped and reported.
 
       :param userlist: List of valid cn
+      :return: list of (user, error message) tuples for entries that
+          could not be removed
 
 
 
@@ -114,5 +119,25 @@ Module Contents
 
 
    .. py:method:: load_data()
+
+
+   .. py:method:: create()
+
+
+   .. py:method:: migrate()
+
+      Migrate a legacy sophomorix-group entry (living in OU=Projects) to OU=LMNGroups,
+      converting its sophomorixType to lmngroup.
+
+      A move only changes the entry's DN, not its attributes: the member list is
+      untouched, and memberOf on the members is a computed backlink that follows
+      automatically.
+
+
+
+.. py:function:: find_legacy_groups(school='default-school')
+
+   List groups still living in OU=Projects (sophomorixType=sophomorix-group),
+   not yet migrated to OU=LMNGroups.
 
 

@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.subnets.subnets &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../linuxmusterTools.html">linuxmusterTools</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.subnets.subnets</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for linuxmusterTools.subnets.subnets</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ipaddress</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..lmnfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">LMNFile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.timestamps</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_utc_mtime</span>
+
+
+<div class="viewcode-block" id="logger">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/subnets/subnets/index.html#linuxmusterTools.subnets.subnets.logger">[docs]</a>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
+
+
+<span class="c1"># Single, school-independent file, managed by linuxmuster-import-subnets.</span>
+<div class="viewcode-block" id="SUBNETS_PATH">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/subnets/subnets/index.html#linuxmusterTools.subnets.subnets.SUBNETS_PATH">[docs]</a>
+<span class="n">SUBNETS_PATH</span> <span class="o">=</span> <span class="s1">&#39;/etc/linuxmuster/subnets.csv&#39;</span></div>
+
+<div class="viewcode-block" id="IMPORT_COMMAND">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/subnets/subnets/index.html#linuxmusterTools.subnets.subnets.IMPORT_COMMAND">[docs]</a>
+<span class="n">IMPORT_COMMAND</span> <span class="o">=</span> <span class="s1">&#39;linuxmuster-import-subnets&#39;</span></div>
+
+
+<span class="c1"># Valid values for the SETUP-Flag column (empty means &quot;regular subnet&quot;).</span>
+<div class="viewcode-block" id="SETUP_FLAGS">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/subnets/subnets/index.html#linuxmusterTools.subnets.subnets.SETUP_FLAGS">[docs]</a>
+<span class="n">SETUP_FLAGS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;SETUP&#39;</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="Subnets">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/subnets/subnets/index.html#linuxmusterTools.subnets.subnets.Subnets">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Subnets</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read and validate the global subnets definition file</span>
+<span class="sd">    (/etc/linuxmuster/subnets.csv), which is imported into the DHCP, ntp and</span>
+<span class="sd">    netplan configuration by linuxmuster-import-subnets.</span>
+
+<span class="sd">    Unlike devices.csv, subnets.csv is not per-school: there is exactly one file</span>
+<span class="sd">    for the whole server.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">SUBNETS_PATH</span><span class="p">):</span>
+<div class="viewcode-block" id="Subnets.path">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/subnets/subnets/index.html#linuxmusterTools.subnets.subnets.Subnets.path">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span></div>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Subnets.load">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/subnets/subnets/index.html#linuxmusterTools.subnets.subnets.Subnets.load">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subnets</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">with</span> <span class="n">LMNFile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">subnets_csv</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">subnet</span> <span class="ow">in</span> <span class="n">subnets_csv</span><span class="o">.</span><span class="n">read</span><span class="p">():</span>
+                <span class="c1"># Skip comment lines and empty lines.</span>
+                <span class="n">network</span> <span class="o">=</span> <span class="p">(</span><span class="n">subnet</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;network&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">network</span> <span class="ow">or</span> <span class="n">network</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">):</span>
+                    <span class="k">continue</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">subnets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subnet</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">networks</span> <span class="o">=</span> <span class="nb">list</span><span class="p">({</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;network&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subnets</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;network&#39;</span><span class="p">)})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">csv_mtime</span> <span class="o">=</span> <span class="n">get_utc_mtime</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Subnets.filter">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/subnets/subnets/index.html#linuxmusterTools.subnets.subnets.Subnets.filter">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">networks</span><span class="o">=</span><span class="p">[]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filter the subnets list by network (e.g. &#39;10.0.0.0/16&#39;).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">networks</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">subnet</span> <span class="k">for</span> <span class="n">subnet</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subnets</span> <span class="k">if</span> <span class="n">subnet</span><span class="p">[</span><span class="s1">&#39;network&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">networks</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">subnets</span></div>
+
+
+<div class="viewcode-block" id="Subnets.get_subnet">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/subnets/subnets/index.html#linuxmusterTools.subnets.subnets.Subnets.get_subnet">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_subnet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">subnet</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subnets</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">subnet</span><span class="p">[</span><span class="s1">&#39;network&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">network</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">subnet</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Subnets.check_conf">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/subnets/subnets/index.html#linuxmusterTools.subnets.subnets.Subnets.check_conf">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_conf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate the content of subnets.csv. Returns a list of human readable</span>
+<span class="sd">        error messages, or False if everything is valid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">report</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">network_rev</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">subnet</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subnets</span><span class="p">:</span>
+            <span class="n">network</span> <span class="o">=</span> <span class="n">subnet</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;network&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">network</span> <span class="ow">in</span> <span class="n">network_rev</span><span class="p">:</span>
+                <span class="n">network_rev</span><span class="p">[</span><span class="n">network</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">network_rev</span><span class="p">[</span><span class="n">network</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+            <span class="c1"># network must be a valid CIDR (e.g. 10.0.0.0/16).</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">net</span> <span class="o">=</span> <span class="n">ipaddress</span><span class="o">.</span><span class="n">ip_network</span><span class="p">(</span><span class="n">network</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">network</span><span class="si">}</span><span class="s2"> is not a valid network in CIDR notation&quot;</span><span class="p">)</span>
+                <span class="n">net</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="c1"># routerIp, beginRange and endRange must be valid IPs inside network.</span>
+            <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;routerIp&#39;</span><span class="p">,</span> <span class="s1">&#39;beginRange&#39;</span><span class="p">,</span> <span class="s1">&#39;endRange&#39;</span><span class="p">]:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">subnet</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
+                    <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">network</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2"> must not be empty&quot;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">ip</span> <span class="o">=</span> <span class="n">ipaddress</span><span class="o">.</span><span class="n">ip_address</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> is not a valid ip address (</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="n">network</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="n">net</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ip</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">net</span><span class="p">:</span>
+                    <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">) is not part of network </span><span class="si">{</span><span class="n">network</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># nameServer and nextServer are optional, but must be valid IPs if set.</span>
+            <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;nameServer&#39;</span><span class="p">,</span> <span class="s1">&#39;nextServer&#39;</span><span class="p">]:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">subnet</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">ipaddress</span><span class="o">.</span><span class="n">ip_address</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> is not a valid ip address (</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="n">network</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+            <span class="n">setup_flag</span> <span class="o">=</span> <span class="p">(</span><span class="n">subnet</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;setupFlag&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">setup_flag</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">SETUP_FLAGS</span><span class="p">:</span>
+                <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">setup_flag</span><span class="si">}</span><span class="s2"> is not a valid setup flag for </span><span class="si">{</span><span class="n">network</span><span class="si">}</span><span class="s2"> (allowed: SETUP or empty)&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">network</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">network_rev</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">network</span><span class="si">}</span><span class="s2"> is defined </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> times&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">report</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">report</span>
+
+        <span class="k">return</span> <span class="kc">False</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="import_subnets">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/subnets/subnets/index.html#linuxmusterTools.subnets.subnets.import_subnets">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">import_subnets</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run linuxmuster-import-subnets, which regenerates the DHCP, ntp and netplan</span>
+<span class="sd">    configuration from /etc/linuxmuster/subnets.csv and restarts the affected</span>
+<span class="sd">    services.</span>
+
+<span class="sd">    Returns a dict with the return code and the captured stdout/stderr.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Running </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">IMPORT_COMMAND</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">IMPORT_COMMAND</span><span class="p">],</span>
+        <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+        <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;returncode&#39;</span><span class="p">:</span> <span class="n">results</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span>
+        <span class="s1">&#39;output&#39;</span><span class="p">:</span> <span class="n">results</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">errors</span><span class="o">=</span><span class="s1">&#39;replace&#39;</span><span class="p">),</span>
+    <span class="p">}</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -4,28 +4,24 @@ linuxmusterTools.ldapconnector.models.common
 .. py:module:: linuxmusterTools.ldapconnector.models.common
 
 
-Classes
--------
 
-.. autoapisummary::
 
-   linuxmusterTools.ldapconnector.models.common.LMNModel
-   linuxmusterTools.ldapconnector.models.common.LMNOUModel
-   linuxmusterTools.ldapconnector.models.common.LMNGPOModel
 
 
 Module Contents
 ---------------
+
+.. py:function:: check_password(dn, password='')
 
 .. py:class:: LMNModel
 
    Common parent class to gather common methods.
 
 
-   .. py:method:: asdict()
+   .. py:method:: as_dict()
 
 
-   .. py:method:: asjson()
+   .. py:method:: as_json()
 
 
    .. py:method:: split_dn(dn)

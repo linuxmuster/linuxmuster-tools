@@ -4,20 +4,8 @@ linuxmusterTools.lmnconfig.setup
 .. py:module:: linuxmusterTools.lmnconfig.setup
 
 
-Attributes
-----------
-
-.. autoapisummary::
-
-   linuxmusterTools.lmnconfig.setup.logger
 
 
-Classes
--------
-
-.. autoapisummary::
-
-   linuxmusterTools.lmnconfig.setup.SetupConfig
 
 
 Module Contents

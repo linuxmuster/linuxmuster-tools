@@ -1,0 +1,588 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.linbo.linbo_sync &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../linuxmusterTools.html">linuxmusterTools</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.linbo.linbo_sync</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for linuxmusterTools.linbo.linbo_sync</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">LINBO remote commands — build, run and track linbo-remote sessions.</span>
+
+<span class="sd">linbo-remote sends actions (format/sync/start/halt/...) to hosts over ssh.</span>
+<span class="sd">Each run happens in a detached tmux session named &quot;&lt;hostname&gt;_linbo-remote&quot;,</span>
+<span class="sd">and logs to LINBO&#39;s log directory: one &lt;hostname&gt;_linbo-remote_&lt;YYYYmmddHHMMSS&gt;.log</span>
+<span class="sd">per run since linuxmuster-linbo7 7.4.18, a single &lt;hostname&gt;.linbo-remote</span>
+<span class="sd">overwritten by each run before (see LinboBootLogs.latest_remote_log()).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.checks</span><span class="w"> </span><span class="kn">import</span> <span class="n">NameChecker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..devices</span><span class="w"> </span><span class="kn">import</span> <span class="n">Devices</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..ldapconnector</span><span class="w"> </span><span class="kn">import</span> <span class="n">LMNLdapReader</span> <span class="k">as</span> <span class="n">lr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">LINBO_PATH</span><span class="p">,</span> <span class="n">LinboConfigManager</span><span class="p">,</span> <span class="n">read_config</span>
+
+
+<div class="viewcode-block" id="SESSION_SUFFIX">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.SESSION_SUFFIX">[docs]</a>
+<span class="n">SESSION_SUFFIX</span> <span class="o">=</span> <span class="s1">&#39;_linbo-remote&#39;</span></div>
+
+
+<span class="c1"># Where linbo-remote -p leaves a host&#39;s onboot commands: one &lt;hostname&gt;.cmd</span>
+<span class="c1"># file each, removed by LINBO once the client has downloaded it at boot.</span>
+<div class="viewcode-block" id="ONBOOT_CMD_PATH">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.ONBOOT_CMD_PATH">[docs]</a>
+<span class="n">ONBOOT_CMD_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">LINBO_PATH</span><span class="p">)</span> <span class="o">/</span> <span class="s1">&#39;linbocmd&#39;</span></div>
+
+
+<div class="viewcode-block" id="name_checker">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.name_checker">[docs]</a>
+<span class="n">name_checker</span> <span class="o">=</span> <span class="n">NameChecker</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="LinboRemoteParameterError">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.LinboRemoteParameterError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LinboRemoteParameterError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when LinboRemote is given an invalid or inconsistent parameter.&quot;&quot;&quot;</span></div>
+
+
+
+<span class="c1"># TODO:</span>
+<span class="c1">#  - add support for remote linbo server (per ssh)</span>
+
+<div class="viewcode-block" id="LinboRemote">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.LinboRemote">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LinboRemote</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build and run a linbo-remote command against a host, group or room.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="LinboRemote.BASE_COMMAND">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.LinboRemote.BASE_COMMAND">[docs]</a>
+    <span class="n">BASE_COMMAND</span> <span class="o">=</span> <span class="s1">&#39;/usr/sbin/linbo-remote&#39;</span></div>
+
+<div class="viewcode-block" id="LinboRemote.SUPPORTED_COMMANDS">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.LinboRemote.SUPPORTED_COMMANDS">[docs]</a>
+    <span class="n">SUPPORTED_COMMANDS</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;partition&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nr&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;msg&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+        <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nr&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;msg&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+        <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nr&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;msg&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+        <span class="s1">&#39;initcache&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nr&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;msg&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;rsync&#39;</span><span class="p">,</span> <span class="s1">&#39;multicast&#39;</span><span class="p">,</span> <span class="s1">&#39;torrent&#39;</span><span class="p">]},</span>
+        <span class="s1">&#39;sync&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nr&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;msg&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+        <span class="s1">&#39;new&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nr&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;msg&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+        <span class="s1">&#39;postsync&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nr&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;msg&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+        <span class="s1">&#39;start&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nr&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;msg&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+        <span class="s1">&#39;prestart&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nr&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;msg&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+        <span class="s1">&#39;create_image&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nr&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;msg&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+        <span class="s1">&#39;upload_image&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nr&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;msg&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+        <span class="s1">&#39;create_qdiff&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nr&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;msg&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+        <span class="s1">&#39;upload_qdiff&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nr&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;msg&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+        <span class="s1">&#39;reboot&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nr&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;msg&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+        <span class="s1">&#39;halt&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nr&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;msg&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+    <span class="p">}</span></div>
+
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">wait</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>                     <span class="c1"># -b</span>
+            <span class="n">cmd</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>                     <span class="c1"># -c</span>
+            <span class="n">disable_gui</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>          <span class="c1"># -d</span>
+            <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>                 <span class="c1"># -g</span>
+            <span class="n">clients</span><span class="o">=</span><span class="p">[],</span>                 <span class="c1"># -i, ip or hostname</span>
+            <span class="n">bypass</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>                <span class="c1"># -n</span>
+            <span class="n">room</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>                  <span class="c1"># -r</span>
+            <span class="n">school</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>                <span class="c1"># -s</span>
+            <span class="n">onboot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>               <span class="c1"># -p</span>
+            <span class="n">wol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>                      <span class="c1"># -w</span>
+            <span class="n">broadcast</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>             <span class="c1"># -u</span>
+    <span class="p">):</span>
+<div class="viewcode-block" id="LinboRemote.wait">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.LinboRemote.wait">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span> <span class="o">=</span> <span class="n">wait</span></div>
+
+<div class="viewcode-block" id="LinboRemote.cmd">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.LinboRemote.cmd">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span></div>
+
+<div class="viewcode-block" id="LinboRemote.disable_gui">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.LinboRemote.disable_gui">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">disable_gui</span> <span class="o">=</span> <span class="n">disable_gui</span></div>
+
+<div class="viewcode-block" id="LinboRemote.group">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.LinboRemote.group">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="n">group</span></div>
+
+<div class="viewcode-block" id="LinboRemote.clients">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.LinboRemote.clients">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clients</span> <span class="o">=</span> <span class="n">clients</span></div>
+
+<div class="viewcode-block" id="LinboRemote.bypass">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.LinboRemote.bypass">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bypass</span> <span class="o">=</span> <span class="n">bypass</span></div>
+
+<div class="viewcode-block" id="LinboRemote.room">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.LinboRemote.room">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">room</span> <span class="o">=</span> <span class="n">room</span></div>
+
+<div class="viewcode-block" id="LinboRemote.school">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.LinboRemote.school">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">school</span> <span class="o">=</span> <span class="n">school</span></div>
+
+<div class="viewcode-block" id="LinboRemote.onboot">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.LinboRemote.onboot">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onboot</span> <span class="o">=</span> <span class="n">onboot</span></div>
+
+<div class="viewcode-block" id="LinboRemote.wol">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.LinboRemote.wol">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wol</span> <span class="o">=</span> <span class="n">wol</span></div>
+
+<div class="viewcode-block" id="LinboRemote.broadcast">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.LinboRemote.broadcast">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">broadcast</span> <span class="o">=</span> <span class="n">broadcast</span></div>
+
+
+<div class="viewcode-block" id="LinboRemote.built_cmd">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.LinboRemote.built_cmd">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">built_cmd</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_args</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wol</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">LinboRemoteParameterError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;If given, wait and wol must be positive integer.&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">wol</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LinboRemoteParameterError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;If given, wait and wol must be positive integer.&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">wol</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LinboRemoteParameterError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;If parameter wait is given, wol must be given too.&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">broadcast</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">broadcast</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">LinboRemoteParameterError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;broadcast must be a boolean.&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bypass</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bypass</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">LinboRemoteParameterError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;bypass must be a boolean.&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">school</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">school</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">lr</span><span class="o">.</span><span class="n">getval</span><span class="p">(</span><span class="s1">&#39;/schools&#39;</span><span class="p">,</span> <span class="s1">&#39;ou&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">LinboRemoteParameterError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="si">}</span><span class="s1"> is not a valid school.&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">clients</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LinboRemoteParameterError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;group and clients are mutually exclusive.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">clients</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">room</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LinboRemoteParameterError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;room and clients are mutually exclusive.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">room</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LinboRemoteParameterError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;group and room are mutually exclusive.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">clients</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">room</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LinboRemoteParameterError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Specify at least a group, a room or a client.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Commands whose nr is a position in start.conf&#39;s [OS] list, not a partition number.</span>
+<div class="viewcode-block" id="LinboRemote.NR_OS_POSITION_COMMANDS">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.LinboRemote.NR_OS_POSITION_COMMANDS">[docs]</a>
+    <span class="n">NR_OS_POSITION_COMMANDS</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;new&#39;</span><span class="p">,</span> <span class="s1">&#39;sync&#39;</span><span class="p">,</span> <span class="s1">&#39;postsync&#39;</span><span class="p">,</span> <span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;prestart&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;create_image&#39;</span><span class="p">,</span> <span class="s1">&#39;upload_image&#39;</span><span class="p">,</span> <span class="s1">&#39;create_qdiff&#39;</span><span class="p">,</span> <span class="s1">&#39;upload_qdiff&#39;</span><span class="p">,</span>
+    <span class="p">}</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_target_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resolve the linbo group(s) actually targeted by this command, so nr</span>
+<span class="sd">        can be checked against every start.conf involved — a room or a</span>
+<span class="sd">        clients list can span hosts from different groups.</span>
+
+<span class="sd">        clients is matched against ip, hostname and school-prefixed</span>
+<span class="sd">        hostname, since -i (like this method) accepts either an ip or a</span>
+<span class="sd">        hostname.</span>
+
+<span class="sd">        :return: Set of group names.</span>
+<span class="sd">        :rtype: set of str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">}</span>
+
+        <span class="n">school</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">school</span> <span class="ow">or</span> <span class="s1">&#39;default-school&#39;</span>
+        <span class="n">devices</span> <span class="o">=</span> <span class="n">Devices</span><span class="p">(</span><span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">room</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">devices</span><span class="o">.</span><span class="n">devices</span> <span class="k">if</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;room&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">room</span><span class="p">}</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">is_targeted</span><span class="p">(</span><span class="n">device</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;ip&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">clients</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="n">hostname</span> <span class="o">=</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">]</span>
+            <span class="n">prefixed</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">school</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">if</span> <span class="n">school</span> <span class="o">!=</span> <span class="s1">&#39;default-school&#39;</span> <span class="k">else</span> <span class="n">hostname</span>
+            <span class="k">return</span> <span class="n">hostname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">clients</span> <span class="ow">or</span> <span class="n">prefixed</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">clients</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">devices</span><span class="o">.</span><span class="n">devices</span> <span class="k">if</span> <span class="n">is_targeted</span><span class="p">(</span><span class="n">d</span><span class="p">)}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_nr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">nr</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check that nr matches an actual position in the start.conf of every</span>
+<span class="sd">        group targeted by this command.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">nr</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">LinboRemoteParameterError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">nr</span><span class="si">}</span><span class="s1"> is not a valid position for </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+
+        <span class="n">groups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_target_groups</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">groups</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LinboRemoteParameterError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not resolve any group for the given target.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Only needed for &#39;format&#39;: the partition count of a group, from its</span>
+        <span class="c1"># [Partition] sections (nr for other commands is an [OS] position,</span>
+        <span class="c1"># already available from read_config below).</span>
+        <span class="n">startconf_mgr</span> <span class="o">=</span> <span class="n">LinboConfigManager</span><span class="p">()</span> <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;format&#39;</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">read_config</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">LinboRemoteParameterError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No start.conf for group </span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;format&#39;</span><span class="p">:</span>
+                <span class="n">linbo_config</span> <span class="o">=</span> <span class="n">startconf_mgr</span><span class="o">.</span><span class="n">load_linbo_startconf</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+                <span class="n">nr_partitions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">linbo_config</span><span class="o">.</span><span class="n">Partitions</span><span class="p">)</span> <span class="k">if</span> <span class="n">linbo_config</span> <span class="k">else</span> <span class="mi">0</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nr</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">nr_partitions</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="n">LinboRemoteParameterError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No partition </span><span class="si">{</span><span class="n">nr</span><span class="si">}</span><span class="s1"> in start.conf.</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">NR_OS_POSITION_COMMANDS</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nr</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="p">)):</span>
+                <span class="k">raise</span> <span class="n">LinboRemoteParameterError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No OS at position </span><span class="si">{</span><span class="n">nr</span><span class="si">}</span><span class="s1"> in start.conf.</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmd</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LinboRemoteParameterError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;cmd must be given.&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">):</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">name</span><span class="p">,</span> <span class="n">nr</span><span class="p">,</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">args</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">name</span><span class="p">,</span> <span class="n">nr</span> <span class="o">=</span> <span class="n">args</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">name</span><span class="p">,</span> <span class="n">nr</span><span class="p">,</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Wrong number of args</span>
+                <span class="k">raise</span> <span class="n">LinboRemoteParameterError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid number of options for the command </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">SUPPORTED_COMMANDS</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">LinboRemoteParameterError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Command </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> unknown.&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">nr</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">SUPPORTED_COMMANDS</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s1">&#39;nr&#39;</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="n">LinboRemoteParameterError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Command </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> does not support any option.&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">msg</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">SUPPORTED_COMMANDS</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s1">&#39;msg&#39;</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="n">LinboRemoteParameterError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Command </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> does not accept a message.&#39;</span><span class="p">)</span>
+
+            <span class="c1"># Without a type, linbo-remote takes the one of start.conf.</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;initcache&#39;</span> <span class="ow">and</span> <span class="n">nr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">nr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">SUPPORTED_COMMANDS</span><span class="p">[</span><span class="s1">&#39;initcache&#39;</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="n">LinboRemoteParameterError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Wrong type </span><span class="si">{</span><span class="n">nr</span><span class="si">}</span><span class="s1"> for the command initcache.&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">nr</span> <span class="ow">and</span> <span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;initcache&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_check_nr</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">nr</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LinboRemote.build">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.LinboRemote.build">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_args</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_cmd</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">built_cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">BASE_COMMAND</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">built_cmd</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39; -b </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wait</span><span class="si">}</span><span class="s1"> -w </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wol</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">wol</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">built_cmd</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39; -w </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wol</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">broadcast</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">built_cmd</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39; -u&#39;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bypass</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">built_cmd</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39; -n&#39;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">room</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">built_cmd</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39; -r </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">room</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">built_cmd</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39; -g </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">built_cmd</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39; -i </span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clients</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">built_cmd</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39; -s </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">disable_gui</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">built_cmd</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39; -d&#39;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">onboot</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">built_cmd</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39; -p&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">built_cmd</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39; -c&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">built_cmd</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cmd</span><span class="si">}</span><span class="s1">&#39;</span></div>
+
+
+<div class="viewcode-block" id="LinboRemote.run">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.LinboRemote.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Build and run the linbo-remote command.</span>
+
+<span class="sd">        :return: Status dict {&#39;status&#39;: 0, &#39;msg&#39;: &lt;command output&gt;} on success,</span>
+<span class="sd">            or {&#39;status&#39;: 1, &#39;msg&#39;: &lt;error&gt;} if some hosts were offline.</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        :raises LinboRemoteParameterError: if linbo-remote itself rejected the</span>
+<span class="sd">            command line (e.g. unknown group/room, no valid host in a -i list,</span>
+<span class="sd">            missing command) — it validates clients/group/room and exits</span>
+<span class="sd">            non-zero before running anything in that case.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">built_cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span>
+            <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span>
+            <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span>
+
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">else</span> <span class="s1">&#39;linbo-remote failed with no output.&#39;</span>
+            <span class="k">raise</span> <span class="n">LinboRemoteParameterError</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s1">&#39;Not online, host skipped.&#39;</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
+            <span class="n">offline_hosts</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s1">&#39;Not online, host skipped.&#39;</span> <span class="ow">in</span> <span class="n">line</span>
+            <span class="p">]</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;msg&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Not online, host skipped: </span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">offline_hosts</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;msg&#39;</span><span class="p">:</span> <span class="n">output</span><span class="p">}</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="list_running_sessions">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.list_running_sessions">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">list_running_sessions</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    List currently running linbo-remote tmux sessions.</span>
+
+<span class="sd">    :return: List of {hostname, session, created} dicts, one per active</span>
+<span class="sd">        linbo-remote session. Empty list if none are running, or if no</span>
+<span class="sd">        tmux server is running at all.</span>
+<span class="sd">    :rtype: list of dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="p">[</span><span class="s1">&#39;tmux&#39;</span><span class="p">,</span> <span class="s1">&#39;list-sessions&#39;</span><span class="p">,</span> <span class="s1">&#39;-F&#39;</span><span class="p">,</span> <span class="s1">&#39;#</span><span class="si">{session_name}</span><span class="s1">|#</span><span class="si">{session_created}</span><span class="s1">&#39;</span><span class="p">],</span>
+            <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span>
+            <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="n">sessions</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">created</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">created</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">SESSION_SUFFIX</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="n">sessions</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;hostname&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">[:</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">SESSION_SUFFIX</span><span class="p">)],</span>
+            <span class="s1">&#39;session&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s1">&#39;created&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">created</span><span class="p">),</span> <span class="n">tz</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+        <span class="p">})</span>
+    <span class="k">return</span> <span class="n">sessions</span></div>
+
+
+
+<div class="viewcode-block" id="attach_command">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.attach_command">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">attach_command</span><span class="p">(</span><span class="n">hostname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build the tmux attach command for a host&#39;s running linbo-remote session.</span>
+
+<span class="sd">    Not meant to be run through a web request: `tmux attach` needs an</span>
+<span class="sd">    interactive terminal (a pty), which a stateless HTTP call can&#39;t provide.</span>
+<span class="sd">    Exposed so a future terminal-in-browser feature (websocket + pty) has</span>
+<span class="sd">    the exact session name to attach to.</span>
+
+<span class="sd">    :param hostname: Hostname whose session to attach to</span>
+<span class="sd">    :type hostname: str</span>
+<span class="sd">    :return: Shell command string, e.g. &quot;tmux attach -t pc001_linbo-remote&quot;</span>
+<span class="sd">    :rtype: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;tmux attach -t </span><span class="si">{</span><span class="n">hostname</span><span class="si">}{</span><span class="n">SESSION_SUFFIX</span><span class="si">}</span><span class="s1">&#39;</span></div>
+
+
+
+<div class="viewcode-block" id="list_onboot_commands">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.list_onboot_commands">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">list_onboot_commands</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    List the onboot commands waiting for a host&#39;s next boot.</span>
+
+<span class="sd">    :return: List of {hostname, commands} dicts, commands being the</span>
+<span class="sd">        comma separated list written by linbo-remote -p, e.g.</span>
+<span class="sd">        [&#39;sync:1&#39;, &#39;start:1&#39;]. Empty list if nothing is pending.</span>
+<span class="sd">    :rtype: list of dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">pending</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">ONBOOT_CMD_PATH</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.cmd&#39;</span><span class="p">)):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">pending</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_onboot_command</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">stem</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="c1"># Not written by linbo-remote, whose file names are host names.</span>
+            <span class="k">continue</span>
+    <span class="k">return</span> <span class="n">pending</span></div>
+
+
+
+<div class="viewcode-block" id="get_onboot_command">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.get_onboot_command">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_onboot_command</span><span class="p">(</span><span class="n">hostname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read the onboot commands waiting for one host&#39;s next boot.</span>
+
+<span class="sd">    :param hostname: Hostname whose &lt;hostname&gt;.cmd file to read</span>
+<span class="sd">    :type hostname: str</span>
+<span class="sd">    :return: {hostname, commands}, commands being the comma separated list</span>
+<span class="sd">        written by linbo-remote -p, e.g. [&#39;sync:1&#39;, &#39;start:1&#39;]</span>
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    :raises ValueError: if the hostname is not a valid host name</span>
+<span class="sd">    :raises FileNotFoundError: if no command is pending for this host</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name_checker</span><span class="o">.</span><span class="n">validate_host_name</span><span class="p">(</span><span class="n">hostname</span><span class="p">)</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">ONBOOT_CMD_PATH</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s1">.cmd&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;hostname&#39;</span><span class="p">:</span> <span class="n">hostname</span><span class="p">,</span>
+        <span class="s1">&#39;commands&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">cmd</span> <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="n">content</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">cmd</span><span class="p">],</span>
+    <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="delete_onboot_command">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/linbo_sync/index.html#linuxmusterTools.linbo.linbo_sync.delete_onboot_command">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">delete_onboot_command</span><span class="p">(</span><span class="n">hostname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Withdraw a host&#39;s onboot commands before its next boot.</span>
+
+<span class="sd">    :param hostname: Hostname whose &lt;hostname&gt;.cmd file to delete</span>
+<span class="sd">    :type hostname: str</span>
+<span class="sd">    :raises ValueError: if the hostname is not a valid host name</span>
+<span class="sd">    :raises FileNotFoundError: if no command is pending for this host</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name_checker</span><span class="o">.</span><span class="n">validate_host_name</span><span class="p">(</span><span class="n">hostname</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">ONBOOT_CMD_PATH</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s1">.cmd&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

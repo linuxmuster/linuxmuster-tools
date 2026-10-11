@@ -1,0 +1,15 @@
+linuxmusterTools.subnets
+========================
+
+.. py:module:: linuxmusterTools.subnets
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/linuxmusterTools/subnets/subnets/index
+
+

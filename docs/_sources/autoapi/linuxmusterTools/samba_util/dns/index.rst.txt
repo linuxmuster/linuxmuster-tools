@@ -4,12 +4,6 @@ linuxmusterTools.samba_util.dns
 .. py:module:: linuxmusterTools.samba_util.dns
 
 
-Classes
--------
-
-.. autoapisummary::
-
-   linuxmusterTools.samba_util.dns.SambaToolDNS
 
 
 Module Contents
@@ -18,32 +12,6 @@ Module Contents
 .. py:class:: SambaToolDNS
 
    Object to manage current samba dns entries on the system. 
-
-
-   .. py:method:: _get_zone()
-
-      Parse setup.ini to get the current zone and store it in self.zone.
-
-
-
-   .. py:method:: _get_ignore_list()
-
-      Get list of LMN devices to ignore them and store it in self.lmn_hosts,
-      because the list of DNS entries would be too long.
-
-
-
-   .. py:method:: _samba_tool_process(action, options)
-
-      Execute samba-tool dns with parameter.
-
-      :param action: query, add, delete or update
-      :type action: string
-      :param options: Tuple of necessary options for the query
-      :type options: tuple
-      :return: List of lines as strings
-      :rtype: list
-
 
 
    .. py:method:: list()

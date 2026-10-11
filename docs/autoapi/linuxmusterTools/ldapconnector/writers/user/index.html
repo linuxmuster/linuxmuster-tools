@@ -6,18 +6,18 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.writers.user &mdash; linuxmuster-tools7 7.3.26 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
+  <title>linuxmusterTools.ldapconnector.writers.user &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/theme_overrides.css?v=472cca7c" />
 
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../_static/documentation_options.js?v=ac320c09"></script>
-      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../../_static/translations.js?v=8fd896e3"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
@@ -56,17 +56,17 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../linbo/index.html">linuxmusterTools.linbo</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../lmnconfig/index.html">linuxmusterTools.lmnconfig</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../lmnfile/index.html">linuxmusterTools.lmnfile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../passwords/index.html">linuxmusterTools.passwords</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../print/index.html">linuxmusterTools.print</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../quotas/index.html">linuxmusterTools.quotas</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../samba_util/index.html">linuxmusterTools.samba_util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../smbclient/index.html">linuxmusterTools.smbclient</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../subnets/index.html">linuxmusterTools.subnets</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../index.html#attributes">Attributes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../index.html#classes">Classes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../index.html#package-contents">Package Contents</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../create_students_groups/index.html">create_students_groups</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../00-update-schoolclasses-groups/index.html">00-update-schoolclasses-groups</a></li>
 </ul>
 </li>
 </ul>
@@ -101,71 +101,6 @@
              
   <section id="module-linuxmusterTools.ldapconnector.writers.user">
 <span id="linuxmustertools-ldapconnector-writers-user"></span><h1>linuxmusterTools.ldapconnector.writers.user<a class="headerlink" href="#module-linuxmusterTools.ldapconnector.writers.user" title="Link to this heading"></a></h1>
-<section id="attributes">
-<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.user.logger" title="linuxmusterTools.ldapconnector.writers.user.logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logger</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.user.name_checker" title="linuxmusterTools.ldapconnector.writers.user.name_checker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_checker</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="classes">
-<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser" title="linuxmusterTools.ldapconnector.writers.user.LMNUser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNUser</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.user.LMNUsers" title="linuxmusterTools.ldapconnector.writers.user.LMNUsers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNUsers</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.user.LMNStudent" title="linuxmusterTools.ldapconnector.writers.user.LMNStudent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNStudent</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.user.LMNStudents" title="linuxmusterTools.ldapconnector.writers.user.LMNStudents"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNStudents</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.user.LMNTeacher" title="linuxmusterTools.ldapconnector.writers.user.LMNTeacher"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNTeacher</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.user.LMNTeachers" title="linuxmusterTools.ldapconnector.writers.user.LMNTeachers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNTeachers</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.user.LMNParent" title="linuxmusterTools.ldapconnector.writers.user.LMNParent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNParent</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.user.LMNParents" title="linuxmusterTools.ldapconnector.writers.user.LMNParents"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNParents</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.user.LMNStaff" title="linuxmusterTools.ldapconnector.writers.user.LMNStaff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNStaff</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.user.LMNStaffs" title="linuxmusterTools.ldapconnector.writers.user.LMNStaffs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNStaffs</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.user.LMNSchoolAdmin" title="linuxmusterTools.ldapconnector.writers.user.LMNSchoolAdmin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNSchoolAdmin</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.user.LMNSchoolAdmins" title="linuxmusterTools.ldapconnector.writers.user.LMNSchoolAdmins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNSchoolAdmins</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.user.LMNGlobalAdmin" title="linuxmusterTools.ldapconnector.writers.user.LMNGlobalAdmin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNGlobalAdmin</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.user.LMNGlobalAdmins" title="linuxmusterTools.ldapconnector.writers.user.LMNGlobalAdmins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNGlobalAdmins</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.user.LMNParentsGroup" title="linuxmusterTools.ldapconnector.writers.user.LMNParentsGroup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNParentsGroup</span></code></a></p></td>
-<td><p>Comme group class for all group types in the linuxmuster project (Projects,</p></td>
-</tr>
-</tbody>
-</table>
-</section>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
 <dl class="py data">
@@ -180,7 +115,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNUser">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNUser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNUser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNUser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNUser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser" title="Link to this definition"></a></dt>
 <dd><dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNUser.cn">
 <span class="sig-name descname"><span class="pre">cn</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNUser.cn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser.cn" title="Link to this definition"></a></dt>
@@ -208,12 +143,12 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNUser.new">
-<span class="sig-name descname"><span class="pre">new</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNUser.new"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser.new" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">new</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNUser.new"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser.new" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNUser.school">
-<span class="sig-name descname"><span class="pre">school</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'default-school'</span></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNUser.school"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser.school" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">school</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'default-school'</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNUser.school"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser.school" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -261,31 +196,46 @@ kwargs must contain a data dict with attributes/values to set.</p>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNUser._move">
-<span class="sig-name descname"><span class="pre">_move</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dst_ou</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNUser._move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser._move" title="Link to this definition"></a></dt>
-<dd><p>Move the user to a new Organisational Unit.This method just move an
-existing ldap account to a new OU but do not handle the filesystem
-to move the user’s files: it’s necessary to use separately
-Samba/smbclient for this. Use this method very carefully!</p>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNUser.test_first_password">
+<span class="sig-name descname"><span class="pre">test_first_password</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNUser.test_first_password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser.test_first_password" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNUser.set_actual_password">
+<span class="sig-name descname"><span class="pre">set_actual_password</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">password</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNUser.set_actual_password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser.set_actual_password" title="Link to this definition"></a></dt>
+<dd><p>Set the account’s current password (unicodePwd) directly via SamDB,
+bypassing sophomorix-passwd/smbpasswd entirely. Requires root (opens
+/var/lib/samba/private/sam.ldb).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNUser._create">
-<span class="sig-name descname"><span class="pre">_create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dst_ou</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNUser._create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser._create" title="Link to this definition"></a></dt>
-<dd><p>For an user marked as new, create an entry in the specified OU.
-This method just create an account ldap but do not handle the filesystem
-to create the appropriate directory tree for the user: it’s necessary to
-use separately Samba/smbclient for this. Use this method very carefully!</p>
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNUser.set_first_password">
+<span class="sig-name descname"><span class="pre">set_first_password</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">password</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNUser.set_first_password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser.set_first_password" title="Link to this definition"></a></dt>
+<dd><p>Set the given password as both sophomorixFirstPassword and the
+account’s current password.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNUser.set_random_first_password">
+<span class="sig-name descname"><span class="pre">set_random_first_password</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNUser.set_random_first_password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser.set_random_first_password" title="Link to this definition"></a></dt>
+<dd><p>Generate a random password satisfying the resolved password policy
+for this user’s role/school, then set it as first + current password.
+Length is entirely determined by that policy’s minimum length.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the generated password</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNUser.create">
-<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNUser.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser.create" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNUser.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser.create" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNUser.move">
-<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">move</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNUser.move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser.move" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">move</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNUser.move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser.move" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -298,7 +248,7 @@ use separately Samba/smbclient for this. Use this method very carefully!</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNUsers">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNUsers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNUsers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNUsers" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNUsers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNUsers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNUsers" title="Link to this definition"></a></dt>
 <dd><dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNUsers.lr">
 <span class="sig-name descname"><span class="pre">lr</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNUsers.lr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNUsers.lr" title="Link to this definition"></a></dt>
@@ -333,7 +283,7 @@ use separately Samba/smbclient for this. Use this method very carefully!</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNStudent">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNStudent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNStudent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNStudent" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNStudent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNStudent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNStudent" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser" title="linuxmusterTools.ldapconnector.writers.user.LMNUser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNUser</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNStudent.load_parents">
@@ -368,7 +318,7 @@ use separately Samba/smbclient for this. Use this method very carefully!</p>
 <dd><p>Add many parents to a specific user.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parents_cn</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – list of cn of the parents</p>
+<dd class="field-odd"><p><strong>parents_cn</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a>) – list of cn of the parents</p>
 </dd>
 </dl>
 </dd></dl>
@@ -379,7 +329,7 @@ use separately Samba/smbclient for this. Use this method very carefully!</p>
 <dd><p>Remove parents from a specific user.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parent_cn</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – list of cn of the parent s</p>
+<dd class="field-odd"><p><strong>parent_cn</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a>) – list of cn of the parent s</p>
 </dd>
 </dl>
 </dd></dl>
@@ -398,7 +348,7 @@ use separately Samba/smbclient for this. Use this method very carefully!</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNStudents">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNStudents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNStudents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNStudents" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNStudents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNStudents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNStudents" title="Link to this definition"></a></dt>
 <dd><dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNStudents.lr">
 <span class="sig-name descname"><span class="pre">lr</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNStudents.lr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNStudents.lr" title="Link to this definition"></a></dt>
@@ -433,11 +383,11 @@ use separately Samba/smbclient for this. Use this method very carefully!</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNTeacher">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNTeacher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNTeacher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNTeacher" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNTeacher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNTeacher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNTeacher" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser" title="linuxmusterTools.ldapconnector.writers.user.LMNUser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNUser</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNTeacher.move">
-<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">move</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNTeacher.move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNTeacher.move" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">move</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNTeacher.move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNTeacher.move" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -449,7 +399,7 @@ use separately Samba/smbclient for this. Use this method very carefully!</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNTeachers">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNTeachers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNTeachers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNTeachers" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNTeachers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNTeachers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNTeachers" title="Link to this definition"></a></dt>
 <dd><dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNTeachers.lr">
 <span class="sig-name descname"><span class="pre">lr</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNTeachers.lr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNTeachers.lr" title="Link to this definition"></a></dt>
@@ -484,11 +434,11 @@ use separately Samba/smbclient for this. Use this method very carefully!</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNParent">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNParent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNParent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNParent" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNParent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNParent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNParent" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser" title="linuxmusterTools.ldapconnector.writers.user.LMNUser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNUser</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNParent.move">
-<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">move</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNParent.move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNParent.move" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">move</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNParent.move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNParent.move" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -500,7 +450,7 @@ use separately Samba/smbclient for this. Use this method very carefully!</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNParents">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNParents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNParents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNParents" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNParents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNParents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNParents" title="Link to this definition"></a></dt>
 <dd><dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNParents.lr">
 <span class="sig-name descname"><span class="pre">lr</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNParents.lr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNParents.lr" title="Link to this definition"></a></dt>
@@ -535,11 +485,11 @@ use separately Samba/smbclient for this. Use this method very carefully!</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNStaff">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNStaff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNStaff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNStaff" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNStaff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNStaff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNStaff" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser" title="linuxmusterTools.ldapconnector.writers.user.LMNUser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNUser</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNStaff.move">
-<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">move</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNStaff.move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNStaff.move" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">move</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNStaff.move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNStaff.move" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -551,7 +501,7 @@ use separately Samba/smbclient for this. Use this method very carefully!</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNStaffs">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNStaffs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNStaffs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNStaffs" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNStaffs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNStaffs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNStaffs" title="Link to this definition"></a></dt>
 <dd><dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNStaffs.lr">
 <span class="sig-name descname"><span class="pre">lr</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNStaffs.lr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNStaffs.lr" title="Link to this definition"></a></dt>
@@ -586,13 +536,13 @@ use separately Samba/smbclient for this. Use this method very carefully!</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNSchoolAdmin">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNSchoolAdmin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNSchoolAdmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNSchoolAdmin" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNSchoolAdmin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNSchoolAdmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNSchoolAdmin" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser" title="linuxmusterTools.ldapconnector.writers.user.LMNUser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNUser</span></code></a></p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNSchoolAdmins">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNSchoolAdmins</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNSchoolAdmins"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNSchoolAdmins" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNSchoolAdmins</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNSchoolAdmins"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNSchoolAdmins" title="Link to this definition"></a></dt>
 <dd><dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNSchoolAdmins.lr">
 <span class="sig-name descname"><span class="pre">lr</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNSchoolAdmins.lr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNSchoolAdmins.lr" title="Link to this definition"></a></dt>
@@ -627,13 +577,13 @@ use separately Samba/smbclient for this. Use this method very carefully!</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNGlobalAdmin">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNGlobalAdmin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNGlobalAdmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNGlobalAdmin" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNGlobalAdmin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNGlobalAdmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNGlobalAdmin" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.user.LMNUser" title="linuxmusterTools.ldapconnector.writers.user.LMNUser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNUser</span></code></a></p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNGlobalAdmins">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNGlobalAdmins</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNGlobalAdmins"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNGlobalAdmins" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNGlobalAdmins</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNGlobalAdmins"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNGlobalAdmins" title="Link to this definition"></a></dt>
 <dd><dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNGlobalAdmins.lr">
 <span class="sig-name descname"><span class="pre">lr</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNGlobalAdmins.lr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNGlobalAdmins.lr" title="Link to this definition"></a></dt>
@@ -668,23 +618,18 @@ use separately Samba/smbclient for this. Use this method very carefully!</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNParentsGroup">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNParentsGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">student_cn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNParentsGroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNParentsGroup" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.user.</span></span><span class="sig-name descname"><span class="pre">LMNParentsGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">student_cn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNParentsGroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNParentsGroup" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="../group/index.html#linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon" title="linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon</span></code></a></p>
 <p>Comme group class for all group types in the linuxmuster project (Projects,
 Schoolclasses, ManagementGroup, Sophomorix Group, etc …).</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNParentsGroup.cn">
-<span class="sig-name descname"><span class="pre">cn</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Uninferable-parents'</span></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNParentsGroup.cn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNParentsGroup.cn" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">cn</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNParentsGroup.cn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNParentsGroup.cn" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNParentsGroup.student_cn">
 <span class="sig-name descname"><span class="pre">student_cn</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNParentsGroup.student_cn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNParentsGroup.student_cn" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.user.LMNParentsGroup._check_ou">
-<span class="sig-name descname"><span class="pre">_check_ou</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/user.html#LMNParentsGroup._check_ou"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.user.LMNParentsGroup._check_ou" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -713,7 +658,7 @@ Schoolclasses, ManagementGroup, Sophomorix Group, etc …).</p>
 <dd><p>Add all given parents to a specific user.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parents_cn</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – list of parents cn</p>
+<dd class="field-odd"><p><strong>parents_cn</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a>) – list of parents cn</p>
 </dd>
 </dl>
 </dd></dl>
@@ -724,7 +669,7 @@ Schoolclasses, ManagementGroup, Sophomorix Group, etc …).</p>
 <dd><p>Remove all given parents from a specific user.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parents_cn</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – list of parents cn</p>
+<dd class="field-odd"><p><strong>parents_cn</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a>) – list of parents cn</p>
 </dd>
 </dl>
 </dd></dl>
@@ -751,7 +696,7 @@ Schoolclasses, ManagementGroup, Sophomorix Group, etc …).</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

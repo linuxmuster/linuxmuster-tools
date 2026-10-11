@@ -1,0 +1,260 @@
+linuxmusterTools.devices.validator
+==================================
+
+.. py:module:: linuxmusterTools.devices.validator
+
+.. autoapi-nested-parse::
+
+   Validation rules for the devices of a school.
+
+   The rules below are the naming rules of an Active Directory domain, taken
+   from the vendor documentation, not from the way sophomorix, the web ui or
+   this library happen to implement them today - those three disagree with
+   each other on several points:
+
+   https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/naming-conventions-for-computer-domain-site-ou
+
+   Every rule is a function validating one value and returning findings, so
+   that a caller writing a single attribute into the AD - LMNDevice.rename()
+   and the create() to come - checks exactly what a caller validating a whole
+   devices.csv checks. Add a rule here, never at a call site.
+
+   Validating a whole inventory is an object instead, InventoryValidator: it
+   carries what a single value does not - the computer roles read from
+   sophomorix.ini, the school and file a finding is stamped with, and the
+   values seen so far that uniqueness is checked against.
+
+
+
+
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:data:: logger
+
+.. py:data:: name_checker
+
+.. py:data:: ERROR
+   :value: 'error'
+
+
+.. py:data:: WARNING
+   :value: 'warning'
+
+
+.. py:data:: SEVERITY_ICONS
+
+.. py:data:: NETBIOS_NAME_MAX_LENGTH
+   :value: 15
+
+
+.. py:data:: DHCP
+   :value: 'DHCP'
+
+
+.. py:data:: PXE_NAMED_VALUES
+   :value: ('ml',)
+
+
+.. py:class:: Finding
+
+   One problem found on one value.
+
+   ``code`` is what a caller should branch on and what the web ui
+   translates: the ``message`` is built here, in English, and can not be
+   translated on the other side.
+
+
+   .. py:attribute:: severity
+      :type:  str
+
+
+   .. py:attribute:: code
+      :type:  str
+
+
+   .. py:attribute:: message
+      :type:  str
+
+
+   .. py:attribute:: field
+      :type:  str
+      :value: ''
+
+
+
+   .. py:attribute:: value
+      :type:  str
+      :value: ''
+
+
+
+   .. py:attribute:: school
+      :type:  str
+      :value: ''
+
+
+
+   .. py:attribute:: file
+      :type:  str
+      :value: ''
+
+
+
+   .. py:attribute:: line
+      :type:  int
+      :value: None
+
+
+
+   .. py:attribute:: subject
+      :type:  str
+      :value: ''
+
+
+
+   .. py:attribute:: related
+      :type:  list
+      :value: []
+
+
+
+   .. py:method:: as_dict()
+
+
+.. py:function:: prefixed_hostname(hostname, school='default-school')
+
+   The name of a host as everything outside its own school writes it -
+   sophomorix' own SCHOOLS.<school>.PREFIX. This is the name that lands in
+   the AD, so this is the name the length limit applies to.
+
+   :return: '<school>-<hostname>', or the hostname itself for default-school
+   :rtype: string
+
+
+.. py:function:: validate_room(room)
+
+   :param room: Value of the room field
+   :type room: string
+   :return: Findings, empty if the room name is valid
+   :rtype: list
+
+
+.. py:function:: validate_hostname(hostname, role='', school='default-school', roles=None)
+
+   Validate a host name against the AD naming rules.
+
+   The length limit is checked on the prefixed name, since that is what
+   sophomorix writes into the AD, and only for the roles that get a machine
+   account - the limit comes from the sAMAccountName, so a role without one
+   is not concerned.
+
+   :param hostname: Value of the hostname field
+   :type hostname: string
+   :param role: sophomorixRole of the device, empty for the default role
+   :type role: string
+   :param school: School the device belongs to
+   :type school: string
+   :param roles: What sophomorix.ini says, read from the machine if not given
+   :type roles: ComputerRoles
+   :return: Findings, empty if the host name is valid
+   :rtype: list
+
+
+.. py:function:: validate_group(group)
+
+   :param group: Value of the group field, a LINBO group
+   :type group: string
+   :return: Findings, empty if the group name is valid
+   :rtype: list
+
+
+.. py:function:: validate_mac(mac)
+
+   :param mac: Value of the mac field, in any of the three accepted forms
+   :type mac: string
+   :return: Findings, empty if the address is valid
+   :rtype: list
+
+
+.. py:function:: validate_ip(ip)
+
+   :param ip: Value of the ip field, or DHCP
+   :type ip: string
+   :return: Findings, empty if the address is valid
+   :rtype: list
+
+
+.. py:function:: validate_pxe_flag(pxe_flag)
+
+   Values of the pxeFlag field:
+
+   - empty or 0: no pxe
+   - 1: LINBO pxe, the only other value documented in devices.csv(5)
+   - 2: formerly LINBO pxe + opsi management, still handled like 1 by
+     linuxmuster-import-devices and linbo-remote
+   - 3: formerly opsi pxe; since opsi was removed (linuxmuster-base7 #127),
+     linuxmuster-import-devices still sets up pxe for it, but linbo-remote
+     ignores it
+   - ml: accepted by sophomorix-device (its %pxe hash), meaning undocumented
+
+   Any other single digit is accepted too, as sophomorix-device does.
+
+   :param pxe_flag: Value of the pxeFlag field
+   :type pxe_flag: string
+   :return: Findings, empty if the flag is valid
+   :rtype: list
+
+
+.. py:function:: validate_role(role, roles=None)
+
+   :param role: Value of the sophomorixRole field, empty for the default role
+   :type role: string
+   :param roles: What sophomorix.ini says, read from the machine if not given
+   :type roles: ComputerRoles
+   :return: Findings, empty if the role is known to sophomorix.ini
+   :rtype: list
+
+
+.. py:function:: validate_device(device, school='default-school', file='', line=None, roles=None)
+
+   Apply every value rule to one device, as read from devices.csv.
+
+   :param device: One row of devices.csv, enriched by Devices.load()
+   :type device: dict
+   :param roles: What sophomorix.ini says, read from the machine if not given
+   :type roles: ComputerRoles
+   :return: Findings on that device
+   :rtype: list
+
+
+.. py:class:: InventoryValidator(inventories, roles=None)
+
+   Validate one or several device inventories at once, and report
+   everything found instead of stopping at the first problem.
+
+   Passing several inventories is what makes the cross school rules work:
+   a host name or a mac address used in two schools can not be seen from
+   one of them alone.
+
+
+   .. py:attribute:: inventories
+
+
+   .. py:attribute:: roles
+
+
+   .. py:method:: validate()
+
+      Apply every rule, per value and across inventories.
+
+      :return: valid, counts, findings as dicts and report as flat strings
+      :rtype: dict
+
+
+

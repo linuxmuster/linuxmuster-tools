@@ -4,26 +4,8 @@ linuxmusterTools.lmnconfig.samba
 .. py:module:: linuxmusterTools.lmnconfig.samba
 
 
-Attributes
-----------
-
-.. autoapisummary::
-
-   linuxmusterTools.lmnconfig.samba.logger
-   linuxmusterTools.lmnconfig.samba.smbconf
-   linuxmusterTools.lmnconfig.samba.LOG_LEVEL
-   linuxmusterTools.lmnconfig.samba.DFS
-   linuxmusterTools.lmnconfig.samba.config
-   linuxmusterTools.lmnconfig.samba.SHARES_LIST
-   linuxmusterTools.lmnconfig.samba.dfs_proxy
 
 
-Functions
----------
-
-.. autoapisummary::
-
-   linuxmusterTools.lmnconfig.samba.parse_log_level
 
 
 Module Contents
@@ -35,12 +17,10 @@ Module Contents
 
 .. py:function:: parse_log_level(level)
 
-   A level entry should look like
+   A level entry should look like one of these::
 
        log level = auth_audit:2
-   or
        log level = 2
-   or
        log level = 1 auth_audit:3 winbind:5
 
 

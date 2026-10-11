@@ -1,0 +1,63 @@
+linuxmusterTools.linbo.dhcp
+===========================
+
+.. py:module:: linuxmusterTools.linbo.dhcp
+
+.. autoapi-nested-parse::
+
+   LINBO DHCP Exporter — generates and reads DHCP config data.
+
+   Supports dnsmasq proxy-DHCP config generation from host data,
+   and ISC DHCP config reading from linuxmuster-generated files.
+
+
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:data:: logger
+
+.. py:data:: DHCP_SUBNETS_PATH
+
+.. py:data:: DHCP_DEVICES_DIR
+
+.. py:class:: LinboDhcpExporter
+
+   Generate and read DHCP configurations.
+
+
+   .. py:method:: generate_dnsmasq_proxy(hosts: list[dict], server_ip: str | None = None) -> str
+
+      Generate dnsmasq proxy-DHCP config from host list.
+
+      Args:
+          hosts: List of host dicts with 'pxeEnabled', 'mac', 'group'
+          server_ip: TFTP/boot server IP (auto-detected from setup.ini if None)
+
+      Returns:
+          The complete dnsmasq configuration as a string.
+
+
+
+   .. py:method:: get_isc_dhcp(school: str = 'default-school') -> dict
+
+      Read ISC DHCP config files for a school.
+
+      Returns dict with subnets, devices content, and mtimes.
+      subnets.conf is shared (not per-school).
+      devices/{school}.conf is per-school.
+
+
+
+   .. py:method:: content_etag(content: str) -> str
+      :staticmethod:
+
+
+      Generate ETag for content string.
+
+
+

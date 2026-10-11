@@ -1,0 +1,15 @@
+linuxmusterTools.passwords
+==========================
+
+.. py:module:: linuxmusterTools.passwords
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/linuxmusterTools/passwords/policy/index
+
+

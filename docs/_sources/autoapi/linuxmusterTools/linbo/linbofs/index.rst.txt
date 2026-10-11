@@ -1,0 +1,67 @@
+linuxmusterTools.linbo.linbofs
+==============================
+
+.. py:module:: linuxmusterTools.linbo.linbofs
+
+.. autoapi-nested-parse::
+
+   LINBO linbofs Rebuild Service — execute update-linbofs with locking.
+
+   Manages linbofs64 rebuilds with:
+   - File-based mutual exclusion
+   - Build log rotation (keeps 3 most recent)
+   - Fakeroot detection
+   - Output buffering with size limits
+
+
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:data:: logger
+
+.. py:data:: UPDATE_SCRIPT
+
+.. py:data:: LINBO_DIR
+
+.. py:data:: CONFIG_DIR
+
+.. py:data:: LOCK_FILE
+
+.. py:data:: MAX_LOG_FILES
+   :value: 3
+
+
+.. py:function:: rotate_build_logs() -> int
+
+   Rotate build logs, keeping only the 3 most recent.
+
+   Returns:
+       Number of deleted log files
+
+
+.. py:function:: update_linbofs(linbo_dir: str | None = None, config_dir: str | None = None, timeout: int = 300) -> dict
+
+   Execute update-linbofs script.
+
+   Args:
+       linbo_dir: Override LINBO directory
+       config_dir: Override config directory
+       timeout: Maximum execution time in seconds (default: 5 min)
+
+   Returns:
+       {success, output, errors, duration}
+
+
+.. py:function:: get_linbofs_info() -> dict
+
+   Get linbofs64 file info.
+
+   Returns:
+       {exists, size, modifiedAt, md5}
+
+

@@ -4,22 +4,8 @@ linuxmusterTools.ldapconnector.ldap_writer
 .. py:module:: linuxmusterTools.ldapconnector.ldap_writer
 
 
-Attributes
-----------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.ldap_writer.logger
-   linuxmusterTools.ldapconnector.ldap_writer.OBJECT_MAPPING
-   linuxmusterTools.ldapconnector.ldap_writer.ldap_writer
 
 
-Classes
--------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.ldap_writer.LdapWriter
 
 
 Module Contents
@@ -35,94 +21,6 @@ Module Contents
 
 
    .. py:attribute:: lr
-
-
-   .. py:method:: _addLDIF(lmnobject, data={})
-
-      Create a list of tuples (attr, new_val) to be sent as add attributes to
-      Ldap. lmnobject is one the objects whose classes are defined in the
-      directory 'writers'.
-      Method add_s of python-ldap only accepts a list a 2-Tuples (attr,value).
-
-
-
-   .. py:method:: _setattr(lmnobject, data=None, add=False)
-
-      Set one or more attributes only for a ldap entry.
-      data is a dict of attributes/values to set.
-      If some attributes are lists, the boolean add permit to decide if the
-      new values must be added to the existing value list (add=True) or
-      if the list must be completely replaced (add=False, default behaviour).
-
-      :param lmnobject: object to modify (project, student ...)
-      :type lmnobject: something like User, Project, etc
-      :param data: Dict of attributes:values to write
-      :type data: dict
-      :param add: Replace a list values with the new values or add the
-      new values to the existing ones.
-      :type add: bool
-
-
-
-   .. py:method:: _delattr(lmnobject, data=None)
-
-      Delete one or more attributes only for a ldap entry.
-
-      :param lmnobject: object to modify (project, student ...)
-      :type lmnobject: something like User, Project, etc
-      :param data: Dict of attributes:values to delete.
-      Value may be empty if the attribute is not ambiguous
-      :type data: dict
-
-
-
-   .. py:method:: _rename(old_dn, new_cn)
-
-      Update the CN of an entry, given by its dn.
-
-
-
-   .. py:method:: _move(old_dn, new_ou)
-
-      Move an entry, given by its dn, to a new OU.
-
-
-
-   .. py:method:: _add(lmnobject, data={})
-
-      Create an entry with the given dn.
-      Should be mostly used for users or computers.
-
-      :param dn: dn of the object to add
-      :type dn: basestring
-
-
-
-   .. py:method:: _add_ou(dn)
-
-      Create an organisational unit with the given dn.
-
-      :param dn: dn of the object to add
-      :type dn: basestring
-
-
-
-   .. py:method:: _add_group(lmnobject, data={})
-
-      Create a group with the given dn.
-
-      :param dn: dn of the object to add
-      :type dn: basestring
-
-
-
-   .. py:method:: _del(dn)
-
-      Delete an Ldap object.
-
-      :param dn: dn of the object to delete
-      :type dn: basestring
-
 
 
 .. py:data:: ldap_writer

@@ -1,0 +1,95 @@
+linuxmusterTools.linbo.ssh
+==========================
+
+.. py:module:: linuxmusterTools.linbo.ssh
+
+.. autoapi-nested-parse::
+
+   LINBO SSH Service — execute commands on LINBO clients via SSH.
+
+   Uses the system ssh client. Key loading is lazy: the private key is loaded
+   on first use, not at module import time.
+
+   Default connection: root@host:2222 with RSA key from
+   /etc/linuxmuster/linbo/ssh_host_rsa_key_client
+
+
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:data:: logger
+
+.. py:data:: SAFE_OSNAME_RE
+
+.. py:data:: SAFE_PARTITION_RE
+
+.. py:data:: SAFE_DOWNLOAD_TYPE_RE
+
+.. py:function:: execute_command(host: str, command: str, port: int | None = None, timeout: float | None = None) -> dict
+
+   Execute a command on a remote host via SSH.
+
+   Args:
+       host: Target hostname or IP
+       command: Shell command to execute
+       port: SSH port (default: 2222)
+       timeout: Connection timeout in seconds
+
+   Returns:
+       {stdout, stderr, code}
+
+
+.. py:function:: execute_commands(host: str, commands: list[str], port: int | None = None, timeout: float | None = None, continue_on_error: bool = False) -> list[dict]
+
+   Execute multiple commands sequentially.
+
+   Args:
+       host: Target hostname or IP
+       commands: List of shell commands
+       continue_on_error: Continue even if a command fails
+
+   Returns:
+       List of {command, success, stdout, stderr, code} dicts
+
+
+.. py:function:: test_connection(host: str, port: int | None = None) -> dict
+
+   Test SSH connectivity to a host.
+
+   Returns:
+       {success, connected} or {success: False, error}
+
+
+.. py:function:: execute_linbo_command(host: str, linbo_command: str, params: dict | None = None) -> dict
+
+   Execute a LINBO command on a host.
+
+   Supported commands: sync, start, reboot, shutdown, halt, initcache, partition, format
+
+   Args:
+       host: Target hostname or IP
+       linbo_command: LINBO command name
+       params: Optional parameters (osName, forceNew, downloadType, partition)
+
+   Returns:
+       {stdout, stderr, code}
+
+
+.. py:function:: get_linbo_status(host: str, port: int | None = None) -> dict
+
+   Get LINBO status from a host (images, cache, disks).
+
+   Returns:
+       {success, images, cache, disks} or {success: False, error}
+
+
+.. py:function:: reset_key_cache() -> None
+
+   Reset the cached SSH key (for testing).
+
+

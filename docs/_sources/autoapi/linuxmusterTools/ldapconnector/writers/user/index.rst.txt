@@ -4,35 +4,8 @@ linuxmusterTools.ldapconnector.writers.user
 .. py:module:: linuxmusterTools.ldapconnector.writers.user
 
 
-Attributes
-----------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.writers.user.logger
-   linuxmusterTools.ldapconnector.writers.user.name_checker
 
 
-Classes
--------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.writers.user.LMNUser
-   linuxmusterTools.ldapconnector.writers.user.LMNUsers
-   linuxmusterTools.ldapconnector.writers.user.LMNStudent
-   linuxmusterTools.ldapconnector.writers.user.LMNStudents
-   linuxmusterTools.ldapconnector.writers.user.LMNTeacher
-   linuxmusterTools.ldapconnector.writers.user.LMNTeachers
-   linuxmusterTools.ldapconnector.writers.user.LMNParent
-   linuxmusterTools.ldapconnector.writers.user.LMNParents
-   linuxmusterTools.ldapconnector.writers.user.LMNStaff
-   linuxmusterTools.ldapconnector.writers.user.LMNStaffs
-   linuxmusterTools.ldapconnector.writers.user.LMNSchoolAdmin
-   linuxmusterTools.ldapconnector.writers.user.LMNSchoolAdmins
-   linuxmusterTools.ldapconnector.writers.user.LMNGlobalAdmin
-   linuxmusterTools.ldapconnector.writers.user.LMNGlobalAdmins
-   linuxmusterTools.ldapconnector.writers.user.LMNParentsGroup
 
 
 Module Contents
@@ -109,21 +82,31 @@ Module Contents
    .. py:method:: get_children()
 
 
-   .. py:method:: _move(dst_ou)
-
-      Move the user to a new Organisational Unit.This method just move an
-      existing ldap account to a new OU but do not handle the filesystem
-      to move the user's files: it's necessary to use separately
-      Samba/smbclient for this. Use this method very carefully!
+   .. py:method:: test_first_password()
 
 
+   .. py:method:: set_actual_password(password)
 
-   .. py:method:: _create(dst_ou)
+      Set the account's current password (unicodePwd) directly via SamDB,
+      bypassing sophomorix-passwd/smbpasswd entirely. Requires root (opens
+      /var/lib/samba/private/sam.ldb).
 
-      For an user marked as new, create an entry in the specified OU.
-      This method just create an account ldap but do not handle the filesystem
-      to create the appropriate directory tree for the user: it's necessary to
-      use separately Samba/smbclient for this. Use this method very carefully!
+
+
+   .. py:method:: set_first_password(password)
+
+      Set the given password as both sophomorixFirstPassword and the
+      account's current password.
+
+
+
+   .. py:method:: set_random_first_password()
+
+      Generate a random password satisfying the resolved password policy
+      for this user's role/school, then set it as first + current password.
+      Length is entirely determined by that policy's minimum length.
+
+      :return: the generated password
 
 
 
@@ -392,14 +375,9 @@ Module Contents
 
 
    .. py:attribute:: cn
-      :value: 'Uninferable-parents'
-
 
 
    .. py:attribute:: student_cn
-
-
-   .. py:method:: _check_ou()
 
 
    .. py:method:: load_data()

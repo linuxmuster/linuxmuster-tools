@@ -1,0 +1,195 @@
+linuxmusterTools.linbo.linbo_sync
+=================================
+
+.. py:module:: linuxmusterTools.linbo.linbo_sync
+
+.. autoapi-nested-parse::
+
+   LINBO remote commands — build, run and track linbo-remote sessions.
+
+   linbo-remote sends actions (format/sync/start/halt/...) to hosts over ssh.
+   Each run happens in a detached tmux session named "<hostname>_linbo-remote",
+   and logs to LINBO's log directory: one <hostname>_linbo-remote_<YYYYmmddHHMMSS>.log
+   per run since linuxmuster-linbo7 7.4.18, a single <hostname>.linbo-remote
+   overwritten by each run before (see LinboBootLogs.latest_remote_log()).
+
+
+
+
+
+
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:data:: SESSION_SUFFIX
+   :value: '_linbo-remote'
+
+
+.. py:data:: ONBOOT_CMD_PATH
+
+.. py:data:: name_checker
+
+.. py:exception:: LinboRemoteParameterError
+
+   Bases: :py:obj:`ValueError`
+
+
+   Raised when LinboRemote is given an invalid or inconsistent parameter.
+
+
+.. py:class:: LinboRemote(wait=0, cmd='', disable_gui=False, group=None, clients=[], bypass=None, room=None, school=None, onboot=False, wol=0, broadcast=None)
+
+   Build and run a linbo-remote command against a host, group or room.
+
+
+   .. py:attribute:: BASE_COMMAND
+      :value: '/usr/sbin/linbo-remote'
+
+
+
+   .. py:attribute:: SUPPORTED_COMMANDS
+
+
+   .. py:attribute:: wait
+      :value: 0
+
+
+
+   .. py:attribute:: cmd
+      :value: ''
+
+
+
+   .. py:attribute:: disable_gui
+      :value: False
+
+
+
+   .. py:attribute:: group
+      :value: None
+
+
+
+   .. py:attribute:: clients
+      :value: []
+
+
+
+   .. py:attribute:: bypass
+      :value: None
+
+
+
+   .. py:attribute:: room
+      :value: None
+
+
+
+   .. py:attribute:: school
+      :value: None
+
+
+
+   .. py:attribute:: onboot
+      :value: False
+
+
+
+   .. py:attribute:: wol
+      :value: 0
+
+
+
+   .. py:attribute:: broadcast
+      :value: None
+
+
+
+   .. py:attribute:: built_cmd
+      :value: ''
+
+
+
+   .. py:attribute:: NR_OS_POSITION_COMMANDS
+
+
+   .. py:method:: build()
+
+
+   .. py:method:: run()
+
+      Build and run the linbo-remote command.
+
+      :return: Status dict {'status': 0, 'msg': <command output>} on success,
+          or {'status': 1, 'msg': <error>} if some hosts were offline.
+      :rtype: dict
+      :raises LinboRemoteParameterError: if linbo-remote itself rejected the
+          command line (e.g. unknown group/room, no valid host in a -i list,
+          missing command) — it validates clients/group/room and exits
+          non-zero before running anything in that case.
+
+
+
+.. py:function:: list_running_sessions() -> list[dict]
+
+   List currently running linbo-remote tmux sessions.
+
+   :return: List of {hostname, session, created} dicts, one per active
+       linbo-remote session. Empty list if none are running, or if no
+       tmux server is running at all.
+   :rtype: list of dict
+
+
+.. py:function:: attach_command(hostname: str) -> str
+
+   Build the tmux attach command for a host's running linbo-remote session.
+
+   Not meant to be run through a web request: `tmux attach` needs an
+   interactive terminal (a pty), which a stateless HTTP call can't provide.
+   Exposed so a future terminal-in-browser feature (websocket + pty) has
+   the exact session name to attach to.
+
+   :param hostname: Hostname whose session to attach to
+   :type hostname: str
+   :return: Shell command string, e.g. "tmux attach -t pc001_linbo-remote"
+   :rtype: str
+
+
+.. py:function:: list_onboot_commands() -> list[dict]
+
+   List the onboot commands waiting for a host's next boot.
+
+   :return: List of {hostname, commands} dicts, commands being the
+       comma separated list written by linbo-remote -p, e.g.
+       ['sync:1', 'start:1']. Empty list if nothing is pending.
+   :rtype: list of dict
+
+
+.. py:function:: get_onboot_command(hostname: str) -> dict
+
+   Read the onboot commands waiting for one host's next boot.
+
+   :param hostname: Hostname whose <hostname>.cmd file to read
+   :type hostname: str
+   :return: {hostname, commands}, commands being the comma separated list
+       written by linbo-remote -p, e.g. ['sync:1', 'start:1']
+   :rtype: dict
+   :raises ValueError: if the hostname is not a valid host name
+   :raises FileNotFoundError: if no command is pending for this host
+
+
+.. py:function:: delete_onboot_command(hostname: str) -> None
+
+   Withdraw a host's onboot commands before its next boot.
+
+   :param hostname: Hostname whose <hostname>.cmd file to delete
+   :type hostname: str
+   :raises ValueError: if the hostname is not a valid host name
+   :raises FileNotFoundError: if no command is pending for this host
+
+

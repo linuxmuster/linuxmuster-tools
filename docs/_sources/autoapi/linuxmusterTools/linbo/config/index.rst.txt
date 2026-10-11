@@ -4,227 +4,269 @@ linuxmusterTools.linbo.config
 .. py:module:: linuxmusterTools.linbo.config
 
 
-Attributes
-----------
-
-.. autoapisummary::
-
-   linuxmusterTools.linbo.config.LINBO_PATH
 
 
-Classes
--------
-
-.. autoapisummary::
-
-   linuxmusterTools.linbo.config.Partition
-   linuxmusterTools.linbo.config.OS
-   linuxmusterTools.linbo.config.Linbo
-   linuxmusterTools.linbo.config.LinboConfig
-   linuxmusterTools.linbo.config.LinboConfigManager
 
 
-Functions
----------
-
-.. autoapisummary::
-
-   linuxmusterTools.linbo.config.read_config
-   linuxmusterTools.linbo.config.last_sync
-   linuxmusterTools.linbo.config.group_os
-   linuxmusterTools.linbo.config.list_workstations
-   linuxmusterTools.linbo.config.last_sync_all
 
 
 Module Contents
 ---------------
 
-.. py:class:: Partition
-
-   .. py:attribute:: Bootable
-      :type:  bool
-
-
-   .. py:attribute:: Dev
-      :type:  str
-
-
-   .. py:attribute:: FSType
-      :type:  str
-
-
-   .. py:attribute:: Id
-      :type:  int
-
-
-   .. py:attribute:: Label
-      :type:  str
-
-
-   .. py:attribute:: Size
-      :type:  str
-
-
-.. py:class:: OS
-
-   .. py:attribute:: Append
-      :type:  str
-
-
-   .. py:attribute:: Autostart
-      :type:  bool
-
-
-   .. py:attribute:: AutostartTimeout
-      :type:  int
-
-
-   .. py:attribute:: BaseImage
-      :type:  str
-
-
-   .. py:attribute:: Boot
-      :type:  str
-
-
-   .. py:attribute:: DefaultAction
-      :type:  str
-
-
-   .. py:attribute:: Description
-      :type:  str
-
-
-   .. py:attribute:: Hidden
-      :type:  bool
-
-
-   .. py:attribute:: IconName
-      :type:  str
-
-
-   .. py:attribute:: Initrd
-      :type:  str
-
-
-   .. py:attribute:: Kernel
-      :type:  str
-
-
-   .. py:attribute:: NewEnabled
-      :type:  bool
-
-
-   .. py:attribute:: Root
-      :type:  str
-
-
-   .. py:attribute:: StartEnabled
-      :type:  bool
-
-
-   .. py:attribute:: SyncEnabled
-      :type:  bool
-
-
-   .. py:attribute:: Version
-      :type:  str
-
-
-.. py:class:: Linbo
-
-   .. py:attribute:: AutoFormat
-      :type:  bool
-
-
-   .. py:attribute:: AutoInitCache
-      :type:  bool
-
-
-   .. py:attribute:: AutoPartition
-      :type:  bool
-
-
-   .. py:attribute:: Cache
-      :type:  str
-
-
-   .. py:attribute:: DownloadType
-      :type:  str
-
-
-   .. py:attribute:: Group
-      :type:  str
-
-
-   .. py:attribute:: GuiDisabled
-      :type:  bool
-
-
-   .. py:attribute:: KernelOptions
-      :type:  str
-
-
-   .. py:attribute:: Locale
-      :type:  str
-
-
-   .. py:attribute:: RootTimeout
-      :type:  int
-
-
-   .. py:attribute:: Server
-      :type:  str
-
-
-   .. py:attribute:: SystemType
-      :type:  str
-
-
-   .. py:attribute:: UseMinimalLayout
-      :type:  bool
-
-
-.. py:class:: LinboConfig
-
-   .. py:attribute:: LINBO
-      :type:  Linbo
-
-
-   .. py:attribute:: Partitions
-      :type:  list
-
-
-   .. py:attribute:: OS
-      :type:  list
-
-
-.. py:class:: LinboConfigManager
-
 .. py:data:: LINBO_PATH
    :value: '/srv/linbo'
+
+
+.. py:data:: LINBO_LOG_PATH
+   :value: '/var/log/linuxmuster/linbo'
+
+
+.. py:data:: EXAMPLE_SIDECAR_TYPES
+   :value: ('reg', 'postsync', 'prestart')
+
+
+.. py:data:: logger
+
+.. py:data:: name_checker
+
+.. py:class:: LinboConfigManager(school='default-school')
+
+   .. py:attribute:: school
+      :value: 'default-school'
+
+
+
+   .. py:attribute:: linbo_configs
+
+
+   .. py:attribute:: group_ids
+      :value: []
+
+
+
+   .. py:method:: load_linbo_startconf(group)
+
+      WIP. Do not use in productivity !
+      Parse a single group's start.conf and cache it in linbo_configs.
+
+
+
+   .. py:method:: load_linbo_startconfs()
+
+      WIP. Do not use in productivity !
+      Parse every known group's start.conf.
+
+
+
+   .. py:method:: parse_linbo_startconf(config)
+
+      WIP. Do not use in productivity !
+      Parse a start.conf file to a LinboConfig object.
+      TODO: duplicate in lmnfile reader
+
+
+
+   .. py:method:: load_raw_startconfs(group_ids: list[str]) -> list[dict]
+
+      Return raw start.conf contents, hashes, and mtimes for the requested IDs.
+
+
+
+   .. py:method:: write_raw_startconf(group_id: str, content: str) -> None
+
+      Create or update a start.conf file from raw text content.
+
+      Writes the content verbatim (comments and formatting preserved),
+      unlike StartConfLoader.write() which rebuilds the file from parsed
+      sections and drops comments.
+      TODO: add a method to parse the content.
+
+
+
+   .. py:method:: delete_startconf(group_id: str) -> None
+
+      Delete a start.conf file and its associated GRUB config.
+
+
+
+   .. py:method:: list_examples() -> list[dict]
+
+      List the example configs shipped in /srv/linbo/examples.
+
+      Only the files that are usable as a starting point are listed: the
+      start.conf templates and the .reg/.postsync/.prestart sidecars, same
+      kinds as the legacy webui offered. Anything else in the directory
+      (the README, for one) is left out, and that listing is what
+      read_example() accepts as a name.
+
+      :return: One dict per example, with its name, kind, size and mtime
+      :rtype: list of dict
+
+
+
+   .. py:method:: read_example(name: str) -> str
+
+      Return the content of one example config.
+
+      The name is accepted only if list_examples() reports it, which is
+      what keeps a name coming from a request inside the directory: a path
+      of its own, absolute or not, is never one of the listed entries.
+
+      :param name: File name as listed by list_examples()
+      :type name: string
+      :return: Content of the example file
+      :rtype: string
+      :raises FileNotFoundError: if no example goes by that name
+
+
+
+   .. py:method:: list_startconf_backups(group_id: str) -> list[dict]
+
+      List the backups LMNFile.backup() left next to a group's start.conf,
+      newest first.
+
+      The list is bounded: backup() keeps the ten previous versions and
+      drops the oldest whenever it writes an eleventh, so an edit older
+      than that is gone for good.
+
+      Matching is exact on `.start.conf.<group_id>.bak.<epoch>`. Group
+      names do prefix each other on a real server (101, 101-test, 101b),
+      and a group's VDI config has backups of its own
+      (`.start.conf.<group_id>.vdi.bak.<epoch>`): neither must show up in
+      the other's history.
+
+      :param group_id: LINBO group id (the `<id>` in start.conf.<id>)
+      :type group_id: string
+      :return: One dict per backup, with its epoch timestamp, size and date
+      :rtype: list of dict
+      :raises ValueError: if the group id is not a valid config name
+
+
+
+   .. py:method:: restore_startconf_backup(group_id: str, timestamp: int) -> None
+
+      Put a backup back in place as the group's start.conf.
+
+      The current start.conf is backed up first, so a restore can itself be
+      undone. The backup is copied byte for byte rather than parsed and
+      rewritten: comments and formatting are the point of having it.
+
+      :param group_id: LINBO group id (the `<id>` in start.conf.<id>)
+      :type group_id: string
+      :param timestamp: Epoch timestamp of the backup, as listed
+      :type timestamp: integer
+      :raises ValueError: if the group id or the timestamp is not valid
+      :raises FileNotFoundError: if no backup goes by that timestamp
+
+
+
+   .. py:method:: delete_startconf_backup(group_id: str, timestamp: int) -> None
+
+      Delete one backup of a group's start.conf, irreversibly.
+
+      :param group_id: LINBO group id (the `<id>` in start.conf.<id>)
+      :type group_id: string
+      :param timestamp: Epoch timestamp of the backup, as listed
+      :type timestamp: integer
+      :raises ValueError: if the group id or the timestamp is not valid
+      :raises FileNotFoundError: if no backup goes by that timestamp
+
+
+
+   .. py:method:: read_vdi_config(group_id: str) -> dict
+
+      Return a group's parsed VDI config.
+
+      The file is start.conf.<group_id>.vdi, YAML: LMNFile excludes the
+      extension from its start.conf handler. Not an image's .vdi sidecar
+      (<image>.qcow2.vdi, free text, owned by LinboImageManager).
+
+      :param group_id: LINBO group id (the `<id>` in start.conf.<id>)
+      :type group_id: string
+      :return: Parsed config, an empty dict if the file exists but is empty
+      :rtype: dict
+      :raises ValueError: if the group id is not a valid config name
+      :raises FileNotFoundError: if the group has no VDI config
+
+
+
+   .. py:method:: write_vdi_config(group_id: str, config: dict) -> None
+
+      Create or update a group's VDI config, replacing it as a whole.
+
+      The file is left mode 600, which is what YAMLLoader itself sets when
+      it opens the file and what these configs have on a server; its own
+      final rename would otherwise leave the new file at the umask default.
+      The write goes through LMNFile, which backs the previous version up.
+
+      :param group_id: LINBO group id (the `<id>` in start.conf.<id>)
+      :type group_id: string
+      :param config: Full config to write
+      :type config: dict
+      :raises ValueError: if the group id is not a valid config name
+
+
+
+   .. py:method:: delete_vdi_config(group_id: str) -> None
+
+      Delete a group's VDI config, which disables VDI for that group.
+
+      The group's start.conf is left untouched.
+
+      :param group_id: LINBO group id (the `<id>` in start.conf.<id>)
+      :type group_id: string
+      :raises ValueError: if the group id is not a valid config name
+      :raises FileNotFoundError: if the group has no VDI config
+
+
+
+.. py:function:: last_sync(workstation, image, timestamp=True)
+
+   Get the last synchronisation of a workstation for a given image.
+
+   The status file is looked up without taking its case into account: its
+   name is built by rsync-pre-download.sh from the reverse DNS resolution
+   made by rsyncd, not from devices.csv, and DNS is case insensitive. Both
+   PC-001_image.status and pc-001_image.status can therefore sit in the log
+   directory, only one of them still being written to, so every variant is
+   read and the most recent entry wins.
+
+   :param workstation: Workstation
+   :type workstation: string
+   :param image: Name of the image file
+   :type image: string
+   :param timestamp: Return the epoch of the entry (default), or the whole
+                     entry when False, to also get the version of the image
+                     which was applied.
+   :type timestamp: bool
+   :return: Epoch, or the entry as returned by _parse_image_status_file();
+            False in both cases if the host never synced that image
+   :rtype: float, dict or bool
+
+
+.. py:function:: get_host_image_status(log_dir=None)
+
+   Report the last logged image status for every host, read directly from
+   the ``*_image.status`` files in the LINBO log directory.
+
+   Unlike last_sync(), this does not need to know beforehand which image a
+   host is expected to run: it just reports whatever the last
+   log_image_status() call from linuxmuster-linbo7's shell_functions wrote
+   to that host's status file, "applied" or "created".
+
+   :param log_dir: Override log directory (default: LINBO_LOG_PATH)
+   :type log_dir: string
+   :return: Dict mapping hostname to {lastSync, action, image, imageVersion}
+   :rtype: dict
 
 
 .. py:function:: read_config(group)
 
    Get the os config from linbo config file start.conf.<group>
-
    :param group: Linbo group
    :type group: string
    :return: Config as list of dict
    :rtype: list of dict
-
-
-.. py:function:: last_sync(workstation, image)
-
-   Get the date of the last sync date for a workstation w.
-
-   :param w: Workstation
-   :type w: string
-   :param image: Name of the image file
-   :type image: string
-   :return: Last synchronisation time
-   :rtype: datetime
 
 
 .. py:function:: group_os(workstations)

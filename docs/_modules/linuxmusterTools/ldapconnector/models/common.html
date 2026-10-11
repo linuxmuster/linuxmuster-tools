@@ -5,18 +5,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.models.common &mdash; linuxmuster-tools7 7.3.26 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+  <title>linuxmusterTools.ldapconnector.models.common &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/theme_overrides.css?v=472cca7c" />
 
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=ac320c09"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/translations.js?v=8fd896e3"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
@@ -74,42 +74,61 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.ldapconnector.models.common</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">asdict</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ldap</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">asdict</span>
+
+<div class="viewcode-block" id="check_password">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.check_password">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_password</span><span class="p">(</span><span class="n">dn</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">dn</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="n">l</span> <span class="o">=</span> <span class="n">ldap</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s2">&quot;ldaps://localhost:636/&quot;</span><span class="p">)</span>
+    <span class="n">l</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="n">ldap</span><span class="o">.</span><span class="n">OPT_REFERRALS</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">l</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="n">ldap</span><span class="o">.</span><span class="n">OPT_RESTART</span><span class="p">,</span> <span class="n">ldap</span><span class="o">.</span><span class="n">OPT_ON</span><span class="p">)</span>
+    <span class="n">l</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="n">ldap</span><span class="o">.</span><span class="n">OPT_X_TLS_REQUIRE_CERT</span><span class="p">,</span> <span class="n">ldap</span><span class="o">.</span><span class="n">OPT_X_TLS_ALLOW</span><span class="p">)</span>
+    <span class="n">l</span><span class="o">.</span><span class="n">protocol_version</span> <span class="o">=</span> <span class="n">ldap</span><span class="o">.</span><span class="n">VERSION3</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">l</span><span class="o">.</span><span class="n">bind_s</span><span class="p">(</span><span class="n">dn</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="n">ldap</span><span class="o">.</span><span class="n">INVALID_CREDENTIALS</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
 
 
 <span class="nd">@dataclass</span>
 <div class="viewcode-block" id="LMNModel">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/index.html#linuxmusterTools.ldapconnector.models.common.LMNModel">[docs]</a>
-<span class="k">class</span> <span class="nc">LMNModel</span><span class="p">:</span>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.LMNModel">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LMNModel</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Common parent class to gather common methods.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="LMNModel.asdict">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/index.html#linuxmusterTools.ldapconnector.models.common.LMNModel.asdict">[docs]</a>
-    <span class="k">def</span> <span class="nf">asdict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LMNModel.as_dict">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.LMNModel.as_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="LMNModel.asjson">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/index.html#linuxmusterTools.ldapconnector.models.common.LMNModel.asjson">[docs]</a>
-    <span class="k">def</span> <span class="nf">asjson</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">asdict</span><span class="p">())</span></div>
+<div class="viewcode-block" id="LMNModel.as_json">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.LMNModel.as_json">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">as_dict</span><span class="p">())</span></div>
 
 
     <span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="LMNModel.split_dn">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/index.html#linuxmusterTools.ldapconnector.models.common.LMNModel.split_dn">[docs]</a>
-    <span class="k">def</span> <span class="nf">split_dn</span><span class="p">(</span><span class="n">dn</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.LMNModel.split_dn">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">split_dn</span><span class="p">(</span><span class="n">dn</span><span class="p">):</span>
         <span class="c1"># &#39;CN=11c,OU=11c,OU=Students,OU=default-school,OU=SCHOOLS...&#39; becomes :</span>
         <span class="c1"># [[&#39;CN&#39;, &#39;11c&#39;], [&#39;OU&#39;, &#39;11c&#39;], [&#39;OU&#39;, &#39;Students&#39;],...]</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">dn</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span></div>
 
 
 <div class="viewcode-block" id="LMNModel.common_name">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/index.html#linuxmusterTools.ldapconnector.models.common.LMNModel.common_name">[docs]</a>
-    <span class="k">def</span> <span class="nf">common_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dn</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.LMNModel.common_name">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">common_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dn</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="c1"># [[&#39;CN&#39;, &#39;11c&#39;], [&#39;OU&#39;, &#39;11c&#39;], [&#39;OU&#39;, &#39;Students&#39;],...]</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">split_dn</span><span class="p">(</span><span class="n">dn</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
@@ -120,80 +139,80 @@
 
 <span class="nd">@dataclass</span>
 <div class="viewcode-block" id="LMNOUModel">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/index.html#linuxmusterTools.ldapconnector.models.common.LMNOUModel">[docs]</a>
-<span class="k">class</span> <span class="nc">LMNOUModel</span><span class="p">(</span><span class="n">LMNModel</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.LMNOUModel">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LMNOUModel</span><span class="p">(</span><span class="n">LMNModel</span><span class="p">):</span>
 <div class="viewcode-block" id="LMNOUModel.distinguishedName">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.models.common.LMNOUModel.distinguishedName">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.LMNOUModel.distinguishedName">[docs]</a>
     <span class="n">distinguishedName</span><span class="p">:</span> <span class="nb">str</span></div>
 
 <div class="viewcode-block" id="LMNOUModel.dn">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.models.common.LMNOUModel.dn">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.LMNOUModel.dn">[docs]</a>
     <span class="n">dn</span><span class="p">:</span> <span class="nb">str</span></div>
 
 <div class="viewcode-block" id="LMNOUModel.name">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.models.common.LMNOUModel.name">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.LMNOUModel.name">[docs]</a>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span></div>
 
 <div class="viewcode-block" id="LMNOUModel.objectCategory">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.models.common.LMNOUModel.objectCategory">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.LMNOUModel.objectCategory">[docs]</a>
     <span class="n">objectCategory</span><span class="p">:</span> <span class="nb">list</span></div>
 
 <div class="viewcode-block" id="LMNOUModel.objectClass">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.models.common.LMNOUModel.objectClass">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.LMNOUModel.objectClass">[docs]</a>
     <span class="n">objectClass</span><span class="p">:</span> <span class="nb">list</span></div>
 
 <div class="viewcode-block" id="LMNOUModel.ou">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.models.common.LMNOUModel.ou">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.LMNOUModel.ou">[docs]</a>
     <span class="n">ou</span><span class="p">:</span> <span class="nb">str</span></div>
 
 
 <div class="viewcode-block" id="LMNOUModel.__post_init__">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/index.html#linuxmusterTools.ldapconnector.models.common.LMNOUModel.__post_init__">[docs]</a>
-    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.LMNOUModel.__post_init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distinguishedName</span></div>
 </div>
 
 
 <span class="nd">@dataclass</span>
 <div class="viewcode-block" id="LMNGPOModel">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/index.html#linuxmusterTools.ldapconnector.models.common.LMNGPOModel">[docs]</a>
-<span class="k">class</span> <span class="nc">LMNGPOModel</span><span class="p">(</span><span class="n">LMNModel</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.LMNGPOModel">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LMNGPOModel</span><span class="p">(</span><span class="n">LMNModel</span><span class="p">):</span>
 <div class="viewcode-block" id="LMNGPOModel.cn">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.models.common.LMNGPOModel.cn">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.LMNGPOModel.cn">[docs]</a>
     <span class="n">cn</span><span class="p">:</span> <span class="nb">str</span></div>
 
 <div class="viewcode-block" id="LMNGPOModel.distinguishedName">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.models.common.LMNGPOModel.distinguishedName">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.LMNGPOModel.distinguishedName">[docs]</a>
     <span class="n">distinguishedName</span><span class="p">:</span> <span class="nb">str</span></div>
 
 <div class="viewcode-block" id="LMNGPOModel.displayName">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.models.common.LMNGPOModel.displayName">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.LMNGPOModel.displayName">[docs]</a>
     <span class="n">displayName</span><span class="p">:</span> <span class="nb">str</span></div>
 
 <div class="viewcode-block" id="LMNGPOModel.dn">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.models.common.LMNGPOModel.dn">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.LMNGPOModel.dn">[docs]</a>
     <span class="n">dn</span><span class="p">:</span> <span class="nb">str</span></div>
 
 <div class="viewcode-block" id="LMNGPOModel.gPCFileSysPath">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.models.common.LMNGPOModel.gPCFileSysPath">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.LMNGPOModel.gPCFileSysPath">[docs]</a>
     <span class="n">gPCFileSysPath</span><span class="p">:</span> <span class="nb">str</span></div>
 
 <div class="viewcode-block" id="LMNGPOModel.name">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.models.common.LMNGPOModel.name">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.LMNGPOModel.name">[docs]</a>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span></div>
 
 <div class="viewcode-block" id="LMNGPOModel.objectCategory">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.models.common.LMNGPOModel.objectCategory">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.LMNGPOModel.objectCategory">[docs]</a>
     <span class="n">objectCategory</span><span class="p">:</span> <span class="nb">list</span></div>
 
 <div class="viewcode-block" id="LMNGPOModel.objectClass">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.models.common.LMNGPOModel.objectClass">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.LMNGPOModel.objectClass">[docs]</a>
     <span class="n">objectClass</span><span class="p">:</span> <span class="nb">list</span></div>
 
 
 <div class="viewcode-block" id="LMNGPOModel.__post_init__">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/index.html#linuxmusterTools.ldapconnector.models.common.LMNGPOModel.__post_init__">[docs]</a>
-    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/models/common/index.html#linuxmusterTools.ldapconnector.LMNGPOModel.__post_init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distinguishedName</span></div>
 </div>
 
@@ -206,7 +225,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

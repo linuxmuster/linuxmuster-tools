@@ -4,12 +4,6 @@ linuxmusterTools.ldapconnector.models.lmnobject
 .. py:module:: linuxmusterTools.ldapconnector.models.lmnobject
 
 
-Classes
--------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.models.lmnobject.LMNObjectModel
 
 
 Module Contents
@@ -120,7 +114,7 @@ Module Contents
 
 
    .. py:attribute:: sophomorixCloudQuotaCalculated
-      :type:  list
+      :type:  str
 
 
    .. py:attribute:: sophomorixComment
@@ -264,7 +258,7 @@ Module Contents
 
 
    .. py:attribute:: sophomorixMailQuotaCalculated
-      :type:  list
+      :type:  str
 
 
    .. py:attribute:: sophomorixMailQuota

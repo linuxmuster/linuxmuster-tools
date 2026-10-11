@@ -1,0 +1,51 @@
+linuxmusterTools.print.render
+=============================
+
+.. py:module:: linuxmusterTools.print.render
+
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:data:: OUTPUT_DIR
+   :value: '/var/lib/lmntools/print/'
+
+
+.. py:data:: TEMPLATES_DIR
+   :value: '/var/lib/lmntools/templates/'
+
+
+.. py:class:: LatexRenderer(template_obj, data, caller='', vars={})
+
+   .. py:attribute:: data
+
+
+   .. py:attribute:: caller
+      :value: ''
+
+
+
+   .. py:attribute:: template_obj
+
+
+   .. py:attribute:: vars
+
+
+   .. py:method:: render()
+
+      Render the vars in the jinja template
+
+
+
+   .. py:method:: compile()
+
+      Prepare the tex file and compile, while trying to catch the compilations errors.
+
+      :return: PDF path as string
+
+
+

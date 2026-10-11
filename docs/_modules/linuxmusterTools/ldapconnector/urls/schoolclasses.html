@@ -5,18 +5,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.urls.schoolclasses &mdash; linuxmuster-tools7 7.3.26 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+  <title>linuxmusterTools.ldapconnector.urls.schoolclasses &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/theme_overrides.css?v=472cca7c" />
 
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=ac320c09"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/translations.js?v=8fd896e3"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
@@ -74,31 +74,34 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.ldapconnector.urls.schoolclasses</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">linuxmusterTools.ldapconnector.models</span> <span class="k">as</span> <span class="nn">models</span>
-<span class="kn">from</span> <span class="nn">linuxmusterTools.ldapconnector.urls.ldaprouter</span> <span class="kn">import</span> <span class="n">router</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ldap.filter</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">linuxmusterTools.ldapconnector.models</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">models</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.ldapconnector.urls.ldaprouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">router</span>
 
 
 <span class="nd">@router</span><span class="o">.</span><span class="n">single</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/schoolclasses/(?P&lt;schoolclass&gt;[\w\-_ ]*)&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNSchoolClassModel</span><span class="p">)</span>
 <div class="viewcode-block" id="get_schoolclass">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/schoolclasses/index.html#linuxmusterTools.ldapconnector.urls.get_schoolclass">[docs]</a>
-<span class="k">def</span> <span class="nf">get_schoolclass</span><span class="p">(</span><span class="n">schoolclass</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/schoolclasses/index.html#linuxmusterTools.ldapconnector.urls.schoolclasses.get_schoolclass">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_schoolclass</span><span class="p">(</span><span class="n">schoolclass</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get all details from a specific schoolclass.</span>
 <span class="sd">    Return a LMNSchoolClassModel data object</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">schoolclass</span> <span class="o">=</span> <span class="n">ldap</span><span class="o">.</span><span class="n">filter</span><span class="o">.</span><span class="n">escape_filter_chars</span><span class="p">(</span><span class="n">schoolclass</span><span class="p">)</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;(&amp;(cn=</span><span class="si">{</span><span class="n">schoolclass</span><span class="si">}</span><span class="s2">)(objectClass=group)(sophomorixType=adminclass))&quot;&quot;&quot;</span></div>
 
 
 <span class="nd">@router</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/schoolclasses/(?P&lt;schoolclass&gt;[a-z0-9\-_]*)/students&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNUserModel</span><span class="p">)</span>
 <div class="viewcode-block" id="get_all_students_from_schoolclass">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/schoolclasses/index.html#linuxmusterTools.ldapconnector.urls.get_all_students_from_schoolclass">[docs]</a>
-<span class="k">def</span> <span class="nf">get_all_students_from_schoolclass</span><span class="p">(</span><span class="n">schoolclass</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/schoolclasses/index.html#linuxmusterTools.ldapconnector.urls.schoolclasses.get_all_students_from_schoolclass">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_all_students_from_schoolclass</span><span class="p">(</span><span class="n">schoolclass</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get all students details from a specific schoolclass.</span>
 <span class="sd">    Return a list of LMNUserModel data objects.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">schoolclass</span> <span class="o">=</span> <span class="n">ldap</span><span class="o">.</span><span class="n">filter</span><span class="o">.</span><span class="n">escape_filter_chars</span><span class="p">(</span><span class="n">schoolclass</span><span class="p">)</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;(&amp;</span>
 <span class="s2">                                (objectClass=user)</span>
 <span class="s2">                                (sophomorixAdminClass=</span><span class="si">{</span><span class="n">schoolclass</span><span class="si">}</span><span class="s2">)</span>
@@ -108,8 +111,8 @@
 
 <span class="nd">@router</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/schoolclasses&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNSchoolClassModel</span><span class="p">)</span>
 <div class="viewcode-block" id="get_all_schoolclasses">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/schoolclasses/index.html#linuxmusterTools.ldapconnector.urls.get_all_schoolclasses">[docs]</a>
-<span class="k">def</span> <span class="nf">get_all_schoolclasses</span><span class="p">():</span>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/schoolclasses/index.html#linuxmusterTools.ldapconnector.urls.schoolclasses.get_all_schoolclasses">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_all_schoolclasses</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get all schoolclasses details.</span>
 <span class="sd">    Return a list of LMNSchoolClassModel data objects.</span>
@@ -120,26 +123,55 @@
 
 <span class="nd">@router</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/schoolclasses/search/(?P&lt;query&gt;\w*)&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNSchoolClassModel</span><span class="p">)</span>
 <div class="viewcode-block" id="get_results_search_schoolclasses">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/schoolclasses/index.html#linuxmusterTools.ldapconnector.urls.get_results_search_schoolclasses">[docs]</a>
-<span class="k">def</span> <span class="nf">get_results_search_schoolclasses</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/schoolclasses/index.html#linuxmusterTools.ldapconnector.urls.schoolclasses.get_results_search_schoolclasses">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_results_search_schoolclasses</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get all details from a search about schoolclasses.</span>
 <span class="sd">    Return a list of LMNSchoolClassModel data objects.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">query</span> <span class="o">=</span> <span class="n">ldap</span><span class="o">.</span><span class="n">filter</span><span class="o">.</span><span class="n">escape_filter_chars</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;(&amp;(objectClass=group)(sophomorixType=adminclass)(cn=*</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">*))&quot;&quot;&quot;</span></div>
 
 
 <span class="nd">@router</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/empty_schoolclasses&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNSchoolClassModel</span><span class="p">)</span>
 <div class="viewcode-block" id="get_results_search_empty_schoolclasses">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/schoolclasses/index.html#linuxmusterTools.ldapconnector.urls.get_results_search_empty_schoolclasses">[docs]</a>
-<span class="k">def</span> <span class="nf">get_results_search_empty_schoolclasses</span><span class="p">():</span>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/schoolclasses/index.html#linuxmusterTools.ldapconnector.urls.schoolclasses.get_results_search_empty_schoolclasses">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_results_search_empty_schoolclasses</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get all details from empty schoolclasses.</span>
 <span class="sd">    Return a list of LMNSchoolClassModel data objects.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;(&amp;(objectClass=group)(sophomorixType=adminclass)(!(sophomorixMembers=*)))&quot;&quot;&quot;</span></div>
+
+
+<span class="c1">## Extraclasses</span>
+
+<span class="nd">@router</span><span class="o">.</span><span class="n">single</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/extraclasses/(?P&lt;schoolclass&gt;[\w\-_ ]*)&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNSchoolClassModel</span><span class="p">)</span>
+<div class="viewcode-block" id="get_extraclass">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/schoolclasses/index.html#linuxmusterTools.ldapconnector.urls.schoolclasses.get_extraclass">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_extraclass</span><span class="p">(</span><span class="n">schoolclass</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get all details from a specific extraclass.</span>
+<span class="sd">    Return a LMNSchoolClassModel data object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">schoolclass</span> <span class="o">=</span> <span class="n">ldap</span><span class="o">.</span><span class="n">filter</span><span class="o">.</span><span class="n">escape_filter_chars</span><span class="p">(</span><span class="n">schoolclass</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;(&amp;(cn=</span><span class="si">{</span><span class="n">schoolclass</span><span class="si">}</span><span class="s2">)(objectClass=group)(sophomorixType=extraclass))&quot;&quot;&quot;</span></div>
+
+
+<span class="nd">@router</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/extraclasses&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNSchoolClassModel</span><span class="p">)</span>
+<div class="viewcode-block" id="get_all_extraclasses">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/schoolclasses/index.html#linuxmusterTools.ldapconnector.urls.schoolclasses.get_all_extraclasses">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_all_extraclasses</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get all extraclasses details.</span>
+<span class="sd">    Return a list of LMNSchoolClassModel data objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="s2">&quot;&quot;&quot;(&amp;(objectClass=group)(sophomorixType=extraclass))&quot;&quot;&quot;</span></div>
+
 
 </pre></div>
 
@@ -150,7 +182,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

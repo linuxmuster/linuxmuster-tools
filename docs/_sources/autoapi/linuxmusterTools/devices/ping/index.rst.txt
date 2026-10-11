@@ -4,12 +4,6 @@ linuxmusterTools.devices.ping
 .. py:module:: linuxmusterTools.devices.ping
 
 
-Classes
--------
-
-.. autoapisummary::
-
-   linuxmusterTools.devices.ping.UPChecker
 
 
 Module Contents

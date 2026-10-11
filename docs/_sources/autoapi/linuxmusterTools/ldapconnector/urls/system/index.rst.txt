@@ -4,13 +4,6 @@ linuxmusterTools.ldapconnector.urls.system
 .. py:module:: linuxmusterTools.ldapconnector.urls.system
 
 
-Functions
----------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.urls.system.get_all_gpos
-   linuxmusterTools.ldapconnector.urls.system.get_one_gpo
 
 
 Module Contents

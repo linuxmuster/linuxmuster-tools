@@ -4,17 +4,6 @@ linuxmusterTools.ldapconnector.urls.groups
 .. py:module:: linuxmusterTools.ldapconnector.urls.groups
 
 
-Functions
----------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.urls.groups.get_all_units
-   linuxmusterTools.ldapconnector.urls.groups.get_group
-   linuxmusterTools.ldapconnector.urls.groups.get_all_groups
-   linuxmusterTools.ldapconnector.urls.groups.get_group
-   linuxmusterTools.ldapconnector.urls.groups.get_all_printers
-   linuxmusterTools.ldapconnector.urls.groups.get_printer
 
 
 Module Contents
@@ -27,7 +16,7 @@ Module Contents
    Return a list of LMNGroupModel data objects.
 
 
-.. py:function:: get_group(name='')
+.. py:function:: get_unit(name='')
 
    Get a unit specified by its name. The terminology "unit" was chosen in order to differenciate with a "group" from
    sophomorix-group. A unit can be a schoolclass, a project, a group, etc ...

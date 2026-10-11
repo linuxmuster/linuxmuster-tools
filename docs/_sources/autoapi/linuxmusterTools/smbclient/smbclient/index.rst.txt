@@ -1,0 +1,39 @@
+linuxmusterTools.smbclient.smbclient
+====================================
+
+.. py:module:: linuxmusterTools.smbclient.smbclient
+
+.. autoapi-nested-parse::
+
+   A smbclient utility to perform some basic operations on the fileserver.
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:class:: LMNSMBClient(school='default-school')
+
+   .. py:method:: switch(school)
+
+
+   .. py:method:: list(path)
+
+      Return a list of files and directories in path, if existing.
+
+      :param path: Samba path like students/10a/myuser/transfer
+      :return: list
+
+
+
+   .. py:method:: deltree(path)
+
+      Delete recursively the content of a directory.
+
+      :param path: Samba path like students/attic/myuser
+      :return: list
+
+
+

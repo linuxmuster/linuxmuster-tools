@@ -4,12 +4,6 @@ linuxmusterTools.ldapconnector.urls.objects
 .. py:module:: linuxmusterTools.ldapconnector.urls.objects
 
 
-Functions
----------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.urls.objects.get_from_dn
 
 
 Module Contents

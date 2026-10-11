@@ -1,0 +1,756 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.devices.validator &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../linuxmusterTools.html">linuxmusterTools</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.devices.validator</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for linuxmusterTools.devices.validator</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Validation rules for the devices of a school.</span>
+
+<span class="sd">The rules below are the naming rules of an Active Directory domain, taken</span>
+<span class="sd">from the vendor documentation, not from the way sophomorix, the web ui or</span>
+<span class="sd">this library happen to implement them today - those three disagree with</span>
+<span class="sd">each other on several points:</span>
+
+<span class="sd">https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/naming-conventions-for-computer-domain-site-ou</span>
+
+<span class="sd">Every rule is a function validating one value and returning findings, so</span>
+<span class="sd">that a caller writing a single attribute into the AD - LMNDevice.rename()</span>
+<span class="sd">and the create() to come - checks exactly what a caller validating a whole</span>
+<span class="sd">devices.csv checks. Add a rule here, never at a call site.</span>
+
+<span class="sd">Validating a whole inventory is an object instead, InventoryValidator: it</span>
+<span class="sd">carries what a single value does not - the computer roles read from</span>
+<span class="sd">sophomorix.ini, the school and file a finding is stamped with, and the</span>
+<span class="sd">values seen so far that uniqueness is checked against.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span> <span class="k">as</span> <span class="n">dataclass_field</span><span class="p">,</span> <span class="n">asdict</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.checks</span><span class="w"> </span><span class="kn">import</span> <span class="n">NameChecker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..lmnconfig</span><span class="w"> </span><span class="kn">import</span> <span class="n">SophomorixIni</span>
+
+
+<div class="viewcode-block" id="logger">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.logger">[docs]</a>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="name_checker">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.name_checker">[docs]</a>
+<span class="n">name_checker</span> <span class="o">=</span> <span class="n">NameChecker</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ERROR">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.ERROR">[docs]</a>
+<span class="n">ERROR</span> <span class="o">=</span> <span class="s1">&#39;error&#39;</span></div>
+
+<div class="viewcode-block" id="WARNING">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.WARNING">[docs]</a>
+<span class="n">WARNING</span> <span class="o">=</span> <span class="s1">&#39;warning&#39;</span></div>
+
+
+<span class="c1"># Prefix of a line of the flat report, shorter than the severity itself.</span>
+<div class="viewcode-block" id="SEVERITY_ICONS">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.SEVERITY_ICONS">[docs]</a>
+<span class="n">SEVERITY_ICONS</span> <span class="o">=</span> <span class="p">{</span><span class="n">ERROR</span><span class="p">:</span> <span class="s1">&#39;❌&#39;</span><span class="p">,</span> <span class="n">WARNING</span><span class="p">:</span> <span class="s1">&#39;⚠️&#39;</span><span class="p">}</span></div>
+
+
+<span class="c1"># A machine account is a sAMAccountName, whose sixteenth byte is the service</span>
+<span class="c1"># suffix - the trailing &#39;$&#39;. Fifteen characters are left for the name itself,</span>
+<span class="c1"># and the domain does not count.</span>
+<div class="viewcode-block" id="NETBIOS_NAME_MAX_LENGTH">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.NETBIOS_NAME_MAX_LENGTH">[docs]</a>
+<span class="n">NETBIOS_NAME_MAX_LENGTH</span> <span class="o">=</span> <span class="mi">15</span></div>
+
+
+<span class="c1"># Legal value of the ip field: the device gets its address from the dhcp</span>
+<span class="c1"># server, so there is nothing to check and nothing to be unique.</span>
+<div class="viewcode-block" id="DHCP">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.DHCP">[docs]</a>
+<span class="n">DHCP</span> <span class="o">=</span> <span class="s1">&#39;DHCP&#39;</span></div>
+
+
+<span class="c1"># The only named pxe value sophomorix knows (its %pxe hash), beside a digit.</span>
+<div class="viewcode-block" id="PXE_NAMED_VALUES">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.PXE_NAMED_VALUES">[docs]</a>
+<span class="n">PXE_NAMED_VALUES</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;ml&#39;</span><span class="p">,)</span></div>
+
+
+<span class="nd">@dataclass</span>
+<div class="viewcode-block" id="Finding">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.Finding">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Finding</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    One problem found on one value.</span>
+
+<span class="sd">    ``code`` is what a caller should branch on and what the web ui</span>
+<span class="sd">    translates: the ``message`` is built here, in English, and can not be</span>
+<span class="sd">    translated on the other side.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Finding.severity">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.Finding.severity">[docs]</a>
+    <span class="n">severity</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="Finding.code">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.Finding.code">[docs]</a>
+    <span class="n">code</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="Finding.message">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.Finding.message">[docs]</a>
+    <span class="n">message</span><span class="p">:</span> <span class="nb">str</span></div>
+
+<div class="viewcode-block" id="Finding.field">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.Finding.field">[docs]</a>
+    <span class="n">field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span></div>
+
+<div class="viewcode-block" id="Finding.value">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.Finding.value">[docs]</a>
+    <span class="n">value</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span></div>
+
+<div class="viewcode-block" id="Finding.school">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.Finding.school">[docs]</a>
+    <span class="n">school</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span></div>
+
+<div class="viewcode-block" id="Finding.file">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.Finding.file">[docs]</a>
+    <span class="n">file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span></div>
+
+<div class="viewcode-block" id="Finding.line">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.Finding.line">[docs]</a>
+    <span class="n">line</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Finding.subject">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.Finding.subject">[docs]</a>
+    <span class="n">subject</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span></div>
+
+<div class="viewcode-block" id="Finding.related">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.Finding.related">[docs]</a>
+    <span class="n">related</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">dataclass_field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Finding.as_dict">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.Finding.as_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="prefixed_hostname">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.prefixed_hostname">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">prefixed_hostname</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The name of a host as everything outside its own school writes it -</span>
+<span class="sd">    sophomorix&#39; own SCHOOLS.&lt;school&gt;.PREFIX. This is the name that lands in</span>
+<span class="sd">    the AD, so this is the name the length limit applies to.</span>
+
+<span class="sd">    :return: &#39;&lt;school&gt;-&lt;hostname&gt;&#39;, or the hostname itself for default-school</span>
+<span class="sd">    :rtype: string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">if</span> <span class="n">school</span> <span class="ow">and</span> <span class="n">school</span> <span class="o">!=</span> <span class="s1">&#39;default-school&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">school</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="k">return</span> <span class="n">hostname</span></div>
+
+
+
+<span class="c1"># Validation rules</span>
+
+<div class="viewcode-block" id="validate_room">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.validate_room">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_room</span><span class="p">(</span><span class="n">room</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param room: Value of the room field</span>
+<span class="sd">    :type room: string</span>
+<span class="sd">    :return: Findings, empty if the room name is valid</span>
+<span class="sd">    :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">check_room_name</span><span class="p">(</span><span class="n">room</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">Finding</span><span class="p">(</span>
+            <span class="n">ERROR</span><span class="p">,</span> <span class="s1">&#39;room.invalid&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">room</span><span class="si">}</span><span class="s2"> is not a valid room name&quot;</span><span class="p">,</span>
+            <span class="n">field</span><span class="o">=</span><span class="s1">&#39;room&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">room</span><span class="p">,</span>
+        <span class="p">)]</span>
+    <span class="k">return</span> <span class="p">[]</span></div>
+
+
+
+<div class="viewcode-block" id="validate_hostname">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.validate_hostname">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_hostname</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate a host name against the AD naming rules.</span>
+
+<span class="sd">    The length limit is checked on the prefixed name, since that is what</span>
+<span class="sd">    sophomorix writes into the AD, and only for the roles that get a machine</span>
+<span class="sd">    account - the limit comes from the sAMAccountName, so a role without one</span>
+<span class="sd">    is not concerned.</span>
+
+<span class="sd">    :param hostname: Value of the hostname field</span>
+<span class="sd">    :type hostname: string</span>
+<span class="sd">    :param role: sophomorixRole of the device, empty for the default role</span>
+<span class="sd">    :type role: string</span>
+<span class="sd">    :param school: School the device belongs to</span>
+<span class="sd">    :type school: string</span>
+<span class="sd">    :param roles: What sophomorix.ini says, read from the machine if not given</span>
+<span class="sd">    :type roles: ComputerRoles</span>
+<span class="sd">    :return: Findings, empty if the host name is valid</span>
+<span class="sd">    :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">check_host_name</span><span class="p">(</span><span class="n">hostname</span><span class="p">):</span>
+        <span class="c1"># Every rule below reads the name character by character: reporting</span>
+        <span class="c1"># them on a name already rejected would only repeat the same problem.</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">Finding</span><span class="p">(</span>
+            <span class="n">ERROR</span><span class="p">,</span> <span class="s1">&#39;hostname.invalid&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s2"> is not a valid hostname&quot;</span><span class="p">,</span>
+            <span class="n">field</span><span class="o">=</span><span class="s1">&#39;hostname&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">hostname</span><span class="p">,</span>
+        <span class="p">)]</span>
+
+    <span class="n">findings</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">hostname</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+        <span class="n">findings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Finding</span><span class="p">(</span>
+            <span class="n">ERROR</span><span class="p">,</span> <span class="s1">&#39;hostname.all_digits&#39;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s2"> is not a valid hostname: a name can not be all digits&quot;</span><span class="p">,</span>
+            <span class="n">field</span><span class="o">=</span><span class="s1">&#39;hostname&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">hostname</span><span class="p">,</span>
+        <span class="p">))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">hostname</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isalnum</span><span class="p">():</span>
+        <span class="n">findings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Finding</span><span class="p">(</span>
+            <span class="n">ERROR</span><span class="p">,</span> <span class="s1">&#39;hostname.first_char&#39;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s2"> is not a valid hostname: it must start with a letter or a digit&quot;</span><span class="p">,</span>
+            <span class="n">field</span><span class="o">=</span><span class="s1">&#39;hostname&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">hostname</span><span class="p">,</span>
+        <span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">hostname</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">):</span>
+        <span class="n">findings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Finding</span><span class="p">(</span>
+            <span class="n">ERROR</span><span class="p">,</span> <span class="s1">&#39;hostname.last_char&#39;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s2"> is not a valid hostname: it must not end with a hyphen&quot;</span><span class="p">,</span>
+            <span class="n">field</span><span class="o">=</span><span class="s1">&#39;hostname&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">hostname</span><span class="p">,</span>
+        <span class="p">))</span>
+
+    <span class="n">roles</span> <span class="o">=</span> <span class="n">roles</span> <span class="ow">or</span> <span class="n">SophomorixIni</span><span class="p">()</span><span class="o">.</span><span class="n">computer_roles</span>
+
+    <span class="c1"># sophomorix substitutes COMPUTERROLE_DEFAULT for an empty role field.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">role</span> <span class="ow">or</span> <span class="n">roles</span><span class="o">.</span><span class="n">default</span><span class="p">)</span> <span class="ow">in</span> <span class="n">roles</span><span class="o">.</span><span class="n">accounts</span><span class="p">:</span>
+        <span class="n">full_name</span> <span class="o">=</span> <span class="n">prefixed_hostname</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">school</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">full_name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">NETBIOS_NAME_MAX_LENGTH</span><span class="p">:</span>
+            <span class="n">findings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Finding</span><span class="p">(</span>
+                <span class="n">ERROR</span><span class="p">,</span> <span class="s1">&#39;hostname.too_long&#39;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">full_name</span><span class="si">}</span><span class="s2"> is longer than </span><span class="si">{</span><span class="n">NETBIOS_NAME_MAX_LENGTH</span><span class="si">}</span><span class="s2"> characters, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;the maximum length of a machine account name&quot;</span><span class="p">,</span>
+                <span class="n">field</span><span class="o">=</span><span class="s1">&#39;hostname&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">hostname</span><span class="p">,</span>
+            <span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">findings</span></div>
+
+
+
+<div class="viewcode-block" id="validate_group">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.validate_group">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_group</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param group: Value of the group field, a LINBO group</span>
+<span class="sd">    :type group: string</span>
+<span class="sd">    :return: Findings, empty if the group name is valid</span>
+<span class="sd">    :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">check_linbo_conf_name</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">Finding</span><span class="p">(</span>
+            <span class="n">ERROR</span><span class="p">,</span> <span class="s1">&#39;group.invalid&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2"> is not a valid Linbo group&quot;</span><span class="p">,</span>
+            <span class="n">field</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">group</span><span class="p">,</span>
+        <span class="p">)]</span>
+    <span class="k">return</span> <span class="p">[]</span></div>
+
+
+
+<div class="viewcode-block" id="validate_mac">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.validate_mac">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_mac</span><span class="p">(</span><span class="n">mac</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param mac: Value of the mac field, in any of the three accepted forms</span>
+<span class="sd">    :type mac: string</span>
+<span class="sd">    :return: Findings, empty if the address is valid</span>
+<span class="sd">    :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">normalize_mac</span><span class="p">(</span><span class="n">mac</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">Finding</span><span class="p">(</span>
+            <span class="n">ERROR</span><span class="p">,</span> <span class="s1">&#39;mac.invalid&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mac</span><span class="si">}</span><span class="s2"> is not a valid mac address&quot;</span><span class="p">,</span>
+            <span class="n">field</span><span class="o">=</span><span class="s1">&#39;mac&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">mac</span><span class="p">,</span>
+        <span class="p">)]</span>
+    <span class="k">return</span> <span class="p">[]</span></div>
+
+
+
+<div class="viewcode-block" id="validate_ip">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.validate_ip">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_ip</span><span class="p">(</span><span class="n">ip</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param ip: Value of the ip field, or DHCP</span>
+<span class="sd">    :type ip: string</span>
+<span class="sd">    :return: Findings, empty if the address is valid</span>
+<span class="sd">    :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">if</span> <span class="n">ip</span> <span class="o">==</span> <span class="n">DHCP</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">check_ip_name</span><span class="p">(</span><span class="n">ip</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">Finding</span><span class="p">(</span>
+            <span class="n">ERROR</span><span class="p">,</span> <span class="s1">&#39;ip.invalid&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2"> is not a valid ip address&quot;</span><span class="p">,</span>
+            <span class="n">field</span><span class="o">=</span><span class="s1">&#39;ip&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span>
+        <span class="p">)]</span>
+    <span class="k">return</span> <span class="p">[]</span></div>
+
+
+
+<div class="viewcode-block" id="validate_pxe_flag">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.validate_pxe_flag">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_pxe_flag</span><span class="p">(</span><span class="n">pxe_flag</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Values of the pxeFlag field:</span>
+
+<span class="sd">    - empty or 0: no pxe</span>
+<span class="sd">    - 1: LINBO pxe, the only other value documented in devices.csv(5)</span>
+<span class="sd">    - 2: formerly LINBO pxe + opsi management, still handled like 1 by</span>
+<span class="sd">      linuxmuster-import-devices and linbo-remote</span>
+<span class="sd">    - 3: formerly opsi pxe; since opsi was removed (linuxmuster-base7 #127),</span>
+<span class="sd">      linuxmuster-import-devices still sets up pxe for it, but linbo-remote</span>
+<span class="sd">      ignores it</span>
+<span class="sd">    - ml: accepted by sophomorix-device (its %pxe hash), meaning undocumented</span>
+
+<span class="sd">    Any other single digit is accepted too, as sophomorix-device does.</span>
+
+<span class="sd">    :param pxe_flag: Value of the pxeFlag field</span>
+<span class="sd">    :type pxe_flag: string</span>
+<span class="sd">    :return: Findings, empty if the flag is valid</span>
+<span class="sd">    :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="n">flag</span> <span class="o">=</span> <span class="p">(</span><span class="n">pxe_flag</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="c1"># An empty field means no pxe, as Devices._check_pxe_flag() already reads it.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">flag</span> <span class="ow">or</span> <span class="n">flag</span> <span class="ow">in</span> <span class="n">PXE_NAMED_VALUES</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">flag</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">flag</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()):</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">Finding</span><span class="p">(</span>
+        <span class="n">ERROR</span><span class="p">,</span> <span class="s1">&#39;pxe.invalid&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pxe_flag</span><span class="si">}</span><span class="s2"> is not a valid pxe flag&quot;</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s1">&#39;pxeFlag&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">pxe_flag</span><span class="p">,</span>
+    <span class="p">)]</span></div>
+
+
+
+<div class="viewcode-block" id="validate_role">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.validate_role">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_role</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param role: Value of the sophomorixRole field, empty for the default role</span>
+<span class="sd">    :type role: string</span>
+<span class="sd">    :param roles: What sophomorix.ini says, read from the machine if not given</span>
+<span class="sd">    :type roles: ComputerRoles</span>
+<span class="sd">    :return: Findings, empty if the role is known to sophomorix.ini</span>
+<span class="sd">    :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="c1"># sophomorix substitutes COMPUTERROLE_DEFAULT for an empty field.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">role</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">role</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">roles</span> <span class="ow">or</span> <span class="n">SophomorixIni</span><span class="p">()</span><span class="o">.</span><span class="n">computer_roles</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">Finding</span><span class="p">(</span>
+            <span class="n">ERROR</span><span class="p">,</span> <span class="s1">&#39;role.unknown&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">role</span><span class="si">}</span><span class="s2"> is not a valid computer role&quot;</span><span class="p">,</span>
+            <span class="n">field</span><span class="o">=</span><span class="s1">&#39;sophomorixRole&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">role</span><span class="p">,</span>
+        <span class="p">)]</span>
+    <span class="k">return</span> <span class="p">[]</span></div>
+
+
+
+<div class="viewcode-block" id="validate_device">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.validate_device">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_device</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply every value rule to one device, as read from devices.csv.</span>
+
+<span class="sd">    :param device: One row of devices.csv, enriched by Devices.load()</span>
+<span class="sd">    :type device: dict</span>
+<span class="sd">    :param roles: What sophomorix.ini says, read from the machine if not given</span>
+<span class="sd">    :type roles: ComputerRoles</span>
+<span class="sd">    :return: Findings on that device</span>
+<span class="sd">    :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="n">hostname</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hostname&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">role</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sophomorixRole&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">roles</span> <span class="o">=</span> <span class="n">roles</span> <span class="ow">or</span> <span class="n">SophomorixIni</span><span class="p">()</span><span class="o">.</span><span class="n">computer_roles</span>
+
+    <span class="n">findings</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">findings</span> <span class="o">+=</span> <span class="n">validate_room</span><span class="p">(</span><span class="n">device</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;room&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+    <span class="n">findings</span> <span class="o">+=</span> <span class="n">validate_hostname</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="n">role</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="n">roles</span><span class="p">)</span>
+    <span class="n">findings</span> <span class="o">+=</span> <span class="n">validate_group</span><span class="p">(</span><span class="n">device</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+    <span class="c1"># The raw address, not the normalized one: normalize_mac() returns None</span>
+    <span class="c1"># on a malformed address, and the report would name nothing.</span>
+    <span class="n">findings</span> <span class="o">+=</span> <span class="n">validate_mac</span><span class="p">(</span><span class="n">device</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;macRaw&#39;</span><span class="p">,</span> <span class="n">device</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mac&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)))</span>
+    <span class="n">findings</span> <span class="o">+=</span> <span class="n">validate_ip</span><span class="p">(</span><span class="n">device</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ip&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+    <span class="n">findings</span> <span class="o">+=</span> <span class="n">validate_pxe_flag</span><span class="p">(</span><span class="n">device</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pxeFlag&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+    <span class="n">findings</span> <span class="o">+=</span> <span class="n">validate_role</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="n">roles</span><span class="p">)</span>
+    <span class="c1"># officeKey and windowsKey are not checked: their only consumer, the</span>
+    <span class="c1"># Windows reactivation of LINBO, was removed in linuxmuster-linbo7 7.4.0.</span>
+
+    <span class="c1"># The value rules know nothing about where they were called from: stamp</span>
+    <span class="c1"># the place on their findings here.</span>
+    <span class="k">for</span> <span class="n">finding</span> <span class="ow">in</span> <span class="n">findings</span><span class="p">:</span>
+        <span class="n">finding</span><span class="o">.</span><span class="n">school</span> <span class="o">=</span> <span class="n">school</span>
+        <span class="n">finding</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="n">file</span>
+        <span class="n">finding</span><span class="o">.</span><span class="n">line</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;csvLine&#39;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+        <span class="n">finding</span><span class="o">.</span><span class="n">subject</span> <span class="o">=</span> <span class="n">hostname</span>
+
+    <span class="k">return</span> <span class="n">findings</span></div>
+
+
+
+<span class="c1"># Inventory validation (duplicates, multischool ...)</span>
+
+<div class="viewcode-block" id="InventoryValidator">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.InventoryValidator">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">InventoryValidator</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate one or several device inventories at once, and report</span>
+<span class="sd">    everything found instead of stopping at the first problem.</span>
+
+<span class="sd">    Passing several inventories is what makes the cross school rules work:</span>
+<span class="sd">    a host name or a mac address used in two schools can not be seen from</span>
+<span class="sd">    one of them alone.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inventories</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param inventories: Dicts of school, file and devices</span>
+<span class="sd">        :type inventories: list</span>
+<span class="sd">        :param roles: What sophomorix.ini says, read from the machine if not given</span>
+<span class="sd">        :type roles: ComputerRoles</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="InventoryValidator.inventories">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.InventoryValidator.inventories">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inventories</span> <span class="o">=</span> <span class="n">inventories</span></div>
+
+<div class="viewcode-block" id="InventoryValidator.roles">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.InventoryValidator.roles">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">roles</span> <span class="o">=</span> <span class="n">roles</span> <span class="ow">or</span> <span class="n">SophomorixIni</span><span class="p">()</span><span class="o">.</span><span class="n">computer_roles</span></div>
+
+
+<div class="viewcode-block" id="InventoryValidator.validate">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/validator/index.html#linuxmusterTools.devices.validator.InventoryValidator.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply every rule, per value and across inventories.</span>
+
+<span class="sd">        :return: valid, counts, findings as dicts and report as flat strings</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="n">findings</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">devices_count</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">inventory</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">inventories</span><span class="p">:</span>
+            <span class="n">school</span> <span class="o">=</span> <span class="n">inventory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;school&#39;</span><span class="p">,</span> <span class="s1">&#39;default-school&#39;</span><span class="p">)</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">inventory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">inventory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;devices&#39;</span><span class="p">,</span> <span class="p">[]):</span>
+                <span class="n">devices_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">findings</span> <span class="o">+=</span> <span class="n">validate_device</span><span class="p">(</span>
+                    <span class="n">device</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">file</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">roles</span>
+                <span class="p">)</span>
+
+        <span class="n">findings</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_uniqueness</span><span class="p">()</span>
+
+        <span class="n">errors</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">findings</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">severity</span> <span class="o">==</span> <span class="n">ERROR</span><span class="p">]</span>
+        <span class="n">warnings</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">findings</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">severity</span> <span class="o">==</span> <span class="n">WARNING</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;valid&#39;</span><span class="p">:</span> <span class="ow">not</span> <span class="n">errors</span><span class="p">,</span>
+            <span class="s1">&#39;counts&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;schools&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inventories</span><span class="p">),</span>
+                <span class="s1">&#39;devices&#39;</span><span class="p">:</span> <span class="n">devices_count</span><span class="p">,</span>
+                <span class="s1">&#39;errors&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">),</span>
+                <span class="s1">&#39;warnings&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">warnings</span><span class="p">),</span>
+            <span class="p">},</span>
+            <span class="s1">&#39;findings&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">findings</span><span class="p">],</span>
+            <span class="c1"># A flat list of strings, the form Subnets.check_conf() already</span>
+            <span class="c1"># exposes, for a caller that only prints what it gets.</span>
+            <span class="s1">&#39;report&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_text</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">findings</span><span class="p">],</span>
+        <span class="p">}</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_uniqueness</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check what may not be used twice, across every inventory at once.</span>
+
+<span class="sd">        Host names and mac addresses are unique over the whole installation:</span>
+<span class="sd">        a host name because it becomes an AD object named after its school</span>
+<span class="sd">        prefix, a mac address because a machine boots wherever it is plugged</span>
+<span class="sd">        in. An ip address is unique within a school only - a fileserver</span>
+<span class="sd">        legitimately carries the same address in every school - so sharing</span>
+<span class="sd">        one between two schools is reported as a warning.</span>
+
+<span class="sd">        :return: Findings on duplicated values</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="n">hostnames</span><span class="p">,</span> <span class="n">macs</span><span class="p">,</span> <span class="n">ips</span> <span class="o">=</span> <span class="p">{},</span> <span class="p">{},</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">inventory</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">inventories</span><span class="p">:</span>
+            <span class="n">school</span> <span class="o">=</span> <span class="n">inventory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;school&#39;</span><span class="p">,</span> <span class="s1">&#39;default-school&#39;</span><span class="p">)</span>
+            <span class="n">file</span> <span class="o">=</span> <span class="n">inventory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">inventory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;devices&#39;</span><span class="p">,</span> <span class="p">[]):</span>
+                <span class="c1"># One place where a value was used, as &#39;related&#39; exposes it.</span>
+                <span class="n">occurrence</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;school&#39;</span><span class="p">:</span> <span class="n">school</span><span class="p">,</span>
+                    <span class="s1">&#39;subject&#39;</span><span class="p">:</span> <span class="n">device</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hostname&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+                    <span class="s1">&#39;line&#39;</span><span class="p">:</span> <span class="n">device</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;csvLine&#39;</span><span class="p">),</span>
+                    <span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="n">file</span><span class="p">,</span>
+                <span class="p">}</span>
+
+                <span class="c1"># Compared lower cased: sophomorix writes the dns node in</span>
+                <span class="c1"># lower case and the machine account in upper case out of the</span>
+                <span class="c1"># same field, so two names differing only by case are the</span>
+                <span class="c1"># same name.</span>
+                <span class="n">hostname</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hostname&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">hostname</span><span class="p">:</span>
+                    <span class="n">hostnames</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span>
+                        <span class="n">prefixed_hostname</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">school</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="p">[]</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">occurrence</span><span class="p">)</span>
+
+                <span class="c1"># Malformed addresses are reported by validate_mac(), and two</span>
+                <span class="c1"># of them are not &quot;the same address&quot;.</span>
+                <span class="n">mac</span> <span class="o">=</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">normalize_mac</span><span class="p">(</span>
+                    <span class="n">device</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;macRaw&#39;</span><span class="p">,</span> <span class="n">device</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mac&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">mac</span><span class="p">:</span>
+                    <span class="n">macs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">mac</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">occurrence</span><span class="p">)</span>
+
+                <span class="n">ip</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ip&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">ip</span> <span class="ow">and</span> <span class="n">ip</span> <span class="o">!=</span> <span class="n">DHCP</span><span class="p">:</span>
+                    <span class="n">ips</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">occurrence</span><span class="p">)</span>
+
+        <span class="n">findings</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">hostname</span><span class="p">,</span> <span class="n">occurrences</span> <span class="ow">in</span> <span class="n">hostnames</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">occurrences</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">findings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_duplicate</span><span class="p">(</span>
+                    <span class="n">ERROR</span><span class="p">,</span> <span class="s1">&#39;hostname.duplicate&#39;</span><span class="p">,</span> <span class="s1">&#39;hostname&#39;</span><span class="p">,</span> <span class="n">hostname</span><span class="p">,</span>
+                    <span class="n">occurrences</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">,</span>
+                <span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">mac</span><span class="p">,</span> <span class="n">occurrences</span> <span class="ow">in</span> <span class="n">macs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">occurrences</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">findings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_duplicate</span><span class="p">(</span>
+                    <span class="n">ERROR</span><span class="p">,</span> <span class="s1">&#39;mac.duplicate&#39;</span><span class="p">,</span> <span class="s1">&#39;mac&#39;</span><span class="p">,</span> <span class="n">mac</span><span class="p">,</span> <span class="n">occurrences</span><span class="p">,</span>
+                <span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">ip</span><span class="p">,</span> <span class="n">occurrences</span> <span class="ow">in</span> <span class="n">ips</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">occurrences</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">per_school</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">occurrence</span> <span class="ow">in</span> <span class="n">occurrences</span><span class="p">:</span>
+                <span class="n">per_school</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">occurrence</span><span class="p">[</span><span class="s1">&#39;school&#39;</span><span class="p">],</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">occurrence</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">school_occurrences</span> <span class="ow">in</span> <span class="n">per_school</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">school_occurrences</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">findings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_duplicate</span><span class="p">(</span>
+                        <span class="n">ERROR</span><span class="p">,</span> <span class="s1">&#39;ip.duplicate&#39;</span><span class="p">,</span> <span class="s1">&#39;ip&#39;</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">school_occurrences</span><span class="p">,</span>
+                    <span class="p">))</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">per_school</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">findings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_duplicate</span><span class="p">(</span>
+                    <span class="n">WARNING</span><span class="p">,</span> <span class="s1">&#39;ip.multischool&#39;</span><span class="p">,</span> <span class="s1">&#39;ip&#39;</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span>
+                    <span class="n">occurrences</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39; in different schools&#39;</span><span class="p">,</span>
+                <span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">findings</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_duplicate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">severity</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">occurrences</span><span class="p">,</span>
+                   <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        One finding about a value used more than once. It is reported on the</span>
+<span class="sd">        first occurrence, the others being listed in ``related``, so that a</span>
+<span class="sd">        caller has one line to show and every place to fix.</span>
+
+<span class="sd">        :param occurrences: Where the value was used, in the order read</span>
+<span class="sd">        :type occurrences: list</span>
+<span class="sd">        :param label: How the value is named in the message, the field itself</span>
+<span class="sd">                      if not given</span>
+<span class="sd">        :type label: string</span>
+<span class="sd">        :rtype: Finding</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">prefixed_hostname</span><span class="p">(</span><span class="n">o</span><span class="p">[</span><span class="s1">&#39;subject&#39;</span><span class="p">],</span> <span class="n">o</span><span class="p">[</span><span class="s1">&#39;school&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">occurrences</span><span class="p">]</span>
+        <span class="n">first</span> <span class="o">=</span> <span class="n">occurrences</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># A name used twice would otherwise read &quot;pc01, pc01 have the same</span>
+        <span class="c1"># name pc01&quot;.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">names</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> is used </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span><span class="si">}</span><span class="s2"> times</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">names</span><span class="p">)</span><span class="si">}</span><span class="s2"> have the same </span><span class="si">{</span><span class="n">label</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">field</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">value</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">return</span> <span class="n">Finding</span><span class="p">(</span>
+            <span class="n">severity</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span>
+            <span class="n">field</span><span class="o">=</span><span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">school</span><span class="o">=</span><span class="n">first</span><span class="p">[</span><span class="s1">&#39;school&#39;</span><span class="p">],</span> <span class="n">file</span><span class="o">=</span><span class="n">first</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">],</span>
+            <span class="n">line</span><span class="o">=</span><span class="n">first</span><span class="p">[</span><span class="s1">&#39;line&#39;</span><span class="p">],</span> <span class="n">subject</span><span class="o">=</span><span class="n">first</span><span class="p">[</span><span class="s1">&#39;subject&#39;</span><span class="p">],</span>
+            <span class="n">related</span><span class="o">=</span><span class="n">occurrences</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">finding</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        One finding as the single short line of the flat report, e.g.</span>
+<span class="sd">        &quot;❌ hostname.too_long pc0123456789 (school2.devices.csv:12)&quot;.</span>
+
+<span class="sd">        The code and the offending value say what is wrong, the README lists</span>
+<span class="sd">        what each code means; the full sentence stays in the finding.</span>
+
+<span class="sd">        :rtype: string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="c1"># Every place to fix, grouped by file: in a multi-school run, a line</span>
+        <span class="c1"># number alone does not say which devices.csv it is in. The file name</span>
+        <span class="c1"># is enough, it carries the school prefix.</span>
+        <span class="n">lines_per_file</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">occurrence</span> <span class="ow">in</span> <span class="p">[{</span><span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="n">finding</span><span class="o">.</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;line&#39;</span><span class="p">:</span> <span class="n">finding</span><span class="o">.</span><span class="n">line</span><span class="p">}]</span> <span class="o">+</span> <span class="n">finding</span><span class="o">.</span><span class="n">related</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">occurrence</span><span class="p">[</span><span class="s1">&#39;line&#39;</span><span class="p">]:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">occurrence</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">occurrence</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+                <span class="n">lines_per_file</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">occurrence</span><span class="p">[</span><span class="s1">&#39;line&#39;</span><span class="p">]))</span>
+        <span class="n">places</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">file</span> <span class="k">else</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">file</span><span class="p">,</span> <span class="n">lines</span> <span class="ow">in</span> <span class="n">lines_per_file</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">]</span>
+        <span class="n">location</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot; (</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">places</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="k">if</span> <span class="n">places</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="n">icon</span> <span class="o">=</span> <span class="n">SEVERITY_ICONS</span><span class="p">[</span><span class="n">finding</span><span class="o">.</span><span class="n">severity</span><span class="p">]</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">finding</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="n">finding</span><span class="o">.</span><span class="n">value</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="k">else</span> <span class="s2">&quot;&#39;&#39;&quot;</span>
+
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">icon</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">finding</span><span class="o">.</span><span class="n">code</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">value</span><span class="si">}{</span><span class="n">location</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

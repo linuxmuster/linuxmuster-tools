@@ -5,18 +5,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.common.checks.names &mdash; linuxmuster-tools7 7.3.26 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+  <title>linuxmusterTools.common.checks.names &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/theme_overrides.css?v=472cca7c" />
 
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=ac320c09"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/translations.js?v=8fd896e3"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
@@ -74,27 +74,27 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.common.checks.names</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partialmethod</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partialmethod</span>
 
 
 <div class="viewcode-block" id="logger">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.checks.logger">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/common/checks/names/index.html#linuxmusterTools.common.checks.logger">[docs]</a>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NAME_RULES">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.checks.NAME_RULES">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/common/checks/names/index.html#linuxmusterTools.common.checks.NAME_RULES">[docs]</a>
 <span class="n">NAME_RULES</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-zA-Z0-9?!@#§+\-$%&amp;*</span><span class="si">{}</span><span class="s2">()\]\[]+$&quot;</span><span class="p">),</span>
-    <span class="s1">&#39;strong_password&#39;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(?=.*[a-z])(?=.*[A-Z])(?=.*[?!@#§+\-$%&amp;*</span><span class="si">{}</span><span class="s2">()]|(?=.*\d)).{7,}&quot;</span><span class="p">),</span>
+    <span class="s1">&#39;strong_password&#39;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(?=.*[a-z])(?=.*[A-Z])(?=.*[?!@#§+\-$%&amp;*</span><span class="si">{}</span><span class="s2">()\d]).{7,}&quot;</span><span class="p">),</span>
     <span class="s1">&#39;project&#39;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-z0-9_\-]*$&quot;</span><span class="p">),</span>
     <span class="s1">&#39;group&#39;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-z0-9_\-]*$&quot;</span><span class="p">),</span>
     <span class="s2">&quot;session&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-z0-9\+\-_]*$&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">),</span>
-    <span class="s2">&quot;linbo_conf&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-z0-9\+\-_]*$&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">),</span>
-    <span class="s2">&quot;linbo_image&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-zA-Z0-9_\-]+$&quot;</span><span class="p">),</span>
-    <span class="s2">&quot;login&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-z0-9\-_]*$&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">),</span>
+    <span class="s2">&quot;linbo_conf&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-z0-9_\-]+$&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">),</span>
+    <span class="s2">&quot;linbo_image&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-zA-Z0-9_\-\.]+$&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;login&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-z0-9\-_\.]*$&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">),</span>
     <span class="s2">&quot;comment&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-z0-9\-_ ]*&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">),</span> <span class="c1"># sophomorixComment</span>
     <span class="s2">&quot;alphanum&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-z0-9]*$&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">),</span>   <span class="c1"># config names</span>
     <span class="s2">&quot;number&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^([0-9]*)$&quot;</span><span class="p">),</span>
@@ -110,23 +110,28 @@
 
 
 <div class="viewcode-block" id="set_check_method">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/common/index.html#linuxmusterTools.common.checks.set_check_method">[docs]</a>
-<span class="k">def</span> <span class="nf">set_check_method</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/common/checks/names/index.html#linuxmusterTools.common.checks.set_check_method">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_check_method</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">name_type</span> <span class="ow">in</span> <span class="n">NAME_RULES</span><span class="p">:</span>
         <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;check_</span><span class="si">{</span><span class="n">name_type</span><span class="si">}</span><span class="s2">_name&quot;</span><span class="p">,</span> <span class="n">partialmethod</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">check</span><span class="p">,</span> <span class="n">name_type</span><span class="p">))</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;validate_</span><span class="si">{</span><span class="n">name_type</span><span class="si">}</span><span class="s2">_name&quot;</span><span class="p">,</span> <span class="n">partialmethod</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">validate</span><span class="p">,</span> <span class="n">name_type</span><span class="p">))</span>
     <span class="k">return</span> <span class="bp">cls</span></div>
 
 
 <span class="nd">@set_check_method</span>
 <div class="viewcode-block" id="NameChecker">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.common.checks.NameChecker">[docs]</a>
-<span class="k">class</span> <span class="nc">NameChecker</span><span class="p">:</span>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/common/checks/names/index.html#linuxmusterTools.common.checks.NameChecker">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NameChecker</span><span class="p">:</span>
 
 <div class="viewcode-block" id="NameChecker.check">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.common.checks.NameChecker.check">[docs]</a>
-    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name_type</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/common/checks/names/index.html#linuxmusterTools.common.checks.NameChecker.check">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name_type</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
         <span class="c1"># Wrong types and empty strings are not allowed.</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">string</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Avoid path transversal</span>
+        <span class="k">if</span> <span class="s2">&quot;/&quot;</span> <span class="ow">in</span> <span class="n">string</span> <span class="ow">or</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">string</span> <span class="ow">or</span> <span class="s2">&quot;</span><span class="se">\0</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">string</span> <span class="ow">or</span> <span class="s2">&quot;..&quot;</span> <span class="ow">in</span> <span class="n">string</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
 
         <span class="n">pattern</span> <span class="o">=</span> <span class="n">NAME_RULES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name_type</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -135,18 +140,48 @@
         <span class="k">return</span> <span class="kc">False</span></div>
 
 
+<div class="viewcode-block" id="NameChecker.validate">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/common/checks/names/index.html#linuxmusterTools.common.checks.NameChecker.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name_type</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Same rules as check(), but raise instead of returning False, and</span>
+<span class="sd">        return the string so that the result can be assigned back.</span>
+
+<span class="sd">        Use this wherever the name is about to build a filesystem path: a</span>
+<span class="sd">        caller that forgets to test check()&#39;s boolean silently keeps an</span>
+<span class="sd">        unchecked name, while a forgotten validate() cannot go unnoticed.</span>
+
+<span class="sd">        :param name_type: One of the rules declared in NAME_RULES</span>
+<span class="sd">        :type name_type: string</span>
+<span class="sd">        :param string: The name to validate</span>
+<span class="sd">        :type string: string</span>
+<span class="sd">        :return: The validated name, unchanged</span>
+<span class="sd">        :rtype: string</span>
+<span class="sd">        :raises ValueError: if the name does not pass check()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="n">name_type</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid </span><span class="si">{</span><span class="n">name_type</span><span class="si">}</span><span class="s2"> name: </span><span class="si">{</span><span class="n">string</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">string</span></div>
+
+
 <div class="viewcode-block" id="NameChecker.normalize_mac">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/writers/index.html#linuxmusterTools.common.checks.NameChecker.normalize_mac">[docs]</a>
-    <span class="k">def</span> <span class="nf">normalize_mac</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mac</span><span class="p">):</span>
-        <span class="c1"># TODO: all upper ?</span>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/common/checks/names/index.html#linuxmusterTools.common.checks.NameChecker.normalize_mac">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">normalize_mac</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mac</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a mac address in the colon-format  AA:BB:CC:DD:EE:FF</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_mac1_name</span><span class="p">(</span><span class="n">mac</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">mac</span>
+            <span class="k">return</span> <span class="n">mac</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_mac2_name</span><span class="p">(</span><span class="n">mac</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">mac</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">mac</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_mac3_name</span><span class="p">(</span><span class="n">mac</span><span class="p">):</span>
-            <span class="k">return</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="n">mac</span><span class="p">))</span>
+            <span class="k">return</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="n">mac</span><span class="p">))</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># logger.warning(f&quot;Mac addresse {mac} does not correspond to any valid mac address.&quot;)</span>
+            <span class="c1"># logger.warning(f&quot;Mac address {mac} does not correspond to any valid mac address.&quot;)</span>
             <span class="k">return</span> <span class="kc">None</span></div>
 </div>
 
@@ -161,7 +196,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

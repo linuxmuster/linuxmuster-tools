@@ -4,22 +4,8 @@ linuxmusterTools.ldapconnector.urls.ldaprouter
 .. py:module:: linuxmusterTools.ldapconnector.urls.ldaprouter
 
 
-Attributes
-----------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.urls.ldaprouter.logger
-   linuxmusterTools.ldapconnector.urls.ldaprouter.SCHOOL_MARKER
-   linuxmusterTools.ldapconnector.urls.ldaprouter.router
 
 
-Classes
--------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.urls.ldaprouter.LMNLdapRouter
 
 
 Module Contents
@@ -39,9 +25,6 @@ Module Contents
    .. py:attribute:: urls
 
 
-   .. py:method:: _find_method(url)
-
-
    .. py:method:: get(url, **kwargs)
 
       Parse all urls and find the right method to handle the request.
@@ -51,7 +34,7 @@ Module Contents
    .. py:method:: getval(url, attribute, **kwargs)
 
 
-   .. py:method:: getvalues(url, attributes, dict=True, **kwargs)
+   .. py:method:: getvalues(url, attributes, as_dict=True, **kwargs)
 
 
    .. py:method:: print_urls()

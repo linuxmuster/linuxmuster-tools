@@ -1,0 +1,368 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.linbo.linbo_sync &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="linuxmusterTools.linbo.linbofs" href="../linbofs/index.html" />
+    <link rel="prev" title="linuxmusterTools.linbo.images" href="../images/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">linuxmusterTools</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../../common/index.html">linuxmusterTools.common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../devices/index.html">linuxmusterTools.devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../ldapconnector/index.html">linuxmusterTools.ldapconnector</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html">linuxmusterTools.linbo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../lmnconfig/index.html">linuxmusterTools.lmnconfig</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../lmnfile/index.html">linuxmusterTools.lmnfile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../passwords/index.html">linuxmusterTools.passwords</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../print/index.html">linuxmusterTools.print</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../quotas/index.html">linuxmusterTools.quotas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../samba_util/index.html">linuxmusterTools.samba_util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../smbclient/index.html">linuxmusterTools.smbclient</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../subnets/index.html">linuxmusterTools.subnets</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">linuxmusterTools</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">linuxmusterTools.linbo</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.linbo.linbo_sync</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/autoapi/linuxmusterTools/linbo/linbo_sync/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-linuxmusterTools.linbo.linbo_sync">
+<span id="linuxmustertools-linbo-linbo-sync"></span><h1>linuxmusterTools.linbo.linbo_sync<a class="headerlink" href="#module-linuxmusterTools.linbo.linbo_sync" title="Link to this heading"></a></h1>
+<p>LINBO remote commands — build, run and track linbo-remote sessions.</p>
+<p>linbo-remote sends actions (format/sync/start/halt/…) to hosts over ssh.
+Each run happens in a detached tmux session named “&lt;hostname&gt;_linbo-remote”,
+and logs to LINBO’s log directory: one &lt;hostname&gt;_linbo-remote_&lt;YYYYmmddHHMMSS&gt;.log
+per run since linuxmuster-linbo7 7.4.18, a single &lt;hostname&gt;.linbo-remote
+overwritten by each run before (see LinboBootLogs.latest_remote_log()).</p>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.SESSION_SUFFIX">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.linbo_sync.</span></span><span class="sig-name descname"><span class="pre">SESSION_SUFFIX</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_linbo-remote'</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#SESSION_SUFFIX"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.SESSION_SUFFIX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.ONBOOT_CMD_PATH">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.linbo_sync.</span></span><span class="sig-name descname"><span class="pre">ONBOOT_CMD_PATH</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#ONBOOT_CMD_PATH"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.ONBOOT_CMD_PATH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.name_checker">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.linbo_sync.</span></span><span class="sig-name descname"><span class="pre">name_checker</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#name_checker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.name_checker" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.LinboRemoteParameterError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.linbo_sync.</span></span><span class="sig-name descname"><span class="pre">LinboRemoteParameterError</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#LinboRemoteParameterError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.LinboRemoteParameterError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
+<p>Raised when LinboRemote is given an invalid or inconsistent parameter.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.LinboRemote">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.linbo_sync.</span></span><span class="sig-name descname"><span class="pre">LinboRemote</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wait</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_gui</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clients</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bypass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">onboot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">broadcast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#LinboRemote"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.LinboRemote" title="Link to this definition"></a></dt>
+<dd><p>Build and run a linbo-remote command against a host, group or room.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.LinboRemote.BASE_COMMAND">
+<span class="sig-name descname"><span class="pre">BASE_COMMAND</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/usr/sbin/linbo-remote'</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#LinboRemote.BASE_COMMAND"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.LinboRemote.BASE_COMMAND" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.LinboRemote.SUPPORTED_COMMANDS">
+<span class="sig-name descname"><span class="pre">SUPPORTED_COMMANDS</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#LinboRemote.SUPPORTED_COMMANDS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.LinboRemote.SUPPORTED_COMMANDS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.LinboRemote.wait">
+<span class="sig-name descname"><span class="pre">wait</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#LinboRemote.wait"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.LinboRemote.wait" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.LinboRemote.cmd">
+<span class="sig-name descname"><span class="pre">cmd</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#LinboRemote.cmd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.LinboRemote.cmd" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.LinboRemote.disable_gui">
+<span class="sig-name descname"><span class="pre">disable_gui</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#LinboRemote.disable_gui"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.LinboRemote.disable_gui" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.LinboRemote.group">
+<span class="sig-name descname"><span class="pre">group</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#LinboRemote.group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.LinboRemote.group" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.LinboRemote.clients">
+<span class="sig-name descname"><span class="pre">clients</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#LinboRemote.clients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.LinboRemote.clients" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.LinboRemote.bypass">
+<span class="sig-name descname"><span class="pre">bypass</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#LinboRemote.bypass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.LinboRemote.bypass" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.LinboRemote.room">
+<span class="sig-name descname"><span class="pre">room</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#LinboRemote.room"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.LinboRemote.room" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.LinboRemote.school">
+<span class="sig-name descname"><span class="pre">school</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#LinboRemote.school"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.LinboRemote.school" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.LinboRemote.onboot">
+<span class="sig-name descname"><span class="pre">onboot</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#LinboRemote.onboot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.LinboRemote.onboot" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.LinboRemote.wol">
+<span class="sig-name descname"><span class="pre">wol</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#LinboRemote.wol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.LinboRemote.wol" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.LinboRemote.broadcast">
+<span class="sig-name descname"><span class="pre">broadcast</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#LinboRemote.broadcast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.LinboRemote.broadcast" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.LinboRemote.built_cmd">
+<span class="sig-name descname"><span class="pre">built_cmd</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#LinboRemote.built_cmd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.LinboRemote.built_cmd" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.LinboRemote.NR_OS_POSITION_COMMANDS">
+<span class="sig-name descname"><span class="pre">NR_OS_POSITION_COMMANDS</span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#LinboRemote.NR_OS_POSITION_COMMANDS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.LinboRemote.NR_OS_POSITION_COMMANDS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.LinboRemote.build">
+<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#LinboRemote.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.LinboRemote.build" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.LinboRemote.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#LinboRemote.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.LinboRemote.run" title="Link to this definition"></a></dt>
+<dd><p>Build and run the linbo-remote command.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Status dict {‘status’: 0, ‘msg’: &lt;command output&gt;} on success,
+or {‘status’: 1, ‘msg’: &lt;error&gt;} if some hosts were offline.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../../lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.dict" title="linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.dict">dict</a></p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#linuxmusterTools.linbo.linbo_sync.LinboRemoteParameterError" title="linuxmusterTools.linbo.linbo_sync.LinboRemoteParameterError"><strong>LinboRemoteParameterError</strong></a> – if linbo-remote itself rejected the
+command line (e.g. unknown group/room, no valid host in a -i list,
+missing command) — it validates clients/group/room and exits
+non-zero before running anything in that case.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.list_running_sessions">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.linbo_sync.</span></span><span class="sig-name descname"><span class="pre">list_running_sessions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../../lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.dict" title="linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.dict"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#list_running_sessions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.list_running_sessions" title="Link to this definition"></a></dt>
+<dd><p>List currently running linbo-remote tmux sessions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of {hostname, session, created} dicts, one per active
+linbo-remote session. Empty list if none are running, or if no
+tmux server is running at all.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)">list</a> of <a class="reference internal" href="../../lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.dict" title="linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.dict">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.attach_command">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.linbo_sync.</span></span><span class="sig-name descname"><span class="pre">attach_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hostname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#attach_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.attach_command" title="Link to this definition"></a></dt>
+<dd><p>Build the tmux attach command for a host’s running linbo-remote session.</p>
+<p>Not meant to be run through a web request: <cite>tmux attach</cite> needs an
+interactive terminal (a pty), which a stateless HTTP call can’t provide.
+Exposed so a future terminal-in-browser feature (websocket + pty) has
+the exact session name to attach to.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hostname</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – Hostname whose session to attach to</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Shell command string, e.g. “tmux attach -t pc001_linbo-remote”</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.list_onboot_commands">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.linbo_sync.</span></span><span class="sig-name descname"><span class="pre">list_onboot_commands</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../../lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.dict" title="linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.dict"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#list_onboot_commands"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.list_onboot_commands" title="Link to this definition"></a></dt>
+<dd><p>List the onboot commands waiting for a host’s next boot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of {hostname, commands} dicts, commands being the
+comma separated list written by linbo-remote -p, e.g.
+[‘sync:1’, ‘start:1’]. Empty list if nothing is pending.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)">list</a> of <a class="reference internal" href="../../lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.dict" title="linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.dict">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.get_onboot_command">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.linbo_sync.</span></span><span class="sig-name descname"><span class="pre">get_onboot_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hostname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../../lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.dict" title="linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.dict"><span class="pre">dict</span></a></span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#get_onboot_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.get_onboot_command" title="Link to this definition"></a></dt>
+<dd><p>Read the onboot commands waiting for one host’s next boot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hostname</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – Hostname whose &lt;hostname&gt;.cmd file to read</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>{hostname, commands}, commands being the comma separated list
+written by linbo-remote -p, e.g. [‘sync:1’, ‘start:1’]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.dict" title="linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.dict">dict</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – if the hostname is not a valid host name</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#FileNotFoundError" title="(in Python v3.15)"><strong>FileNotFoundError</strong></a> – if no command is pending for this host</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.linbo.linbo_sync.delete_onboot_command">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.linbo.linbo_sync.</span></span><span class="sig-name descname"><span class="pre">delete_onboot_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hostname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../../_modules/linuxmusterTools/linbo/linbo_sync.html#delete_onboot_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.linbo.linbo_sync.delete_onboot_command" title="Link to this definition"></a></dt>
+<dd><p>Withdraw a host’s onboot commands before its next boot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hostname</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – Hostname whose &lt;hostname&gt;.cmd file to delete</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – if the hostname is not a valid host name</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#FileNotFoundError" title="(in Python v3.15)"><strong>FileNotFoundError</strong></a> – if no command is pending for this host</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../images/index.html" class="btn btn-neutral float-left" title="linuxmusterTools.linbo.images" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../linbofs/index.html" class="btn btn-neutral float-right" title="linuxmusterTools.linbo.linbofs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

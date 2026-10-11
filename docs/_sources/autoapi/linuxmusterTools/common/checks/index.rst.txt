@@ -10,48 +10,8 @@ Submodules
 .. toctree::
    :maxdepth: 1
 
+   /autoapi/linuxmusterTools/common/checks/certificates/index
    /autoapi/linuxmusterTools/common/checks/names/index
-
-
-Attributes
-----------
-
-.. autoapisummary::
-
-   linuxmusterTools.common.checks.logger
-   linuxmusterTools.common.checks.NAME_RULES
-
-
-Classes
--------
-
-.. autoapisummary::
-
-   linuxmusterTools.common.checks.NameChecker
-
-
-Functions
----------
-
-.. autoapisummary::
-
-   linuxmusterTools.common.checks.set_check_method
-
-
-Package Contents
-----------------
-
-.. py:data:: logger
-
-.. py:data:: NAME_RULES
-
-.. py:function:: set_check_method(cls, *args)
-
-.. py:class:: NameChecker
-
-   .. py:method:: check(name_type, string)
-
-
-   .. py:method:: normalize_mac(mac)
+   /autoapi/linuxmusterTools/common/checks/tree/index
 
 

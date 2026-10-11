@@ -4,12 +4,6 @@ linuxmusterTools.ldapconnector.models.lmnschool
 .. py:module:: linuxmusterTools.ldapconnector.models.lmnschool
 
 
-Classes
--------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.models.lmnschool.LMNSchoolModel
 
 
 Module Contents

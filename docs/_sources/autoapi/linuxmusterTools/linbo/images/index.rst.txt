@@ -4,40 +4,12 @@ linuxmusterTools.linbo.images
 .. py:module:: linuxmusterTools.linbo.images
 
 
-Attributes
-----------
-
-.. autoapisummary::
-
-   linuxmusterTools.linbo.images.logger
-   linuxmusterTools.linbo.images.LINBO_PATH
-   linuxmusterTools.linbo.images.TIMESTAMP_FMT
-   linuxmusterTools.linbo.images.DATE_UI_FMT
-   linuxmusterTools.linbo.images.EXTRA_IMAGE_FILES
-   linuxmusterTools.linbo.images.EXTRA_NONEDITABLE_IMAGE_FILES
-   linuxmusterTools.linbo.images.EXTRA_COMMON_FILES
-   linuxmusterTools.linbo.images.EXTRA_PERMISSIONS_MAPPING
-   linuxmusterTools.linbo.images.IMAGE
-   linuxmusterTools.linbo.images.DIFF_IMAGE
 
 
-Classes
--------
-
-.. autoapisummary::
-
-   linuxmusterTools.linbo.images.LinboImage
-   linuxmusterTools.linbo.images.LinboImageGroup
-   linuxmusterTools.linbo.images.LinboImageManager
 
 
-Functions
----------
 
-.. autoapisummary::
 
-   linuxmusterTools.linbo.images.date2timestamp
-   linuxmusterTools.linbo.images.timestamp2date
 
 
 Module Contents
@@ -47,6 +19,10 @@ Module Contents
 
 .. py:data:: LINBO_PATH
    :value: '/srv/linbo/images'
+
+
+.. py:data:: LINBO_LOG_PATH
+   :value: '/var/log/linuxmuster/linbo'
 
 
 .. py:data:: TIMESTAMP_FMT
@@ -62,11 +38,15 @@ Module Contents
 
 
 .. py:data:: EXTRA_NONEDITABLE_IMAGE_FILES
-   :value: ['torrent', 'macct']
+   :value: ['torrent', 'macct', 'md5', 'hash']
 
 
 .. py:data:: EXTRA_COMMON_FILES
    :value: ['reg', 'postsync', 'prestart']
+
+
+.. py:data:: ALL_FILES_EXT
+   :value: ['desc', 'info', 'vdi', 'torrent', 'macct', 'md5', 'hash', 'reg', 'postsync', 'prestart']
 
 
 .. py:data:: EXTRA_PERMISSIONS_MAPPING
@@ -79,9 +59,54 @@ Module Contents
    :value: 'qdiff'
 
 
+.. py:data:: IMAGE_SERVICES
+   :value: ['linbo-multicast.service', 'linbo-torrent.service']
+
+
 .. py:function:: date2timestamp(date)
 
 .. py:function:: timestamp2date(timestamp)
+
+.. py:function:: restart_image_services(timeout=60)
+
+   Restart the services distributing the images to the clients, multicast
+   and torrent, so that they serve the new version of a changed image.
+   Both are global: they are restarted for every school.
+
+   :param timeout: Seconds to wait for systemctl
+   :type timeout: int
+   :return: The restarted services
+   :rtype: list
+   :raises subprocess.CalledProcessError: systemctl failed, its stderr attached
+   :raises subprocess.TimeoutExpired: systemctl did not return in time
+
+
+.. py:exception:: ImageExistsError(path)
+
+   Bases: :py:obj:`FileExistsError`
+
+
+   Raised when a new image or backup would replace an existing path.
+
+
+   .. py:attribute:: path
+
+
+.. py:exception:: IncompleteImageInfoError(info_path, missing_fields=None)
+
+   Bases: :py:obj:`ValueError`
+
+
+   Raised when a .info file is missing or missing required fields.
+
+
+   .. py:attribute:: info_path
+
+
+   .. py:attribute:: missing_fields
+      :value: []
+
+
 
 .. py:class:: LinboImage(name, backup=False, timestamp=None, diff=False)
 
@@ -106,9 +131,6 @@ Module Contents
 
 
 
-   .. py:method:: _torrent_stop()
-
-
    .. py:method:: load_info()
 
       Prepare all variables to manage the image object ( path, name, extra files )
@@ -117,11 +139,19 @@ Module Contents
 
    .. py:method:: get_extra()
 
-      Load extra editables config files for the image.
+      Load raw content of extra editables config files.
 
 
 
-   .. py:method:: get_timestamp()
+   .. py:method:: parse_info_file()
+
+      Parse the .info file LINBO itself reads to deploy this image.
+
+      Raises IncompleteImageInfoError if the file is missing or missing a
+      required field: an incomplete .info here means the image is not
+      safely deployable, which callers must see rather than have papered
+      over with a fabricated value.
+
 
 
    .. py:method:: delete_files()
@@ -157,7 +187,7 @@ Module Contents
 
 
 
-.. py:class:: LinboImageGroup(name)
+.. py:class:: LinboImageGroup(name, driver_manager=None)
 
    Class to handle a basic LinboImage and all his backups.
 
@@ -169,6 +199,12 @@ Module Contents
 
 
    .. py:attribute:: backup_path
+
+
+   .. py:attribute:: driver_manager
+
+
+   .. py:attribute:: windows_drivers
 
 
    .. py:method:: load()
@@ -183,6 +219,36 @@ Module Contents
    .. py:method:: get_diff()
 
       Browse current tree to find a differential image.
+
+
+
+   .. py:method:: get_driver_profiles()
+
+      Return this image's assigned profiles in deterministic order.
+
+
+
+   .. py:method:: render_driverpostsync()
+
+      Render this image's thin static-runtime dispatcher.
+
+
+
+   .. py:method:: publish_driverpostsync()
+
+      Publish this image's static-runtime dispatcher.
+
+
+
+   .. py:method:: assign_driver_profile(profile_name)
+
+      Assign one driver profile to this image.
+
+
+
+   .. py:method:: unassign_driver_profile(profile_name)
+
+      Remove a driver profile's optional assignment to this image.
 
 
 
@@ -201,9 +267,48 @@ Module Contents
    .. py:method:: to_dict()
 
 
-.. py:class:: LinboImageManager
+.. py:class:: LinboImageManager(driver_manager=None)
 
    Manager for all Linbo Images.
+
+
+   .. py:attribute:: driver_manager
+
+
+   .. py:method:: get_driver_profile_image(profile_name)
+
+      Return a profile assignment through the image-group domain.
+
+
+
+   .. py:method:: get_image_driver_profiles(image)
+
+      Return an image group's assigned profiles.
+
+
+
+   .. py:method:: render_driverpostsync(image)
+
+      Render an image group's static-runtime dispatcher.
+
+
+
+   .. py:method:: publish_driverpostsync(image)
+
+      Publish an image group's static-runtime dispatcher.
+
+
+
+   .. py:method:: assign_driver_profile(profile_name, image)
+
+      Assign a profile and publish all affected image dispatchers.
+
+
+
+   .. py:method:: unassign_driver_profile(profile_name)
+
+      Remove an assignment and publish the previous image dispatcher.
+
 
 
    .. py:method:: list()
@@ -272,6 +377,12 @@ Module Contents
       :type timestamp: str
       :param diff: data onlyc concern a diff image
       :type diff: bool
+
+
+
+   .. py:method:: get_images_infos()
+
+      Export all necessary images informations for Linbo Docker project
 
 
 

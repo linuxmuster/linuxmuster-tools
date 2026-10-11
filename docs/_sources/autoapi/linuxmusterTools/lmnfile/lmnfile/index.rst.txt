@@ -9,36 +9,10 @@ linuxmusterTools.lmnfile.lmnfile
 
 
 
-Attributes
-----------
-
-.. autoapisummary::
-
-   linuxmusterTools.lmnfile.lmnfile.logger
-   linuxmusterTools.lmnfile.lmnfile.ALLOWED_PATHS
-   linuxmusterTools.lmnfile.lmnfile.EMPTY_LINE_MARKER
-   linuxmusterTools.lmnfile.lmnfile.HEADER_MARKER
 
 
-Classes
--------
-
-.. autoapisummary::
-
-   linuxmusterTools.lmnfile.lmnfile.LMNFile
-   linuxmusterTools.lmnfile.lmnfile.LinboLoader
-   linuxmusterTools.lmnfile.lmnfile.YAMLLoader
-   linuxmusterTools.lmnfile.lmnfile.CSVLoader
-   linuxmusterTools.lmnfile.lmnfile.ConfigLoader
-   linuxmusterTools.lmnfile.lmnfile.StartConfLoader
 
 
-Functions
----------
-
-.. autoapisummary::
-
-   linuxmusterTools.lmnfile.lmnfile.convertBool
 
 
 Module Contents
@@ -58,9 +32,13 @@ Module Contents
    :value: '#HEADERS#'
 
 
+.. py:data:: BOM_MARKER
+   :value: b'\xef\xbb\xbf'
+
+
 .. py:function:: convertBool(boolean)
 
-.. py:class:: LMNFile(file, mode, delimiter=';', fieldnames=None)
+.. py:class:: LMNFile(file, mode, delimiter=';', fieldnames=None, convert_values=True)
 
    Meta class to handle all type of config file used in linuxmuster's project,
    e.g. ini, csv, linbo config files.
@@ -94,6 +72,16 @@ Module Contents
 
    .. py:attribute:: delimiter
       :value: ';'
+
+
+
+   .. py:attribute:: convert_values
+      :value: True
+
+
+
+   .. py:attribute:: has_BOM
+      :value: False
 
 
 
@@ -148,7 +136,7 @@ Module Contents
 
 
 
-.. py:class:: LinboLoader(file, mode, delimiter=';', fieldnames=None)
+.. py:class:: LinboLoader(file, mode, delimiter=';', fieldnames=None, convert_values=True)
 
    Bases: :py:obj:`LMNFile`
 
@@ -167,7 +155,7 @@ Module Contents
    .. py:method:: __exit__(exc_type, exc_val, exc_tb)
 
 
-.. py:class:: YAMLLoader(file, mode, delimiter=';', fieldnames=None)
+.. py:class:: YAMLLoader(file, mode, delimiter=';', fieldnames=None, convert_values=True)
 
    Bases: :py:obj:`LMNFile`
 
@@ -189,7 +177,7 @@ Module Contents
    .. py:method:: __exit__(exc_type, exc_val, exc_tb)
 
 
-.. py:class:: CSVLoader(file, mode, delimiter=';', fieldnames=None)
+.. py:class:: CSVLoader(file, mode, delimiter=';', fieldnames=None, convert_values=True)
 
    Bases: :py:obj:`LMNFile`
 
@@ -217,7 +205,7 @@ Module Contents
    .. py:method:: __exit__(exc_type, exc_val, exc_tb)
 
 
-.. py:class:: ConfigLoader(file, mode, delimiter=';', fieldnames=None)
+.. py:class:: ConfigLoader(file, mode, delimiter=';', fieldnames=None, convert_values=True)
 
    Bases: :py:obj:`LMNFile`
 
@@ -240,13 +228,18 @@ Module Contents
    .. py:method:: write(data)
 
 
-.. py:class:: StartConfLoader(file, mode, delimiter=';', fieldnames=None)
+.. py:class:: StartConfLoader(file, mode, delimiter=';', fieldnames=None, convert_values=True)
 
    Bases: :py:obj:`LMNFile`
 
 
    Meta class to handle all type of config file used in linuxmuster's project,
    e.g. ini, csv, linbo config files.
+
+
+   .. py:attribute:: extensions
+      :value: []
+
 
 
    .. py:method:: __enter__()

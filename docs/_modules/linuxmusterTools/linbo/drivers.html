@@ -1,0 +1,886 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.linbo.drivers &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../linuxmusterTools.html">linuxmusterTools</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.linbo.drivers</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for linuxmusterTools.linbo.drivers</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Manage hardware-specific LINBO driver profile and image metadata.</span>
+
+<span class="sd">``LinboDriverManager`` owns profile directories and their image-independent</span>
+<span class="sd">``match.conf``. ``WindowsDrivers`` is bound to one ``LinboImageGroup`` and</span>
+<span class="sd">owns its ``image.conf`` assignments and ``.driverpostsync`` dispatcher.</span>
+<span class="sd">Both profile configuration files remain below ``/srv/linbo/drivers``; the</span>
+<span class="sd">dispatcher is published in the bound image group&#39;s directory.</span>
+<span class="sd">Hardware inventory, archive extraction and payload validation remain separate.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">fcntl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">stat</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">configobj</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigObjError</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.checks</span><span class="w"> </span><span class="kn">import</span> <span class="n">NameChecker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..lmnfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">LMNFile</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;DriverProfileExistsError&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LinboDriverManager&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">name_checker</span> <span class="o">=</span> <span class="n">NameChecker</span><span class="p">()</span>
+
+<span class="n">DEFAULT_DRIVERS_BASE</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DRIVERS_BASE&quot;</span><span class="p">,</span> <span class="s2">&quot;/srv/linbo/drivers&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">MATCH_CONF_FILENAME</span> <span class="o">=</span> <span class="s2">&quot;match.conf&quot;</span>
+<span class="n">IMAGE_CONF_FILENAME</span> <span class="o">=</span> <span class="s2">&quot;image.conf&quot;</span>
+<span class="n">MAX_MATCH_VALUE_LENGTH</span> <span class="o">=</span> <span class="mi">512</span>
+<span class="n">MUTATION_LOCK_FILENAME</span> <span class="o">=</span> <span class="s2">&quot;.driver-profiles.lock&quot;</span>
+<span class="n">DRIVERPOSTSYNC_MODE</span> <span class="o">=</span> <span class="mo">0o664</span>
+<span class="n">DRIVERPOSTSYNC_MANAGED_HEADER</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;# Managed-By: linuxmusterTools.linbo.driver_hooks v1&quot;</span>
+<span class="p">)</span>
+<span class="n">DRIVERPOSTSYNC_LEGACY_HEADER</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;# Generated by LINBO Patchless — DO NOT EDIT MANUALLY&quot;</span>
+<span class="p">)</span>
+
+<span class="n">_MATCH_VALUE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-zA-Z0-9 .,()/_+-]+$&quot;</span><span class="p">)</span>
+<span class="n">_WINDOWS_RESERVED_STEMS</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;aux&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;con&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nul&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;prn&quot;</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;com</span><span class="si">{</span><span class="n">number</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)),</span>
+        <span class="o">*</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;lpt</span><span class="si">{</span><span class="n">number</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)),</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="DriverProfileExistsError">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/drivers/index.html#linuxmusterTools.linbo.drivers.DriverProfileExistsError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DriverProfileExistsError</span><span class="p">(</span><span class="ne">FileExistsError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when a new profile would replace an existing path.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Driver profile already exists: </span><span class="si">{</span><span class="n">profile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="DriverProfileExistsError.profile">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/drivers/index.html#linuxmusterTools.linbo.drivers.DriverProfileExistsError.profile">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_validated_profile_name</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a profile name compatible with LMN paths and Windows.&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Profile name must be a string.&quot;</span><span class="p">)</span>
+
+    <span class="n">normalized</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="ow">not</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">check_linbo_image_name</span><span class="p">(</span><span class="n">normalized</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="ow">not</span> <span class="n">normalized</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isalnum</span><span class="p">()</span>
+        <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">normalized</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span>
+        <span class="ow">or</span> <span class="n">normalized</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Profile name must start with an alphanumeric character, contain &quot;</span>
+            <span class="s2">&quot;only [a-zA-Z0-9._-], and be at most 100 characters long.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">windows_stem</span> <span class="o">=</span> <span class="n">normalized</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">casefold</span><span class="p">()</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">windows_stem</span> <span class="ow">in</span> <span class="n">_WINDOWS_RESERVED_STEMS</span>
+        <span class="ow">or</span> <span class="n">normalized</span><span class="o">.</span><span class="n">casefold</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;pnputil-install.cmd&quot;</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Windows-reserved profile name: </span><span class="si">{</span><span class="n">normalized</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">normalized</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_validated_driver_image</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an image basename supported by the LINBO driver runtime.&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="ow">not</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">check_linbo_image_name</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="s2">&quot;.&quot;</span> <span class="ow">in</span> <span class="n">image</span>
+        <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">image</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Driver image names must contain only [A-Za-z0-9_-] and be &quot;</span>
+            <span class="s2">&quot;at most 100 characters long.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">image</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_validated_match</span><span class="p">(</span><span class="n">vendor</span><span class="p">,</span> <span class="n">product</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate one canonical DMI vendor/product pair.&quot;&quot;&quot;</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">&quot;vendor&quot;</span><span class="p">,</span> <span class="n">vendor</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;product&quot;</span><span class="p">,</span> <span class="n">product</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2"> must be a string.&quot;</span><span class="p">)</span>
+        <span class="n">normalized</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">normalized</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2"> must not be empty.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">normalized</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">MAX_MATCH_VALUE_LENGTH</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2"> is too long (max </span><span class="si">{</span><span class="n">MAX_MATCH_VALUE_LENGTH</span><span class="si">}</span><span class="s2"> characters).&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">normalized</span> <span class="o">!=</span> <span class="s2">&quot;*&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">_MATCH_VALUE</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">normalized</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2"> contains unsupported characters.&quot;</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">normalized</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="nd">@contextmanager</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_mutation_lock</span><span class="p">(</span><span class="n">base</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Serialize the short profile metadata mutations between API workers.&quot;&quot;&quot;</span>
+
+    <span class="n">lock_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">base</span><span class="p">)</span> <span class="o">/</span> <span class="n">MUTATION_LOCK_FILENAME</span>
+    <span class="n">flags</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">O_CREAT</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">O_RDWR</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">os</span><span class="p">,</span> <span class="s2">&quot;O_CLOEXEC&quot;</span><span class="p">):</span>
+        <span class="n">flags</span> <span class="o">|=</span> <span class="n">os</span><span class="o">.</span><span class="n">O_CLOEXEC</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">os</span><span class="p">,</span> <span class="s2">&quot;O_NOFOLLOW&quot;</span><span class="p">):</span>
+        <span class="n">flags</span> <span class="o">|=</span> <span class="n">os</span><span class="o">.</span><span class="n">O_NOFOLLOW</span>
+
+    <span class="n">lock_fd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">lock_path</span><span class="p">),</span> <span class="n">flags</span><span class="p">,</span> <span class="mo">0o600</span><span class="p">)</span>
+    <span class="n">locked</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fstat</span><span class="p">(</span><span class="n">lock_fd</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISREG</span><span class="p">(</span><span class="n">metadata</span><span class="o">.</span><span class="n">st_mode</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Driver profile lock is not a regular file: </span><span class="si">{</span><span class="n">lock_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">fchmod</span><span class="p">(</span><span class="n">lock_fd</span><span class="p">,</span> <span class="mo">0o600</span><span class="p">)</span>
+        <span class="n">fcntl</span><span class="o">.</span><span class="n">flock</span><span class="p">(</span><span class="n">lock_fd</span><span class="p">,</span> <span class="n">fcntl</span><span class="o">.</span><span class="n">LOCK_EX</span><span class="p">)</span>
+        <span class="n">locked</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">yield</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">locked</span><span class="p">:</span>
+            <span class="n">fcntl</span><span class="o">.</span><span class="n">flock</span><span class="p">(</span><span class="n">lock_fd</span><span class="p">,</span> <span class="n">fcntl</span><span class="o">.</span><span class="n">LOCK_UN</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">lock_fd</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="LinboDriverManager">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/drivers/index.html#linuxmusterTools.linbo.drivers.LinboDriverManager">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LinboDriverManager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create, read, update and delete LINBO driver profile metadata.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">drivers_base</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="LinboDriverManager.base">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/drivers/index.html#linuxmusterTools.linbo.drivers.LinboDriverManager.base">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">Path</span><span class="p">(</span><span class="n">drivers_base</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">drivers_base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="n">DEFAULT_DRIVERS_BASE</span>
+        <span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_base_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">lexists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">):</span>
+            <span class="n">mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">lstat</span><span class="p">()</span><span class="o">.</span><span class="n">st_mode</span>
+            <span class="k">if</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISLNK</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISDIR</span><span class="p">(</span><span class="n">mode</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Driver profile base is not a real directory: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="mo">0o755</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">lstat</span><span class="p">()</span><span class="o">.</span><span class="n">st_mode</span>
+        <span class="k">if</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISLNK</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISDIR</span><span class="p">(</span><span class="n">mode</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Driver profile base is not a real directory: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+    <span class="nd">@contextmanager</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_mutation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Serialize one driver profile metadata mutation.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_base_directory</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">_mutation_lock</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">):</span>
+            <span class="k">yield</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_write_profile_conf</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write one canonical profile configuration through LMNFile.&quot;&quot;&quot;</span>
+
+        <span class="n">is_new</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">lexists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">LMNFile</span><span class="p">(</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span>
+            <span class="s2">&quot;w&quot;</span><span class="p">,</span>
+            <span class="n">convert_values</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span> <span class="k">as</span> <span class="n">profile_file</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">profile_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">section</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span>
+            <span class="n">profile_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_new</span><span class="p">:</span>
+            <span class="n">path</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="mo">0o644</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LinboDriverManager.list_profiles">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/drivers/index.html#linuxmusterTools.linbo.drivers.LinboDriverManager.list_profiles">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">list_profiles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return every complete, valid profile sorted by name.</span>
+
+<span class="sd">        Raise the first profile error instead of skipping it when ``strict``</span>
+<span class="sd">        is true.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">lexists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_base_directory</span><span class="p">()</span>
+
+        <span class="n">profiles</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">iterdir</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">path</span><span class="p">:</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">candidate</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_profile</span><span class="p">(</span><span class="n">candidate</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="n">ConfigObjError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">strict</span><span class="p">:</span>
+                    <span class="k">raise</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="s2">&quot;Ignoring invalid driver profile </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">candidate</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">error</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">profile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">profiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">profiles</span></div>
+
+
+<div class="viewcode-block" id="LinboDriverManager.get_profile">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/drivers/index.html#linuxmusterTools.linbo.drivers.LinboDriverManager.get_profile">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return one valid profile or ``None`` when its path is absent.&quot;&quot;&quot;</span>
+
+        <span class="n">safe_name</span> <span class="o">=</span> <span class="n">_validated_profile_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">lexists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_base_directory</span><span class="p">()</span>
+        <span class="n">profile_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">/</span> <span class="n">safe_name</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">profile_mode</span> <span class="o">=</span> <span class="n">profile_path</span><span class="o">.</span><span class="n">lstat</span><span class="p">()</span><span class="o">.</span><span class="n">st_mode</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISLNK</span><span class="p">(</span><span class="n">profile_mode</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISDIR</span><span class="p">(</span><span class="n">profile_mode</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Driver profile path is not a real directory: </span><span class="si">{</span><span class="n">safe_name</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">match_path</span> <span class="o">=</span> <span class="n">profile_path</span> <span class="o">/</span> <span class="n">MATCH_CONF_FILENAME</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">match_mode</span> <span class="o">=</span> <span class="n">match_path</span><span class="o">.</span><span class="n">lstat</span><span class="p">()</span><span class="o">.</span><span class="n">st_mode</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Driver profile has no </span><span class="si">{</span><span class="n">MATCH_CONF_FILENAME</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">safe_name</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+        <span class="k">if</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISLNK</span><span class="p">(</span><span class="n">match_mode</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISREG</span><span class="p">(</span><span class="n">match_mode</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Driver profile </span><span class="si">{</span><span class="n">MATCH_CONF_FILENAME</span><span class="si">}</span><span class="s2"> is not a regular file: &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">safe_name</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">LMNFile</span><span class="p">(</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">match_path</span><span class="p">),</span>
+                <span class="s2">&quot;r&quot;</span><span class="p">,</span>
+                <span class="n">convert_values</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span> <span class="k">as</span> <span class="n">match_file</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">match_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">ConfigObjError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid </span><span class="si">{</span><span class="n">MATCH_CONF_FILENAME</span><span class="si">}</span><span class="s2"> for driver profile </span><span class="si">{</span><span class="n">safe_name</span><span class="si">}</span><span class="s2">: &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+
+        <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">!=</span> <span class="p">{</span><span class="s2">&quot;match&quot;</span><span class="p">}:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">MATCH_CONF_FILENAME</span><span class="si">}</span><span class="s2"> must contain exactly one [match] section.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">inline_comments</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;match&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">MATCH_CONF_FILENAME</span><span class="si">}</span><span class="s2"> must not contain inline comments.&quot;</span>
+            <span class="p">)</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;match&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="nb">set</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">!=</span> <span class="p">{</span><span class="s2">&quot;vendor&quot;</span><span class="p">,</span> <span class="s2">&quot;product&quot;</span><span class="p">}</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;[match] must contain exactly one vendor and one product.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">inline_comments</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">section</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">MATCH_CONF_FILENAME</span><span class="si">}</span><span class="s2"> must not contain inline comments.&quot;</span>
+            <span class="p">)</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">_validated_match</span><span class="p">(</span><span class="n">section</span><span class="p">[</span><span class="s2">&quot;vendor&quot;</span><span class="p">],</span> <span class="n">section</span><span class="p">[</span><span class="s2">&quot;product&quot;</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">safe_name</span><span class="p">,</span>
+            <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">profile_path</span><span class="p">),</span>
+            <span class="s2">&quot;matchConf&quot;</span><span class="p">:</span> <span class="n">match</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="LinboDriverManager.create_profile">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/drivers/index.html#linuxmusterTools.linbo.drivers.LinboDriverManager.create_profile">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">vendor</span><span class="p">,</span> <span class="n">product</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a profile without replacing any existing path.&quot;&quot;&quot;</span>
+
+        <span class="n">safe_name</span> <span class="o">=</span> <span class="n">_validated_profile_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">_validated_match</span><span class="p">(</span><span class="n">vendor</span><span class="p">,</span> <span class="n">product</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mutation</span><span class="p">():</span>
+            <span class="k">with</span> <span class="n">os</span><span class="o">.</span><span class="n">scandir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">)</span> <span class="k">as</span> <span class="n">entries</span><span class="p">:</span>
+                <span class="n">collision</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span>
+                    <span class="n">entry</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">casefold</span><span class="p">()</span> <span class="o">==</span> <span class="n">safe_name</span><span class="o">.</span><span class="n">casefold</span><span class="p">()</span>
+                    <span class="ow">or</span> <span class="n">entry</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">casefold</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">safe_name</span><span class="o">.</span><span class="n">casefold</span><span class="p">()</span><span class="si">}</span><span class="s2">.deleting-&quot;</span>
+                    <span class="p">)</span>
+                    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">entries</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">collision</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">DriverProfileExistsError</span><span class="p">(</span><span class="n">safe_name</span><span class="p">)</span>
+
+            <span class="n">profile_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">/</span> <span class="n">safe_name</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">profile_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="mo">0o755</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">FileExistsError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">DriverProfileExistsError</span><span class="p">(</span><span class="n">safe_name</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_write_profile_conf</span><span class="p">(</span>
+                    <span class="n">profile_path</span> <span class="o">/</span> <span class="n">MATCH_CONF_FILENAME</span><span class="p">,</span>
+                    <span class="s2">&quot;match&quot;</span><span class="p">,</span>
+                    <span class="n">match</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">profile_path</span><span class="o">.</span><span class="n">rmdir</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">raise</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_profile</span><span class="p">(</span><span class="n">safe_name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LinboDriverManager.update_match">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/drivers/index.html#linuxmusterTools.linbo.drivers.LinboDriverManager.update_match">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">vendor</span><span class="p">,</span> <span class="n">product</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Replace only ``match.conf`` and preserve all driver payload files.&quot;&quot;&quot;</span>
+
+        <span class="n">match</span> <span class="o">=</span> <span class="n">_validated_match</span><span class="p">(</span><span class="n">vendor</span><span class="p">,</span> <span class="n">product</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">lexists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Driver profile not found: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mutation</span><span class="p">():</span>
+            <span class="n">profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_profile</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">profile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Driver profile not found: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_write_profile_conf</span><span class="p">(</span>
+                <span class="n">Path</span><span class="p">(</span><span class="n">profile</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="n">MATCH_CONF_FILENAME</span><span class="p">,</span>
+                <span class="s2">&quot;match&quot;</span><span class="p">,</span>
+                <span class="n">match</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_profile</span><span class="p">(</span><span class="n">profile</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="LinboDriverManager.delete_profile">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/drivers/index.html#linuxmusterTools.linbo.drivers.LinboDriverManager.delete_profile">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delete a valid managed profile and return whether it existed.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">lexists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mutation</span><span class="p">():</span>
+            <span class="n">profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_profile</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">profile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="n">profile_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">profile</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">lexists</span><span class="p">(</span><span class="n">profile_path</span> <span class="o">/</span> <span class="n">IMAGE_CONF_FILENAME</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Driver profile </span><span class="si">{</span><span class="n">profile</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> is assigned; &quot;</span>
+                    <span class="s2">&quot;unassign it before deleting.&quot;</span>
+                <span class="p">)</span>
+            <span class="n">quarantine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">/</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">profile</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.deleting-</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="n">profile_path</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">quarantine</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">quarantine</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mutation</span><span class="p">():</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">lexists</span><span class="p">(</span><span class="n">profile_path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">lexists</span><span class="p">(</span><span class="n">quarantine</span><span class="p">):</span>
+                    <span class="n">quarantine</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">profile_path</span><span class="p">)</span>
+            <span class="k">raise</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+</div>
+
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">WindowsDrivers</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Manage the Windows driver metadata for one LINBO image group.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_group</span><span class="p">,</span> <span class="n">driver_manager</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_group</span> <span class="o">=</span> <span class="n">image_group</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">driver_manager</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">driver_manager</span>
+            <span class="k">if</span> <span class="n">driver_manager</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="n">LinboDriverManager</span><span class="p">()</span>
+        <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_image</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return an image basename supported by the driver runtime.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">_validated_driver_image</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_read_profile_assignment</span><span class="p">(</span><span class="n">profile</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read one already validated profile&#39;s optional image assignment.&quot;&quot;&quot;</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">profile</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="n">IMAGE_CONF_FILENAME</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">metadata</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">lstat</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISLNK</span><span class="p">(</span><span class="n">metadata</span><span class="o">.</span><span class="n">st_mode</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISREG</span><span class="p">(</span><span class="n">metadata</span><span class="o">.</span><span class="n">st_mode</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;image.conf is not a regular file: </span><span class="si">{</span><span class="n">profile</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">LMNFile</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">convert_values</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">image_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">ConfigObjError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid image.conf for driver profile </span><span class="si">{</span><span class="n">profile</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+
+        <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">!=</span> <span class="p">{</span><span class="s2">&quot;image&quot;</span><span class="p">}</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">inline_comments</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;image&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;image.conf must contain one canonical [image] section or &quot;</span>
+                <span class="s2">&quot;one legacy image value.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">section</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="c1"># Read compatibility for the standalone/.deb format.</span>
+            <span class="k">return</span> <span class="n">_validated_driver_image</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">set</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">!=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">}:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;[image] must contain exactly one name.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">section</span><span class="o">.</span><span class="n">inline_comments</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;image.conf must not contain inline comments.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_validated_driver_image</span><span class="p">(</span><span class="n">section</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_profile_image</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">driver_manager</span><span class="p">,</span> <span class="n">profile_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return one profile&#39;s image assignment, if present.&quot;&quot;&quot;</span>
+
+        <span class="n">profile</span> <span class="o">=</span> <span class="n">driver_manager</span><span class="o">.</span><span class="n">get_profile</span><span class="p">(</span><span class="n">profile_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">profile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Driver profile not found: </span><span class="si">{</span><span class="n">profile_name</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_read_profile_assignment</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_profiles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return this image&#39;s assigned profiles in deterministic order.&quot;&quot;&quot;</span>
+
+        <span class="n">image</span> <span class="o">=</span> <span class="n">_validated_driver_image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_group</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">profiles</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">known_names</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">profile</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver_manager</span><span class="o">.</span><span class="n">list_profiles</span><span class="p">(</span><span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">profile</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+            <span class="n">normalized</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">casefold</span><span class="p">()</span>
+            <span class="n">previous</span> <span class="o">=</span> <span class="n">known_names</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">normalized</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">previous</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">previous</span> <span class="o">!=</span> <span class="n">name</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Driver profile names differ only by case: &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">previous</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="n">known_names</span><span class="p">[</span><span class="n">normalized</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_profile_assignment</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span> <span class="o">==</span> <span class="n">image</span><span class="p">:</span>
+                <span class="n">profiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">profiles</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">value</span><span class="p">:</span> <span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">casefold</span><span class="p">(),</span> <span class="n">value</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">render_driverpostsync</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render this image&#39;s thin static-runtime dispatcher.&quot;&quot;&quot;</span>
+
+        <span class="n">image</span> <span class="o">=</span> <span class="n">_validated_driver_image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_group</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">profiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_profiles</span><span class="p">()</span>
+        <span class="n">profile_comment</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">profiles</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;(none)&quot;</span>
+        <span class="n">arguments</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; &quot;</span><span class="si">{</span><span class="n">profile</span><span class="si">}</span><span class="s1">&quot;&#39;</span> <span class="k">for</span> <span class="n">profile</span> <span class="ow">in</span> <span class="n">profiles</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="s2">&quot;#!/bin/sh</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">DRIVERPOSTSYNC_MANAGED_HEADER</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;# Image: </span><span class="si">{</span><span class="n">image</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;# Profiles: </span><span class="si">{</span><span class="n">profile_comment</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;if ! command -v linbo_driverpostsync &gt;/dev/null 2&gt;&amp;1; then</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s1">&#39;    echo &quot;LINBO driver runtime is missing.&quot; &gt;&amp;2</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="s2">&quot;    return 1</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;fi</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s1">&#39;linbo_driverpostsync &quot;</span><span class="si">{</span><span class="n">image</span><span class="si">}</span><span class="s1">&quot;</span><span class="si">{</span><span class="n">arguments</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="s2">&quot;return $?</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_driverpostsync_target</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return existing hook metadata after validating its ownership.&quot;&quot;&quot;</span>
+
+        <span class="n">image_directory</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">parent</span>
+        <span class="n">directory_metadata</span> <span class="o">=</span> <span class="n">image_directory</span><span class="o">.</span><span class="n">lstat</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISDIR</span><span class="p">(</span><span class="n">directory_metadata</span><span class="o">.</span><span class="n">st_mode</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;LINBO image path is not a real directory: </span><span class="si">{</span><span class="n">image_directory</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">target_metadata</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">target_metadata</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">lstat</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">stat</span><span class="o">.</span><span class="n">S_ISREG</span><span class="p">(</span><span class="n">target_metadata</span><span class="o">.</span><span class="n">st_mode</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;driverpostsync hook is not a regular file: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hook</span><span class="p">:</span>
+                    <span class="n">header</span> <span class="o">=</span> <span class="p">[</span>
+                        <span class="n">hook</span><span class="o">.</span><span class="n">readline</span><span class="p">(</span><span class="mi">4097</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+                    <span class="p">]</span>
+            <span class="k">except</span> <span class="ne">UnicodeError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">PermissionError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Refusing to overwrite unmanaged driverpostsync hook: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+            <span class="n">legacy_image_headers</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="sa">f</span><span class="s2">&quot;# Auto-generated driverpostsync script for image: </span><span class="si">{</span><span class="n">path</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;# Auto-generated driverpostsync tombstone for image: </span><span class="si">{</span><span class="n">path</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="n">is_managed</span> <span class="o">=</span> <span class="n">header</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span>
+                <span class="s2">&quot;#!/bin/sh&quot;</span><span class="p">,</span>
+                <span class="n">DRIVERPOSTSYNC_MANAGED_HEADER</span><span class="p">,</span>
+            <span class="p">]</span>
+            <span class="n">is_legacy</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">header</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;#!/bin/sh&quot;</span>
+                <span class="ow">and</span> <span class="n">DRIVERPOSTSYNC_LEGACY_HEADER</span> <span class="ow">in</span> <span class="n">header</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="n">legacy_image_headers</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_managed</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_legacy</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">PermissionError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Refusing to overwrite unmanaged driverpostsync hook: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="n">target_metadata</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_write_driverpostsync</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Atomically replace one owned raw driverpostsync hook.&quot;&quot;&quot;</span>
+
+        <span class="n">image_directory</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">parent</span>
+        <span class="n">target_metadata</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_validate_driverpostsync_target</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="n">temporary</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fd</span><span class="p">,</span> <span class="n">temporary</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkstemp</span><span class="p">(</span>
+                <span class="n">prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span>
+                <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.tmp&quot;</span><span class="p">,</span>
+                <span class="nb">dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">image_directory</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">with</span> <span class="n">os</span><span class="o">.</span><span class="n">fdopen</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">hook</span><span class="p">:</span>
+                <span class="n">hook</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+                <span class="n">hook</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">target_metadata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">temporary_metadata</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fstat</span><span class="p">(</span><span class="n">hook</span><span class="o">.</span><span class="n">fileno</span><span class="p">())</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="n">temporary_metadata</span><span class="o">.</span><span class="n">st_uid</span> <span class="o">!=</span> <span class="n">target_metadata</span><span class="o">.</span><span class="n">st_uid</span>
+                        <span class="ow">or</span> <span class="n">temporary_metadata</span><span class="o">.</span><span class="n">st_gid</span> <span class="o">!=</span> <span class="n">target_metadata</span><span class="o">.</span><span class="n">st_gid</span>
+                    <span class="p">):</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">fchown</span><span class="p">(</span>
+                            <span class="n">hook</span><span class="o">.</span><span class="n">fileno</span><span class="p">(),</span>
+                            <span class="n">target_metadata</span><span class="o">.</span><span class="n">st_uid</span><span class="p">,</span>
+                            <span class="n">target_metadata</span><span class="o">.</span><span class="n">st_gid</span><span class="p">,</span>
+                        <span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">fchmod</span><span class="p">(</span><span class="n">hook</span><span class="o">.</span><span class="n">fileno</span><span class="p">(),</span> <span class="n">DRIVERPOSTSYNC_MODE</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">fsync</span><span class="p">(</span><span class="n">hook</span><span class="o">.</span><span class="n">fileno</span><span class="p">())</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">temporary</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+            <span class="n">temporary</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">directory_fd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">image_directory</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">O_RDONLY</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">fsync</span><span class="p">(</span><span class="n">directory_fd</span><span class="p">)</span>
+            <span class="k">finally</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">directory_fd</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">temporary</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">temporary</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_driverpostsync_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return this image group&#39;s driverpostsync hook path.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_group</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+            <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">image_group</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.driverpostsync&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_preflight_driverpostsync</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate this image&#39;s configuration and existing hook target.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_driverpostsync</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_driverpostsync_target</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_driverpostsync_path</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_regenerate_driverpostsync</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render and publish this image&#39;s managed driverpostsync hook.&quot;&quot;&quot;</span>
+
+        <span class="n">content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_driverpostsync</span><span class="p">()</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_driverpostsync_path</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_write_driverpostsync</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">path</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">publish_driverpostsync</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Publish this image&#39;s dispatcher under the profile mutation lock.&quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver_manager</span><span class="o">.</span><span class="n">_mutation</span><span class="p">():</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_regenerate_driverpostsync</span><span class="p">())</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_write_profile_assignment</span><span class="p">(</span><span class="n">driver_manager</span><span class="p">,</span> <span class="n">profile</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set one assignment while the caller holds the mutation lock.&quot;&quot;&quot;</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">profile</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="n">IMAGE_CONF_FILENAME</span>
+        <span class="k">if</span> <span class="n">image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">path</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">missing_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="n">driver_manager</span><span class="o">.</span><span class="n">_write_profile_conf</span><span class="p">(</span>
+            <span class="n">path</span><span class="p">,</span>
+            <span class="s2">&quot;image&quot;</span><span class="p">,</span>
+            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">_validated_driver_image</span><span class="p">(</span><span class="n">image</span><span class="p">)},</span>
+        <span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_apply_assignment</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">driver_manager</span><span class="p">,</span>
+        <span class="n">profile</span><span class="p">,</span>
+        <span class="n">previous_image</span><span class="p">,</span>
+        <span class="n">image</span><span class="p">,</span>
+        <span class="n">affected</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Change one assignment and publish every affected dispatcher.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">previous_image</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">assignment</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">profile</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="n">IMAGE_CONF_FILENAME</span>
+        <span class="n">previous_metadata</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">assignment</span><span class="o">.</span><span class="n">lstat</span><span class="p">()</span> <span class="k">if</span> <span class="n">previous_image</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">windows_drivers</span> <span class="ow">in</span> <span class="n">affected</span><span class="p">:</span>
+            <span class="n">windows_drivers</span><span class="o">.</span><span class="n">_preflight_driverpostsync</span><span class="p">()</span>
+
+        <span class="n">attempted</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_write_profile_assignment</span><span class="p">(</span><span class="n">driver_manager</span><span class="p">,</span> <span class="n">profile</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">windows_drivers</span> <span class="ow">in</span> <span class="n">affected</span><span class="p">:</span>
+                <span class="n">attempted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">windows_drivers</span><span class="p">)</span>
+                <span class="n">windows_drivers</span><span class="o">.</span><span class="n">_regenerate_driverpostsync</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">rollback_errors</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">_write_profile_assignment</span><span class="p">(</span>
+                    <span class="n">driver_manager</span><span class="p">,</span>
+                    <span class="n">profile</span><span class="p">,</span>
+                    <span class="n">previous_image</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">previous_metadata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">restored</span> <span class="o">=</span> <span class="n">assignment</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="n">restored</span><span class="o">.</span><span class="n">st_uid</span> <span class="o">!=</span> <span class="n">previous_metadata</span><span class="o">.</span><span class="n">st_uid</span>
+                        <span class="ow">or</span> <span class="n">restored</span><span class="o">.</span><span class="n">st_gid</span> <span class="o">!=</span> <span class="n">previous_metadata</span><span class="o">.</span><span class="n">st_gid</span>
+                    <span class="p">):</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">chown</span><span class="p">(</span>
+                            <span class="n">assignment</span><span class="p">,</span>
+                            <span class="n">previous_metadata</span><span class="o">.</span><span class="n">st_uid</span><span class="p">,</span>
+                            <span class="n">previous_metadata</span><span class="o">.</span><span class="n">st_gid</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="n">assignment</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">stat</span><span class="o">.</span><span class="n">S_IMODE</span><span class="p">(</span><span class="n">previous_metadata</span><span class="o">.</span><span class="n">st_mode</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">rollback_error</span><span class="p">:</span>
+                <span class="n">rollback_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rollback_error</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">windows_drivers</span> <span class="ow">in</span> <span class="n">attempted</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">windows_drivers</span><span class="o">.</span><span class="n">_regenerate_driverpostsync</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">rollback_error</span><span class="p">:</span>
+                    <span class="n">rollback_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rollback_error</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">rollback_errors</span><span class="p">:</span>
+                <span class="n">details</span> <span class="o">=</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">rollback_errors</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="s2">&quot;Driver assignment publication failed for &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">profile</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">); rollback was incomplete: &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">details</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">rollback_errors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">raise</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_change_own_assignment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile_name</span><span class="p">,</span> <span class="n">assigned</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Change only this image group&#39;s assignment under one lock.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">lexists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">driver_manager</span><span class="o">.</span><span class="n">base</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Driver profile not found: </span><span class="si">{</span><span class="n">profile_name</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver_manager</span><span class="o">.</span><span class="n">_mutation</span><span class="p">():</span>
+            <span class="n">profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver_manager</span><span class="o">.</span><span class="n">get_profile</span><span class="p">(</span><span class="n">profile_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">profile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Driver profile not found: </span><span class="si">{</span><span class="n">profile_name</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="n">_validated_driver_image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_group</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">previous_image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_profile_assignment</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">previous_image</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">assigned</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Driver profile </span><span class="si">{</span><span class="n">profile</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> is assigned to &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">previous_image</span><span class="si">}</span><span class="s2">; use LinboImageManager to move it.&quot;</span>
+                    <span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Driver profile </span><span class="si">{</span><span class="n">profile</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> is assigned to &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">previous_image</span><span class="si">}</span><span class="s2">, not </span><span class="si">{</span><span class="n">image</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+            <span class="n">target_image</span> <span class="o">=</span> <span class="n">image</span> <span class="k">if</span> <span class="n">assigned</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">affected</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="p">]</span> <span class="k">if</span> <span class="n">assigned</span> <span class="ow">or</span> <span class="n">previous_image</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_apply_assignment</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">driver_manager</span><span class="p">,</span>
+                <span class="n">profile</span><span class="p">,</span>
+                <span class="n">previous_image</span><span class="p">,</span>
+                <span class="n">target_image</span><span class="p">,</span>
+                <span class="n">affected</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">profile</span><span class="p">,</span> <span class="n">target_image</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">assign_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assign a profile to this image and publish its dispatcher.&quot;&quot;&quot;</span>
+
+        <span class="n">profile</span><span class="p">,</span> <span class="n">image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_change_own_assignment</span><span class="p">(</span><span class="n">profile_name</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;profile&quot;</span><span class="p">:</span> <span class="n">profile</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">image</span><span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">unassign_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove this image&#39;s profile assignment and publish its hook.&quot;&quot;&quot;</span>
+
+        <span class="n">profile</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_change_own_assignment</span><span class="p">(</span><span class="n">profile_name</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;profile&quot;</span><span class="p">:</span> <span class="n">profile</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

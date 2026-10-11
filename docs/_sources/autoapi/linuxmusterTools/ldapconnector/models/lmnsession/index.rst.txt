@@ -4,12 +4,6 @@ linuxmusterTools.ldapconnector.models.lmnsession
 .. py:module:: linuxmusterTools.ldapconnector.models.lmnsession
 
 
-Classes
--------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.models.lmnsession.LMNSessionModel
 
 
 Module Contents

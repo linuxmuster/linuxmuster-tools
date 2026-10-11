@@ -4,16 +4,6 @@ linuxmusterTools.ldapconnector.urls.ou
 .. py:module:: linuxmusterTools.ldapconnector.urls.ou
 
 
-Functions
----------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.urls.ou.get_all_ou
-   linuxmusterTools.ldapconnector.urls.ou.get_devices_ou
-   linuxmusterTools.ldapconnector.urls.ou.get_students_ou
-   linuxmusterTools.ldapconnector.urls.ou.get_students_parents_ou
-   linuxmusterTools.ldapconnector.urls.ou.get_staff_ou
 
 
 Module Contents

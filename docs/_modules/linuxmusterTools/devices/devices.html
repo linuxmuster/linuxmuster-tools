@@ -5,18 +5,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.devices.devices &mdash; linuxmuster-tools7 7.3.26 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+  <title>linuxmusterTools.devices.devices &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=ac320c09"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/translations.js?v=8fd896e3"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -73,32 +73,44 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.devices.devices</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">..lmnfile</span> <span class="kn">import</span> <span class="n">LMNFile</span>
-<span class="kn">from</span> <span class="nn">..common.checks</span> <span class="kn">import</span> <span class="n">NameChecker</span>
-<span class="kn">from</span> <span class="nn">..lmnconfig</span> <span class="kn">import</span> <span class="n">SophomorixIni</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..lmnfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">LMNFile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.checks</span><span class="w"> </span><span class="kn">import</span> <span class="n">NameChecker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.sorting</span><span class="w"> </span><span class="kn">import</span> <span class="n">sort_naturally</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.timestamps</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_utc_mtime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..lmnconfig</span><span class="w"> </span><span class="kn">import</span> <span class="n">SophomorixIni</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.validator</span><span class="w"> </span><span class="kn">import</span> <span class="n">InventoryValidator</span>
 
 <div class="viewcode-block" id="sophomorix_ini">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/index.html#linuxmusterTools.devices.devices.sophomorix_ini">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/devices/index.html#linuxmusterTools.devices.devices.sophomorix_ini">[docs]</a>
 <span class="n">sophomorix_ini</span> <span class="o">=</span> <span class="n">SophomorixIni</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="CLIENT_ROLES">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/index.html#linuxmusterTools.devices.devices.CLIENT_ROLES">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/devices/index.html#linuxmusterTools.devices.devices.CLIENT_ROLES">[docs]</a>
 <span class="n">CLIENT_ROLES</span> <span class="o">=</span> <span class="n">sophomorix_ini</span><span class="o">.</span><span class="n">clientrole</span></div>
-
-<div class="viewcode-block" id="COMPUTER_ROLES">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/index.html#linuxmusterTools.devices.devices.COMPUTER_ROLES">[docs]</a>
-<span class="n">COMPUTER_ROLES</span> <span class="o">=</span> <span class="n">sophomorix_ini</span><span class="o">.</span><span class="n">computerrole</span></div>
 
 
 <div class="viewcode-block" id="name_checker">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/index.html#linuxmusterTools.devices.devices.name_checker">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/devices/index.html#linuxmusterTools.devices.devices.name_checker">[docs]</a>
 <span class="n">name_checker</span> <span class="o">=</span> <span class="n">NameChecker</span><span class="p">()</span></div>
 
 
+<div class="viewcode-block" id="logger">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/devices/index.html#linuxmusterTools.devices.devices.logger">[docs]</a>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SOPHOMORIX_SCHOOLS_DIR">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/devices/index.html#linuxmusterTools.devices.devices.SOPHOMORIX_SCHOOLS_DIR">[docs]</a>
+<span class="n">SOPHOMORIX_SCHOOLS_DIR</span> <span class="o">=</span> <span class="s1">&#39;/etc/linuxmuster/sophomorix&#39;</span></div>
+
+
 <div class="viewcode-block" id="Devices">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.devices.devices.Devices">[docs]</a>
-<span class="k">class</span> <span class="nc">Devices</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/devices/index.html#linuxmusterTools.devices.devices.Devices">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Devices</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
 <div class="viewcode-block" id="Devices.school">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/devices/index.html#linuxmusterTools.devices.devices.Devices.school">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">school</span> <span class="o">=</span> <span class="n">school</span></div>
@@ -106,132 +118,216 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">switch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Devices.switch">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.devices.devices.Devices.switch">[docs]</a>
-    <span class="k">def</span> <span class="nf">switch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/devices/index.html#linuxmusterTools.devices.devices.Devices.switch">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">switch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">school</span> <span class="o">=</span> <span class="n">school</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">school</span> <span class="o">!=</span> <span class="s1">&#39;default-school&#39;</span><span class="p">:</span>
+            <span class="c1"># Two different prefixes, do not mix them up: the inventory file</span>
+            <span class="c1"># is &lt;school&gt;.devices.csv, while a host of that school is named</span>
+            <span class="c1"># &lt;school&gt;-&lt;hostname&gt; everywhere it is seen from outside its own</span>
+            <span class="c1"># school - sophomorix&#39; own SCHOOLS.&lt;school&gt;.PREFIX.</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="si">}</span><span class="s1">.&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hostname_prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="si">}</span><span class="s1">-&#39;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hostname_prefix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;/etc/linuxmuster/sophomorix/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s1">devices.csv&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">SOPHOMORIX_SCHOOLS_DIR</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s1">devices.csv&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Devices.load">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.devices.devices.Devices.load">[docs]</a>
-    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/devices/index.html#linuxmusterTools.devices.devices.Devices.load">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">devices</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="k">with</span> <span class="n">LMNFile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">devices_csv</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">devices_csv</span><span class="o">.</span><span class="n">read</span><span class="p">():</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;room&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">devices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">LMNFile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">devices_csv</span><span class="p">:</span>
+                <span class="n">rows</span> <span class="o">=</span> <span class="n">devices_csv</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">device</span><span class="p">,</span> <span class="n">csv_line</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">devices_csv</span><span class="o">.</span><span class="n">line_numbers</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;room&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">):</span>
+                        <span class="c1"># TODO: special cases for linbo docker</span>
+                        <span class="n">device</span><span class="p">[</span><span class="s1">&#39;school&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">school</span>
+                        <span class="c1"># The address as written in the file, kept beside the</span>
+                        <span class="c1"># normalized one: normalize_mac() returns None on a</span>
+                        <span class="c1"># malformed address, and a caller reporting it would</span>
+                        <span class="c1"># have nothing left to name.</span>
+                        <span class="n">device</span><span class="p">[</span><span class="s1">&#39;macRaw&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;mac&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span>
+                        <span class="n">device</span><span class="p">[</span><span class="s1">&#39;mac&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">normalize_mac</span><span class="p">(</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;macRaw&#39;</span><span class="p">])</span>
+                        <span class="c1"># Physical line in devices.csv, so that a caller can</span>
+                        <span class="c1"># point at the line to fix.</span>
+                        <span class="n">device</span><span class="p">[</span><span class="s1">&#39;csvLine&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">csv_line</span>
+                        <span class="n">device</span><span class="p">[</span><span class="s1">&#39;pxeEnabled&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_pxe_flag</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">devices</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)]))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;room&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">devices</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;room&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)]))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">clients</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">roles</span><span class="o">=</span><span class="n">CLIENT_ROLES</span><span class="p">)</span></div>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">devices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="c1"># No devices.csv yet, e.g. fresh install not provisioned yet</span>
+            <span class="k">pass</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="o">=</span> <span class="n">sort_naturally</span><span class="p">({</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">devices</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">macs</span> <span class="o">=</span> <span class="n">sort_naturally</span><span class="p">({</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;mac&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">devices</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mac&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ips</span> <span class="o">=</span> <span class="n">sort_naturally</span><span class="p">({</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;ip&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">devices</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ip&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rooms</span> <span class="o">=</span> <span class="n">sort_naturally</span><span class="p">({</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;room&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">devices</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;room&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hostnames</span> <span class="o">=</span> <span class="n">sort_naturally</span><span class="p">({</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">devices</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hostname&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)})</span>
+        <span class="c1"># Same hosts, named as anything school-agnostic writes them: LINBO</span>
+        <span class="c1"># logs, hwinfo files, AD objects. Answers &quot;is this host mine?&quot; for a</span>
+        <span class="c1"># caller holding a name that came from outside the school.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prefixed_hostnames</span> <span class="o">=</span> <span class="p">{</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname_prefix</span><span class="si">}{</span><span class="n">h</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hostnames</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clients</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">roles</span><span class="o">=</span><span class="n">CLIENT_ROLES</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">csv_mtime</span> <span class="o">=</span> <span class="n">get_utc_mtime</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">))</span> <span class="c1"># check if I can replace all paths with Path instances</span></div>
+
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_pxe_flag</span><span class="p">(</span><span class="n">device</span><span class="p">):</span>
+        <span class="n">pxeflag</span> <span class="o">=</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;pxeFlag&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># If pxeflag is not provided, should be 0</span>
+            <span class="n">int_pxeflag</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pxeflag</span><span class="p">)</span> <span class="k">if</span> <span class="n">pxeflag</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">int_pxeflag</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="n">int_pxeflag</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;nopxe&quot;</span>
 
 <div class="viewcode-block" id="Devices.filter">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.devices.devices.Devices.filter">[docs]</a>
-    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="p">[],</span> <span class="n">groups</span><span class="o">=</span><span class="p">[]):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/devices/index.html#linuxmusterTools.devices.devices.Devices.filter">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="p">[],</span> <span class="n">groups</span><span class="o">=</span><span class="p">[],</span> <span class="n">macs</span><span class="o">=</span><span class="p">[]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filter the devices list per attributes.</span>
+<span class="sd">        The filters roles and groups can be combined, but the filter macs must</span>
+<span class="sd">        be used alone.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
         <span class="k">if</span> <span class="n">roles</span> <span class="ow">and</span> <span class="n">groups</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">device</span> <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">devices</span> <span class="k">if</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;sophomorixRole&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">roles</span> <span class="ow">and</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">]</span>
         <span class="k">elif</span> <span class="n">roles</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">device</span> <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">devices</span> <span class="k">if</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;sophomorixRole&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">roles</span><span class="p">]</span>
         <span class="k">elif</span> <span class="n">groups</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">device</span> <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">devices</span> <span class="k">if</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">macs</span><span class="p">:</span>
+            <span class="n">macs_normalized</span> <span class="o">=</span> <span class="p">[</span><span class="n">name_checker</span><span class="o">.</span><span class="n">normalize_mac</span><span class="p">(</span><span class="n">mac</span><span class="p">)</span> <span class="k">for</span> <span class="n">mac</span> <span class="ow">in</span> <span class="n">macs</span><span class="p">]</span>
+            <span class="k">return</span> <span class="p">[</span>
+                <span class="n">device</span>
+                <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">devices</span>
+                <span class="k">if</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">normalize_mac</span><span class="p">(</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;mac&#39;</span><span class="p">])</span> <span class="ow">in</span> <span class="n">macs_normalized</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">devices</span></div>
 
 
-<div class="viewcode-block" id="Devices.get_hostname">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.devices.devices.Devices.get_hostname">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_hostname</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="p">[],</span> <span class="n">groups</span><span class="o">=</span><span class="p">[]):</span>
+<div class="viewcode-block" id="Devices.get_host">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/devices/index.html#linuxmusterTools.devices.devices.Devices.get_host">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_host</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="p">[],</span> <span class="n">groups</span><span class="o">=</span><span class="p">[]):</span>
         <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">roles</span><span class="p">,</span> <span class="n">groups</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">hostname</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">device</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
+<div class="viewcode-block" id="Devices.get_hosts_by_macs">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/devices/index.html#linuxmusterTools.devices.devices.Devices.get_hosts_by_macs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_hosts_by_macs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">macs</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">macs</span><span class="o">=</span><span class="n">macs</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="Devices.get_client">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.devices.devices.Devices.get_client">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_client</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="p">[]):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_hostname</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="n">CLIENT_ROLES</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">)</span></div>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/devices/index.html#linuxmusterTools.devices.devices.Devices.get_client">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_client</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_host</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="n">CLIENT_ROLES</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Devices.get_clients">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.devices.devices.Devices.get_clients">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_clients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="p">[]):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/devices/index.html#linuxmusterTools.devices.devices.Devices.get_clients">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_clients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="p">[]):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">roles</span><span class="o">=</span><span class="n">CLIENT_ROLES</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Devices.check_conf">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.devices.devices.Devices.check_conf">[docs]</a>
-    <span class="k">def</span> <span class="nf">check_conf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># TODO check</span>
-        <span class="c1"># MS SOFTWARE KEYS ?</span>
-        <span class="c1"># COMPUTER_ACCOUNT/HOST_GROUP/HOST_GROUP_TYPE flags ?</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/devices/index.html#linuxmusterTools.devices.devices.Devices.check_conf">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_conf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate the inventory of this school, reporting everything found</span>
+<span class="sd">        instead of stopping at the first problem.</span>
 
-        <span class="n">report</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="sd">        Only this school is read, so a host name, a mac address or an ip</span>
+<span class="sd">        address shared with another school can not be seen here: use</span>
+<span class="sd">        check_all_schools() for that.</span>
 
-        <span class="c1"># Check values</span>
-        <span class="n">ip_rev</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">mac_rev</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">devices</span><span class="p">:</span>
-            <span class="n">ip</span> <span class="o">=</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;ip&#39;</span><span class="p">]</span>
-            <span class="n">mac</span> <span class="o">=</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;mac&#39;</span><span class="p">]</span>
+<span class="sd">        :return: valid, counts, findings and report (see InventoryValidator.validate)</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-            <span class="k">if</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">ip_rev</span><span class="p">:</span>
-                <span class="n">ip_rev</span><span class="p">[</span><span class="n">ip</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">])</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">ip_rev</span><span class="p">[</span><span class="n">ip</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">]]</span>
 
-            <span class="k">if</span> <span class="n">mac</span> <span class="ow">in</span> <span class="n">mac_rev</span><span class="p">:</span>
-                <span class="n">mac_rev</span><span class="p">[</span><span class="n">mac</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">])</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">mac_rev</span><span class="p">[</span><span class="n">mac</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">]]</span>
-
-            <span class="c1"># Check values</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">check_ip_name</span><span class="p">(</span><span class="n">ip</span><span class="p">):</span>
-                <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2"> is not a valid ip address&quot;</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">normalize_mac</span><span class="p">(</span><span class="n">mac</span><span class="p">):</span>
-                <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mac</span><span class="si">}</span><span class="s2"> is not a valid mac address&quot;</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">check_group_name</span><span class="p">(</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]):</span>
-                <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> is not a valid Linbo group&quot;</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">check_room_name</span><span class="p">(</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;room&#39;</span><span class="p">]):</span>
-                <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;room&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> is not a valid room name&quot;</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">check_host_name</span><span class="p">(</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">]):</span>
-                <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> is not a valid hostname&quot;</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;pxeFlag&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="s1">&#39;4&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;6&#39;</span><span class="p">,</span> <span class="s1">&#39;7&#39;</span><span class="p">,</span> <span class="s1">&#39;8&#39;</span><span class="p">,</span> <span class="s1">&#39;9&#39;</span><span class="p">]:</span>
-                <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;pxeFlag&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> is not a valid pxe flag&quot;</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">device</span><span class="p">[</span><span class="s1">&#39;sophomorixRole&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">COMPUTER_ROLES</span><span class="p">:</span>
-                <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">device</span><span class="p">[</span><span class="s1">&#39;sophomorixRole&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> is not a valid computer role&quot;</span><span class="p">)</span>
-
-        <span class="c1"># Check uniqueness</span>
-        <span class="k">for</span> <span class="n">ip</span><span class="p">,</span> <span class="n">hosts</span> <span class="ow">in</span> <span class="n">ip_rev</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">hosts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">hosts</span><span class="p">)</span><span class="si">}</span><span class="s2"> have the same ip </span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">mac</span><span class="p">,</span> <span class="n">hosts</span> <span class="ow">in</span> <span class="n">mac_rev</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">hosts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">report</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">hosts</span><span class="p">)</span><span class="si">}</span><span class="s2"> have the same mac </span><span class="si">{</span><span class="n">mac</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">report</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">report</span>
-
-        <span class="k">return</span> <span class="kc">False</span></div>
+        <span class="k">return</span> <span class="n">InventoryValidator</span><span class="p">([{</span>
+            <span class="s1">&#39;school&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">school</span><span class="p">,</span>
+            <span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
+            <span class="s1">&#39;devices&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">devices</span><span class="p">,</span>
+        <span class="p">}])</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span></div>
 </div>
 
 
 
+<div class="viewcode-block" id="list_schools">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/devices/index.html#linuxmusterTools.devices.devices.list_schools">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">list_schools</span><span class="p">(</span><span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    List the schools holding a devices.csv on this server.</span>
 
+<span class="sd">    This reads the filesystem rather than ldap on purpose: what is</span>
+<span class="sd">    validated here are the files, and a caller already holding the</span>
+<span class="sd">    authoritative list of provisioned schools passes it to</span>
+<span class="sd">    check_all_schools() instead.</span>
+
+<span class="sd">    :param root: Directory holding one subdirectory per school</span>
+<span class="sd">    :type root: string or Path</span>
+<span class="sd">    :return: Sorted school names</span>
+<span class="sd">    :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="n">root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span> <span class="ow">or</span> <span class="n">SOPHOMORIX_SCHOOLS_DIR</span><span class="p">)</span>
+    <span class="n">schools</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">candidates</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">entry</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span> <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">is_dir</span><span class="p">())</span>
+    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not list the schools in </span><span class="si">{</span><span class="n">root</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;default-school&#39;</span> <span class="k">else</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">entry</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.&#39;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">entry</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">devices.csv&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="n">schools</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">schools</span></div>
+
+
+
+<div class="viewcode-block" id="check_all_schools">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/devices/index.html#linuxmusterTools.devices.devices.check_all_schools">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_all_schools</span><span class="p">(</span><span class="n">schools</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate the inventories of every school at once, which is the only way</span>
+<span class="sd">    to see a host name or a mac address used twice in two different schools.</span>
+
+<span class="sd">    :param schools: Schools to validate, discovered on disk if not given</span>
+<span class="sd">    :type schools: list</span>
+<span class="sd">    :return: valid, counts, findings and report (see InventoryValidator.validate)</span>
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">if</span> <span class="n">schools</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">schools</span> <span class="o">=</span> <span class="n">list_schools</span><span class="p">()</span>
+
+    <span class="n">inventories</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">school</span> <span class="ow">in</span> <span class="n">schools</span><span class="p">:</span>
+        <span class="n">devicesmgr</span> <span class="o">=</span> <span class="n">Devices</span><span class="p">(</span><span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">)</span>
+        <span class="n">inventories</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;school&#39;</span><span class="p">:</span> <span class="n">school</span><span class="p">,</span>
+            <span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="n">devicesmgr</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
+            <span class="s1">&#39;devices&#39;</span><span class="p">:</span> <span class="n">devicesmgr</span><span class="o">.</span><span class="n">devices</span><span class="p">,</span>
+        <span class="p">})</span>
+
+    <span class="k">return</span> <span class="n">InventoryValidator</span><span class="p">(</span><span class="n">inventories</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span></div>
 
 </pre></div>
 
@@ -242,7 +338,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

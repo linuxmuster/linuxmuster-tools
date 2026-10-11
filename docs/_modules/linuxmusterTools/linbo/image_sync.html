@@ -1,0 +1,345 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.linbo.image_sync &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../linuxmusterTools.html">linuxmusterTools</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.linbo.image_sync</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for linuxmusterTools.linbo.image_sync</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">LINBO image serving — serve images to caching servers.</span>
+
+<span class="sd">Resolve, upload, stage and finalize image files under the LINBO images</span>
+<span class="sd">directory. The client-side download counterpart lives in WIP/.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.common.checks</span><span class="w"> </span><span class="kn">import</span> <span class="n">NameChecker</span>
+
+
+<div class="viewcode-block" id="name_checker">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/image_sync/index.html#linuxmusterTools.linbo.image_sync.name_checker">[docs]</a>
+<span class="n">name_checker</span> <span class="o">=</span> <span class="n">NameChecker</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="logger">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/image_sync/index.html#linuxmusterTools.linbo.image_sync.logger">[docs]</a>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IMAGES_DIR">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/image_sync/index.html#linuxmusterTools.linbo.image_sync.IMAGES_DIR">[docs]</a>
+<span class="n">IMAGES_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;LINBO_DIR&quot;</span><span class="p">,</span> <span class="s2">&quot;/srv/linbo&quot;</span><span class="p">))</span> <span class="o">/</span> <span class="s2">&quot;images&quot;</span></div>
+
+
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># Image Serving (server-side: serve images TO caching servers)</span>
+<span class="c1"># =============================================================================</span>
+
+
+<div class="viewcode-block" id="IMAGE_EXTS">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/image_sync/index.html#linuxmusterTools.linbo.image_sync.IMAGE_EXTS">[docs]</a>
+<span class="n">IMAGE_EXTS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;.qcow2&quot;</span><span class="p">,</span> <span class="s2">&quot;.qdiff&quot;</span><span class="p">,</span> <span class="s2">&quot;.cloop&quot;</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="INCOMING_DIR_NAME">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/image_sync/index.html#linuxmusterTools.linbo.image_sync.INCOMING_DIR_NAME">[docs]</a>
+<span class="n">INCOMING_DIR_NAME</span> <span class="o">=</span> <span class="s2">&quot;.incoming&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="resolve_image_file">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/image_sync/index.html#linuxmusterTools.linbo.image_sync.resolve_image_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">resolve_image_file</span><span class="p">(</span><span class="n">images_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">image_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolve and validate an image file path.</span>
+
+<span class="sd">    Returns the absolute Path if valid and file exists.</span>
+<span class="sd">    Raises ValueError for invalid paths, FileNotFoundError if missing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="n">image_name</span> <span class="o">=</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">validate_linbo_image_name</span><span class="p">(</span><span class="n">image_name</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">validate_linbo_image_name</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="n">file_path</span> <span class="o">=</span> <span class="p">(</span><span class="n">images_dir</span> <span class="o">/</span> <span class="n">image_name</span> <span class="o">/</span> <span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">file_path</span><span class="o">.</span><span class="n">is_relative_to</span><span class="p">(</span><span class="n">images_dir</span><span class="o">.</span><span class="n">resolve</span><span class="p">()):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Path escapes images directory&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">file_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File not found: </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">file_path</span></div>
+
+
+
+<div class="viewcode-block" id="get_image_file_info">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/image_sync/index.html#linuxmusterTools.linbo.image_sync.get_image_file_info">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_image_file_info</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get metadata for an image file.</span>
+
+<span class="sd">    Returns {size, mtime_ts, etag, last_modified}.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="n">stat</span> <span class="o">=</span> <span class="n">file_path</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span>
+    <span class="n">etag</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">stat</span><span class="o">.</span><span class="n">st_mtime</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">stat</span><span class="o">.</span><span class="n">st_size</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+    <span class="n">mtime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">stat</span><span class="o">.</span><span class="n">st_mtime</span><span class="p">,</span> <span class="n">tz</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="n">stat</span><span class="o">.</span><span class="n">st_size</span><span class="p">,</span>
+        <span class="s2">&quot;mtime_ts&quot;</span><span class="p">:</span> <span class="n">stat</span><span class="o">.</span><span class="n">st_mtime</span><span class="p">,</span>
+        <span class="s2">&quot;etag&quot;</span><span class="p">:</span> <span class="n">etag</span><span class="p">,</span>
+        <span class="s2">&quot;last_modified&quot;</span><span class="p">:</span> <span class="n">mtime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%a</span><span class="s2">, </span><span class="si">%d</span><span class="s2"> %b %Y %H:%M:%S GMT&quot;</span><span class="p">),</span>
+    <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="receive_upload_chunk">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/image_sync/index.html#linuxmusterTools.linbo.image_sync.receive_upload_chunk">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">receive_upload_chunk</span><span class="p">(</span>
+    <span class="n">images_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">image_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write a chunk of upload data to the staging directory.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        images_dir: Base images directory</span>
+<span class="sd">        image_name: Target image name</span>
+<span class="sd">        filename: Target filename</span>
+<span class="sd">        data: Chunk bytes</span>
+<span class="sd">        offset: Byte offset for ranged writes (None = overwrite)</span>
+
+<span class="sd">    Returns {received, offset}.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="n">image_name</span> <span class="o">=</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">validate_linbo_image_name</span><span class="p">(</span><span class="n">image_name</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">validate_linbo_image_name</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="n">staging_dir</span> <span class="o">=</span> <span class="n">images_dir</span> <span class="o">/</span> <span class="n">INCOMING_DIR_NAME</span> <span class="o">/</span> <span class="n">image_name</span>
+    <span class="n">staging_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="p">(</span><span class="n">staging_dir</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">staging_dir</span><span class="p">):</span>
+        <span class="n">directory</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="mo">0o700</span><span class="p">)</span>
+    <span class="n">file_path</span> <span class="o">=</span> <span class="n">staging_dir</span> <span class="o">/</span> <span class="n">filename</span>
+
+    <span class="k">if</span> <span class="n">offset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">offset</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">file_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot resume upload without an existing staged file&quot;</span><span class="p">)</span>
+        <span class="n">current_size</span> <span class="o">=</span> <span class="n">file_path</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span>
+        <span class="k">if</span> <span class="n">current_size</span> <span class="o">!=</span> <span class="n">offset</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Offset mismatch: expected </span><span class="si">{</span><span class="n">current_size</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">offset</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;r+b&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">file_path</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;received&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="s2">&quot;offset&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">offset</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)}</span></div>
+
+
+
+<div class="viewcode-block" id="get_upload_status">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/image_sync/index.html#linuxmusterTools.linbo.image_sync.get_upload_status">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_upload_status</span><span class="p">(</span><span class="n">images_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">image_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check how many bytes have been received for a staged upload.</span>
+
+<span class="sd">    Returns {bytesReceived, complete}.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="n">image_name</span> <span class="o">=</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">validate_linbo_image_name</span><span class="p">(</span><span class="n">image_name</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">validate_linbo_image_name</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="n">file_path</span> <span class="o">=</span> <span class="n">images_dir</span> <span class="o">/</span> <span class="n">INCOMING_DIR_NAME</span> <span class="o">/</span> <span class="n">image_name</span> <span class="o">/</span> <span class="n">filename</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">file_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;bytesReceived&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;complete&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;bytesReceived&quot;</span><span class="p">:</span> <span class="n">file_path</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span><span class="p">,</span> <span class="s2">&quot;complete&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="finalize_upload">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/image_sync/index.html#linuxmusterTools.linbo.image_sync.finalize_upload">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">finalize_upload</span><span class="p">(</span><span class="n">images_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">image_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Move staged files to final directory with backup.</span>
+
+<span class="sd">    Backs up existing image files to a timestamped subdirectory</span>
+<span class="sd">    before replacing them.</span>
+
+<span class="sd">    Returns {finalized, files, backup}.</span>
+<span class="sd">    Raises FileNotFoundError if no staged files exist.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="n">image_name</span> <span class="o">=</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">validate_linbo_image_name</span><span class="p">(</span><span class="n">image_name</span><span class="p">)</span>
+
+    <span class="n">staging_dir</span> <span class="o">=</span> <span class="n">images_dir</span> <span class="o">/</span> <span class="n">INCOMING_DIR_NAME</span> <span class="o">/</span> <span class="n">image_name</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">staging_dir</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;No staged files found&quot;</span><span class="p">)</span>
+
+    <span class="n">target_dir</span> <span class="o">=</span> <span class="n">images_dir</span> <span class="o">/</span> <span class="n">image_name</span>
+    <span class="n">target_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Backup existing image files before overwriting</span>
+    <span class="n">backup_dir</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">existing_images</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">target_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="n">f</span><span class="o">.</span><span class="n">suffix</span> <span class="ow">in</span> <span class="n">IMAGE_EXTS</span>
+    <span class="p">]</span>
+    <span class="k">if</span> <span class="n">existing_images</span><span class="p">:</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M%S&quot;</span><span class="p">)</span>
+        <span class="n">backup_dir</span> <span class="o">=</span> <span class="n">target_dir</span> <span class="o">/</span> <span class="s2">&quot;backup&quot;</span> <span class="o">/</span> <span class="n">timestamp</span>
+        <span class="n">backup_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">target_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">backup_dir</span> <span class="o">/</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Backup failed for </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Backed up existing image to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">backup_dir</span><span class="p">)</span>
+
+    <span class="c1"># Move staged files to target</span>
+    <span class="n">moved</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">staging_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">target_dir</span> <span class="o">/</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">))</span>
+            <span class="n">moved</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">backup_dir</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">directory</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.macct&quot;</span><span class="p">):</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="mo">0o600</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">staging_dir</span><span class="o">.</span><span class="n">rmdir</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Image upload finalized: </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%d</span><span class="s2"> files)&quot;</span><span class="p">,</span> <span class="n">image_name</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">moved</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;finalized&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;files&quot;</span><span class="p">:</span> <span class="n">moved</span><span class="p">,</span>
+        <span class="s2">&quot;backup&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">backup_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">backup_dir</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="cancel_upload">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/image_sync/index.html#linuxmusterTools.linbo.image_sync.cancel_upload">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">cancel_upload</span><span class="p">(</span><span class="n">images_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">image_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clean up staged upload files.</span>
+
+<span class="sd">    Returns {cleaned, detail?}.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="n">image_name</span> <span class="o">=</span> <span class="n">name_checker</span><span class="o">.</span><span class="n">validate_linbo_image_name</span><span class="p">(</span><span class="n">image_name</span><span class="p">)</span>
+
+    <span class="n">staging_dir</span> <span class="o">=</span> <span class="n">images_dir</span> <span class="o">/</span> <span class="n">INCOMING_DIR_NAME</span> <span class="o">/</span> <span class="n">image_name</span>
+    <span class="k">if</span> <span class="n">staging_dir</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">staging_dir</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;cleaned&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;cleaned&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;detail&quot;</span><span class="p">:</span> <span class="s2">&quot;No staging directory found&quot;</span><span class="p">}</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

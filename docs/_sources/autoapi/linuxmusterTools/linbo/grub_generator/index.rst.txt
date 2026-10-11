@@ -1,0 +1,90 @@
+linuxmusterTools.linbo.grub_generator
+=====================================
+
+.. py:module:: linuxmusterTools.linbo.grub_generator
+
+.. autoapi-nested-parse::
+
+   LINBO GRUB Config Generator — generate GRUB boot configs from data objects.
+
+   Pure template-based generation:
+   - Main grub.cfg (PXE boot with MAC→group mapping)
+   - Per-config {group}.cfg (OS menu entries)
+   - Hostcfg symlinks (hostname.cfg + 01-{mac}.cfg)
+
+   Device path translation, OS type detection, template variable substitution.
+
+
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:data:: logger
+
+.. py:data:: LINBO_DIR
+
+.. py:data:: GRUB_DIR
+
+.. py:data:: HOSTCFG_DIR
+
+.. py:function:: get_grub_part(device: str | None) -> str
+
+   Convert Linux device path to GRUB partition format.
+
+   /dev/sda1 → (hd0,1), /dev/nvme0n1p2 → (hd0,2), /dev/mmcblk0p1 → (hd0,1)
+
+
+.. py:function:: get_grub_ostype(osname: str | None) -> str
+
+   Get GRUB OS type from OS name for menu icon classes.
+
+
+.. py:function:: find_cache_partition(partitions: list[dict] | None) -> dict | None
+
+   Find cache partition from partition list.
+
+
+.. py:function:: get_os_partition_index(partitions: list[dict] | None, root_device: str | None) -> int
+
+   Find 1-based partition index for an OS's root device.
+
+
+.. py:function:: hex_to_grub_rgb(hex_color: str | None) -> str
+
+   Convert hex color (#RRGGBB) to GRUB RGB format (R,G,B).
+
+
+.. py:function:: get_os_label(partitions: list[dict] | None, root_device: str | None) -> str
+
+   Get partition label for a root device.
+
+
+.. py:function:: apply_template(template: str, replacements: dict) -> str
+
+   Replace @@key@@ placeholders in template.
+
+
+.. py:function:: mac_to_grub_filename(mac: str) -> str
+
+   Convert MAC to GRUB hostcfg filename: AA:BB:CC:DD:EE:FF → 01-aa-bb-cc-dd-ee-ff
+
+
+.. py:function:: get_linbo_setting(settings: dict | None, key: str)
+
+   Case-insensitive lookup in linbo settings dict.
+
+
+.. py:function:: read_kernel_options(config_id: str, linbo_dir: str | None = None) -> str
+
+   Read KernelOptions from start.conf file.
+
+
+.. py:function:: build_kernel_options(raw_options: str, server: str, config_id: str) -> str
+
+   Build clean kernel options string with server and group injected.
+
+

@@ -5,18 +5,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.samba_util.log &mdash; linuxmuster-tools7 7.3.26 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+  <title>linuxmusterTools.samba_util.log &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=ac320c09"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/translations.js?v=8fd896e3"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -73,13 +73,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.samba_util.log</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">gzip</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gzip</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
 
-<span class="kn">from</span> <span class="nn">..samba_util</span> <span class="kn">import</span> <span class="n">SAMBA_REALM</span><span class="p">,</span> <span class="n">LOG_LEVEL</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..samba_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">SAMBA_REALM</span><span class="p">,</span> <span class="n">LOG_LEVEL</span>
 
 
 <div class="viewcode-block" id="logger">
@@ -98,7 +98,7 @@
 
 <div class="viewcode-block" id="check_audit_level">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/log/index.html#linuxmusterTools.samba_util.log.check_audit_level">[docs]</a>
-<span class="k">def</span> <span class="nf">check_audit_level</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_audit_level</span><span class="p">():</span>
     <span class="n">auth_audit</span> <span class="o">=</span> <span class="n">LOG_LEVEL</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;auth_audit&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">general</span> <span class="o">=</span> <span class="n">LOG_LEVEL</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;general&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
@@ -114,7 +114,7 @@
 
 <div class="viewcode-block" id="format_log_data">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/log/index.html#linuxmusterTools.samba_util.log.format_log_data">[docs]</a>
-<span class="k">def</span> <span class="nf">format_log_data</span><span class="p">(</span><span class="n">entry</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">format_log_data</span><span class="p">(</span><span class="n">entry</span><span class="p">):</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\[([^\]]*)\]&quot;</span><span class="p">,</span> <span class="n">entry</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="s2">&quot;Kerberos&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="s2">&quot;@&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
         <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;</span><span class="si">%a</span><span class="s2">, </span><span class="si">%d</span><span class="s2"> %b %Y %H:%M:%S&quot;</span><span class="p">)</span>
@@ -128,7 +128,7 @@
 
 <div class="viewcode-block" id="parse_log_content">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/log/index.html#linuxmusterTools.samba_util.log.parse_log_content">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_log_content</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_log_content</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
     <span class="n">logs</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
@@ -148,7 +148,7 @@
 
 <div class="viewcode-block" id="last_login">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/log/index.html#linuxmusterTools.samba_util.log.last_login">[docs]</a>
-<span class="k">def</span> <span class="nf">last_login</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">include_gz</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">last_login</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">include_gz</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">logs</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">if</span> <span class="n">check_audit_level</span><span class="p">():</span>
@@ -172,7 +172,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

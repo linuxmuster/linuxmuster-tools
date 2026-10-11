@@ -4,20 +4,8 @@ linuxmusterTools.ldapconnector.ldap_reader
 .. py:module:: linuxmusterTools.ldapconnector.ldap_reader
 
 
-Attributes
-----------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.ldap_reader.logger
 
 
-Classes
--------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.ldap_reader.LdapReader
 
 
 Module Contents
@@ -28,12 +16,6 @@ Module Contents
 .. py:class:: LdapReader
 
    .. py:attribute:: lc
-
-
-   .. py:method:: _create_result_object(result, objectclass, dict=True, school='', attributes=[], dn_filter='', custom_config={})
-
-      Formatting one ldap result object into a dict or a LMN model object.
-
 
 
    .. py:method:: get_single(objectclass, ldap_filter, scope=ldap.SCOPE_SUBTREE, subdn='', attributes=[], **kwargs)
@@ -71,16 +53,6 @@ Module Contents
       :typee school: str
       :param attributes: list of attributes to return
       :typee attributes: list
-
-
-
-   .. py:method:: _filter_value(field, value)
-      :staticmethod:
-
-
-      Middleware to decode values and convert it in an usable format (mostly
-      compatible with json). Parameter field is given in order to find out the
-      type of object.
 
 
 

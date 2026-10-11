@@ -5,18 +5,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.linbo.images &mdash; linuxmuster-tools7 7.3.26 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+  <title>linuxmusterTools.linbo.images &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=ac320c09"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/translations.js?v=8fd896e3"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -73,17 +73,27 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.linbo.images</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
 
-<span class="kn">from</span> <span class="nn">..lmnfile</span> <span class="kn">import</span> <span class="n">LMNFile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.sorting</span><span class="w"> </span><span class="kn">import</span> <span class="n">sort_naturally</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..lmnfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">LMNFile</span>
+<span class="c1"># Keep the existing images-module constants importable after their owner moved.</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.drivers</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DRIVERPOSTSYNC_LEGACY_HEADER</span><span class="p">,</span>
+    <span class="n">DRIVERPOSTSYNC_MANAGED_HEADER</span><span class="p">,</span>
+    <span class="n">IMAGE_CONF_FILENAME</span><span class="p">,</span>
+    <span class="n">LinboDriverManager</span><span class="p">,</span>
+    <span class="n">WindowsDrivers</span> <span class="k">as</span> <span class="n">_WindowsDrivers</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImageInfo</span>
 
 
 <div class="viewcode-block" id="logger">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.logger">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.logger">[docs]</a>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
 
 
@@ -91,34 +101,43 @@
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LINBO_PATH">[docs]</a>
 <span class="n">LINBO_PATH</span> <span class="o">=</span> <span class="s1">&#39;/srv/linbo/images&#39;</span></div>
 
+<div class="viewcode-block" id="LINBO_LOG_PATH">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LINBO_LOG_PATH">[docs]</a>
+<span class="n">LINBO_LOG_PATH</span> <span class="o">=</span> <span class="s1">&#39;/var/log/linuxmuster/linbo&#39;</span></div>
+
 <div class="viewcode-block" id="TIMESTAMP_FMT">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.TIMESTAMP_FMT">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.TIMESTAMP_FMT">[docs]</a>
 <span class="n">TIMESTAMP_FMT</span> <span class="o">=</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H%M&#39;</span></div>
 
 <div class="viewcode-block" id="DATE_UI_FMT">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.DATE_UI_FMT">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.DATE_UI_FMT">[docs]</a>
 <span class="n">DATE_UI_FMT</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%d</span><span class="s1">/%m/%Y %H:%M&#39;</span></div>
 
 
 
 <span class="c1"># Filenames like ubuntu.qcow2.desc</span>
 <div class="viewcode-block" id="EXTRA_IMAGE_FILES">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.EXTRA_IMAGE_FILES">[docs]</a>
-<span class="n">EXTRA_IMAGE_FILES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;desc&#39;</span><span class="p">,</span> <span class="s1">&#39;info&#39;</span><span class="p">,</span>  <span class="s1">&#39;vdi&#39;</span><span class="p">]</span></div>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.EXTRA_IMAGE_FILES">[docs]</a>
+<span class="n">EXTRA_IMAGE_FILES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;desc&#39;</span><span class="p">,</span> <span class="s1">&#39;info&#39;</span><span class="p">,</span> <span class="s1">&#39;vdi&#39;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="EXTRA_NONEDITABLE_IMAGE_FILES">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.EXTRA_NONEDITABLE_IMAGE_FILES">[docs]</a>
-<span class="n">EXTRA_NONEDITABLE_IMAGE_FILES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;torrent&#39;</span><span class="p">,</span> <span class="s1">&#39;macct&#39;</span><span class="p">]</span></div>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.EXTRA_NONEDITABLE_IMAGE_FILES">[docs]</a>
+<span class="n">EXTRA_NONEDITABLE_IMAGE_FILES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;torrent&#39;</span><span class="p">,</span> <span class="s1">&#39;macct&#39;</span><span class="p">,</span> <span class="s1">&#39;md5&#39;</span><span class="p">,</span> <span class="s1">&#39;hash&#39;</span><span class="p">]</span></div>
 
 
 <span class="c1"># Filenames like ubuntu.reg</span>
 <div class="viewcode-block" id="EXTRA_COMMON_FILES">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.EXTRA_COMMON_FILES">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.EXTRA_COMMON_FILES">[docs]</a>
 <span class="n">EXTRA_COMMON_FILES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;reg&#39;</span><span class="p">,</span> <span class="s1">&#39;postsync&#39;</span><span class="p">,</span> <span class="s1">&#39;prestart&#39;</span><span class="p">]</span></div>
 
 
+<div class="viewcode-block" id="ALL_FILES_EXT">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.ALL_FILES_EXT">[docs]</a>
+<span class="n">ALL_FILES_EXT</span> <span class="o">=</span> <span class="n">EXTRA_IMAGE_FILES</span> <span class="o">+</span> <span class="n">EXTRA_NONEDITABLE_IMAGE_FILES</span> <span class="o">+</span> <span class="n">EXTRA_COMMON_FILES</span></div>
+
+
 <div class="viewcode-block" id="EXTRA_PERMISSIONS_MAPPING">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.EXTRA_PERMISSIONS_MAPPING">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.EXTRA_PERMISSIONS_MAPPING">[docs]</a>
 <span class="n">EXTRA_PERMISSIONS_MAPPING</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;desc&#39;</span><span class="p">:</span> <span class="mo">0o664</span><span class="p">,</span>
     <span class="s1">&#39;info&#39;</span><span class="p">:</span> <span class="mo">0o664</span><span class="p">,</span>
@@ -130,34 +149,102 @@
 <span class="p">}</span></div>
 
 <div class="viewcode-block" id="IMAGE">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.IMAGE">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.IMAGE">[docs]</a>
 <span class="n">IMAGE</span> <span class="o">=</span> <span class="s2">&quot;qcow2&quot;</span></div>
 
 <div class="viewcode-block" id="DIFF_IMAGE">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.DIFF_IMAGE">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.DIFF_IMAGE">[docs]</a>
 <span class="n">DIFF_IMAGE</span> <span class="o">=</span> <span class="s2">&quot;qdiff&quot;</span></div>
+
+<div class="viewcode-block" id="IMAGE_SERVICES">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.IMAGE_SERVICES">[docs]</a>
+<span class="n">IMAGE_SERVICES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;linbo-multicast.service&#39;</span><span class="p">,</span> <span class="s1">&#39;linbo-torrent.service&#39;</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="date2timestamp">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.date2timestamp">[docs]</a>
-<span class="k">def</span> <span class="nf">date2timestamp</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.date2timestamp">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">date2timestamp</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">DATE_UI_FMT</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">TIMESTAMP_FMT</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="timestamp2date">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.timestamp2date">[docs]</a>
-<span class="k">def</span> <span class="nf">timestamp2date</span><span class="p">(</span><span class="n">timestamp</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.timestamp2date">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">timestamp2date</span><span class="p">(</span><span class="n">timestamp</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">TIMESTAMP_FMT</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">DATE_UI_FMT</span><span class="p">)</span></div>
 
 
+
+<div class="viewcode-block" id="restart_image_services">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.restart_image_services">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">restart_image_services</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Restart the services distributing the images to the clients, multicast</span>
+<span class="sd">    and torrent, so that they serve the new version of a changed image.</span>
+<span class="sd">    Both are global: they are restarted for every school.</span>
+
+<span class="sd">    :param timeout: Seconds to wait for systemctl</span>
+<span class="sd">    :type timeout: int</span>
+<span class="sd">    :return: The restarted services</span>
+<span class="sd">    :rtype: list</span>
+<span class="sd">    :raises subprocess.CalledProcessError: systemctl failed, its stderr attached</span>
+<span class="sd">    :raises subprocess.TimeoutExpired: systemctl did not return in time</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s1">&#39;systemctl&#39;</span><span class="p">,</span> <span class="s1">&#39;restart&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">IMAGE_SERVICES</span><span class="p">],</span>
+        <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">IMAGE_SERVICES</span></div>
+
+
+
+<div class="viewcode-block" id="ImageExistsError">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.ImageExistsError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ImageExistsError</span><span class="p">(</span><span class="ne">FileExistsError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when a new image or backup would replace an existing path.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Image path already exists: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="ImageExistsError.path">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.ImageExistsError.path">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="IncompleteImageInfoError">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.IncompleteImageInfoError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">IncompleteImageInfoError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Raised when a .info file is missing or missing required fields.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info_path</span><span class="p">,</span> <span class="n">missing_fields</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">missing_fields</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Incomplete image info file </span><span class="si">{</span><span class="n">info_path</span><span class="si">}</span><span class="s2">: missing </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing_fields</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Missing image info file: </span><span class="si">{</span><span class="n">info_path</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+<div class="viewcode-block" id="IncompleteImageInfoError.info_path">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.IncompleteImageInfoError.info_path">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_path</span> <span class="o">=</span> <span class="n">info_path</span></div>
+
+<div class="viewcode-block" id="IncompleteImageInfoError.missing_fields">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.IncompleteImageInfoError.missing_fields">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">missing_fields</span> <span class="o">=</span> <span class="n">missing_fields</span> <span class="ow">or</span> <span class="p">[]</span></div>
+</div>
+
+
+
 <div class="viewcode-block" id="LinboImage">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImage">[docs]</a>
-<span class="k">class</span> <span class="nc">LinboImage</span><span class="p">:</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImage">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LinboImage</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class to manage a linbo image or a backup image</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">backup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">diff</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">backup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">diff</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <div class="viewcode-block" id="LinboImage.name">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImage.name">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span></div>
@@ -176,18 +263,45 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">load_info</span><span class="p">()</span>
 
-<div class="viewcode-block" id="LinboImage._torrent_stop">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImage._torrent_stop">[docs]</a>
-    <span class="k">def</span> <span class="nf">_torrent_stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_torrent_stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s1">&#39;/usr/sbin/linbo-torrent&#39;</span><span class="p">,</span> <span class="s1">&#39;stop&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="si">}</span><span class="s1">.torrent&#39;</span><span class="p">)])</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unable to stop torrent service for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="si">}</span><span class="s1"> : </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unable to stop torrent service for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="si">}</span><span class="s1"> : </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">_torrent_create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Rebuild this image&#39;s torrent and hash file, in the background.</span>
+
+<span class="sd">        linbo-torrent create runs buildtorrent over the whole image, which</span>
+<span class="sd">        takes minutes on a large one: doing it inline would hold the caller,</span>
+<span class="sd">        and the HTTP request behind it, for the entire build. Nothing has to</span>
+<span class="sd">        be tracked beyond the result, which describes itself: &lt;image&gt;.torrent</span>
+<span class="sd">        and &lt;image&gt;.hash appear once it is done, and linbo-torrent status</span>
+<span class="sd">        lists the seeding session.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;/usr/sbin/linbo-torrent&#39;</span><span class="p">,</span> <span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">)]</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">LINBO_LOG_PATH</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">logfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">LINBO_LOG_PATH</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;torrent-create-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="si">}</span><span class="s1">.log&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># An unwritable log directory must not cost the torrent itself.</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unable to log torrent creation for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="si">}</span><span class="s1"> : </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">logfile</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">logfile</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">start_new_session</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unable to start torrent creation for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="si">}</span><span class="s1"> : </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">logfile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">:</span>
+                <span class="n">logfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
 <div class="viewcode-block" id="LinboImage.load_info">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImage.load_info">[docs]</a>
-    <span class="k">def</span> <span class="nf">load_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImage.load_info">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Prepare all variables to manage the image object ( path, name, extra files )</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -202,19 +316,20 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">timestamp2date</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">LINBO_PATH</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_timestamp</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parse_info_file</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_file</span><span class="o">.</span><span class="n">timestamp</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">timestamp2date</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">))</span><span class="o">.</span><span class="n">st_size</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">extras</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extras</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># TODO rename to raw extras</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get_extra</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="LinboImage.get_extra">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImage.get_extra">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_extra</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImage.get_extra">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_extra</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Load extra editables config files for the image.</span>
+<span class="sd">        Load raw content of extra editables config files.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">extra</span> <span class="ow">in</span> <span class="n">EXTRA_IMAGE_FILES</span><span class="p">:</span>
@@ -241,24 +356,48 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">extras</span><span class="p">[</span><span class="n">extra</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="LinboImage.get_timestamp">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImage.get_timestamp">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_timestamp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LinboImage.parse_info_file">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImage.parse_info_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_info_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse the .info file LINBO itself reads to deploy this image.</span>
+
+<span class="sd">        Raises IncompleteImageInfoError if the file is missing or missing a</span>
+<span class="sd">        required field: an incomplete .info here means the image is not</span>
+<span class="sd">        safely deployable, which callers must see rather than have papered</span>
+<span class="sd">        over with a fabricated value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">info_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="si">}</span><span class="s2">.info&quot;</span><span class="p">)</span>
+        <span class="n">attributes</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">info_path</span><span class="p">):</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">info_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">info</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="s1">&#39;timestamp&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s1">&#39;=&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
                         <span class="c1"># Support timestamp=2021..</span>
                         <span class="c1"># and timestamp=&quot;2021...&quot;</span>
-                        <span class="k">return</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Can not find timestamp for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="si">}</span><span class="s2">, using current time as timestamp !&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">TIMESTAMP_FMT</span><span class="p">)</span></div>
+                        <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                        <span class="n">v</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
+                        <span class="c1"># Older/foreign .info files carry keys ImageInfo does not</span>
+                        <span class="c1"># model (e.g. &quot;baseimage&quot; instead of &quot;partition&quot;); ignored</span>
+                        <span class="c1"># here, but the required field it would have filled is</span>
+                        <span class="c1"># still reported missing below.</span>
+                        <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ImageInfo</span><span class="o">.</span><span class="n">__dataclass_fields__</span><span class="p">:</span>
+                            <span class="n">attributes</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
+        <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">field</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">ImageInfo</span><span class="o">.</span><span class="n">__dataclass_fields__</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">attributes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">IncompleteImageInfoError</span><span class="p">(</span><span class="n">info_path</span><span class="p">,</span> <span class="n">missing</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_file</span> <span class="o">=</span> <span class="n">ImageInfo</span><span class="p">(</span><span class="o">**</span><span class="n">attributes</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LinboImage.delete_files">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImage.delete_files">[docs]</a>
-    <span class="k">def</span> <span class="nf">delete_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImage.delete_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete all files from a LinboImage.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -283,8 +422,8 @@
 
 
 <div class="viewcode-block" id="LinboImage.delete">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImage.delete">[docs]</a>
-    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImage.delete">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Completely remove an image and its directory.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -296,17 +435,12 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">diff</span><span class="p">:</span>
             <span class="c1"># Remove directory</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="c1"># TODO: better handle this</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+            <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span></div>
 
-                <span class="c1">#raise EndpointError(e)</span>
 
 <div class="viewcode-block" id="LinboImage.rename">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImage.rename">[docs]</a>
-    <span class="k">def</span> <span class="nf">rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_name</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImage.rename">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Rename a LinboImage and all its files.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -334,8 +468,11 @@
                     <span class="k">with</span> <span class="n">LMNFile</span><span class="p">(</span><span class="n">actual</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">info</span><span class="p">:</span>
                         <span class="n">info</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
-                <span class="c1"># Need to generate a new torrent file</span>
-                <span class="k">if</span> <span class="n">extra</span> <span class="o">==</span> <span class="s2">&quot;torrent&quot;</span><span class="p">:</span>
+                <span class="c1"># A torrent embeds the file name it describes, and the hash</span>
+                <span class="c1"># file describes that torrent: neither survives the rename.</span>
+                <span class="c1"># Both are dropped here and rebuilt by _torrent_create(), once</span>
+                <span class="c1"># the directory holding them has its final name.</span>
+                <span class="k">if</span> <span class="n">extra</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;torrent&quot;</span><span class="p">,</span> <span class="s2">&quot;hash&quot;</span><span class="p">):</span>
                     <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">actual</span><span class="p">)</span>
 
                     <span class="k">continue</span>
@@ -352,12 +489,13 @@
             <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">LINBO_PATH</span><span class="p">,</span> <span class="n">new_name</span><span class="p">))</span>
 
         <span class="c1"># Refresh informations</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">new_name</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">new_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">new_image_name</span></div>
 
 
 <div class="viewcode-block" id="LinboImage.save_extras">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImage.save_extras">[docs]</a>
-    <span class="k">def</span> <span class="nf">save_extras</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImage.save_extras">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_extras</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save all extra files content.</span>
 
@@ -389,8 +527,8 @@
 
 
 <div class="viewcode-block" id="LinboImage.to_dict">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImage.to_dict">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImage.to_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert all necessary infos into a dict for angular.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -406,6 +544,7 @@
             <span class="s1">&#39;prestart&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">extras</span><span class="p">[</span><span class="s1">&#39;prestart&#39;</span><span class="p">],</span>
             <span class="s1">&#39;backup&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">backup</span><span class="p">,</span>
             <span class="s1">&#39;diff&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">diff</span><span class="p">,</span>
+            <span class="s1">&#39;torrent&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="si">}</span><span class="s1">.torrent&#39;</span><span class="p">)),</span>
             <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span><span class="p">,</span>
             <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">,</span>
         <span class="p">}</span></div>
@@ -413,13 +552,13 @@
 
 
 <div class="viewcode-block" id="LinboImageGroup">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImageGroup">[docs]</a>
-<span class="k">class</span> <span class="nc">LinboImageGroup</span><span class="p">:</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageGroup">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LinboImageGroup</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to handle a basic LinboImage and all his backups.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">driver_manager</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <div class="viewcode-block" id="LinboImageGroup.name">
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageGroup.name">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span></div>
@@ -432,20 +571,43 @@
 <a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageGroup.backup_path">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">backup_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">LINBO_PATH</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;backups&#39;</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="LinboImageGroup.driver_manager">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageGroup.driver_manager">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">driver_manager</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">driver_manager</span>
+            <span class="k">if</span> <span class="n">driver_manager</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="n">LinboDriverManager</span><span class="p">()</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="LinboImageGroup.windows_drivers">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageGroup.windows_drivers">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">windows_drivers</span> <span class="o">=</span> <span class="n">_WindowsDrivers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver_manager</span><span class="p">)</span></div>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
 
 <div class="viewcode-block" id="LinboImageGroup.load">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImageGroup.load">[docs]</a>
-    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageGroup.load">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">backups</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">LinboImage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">LinboImage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">IncompleteImageInfoError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Isolated here rather than left to propagate: one image with a</span>
+            <span class="c1"># broken .info must not take the whole manager&#39;s listing down with</span>
+            <span class="c1"># it. The group still exists, flagged, so it stays visible instead</span>
+            <span class="c1"># of silently vanishing from the list.</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Image group </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> is not usable: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">return</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get_backups</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get_diff</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="LinboImageGroup.get_backups">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImageGroup.get_backups">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_backups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageGroup.get_backups">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_backups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Browse current tree to find all backups image.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -468,24 +630,71 @@
 
 
 <div class="viewcode-block" id="LinboImageGroup.get_diff">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImageGroup.get_diff">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_diff</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageGroup.get_diff">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_diff</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Browse current tree to find a differential image.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">LINBO_PATH</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">DIFF_IMAGE</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">diff_image</span> <span class="o">=</span> <span class="n">LinboImage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">diff</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">diff_image</span> <span class="o">=</span> <span class="n">LinboImage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">diff</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">IncompleteImageInfoError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Differential image for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> is not usable: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">diff_image</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">diff_image</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
+<div class="viewcode-block" id="LinboImageGroup.get_driver_profiles">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageGroup.get_driver_profiles">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_driver_profiles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return this image&#39;s assigned profiles in deterministic order.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">windows_drivers</span><span class="o">.</span><span class="n">get_profiles</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LinboImageGroup.render_driverpostsync">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageGroup.render_driverpostsync">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">render_driverpostsync</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render this image&#39;s thin static-runtime dispatcher.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">windows_drivers</span><span class="o">.</span><span class="n">render_driverpostsync</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LinboImageGroup.publish_driverpostsync">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageGroup.publish_driverpostsync">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">publish_driverpostsync</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Publish this image&#39;s static-runtime dispatcher.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">windows_drivers</span><span class="o">.</span><span class="n">publish_driverpostsync</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LinboImageGroup.assign_driver_profile">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageGroup.assign_driver_profile">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">assign_driver_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assign one driver profile to this image.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">windows_drivers</span><span class="o">.</span><span class="n">assign_profile</span><span class="p">(</span><span class="n">profile_name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LinboImageGroup.unassign_driver_profile">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageGroup.unassign_driver_profile">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unassign_driver_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a driver profile&#39;s optional assignment to this image.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">windows_drivers</span><span class="o">.</span><span class="n">unassign_profile</span><span class="p">(</span><span class="n">profile_name</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="LinboImageGroup.rename">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImageGroup.rename">[docs]</a>
-    <span class="k">def</span> <span class="nf">rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_name</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageGroup.rename">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Rename an image and all his backups.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot rename image group </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">backup</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">backups</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">backup</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">new_name</span><span class="p">)</span>
@@ -503,15 +712,31 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">new_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">LINBO_PATH</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">backup_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">LINBO_PATH</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;backups&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backup_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">LINBO_PATH</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;backups&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Only now: base.rename() moved the directory as its last step, and a</span>
+        <span class="c1"># torrent created before that would seed from a path about to vanish.</span>
+        <span class="c1"># Backups are left out on purpose, linbo-torrent only looks two levels</span>
+        <span class="c1"># below /srv/linbo/images and never sees them.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">_torrent_create</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">diff_image</span><span class="p">:</span>
+            <span class="c1"># load_info() would re-parse the .info file and raise on an</span>
+            <span class="c1"># incomplete one, which must not abort a rename that has already</span>
+            <span class="c1"># succeeded: the path is all that is stale here.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">diff_image</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">diff_image</span><span class="o">.</span><span class="n">_torrent_create</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="LinboImageGroup.delete">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImageGroup.delete">[docs]</a>
-    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageGroup.delete">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete basic image, all backups, diff image and all config files.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot delete image group </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">backup</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">backups</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">backup</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
@@ -520,19 +745,19 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">diff_image</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backup_path</span><span class="p">):</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backup_path</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="c1"># TODO: better handle this</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-                <span class="c1">#raise EndpointError(e)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backup_path</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="LinboImageGroup.to_dict">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImageGroup.to_dict">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageGroup.to_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Flagged rather than raised or omitted: the caller (an images</span>
+            <span class="c1"># listing) must still see this group exists and needs attention.</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">,</span> <span class="s1">&#39;selected&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
         <span class="n">result</span><span class="p">[</span><span class="s1">&#39;diff_image&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diff_image</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">diff_image</span> <span class="k">else</span> <span class="p">{}</span>
         <span class="n">result</span><span class="p">[</span><span class="s1">&#39;backups&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
@@ -545,19 +770,134 @@
 
 
 <div class="viewcode-block" id="LinboImageManager">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImageManager">[docs]</a>
-<span class="k">class</span> <span class="nc">LinboImageManager</span><span class="p">:</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageManager">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LinboImageManager</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Manager for all Linbo Images.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">driver_manager</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="LinboImageManager.driver_manager">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageManager.driver_manager">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">driver_manager</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">driver_manager</span>
+            <span class="k">if</span> <span class="n">driver_manager</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="n">LinboDriverManager</span><span class="p">()</span>
+        <span class="p">)</span></div>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">_new_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create one image group with the shared driver profile manager.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">LinboImageGroup</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">,</span>
+            <span class="n">driver_manager</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">driver_manager</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_require_driver_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return one validated, existing LINBO image group.&quot;&quot;&quot;</span>
+
+        <span class="n">image</span> <span class="o">=</span> <span class="n">_WindowsDrivers</span><span class="o">.</span><span class="n">validate_image</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="n">image</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;LINBO image not found: </span><span class="si">{</span><span class="n">image</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+
+<div class="viewcode-block" id="LinboImageManager.get_driver_profile_image">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageManager.get_driver_profile_image">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_driver_profile_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a profile assignment through the image-group domain.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">_WindowsDrivers</span><span class="o">.</span><span class="n">get_profile_image</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">driver_manager</span><span class="p">,</span>
+            <span class="n">profile_name</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LinboImageManager.get_image_driver_profiles">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageManager.get_image_driver_profiles">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_image_driver_profiles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return an image group&#39;s assigned profiles.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_require_driver_group</span><span class="p">(</span><span class="n">image</span><span class="p">)</span><span class="o">.</span><span class="n">get_driver_profiles</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LinboImageManager.render_driverpostsync">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageManager.render_driverpostsync">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">render_driverpostsync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render an image group&#39;s static-runtime dispatcher.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_require_driver_group</span><span class="p">(</span><span class="n">image</span><span class="p">)</span><span class="o">.</span><span class="n">render_driverpostsync</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LinboImageManager.publish_driverpostsync">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageManager.publish_driverpostsync">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">publish_driverpostsync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Publish an image group&#39;s static-runtime dispatcher.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_require_driver_group</span><span class="p">(</span><span class="n">image</span><span class="p">)</span><span class="o">.</span><span class="n">publish_driverpostsync</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_change_driver_assignment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile_name</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">unassign</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Change one assignment and coordinate all affected image groups.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">lexists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">driver_manager</span><span class="o">.</span><span class="n">base</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Driver profile not found: </span><span class="si">{</span><span class="n">profile_name</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver_manager</span><span class="o">.</span><span class="n">_mutation</span><span class="p">():</span>
+            <span class="n">profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver_manager</span><span class="o">.</span><span class="n">get_profile</span><span class="p">(</span><span class="n">profile_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">profile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Driver profile not found: </span><span class="si">{</span><span class="n">profile_name</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">unassign</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_require_driver_group</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">image</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">name</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">image</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">previous_image</span> <span class="o">=</span> <span class="n">_WindowsDrivers</span><span class="o">.</span><span class="n">_read_profile_assignment</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+            <span class="n">previous</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">previous_image</span><span class="p">)</span>
+            <span class="n">affected</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">previous</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">group</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">group</span><span class="o">.</span><span class="n">windows_drivers</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">affected</span><span class="p">:</span>
+                    <span class="n">affected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group</span><span class="o">.</span><span class="n">windows_drivers</span><span class="p">)</span>
+            <span class="n">_WindowsDrivers</span><span class="o">.</span><span class="n">_apply_assignment</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">driver_manager</span><span class="p">,</span>
+                <span class="n">profile</span><span class="p">,</span>
+                <span class="n">previous_image</span><span class="p">,</span>
+                <span class="n">image</span><span class="p">,</span>
+                <span class="n">affected</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;profile&quot;</span><span class="p">:</span> <span class="n">profile</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">image</span><span class="p">}</span>
+
+<div class="viewcode-block" id="LinboImageManager.assign_driver_profile">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageManager.assign_driver_profile">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">assign_driver_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile_name</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assign a profile and publish all affected image dispatchers.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_change_driver_assignment</span><span class="p">(</span><span class="n">profile_name</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LinboImageManager.unassign_driver_profile">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageManager.unassign_driver_profile">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unassign_driver_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove an assignment and publish the previous image dispatcher.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_change_driver_assignment</span><span class="p">(</span>
+            <span class="n">profile_name</span><span class="p">,</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="n">unassign</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="LinboImageManager.list">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImageManager.list">[docs]</a>
-    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageManager.list">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Browse LINBO_PATH to discover all linbo images.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -565,16 +905,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">LINBO_PATH</span><span class="p">):</span>
             <span class="k">return</span>
-        <span class="k">for</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">LINBO_PATH</span><span class="p">):</span>
+        <span class="c1"># The dict keeps the insertion order: callers get the images in</span>
+        <span class="c1"># natural order, without sorting them again.</span>
+        <span class="k">for</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="n">sort_naturally</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">LINBO_PATH</span><span class="p">)):</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">LINBO_PATH</span><span class="p">,</span> <span class="nb">dir</span><span class="p">)):</span>
                 <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">LINBO_PATH</span><span class="p">,</span> <span class="nb">dir</span><span class="p">)):</span>
                     <span class="k">if</span> <span class="n">file</span> <span class="o">==</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">dir</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">IMAGE</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="nb">dir</span><span class="p">]</span> <span class="o">=</span> <span class="n">LinboImageGroup</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span></div>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="nb">dir</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_new_group</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LinboImageManager.delete">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImageManager.delete">[docs]</a>
-    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">diff</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageManager.delete">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">diff</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete a whole image and its backups. If date is given, only delete an</span>
 <span class="sd">        associated backup. date and diff parameter excludes each other.</span>
@@ -591,7 +933,7 @@
             <span class="k">if</span> <span class="n">diff</span><span class="p">:</span>
                 <span class="c1"># Only delete a differential image</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="n">group</span><span class="p">]</span><span class="o">.</span><span class="n">diff_image</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">date</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">group</span><span class="p">]</span><span class="o">.</span><span class="n">backups</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">date</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="n">group</span><span class="p">]</span><span class="o">.</span><span class="n">backups</span><span class="p">:</span>
                 <span class="c1"># The object to delete is only a backup</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="n">group</span><span class="p">]</span><span class="o">.</span><span class="n">backups</span><span class="p">[</span><span class="n">date</span><span class="p">]</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="n">group</span><span class="p">]</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
@@ -602,8 +944,8 @@
 
 
 <div class="viewcode-block" id="LinboImageManager.rename">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImageManager.rename">[docs]</a>
-    <span class="k">def</span> <span class="nf">rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">new_name</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageManager.rename">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">new_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Rename a whole linbo image and its backups recursiverly.</span>
 
@@ -615,13 +957,13 @@
 
         <span class="k">if</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="n">group</span><span class="p">]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">new_name</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="n">new_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">LinboImageGroup</span><span class="p">(</span><span class="n">new_name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="n">new_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_new_group</span><span class="p">(</span><span class="n">new_name</span><span class="p">)</span>
             <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="n">group</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="LinboImageManager.duplicate">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImageManager.duplicate">[docs]</a>
-    <span class="k">def</span> <span class="nf">duplicate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">new_name</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageManager.duplicate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">duplicate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">new_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Duplicate a whole linbo image without backups.</span>
 
@@ -632,14 +974,21 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">LINBO_PATH</span><span class="p">,</span> <span class="n">new_name</span><span class="p">)):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Directory </span><span class="si">{</span><span class="n">new_name</span><span class="si">}</span><span class="s2"> already exists&quot;</span><span class="p">)</span>
-            <span class="k">return</span>
+            <span class="k">raise</span> <span class="n">ImageExistsError</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">LINBO_PATH</span><span class="p">,</span> <span class="n">new_name</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
+            <span class="c1"># A torrent embeds the file name it describes and the hash file</span>
+            <span class="c1"># describes that torrent: copying them under a new name would only</span>
+            <span class="c1"># produce two files that lie. They are left out, and the rename()</span>
+            <span class="c1"># below rebuilds them. &#39;backups&#39; is returned as a set: shutil</span>
+            <span class="c1"># matches names with `in`, and a bare string would also swallow</span>
+            <span class="c1"># every one of its substrings.</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">LINBO_PATH</span><span class="p">,</span> <span class="n">group</span><span class="p">),</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">LINBO_PATH</span><span class="p">,</span> <span class="n">new_name</span><span class="p">),</span>
-                <span class="n">ignore</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="s1">&#39;backups&#39;</span>
+                <span class="n">ignore</span><span class="o">=</span><span class="k">lambda</span> <span class="n">src</span><span class="p">,</span> <span class="n">names</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;backups&#39;</span><span class="p">}</span> <span class="o">|</span> <span class="p">{</span>
+                    <span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span> <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s1">&#39;.torrent&#39;</span><span class="p">,</span> <span class="s1">&#39;.hash&#39;</span><span class="p">))</span>
+                <span class="p">},</span>
             <span class="p">)</span>
 
             <span class="n">old_prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">.&#39;</span>
@@ -652,13 +1001,13 @@
                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">LINBO_PATH</span><span class="p">,</span> <span class="n">new_name</span><span class="p">,</span> <span class="n">file</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">old_prefix</span><span class="p">,</span> <span class="n">new_prefix</span><span class="p">)),</span>
                     <span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="n">new_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">LinboImageGroup</span><span class="p">(</span><span class="n">new_name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="n">new_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_new_group</span><span class="p">(</span><span class="n">new_name</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="n">new_name</span><span class="p">]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">new_name</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LinboImageManager.restore">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImageManager.restore">[docs]</a>
-    <span class="k">def</span> <span class="nf">restore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">date</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageManager.restore">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">restore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">date</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete a basic linbo image and restore a backup.</span>
 
@@ -679,8 +1028,7 @@
                 <span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">new_backup_dir</span><span class="p">):</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Backup directory </span><span class="si">{</span><span class="n">new_backup_dir</span><span class="si">}</span><span class="s2"> already exists&quot;</span><span class="p">)</span>
-                    <span class="k">return</span>
+                    <span class="k">raise</span> <span class="n">ImageExistsError</span><span class="p">(</span><span class="n">new_backup_dir</span><span class="p">)</span>
                 
                 <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">new_backup_dir</span><span class="p">)</span>
 
@@ -702,8 +1050,8 @@
 
 
 <div class="viewcode-block" id="LinboImageManager.save_extras">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/index.html#linuxmusterTools.linbo.images.LinboImageManager.save_extras">[docs]</a>
-    <span class="k">def</span> <span class="nf">save_extras</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">diff</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageManager.save_extras">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_extras</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">diff</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save extra files for a base image, a backup or a differential</span>
 <span class="sd">        image. timestamp and diff parameters excludes each other.</span>
@@ -725,11 +1073,76 @@
         <span class="k">if</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
             <span class="n">imageGroup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="n">group</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">diff</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">imageGroup</span><span class="o">.</span><span class="n">diff_image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Image group </span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2"> has no differential image&quot;</span><span class="p">)</span>
                 <span class="n">imageGroup</span><span class="o">.</span><span class="n">diff_image</span><span class="o">.</span><span class="n">save_extras</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">imageGroup</span><span class="o">.</span><span class="n">backups</span><span class="p">:</span>
                 <span class="n">imageGroup</span><span class="o">.</span><span class="n">backups</span><span class="p">[</span><span class="n">date</span><span class="p">]</span><span class="o">.</span><span class="n">save_extras</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">imageGroup</span><span class="o">.</span><span class="n">base</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot save extras for image group </span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">imageGroup</span><span class="o">.</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">imageGroup</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">save_extras</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LinboImageManager.get_images_infos">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/images/index.html#linuxmusterTools.linbo.images.LinboImageManager.get_images_infos">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_images_infos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Export all necessary images informations for Linbo Docker project</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="n">images_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">image_group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">base_image</span> <span class="o">=</span> <span class="n">image_group</span><span class="o">.</span><span class="n">base</span>
+
+            <span class="n">files</span> <span class="o">=</span> <span class="p">[{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">base_image</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
+                <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="n">base_image</span><span class="o">.</span><span class="n">info_file</span><span class="o">.</span><span class="n">imagesize</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;image&quot;</span>
+            <span class="p">}]</span>
+            <span class="n">files_ext</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="n">md5_content</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">image_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_image</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">base_image</span><span class="o">.</span><span class="n">image</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">updated</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span><span class="o">.</span><span class="n">st_mtime</span>
+
+            <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">ALL_FILES_EXT</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">EXTRA_COMMON_FILES</span><span class="p">:</span>
+                    <span class="n">ext_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ext_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_image</span><span class="o">.</span><span class="n">image</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span>
+
+                <span class="n">file_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">LINBO_PATH</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">ext_name</span><span class="si">}</span><span class="s2">&quot;</span>
+
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+                    <span class="n">size</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span><span class="o">.</span><span class="n">st_size</span>
+                    <span class="n">files_ext</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ext</span><span class="p">)</span>
+                    <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">ext_name</span><span class="p">,</span>
+                        <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="n">size</span><span class="p">,</span>
+                        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;extra_file&quot;</span>
+                    <span class="p">})</span>
+
+                    <span class="k">if</span> <span class="n">ext</span> <span class="o">==</span> <span class="s2">&quot;md5&quot;</span><span class="p">:</span>
+                        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                            <span class="n">md5_content</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="n">images_list</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">base_image</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
+                <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="n">base_image</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
+                <span class="s2">&quot;base&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;images/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">base_image</span><span class="o">.</span><span class="n">image</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="n">base_image</span><span class="o">.</span><span class="n">info_file</span><span class="o">.</span><span class="n">imagesize</span><span class="p">,</span>
+                <span class="s2">&quot;md5&quot;</span><span class="p">:</span> <span class="n">md5_content</span><span class="p">,</span>
+                <span class="s2">&quot;info&quot;</span><span class="p">:</span> <span class="n">base_image</span><span class="o">.</span><span class="n">info_file</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(),</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">base_image</span><span class="o">.</span><span class="n">extras</span><span class="p">[</span><span class="s1">&#39;desc&#39;</span><span class="p">],</span>
+                <span class="s2">&quot;extra_files&quot;</span><span class="p">:</span> <span class="n">files_ext</span><span class="p">,</span>
+                <span class="s2">&quot;files&quot;</span><span class="p">:</span> <span class="n">files</span><span class="p">,</span>
+                <span class="s2">&quot;updatedAt&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">updated</span><span class="p">,</span> <span class="n">tz</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+            <span class="p">})</span>
+
+        <span class="k">return</span> <span class="n">images_list</span></div>
 </div>
 
 </pre></div>
@@ -741,7 +1154,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

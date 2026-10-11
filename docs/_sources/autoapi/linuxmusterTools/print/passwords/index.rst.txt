@@ -1,0 +1,20 @@
+linuxmusterTools.print.passwords
+================================
+
+.. py:module:: linuxmusterTools.print.passwords
+
+
+
+
+Module Contents
+---------------
+
+.. py:function:: print_passwords_list(schoolclass, caller, school='default-school', large=False, template='passwords-DE-1-template.tex')
+
+   Print the password letters/cards of the students from a specific schoolclass.
+
+   :param caller: the user calling the process, for generating the filename
+   :param large: use the passwordslarge templates (bigger cards, 18 per page instead of 36)
+   :return: PDF path
+
+

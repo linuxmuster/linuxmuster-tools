@@ -1,0 +1,238 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.linbo.grub &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../linuxmusterTools.html">linuxmusterTools</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.linbo.grub</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for linuxmusterTools.linbo.grub</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">LINBO GRUB Config Reader — reads existing GRUB config files from disk.</span>
+
+<span class="sd">Does NOT generate GRUB configs — that is done by the linbo-api locally.</span>
+<span class="sd">This module only reads what linuxmuster-import-devices or linbo-api has written.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.timestamps</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_utc_mtime</span>
+
+
+<div class="viewcode-block" id="logger">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/grub/index.html#linuxmusterTools.linbo.grub.logger">[docs]</a>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GRUB_DIR_DEFAULT">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/grub/index.html#linuxmusterTools.linbo.grub.GRUB_DIR_DEFAULT">[docs]</a>
+<span class="n">GRUB_DIR_DEFAULT</span> <span class="o">=</span> <span class="s1">&#39;/srv/linbo/boot/grub&#39;</span></div>
+
+
+
+<div class="viewcode-block" id="LinboGrubReader">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/grub/index.html#linuxmusterTools.linbo.grub.LinboGrubReader">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LinboGrubReader</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read-only access to GRUB config files.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grub_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">GRUB_DIR_DEFAULT</span><span class="p">):</span>
+<div class="viewcode-block" id="LinboGrubReader.grub_dir">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/grub/index.html#linuxmusterTools.linbo.grub.LinboGrubReader.grub_dir">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grub_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">grub_dir</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LinboGrubReader.list_grub_cfg_ids">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/grub/index.html#linuxmusterTools.linbo.grub.LinboGrubReader.list_grub_cfg_ids">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">list_grub_cfg_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return sorted list of GRUB config group IDs (stems of ``*.cfg`` files).&quot;&quot;&quot;</span>
+        <span class="n">ids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grub_dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.cfg&quot;</span><span class="p">)):</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">stem</span>
+            <span class="k">if</span> <span class="n">group</span><span class="p">:</span>
+                <span class="n">ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ids</span></div>
+
+
+<div class="viewcode-block" id="LinboGrubReader.get_configs_by_ids">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/grub/index.html#linuxmusterTools.linbo.grub.LinboGrubReader.get_configs_by_ids">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_configs_by_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return GRUB config content and mtime for given group IDs.</span>
+
+<span class="sd">        Returns list of {id, content, updatedAt} dicts.</span>
+<span class="sd">        Skips IDs whose .cfg file does not exist.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">group_id</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">:</span>
+            <span class="n">cfg_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grub_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">group_id</span><span class="si">}</span><span class="s2">.cfg&quot;</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">cfg_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+                <span class="k">continue</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">content</span> <span class="o">=</span> <span class="n">cfg_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">mtime</span> <span class="o">=</span> <span class="n">get_utc_mtime</span><span class="p">(</span><span class="n">cfg_path</span><span class="p">)</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">group_id</span><span class="p">,</span>
+                <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">content</span><span class="p">,</span>
+                <span class="s2">&quot;updatedAt&quot;</span><span class="p">:</span> <span class="n">mtime</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="k">if</span> <span class="n">mtime</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="p">})</span>
+
+        <span class="k">return</span> <span class="n">results</span></div>
+
+
+<div class="viewcode-block" id="LinboGrubReader.get_all_grub_configs">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/grub/index.html#linuxmusterTools.linbo.grub.LinboGrubReader.get_all_grub_configs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_all_grub_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school_groups</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return all GRUB configs, optionally filtered by school groups.</span>
+
+<span class="sd">        Always includes main grub.cfg. Group configs are filtered by</span>
+<span class="sd">        school_groups if provided.</span>
+
+<span class="sd">        Returns list of {id, filename, content, updatedAt} dicts.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">configs</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Always include main grub.cfg</span>
+        <span class="n">main_cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grub_dir</span> <span class="o">/</span> <span class="s2">&quot;grub.cfg&quot;</span>
+        <span class="k">if</span> <span class="n">main_cfg</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">content</span> <span class="o">=</span> <span class="n">main_cfg</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+                <span class="n">mtime</span> <span class="o">=</span> <span class="n">get_utc_mtime</span><span class="p">(</span><span class="n">main_cfg</span><span class="p">)</span>
+                <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;grub&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="s2">&quot;grub.cfg&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">content</span><span class="p">,</span>
+                    <span class="s2">&quot;updatedAt&quot;</span><span class="p">:</span> <span class="n">mtime</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="k">if</span> <span class="n">mtime</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="p">})</span>
+            <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Failed to read grub.cfg: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
+
+        <span class="c1"># Group configs</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grub_dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.cfg&quot;</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;grub.cfg&quot;</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">stem</span>
+            <span class="k">if</span> <span class="n">school_groups</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">group</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">school_groups</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">content</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+                <span class="n">mtime</span> <span class="o">=</span> <span class="n">get_utc_mtime</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                <span class="n">configs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span>
+                    <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2">.cfg&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">content</span><span class="p">,</span>
+                    <span class="s2">&quot;updatedAt&quot;</span><span class="p">:</span> <span class="n">mtime</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="k">if</span> <span class="n">mtime</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="p">})</span>
+            <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+        <span class="k">return</span> <span class="n">configs</span></div>
+
+
+<div class="viewcode-block" id="LinboGrubReader.get_cfg_mtime">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/grub/index.html#linuxmusterTools.linbo.grub.LinboGrubReader.get_cfg_mtime">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_cfg_mtime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return mtime for a specific GRUB config file.&quot;&quot;&quot;</span>
+        <span class="n">cfg_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grub_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">group_id</span><span class="si">}</span><span class="s2">.cfg&quot;</span>
+        <span class="k">return</span> <span class="n">get_utc_mtime</span><span class="p">(</span><span class="n">cfg_path</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

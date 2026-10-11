@@ -5,18 +5,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.lmnconfig.webui &mdash; linuxmuster-tools7 7.3.26 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+  <title>linuxmusterTools.lmnconfig.webui &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=ac320c09"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/translations.js?v=8fd896e3"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -73,34 +73,34 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.lmnconfig.webui</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">logging</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">from</span> <span class="nn">linuxmusterTools.lmnfile</span> <span class="kn">import</span> <span class="n">LMNFile</span>
-<span class="kn">from</span> <span class="nn">linuxmusterTools.common</span> <span class="kn">import</span> <span class="n">WEBUI_IMPORT</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.lmnfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">LMNFile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">WEBUI_IMPORT</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.common.timestamps</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_utc_mtime</span>
 
 
 <div class="viewcode-block" id="logger">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/webui/index.html#linuxmusterTools.lmnconfig.logger">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/webui/index.html#linuxmusterTools.lmnconfig.webui.logger">[docs]</a>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
 
 
+<span class="n">_CACHE</span> <span class="o">=</span> <span class="p">{}</span>
+
 <div class="viewcode-block" id="CustomFieldsConfig">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/webui/index.html#linuxmusterTools.lmnconfig.CustomFieldsConfig">[docs]</a>
-<span class="k">class</span> <span class="nc">CustomFieldsConfig</span><span class="p">:</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/webui/index.html#linuxmusterTools.lmnconfig.webui.CustomFieldsConfig">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomFieldsConfig</span><span class="p">:</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
-        <span class="n">custom_config_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;/etc/linuxmuster/sophomorix/</span><span class="si">{</span><span class="n">school</span><span class="si">}</span><span class="s1">/custom_fields.yml&#39;</span>
-
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">WEBUI_IMPORT</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">return</span>
-        <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">custom_config_path</span><span class="p">):</span>
-            <span class="k">with</span> <span class="n">LMNFile</span><span class="p">(</span><span class="n">custom_config_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">config</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1">#logger.warning(f&quot;No custom fields config found for the school {school}&quot;)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="CustomFieldsConfig.config">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/webui/index.html#linuxmusterTools.lmnconfig.webui.CustomFieldsConfig.config">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load</span><span class="p">(</span><span class="n">school</span><span class="p">)</span></div>
+
 
         <span class="k">for</span> <span class="n">role</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;globaladministrators&#39;</span><span class="p">,</span> <span class="s1">&#39;schooladministrators&#39;</span><span class="p">,</span> <span class="s1">&#39;students&#39;</span><span class="p">,</span> <span class="s1">&#39;teachers&#39;</span><span class="p">]:</span>
             <span class="n">tmp_role_config</span> <span class="o">=</span> <span class="p">{}</span>
@@ -108,7 +108,42 @@
             <span class="k">for</span> <span class="n">config_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;custom&#39;</span><span class="p">,</span> <span class="s1">&#39;customDisplay&#39;</span><span class="p">,</span> <span class="s1">&#39;customMulti&#39;</span><span class="p">,</span> <span class="s1">&#39;passwordTemplates&#39;</span><span class="p">,</span> <span class="s1">&#39;proxyAddresses&#39;</span><span class="p">]:</span>
                 <span class="n">tmp_role_config</span><span class="p">[</span><span class="n">config_type</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">config_type</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="p">{})</span>
 
-            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role</span><span class="p">,</span> <span class="n">tmp_role_config</span><span class="p">)</span></div>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role</span><span class="p">,</span> <span class="n">tmp_role_config</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load</span><span class="p">(</span><span class="n">school</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the parsed custom fields config of a school, reading the file</span>
+<span class="sd">        again only if it changed since the last read. Every ldap request of</span>
+<span class="sd">        the ldapconnector instantiates this class, so parsing the yaml file</span>
+<span class="sd">        each time cost 12-19 ms per request.</span>
+
+<span class="sd">        The returned dict is shared between callers and must not be modified.</span>
+
+<span class="sd">        :param school: school name</span>
+<span class="sd">        :type school: basestring</span>
+<span class="sd">        :return: parsed custom_fields.yml, empty dict if the file doesn&#39;t exist</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;/etc/linuxmuster/sophomorix/</span><span class="si">{</span><span class="n">school</span><span class="si">}</span><span class="s1">/custom_fields.yml&#39;</span><span class="p">)</span>
+        <span class="n">mtime</span> <span class="o">=</span> <span class="n">get_utc_mtime</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">mtime</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1">#logger.warning(f&quot;No custom fields config found for the school {school}&quot;)</span>
+            <span class="k">return</span> <span class="p">{}</span>
+
+        <span class="n">cached</span> <span class="o">=</span> <span class="n">_CACHE</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">school</span><span class="p">)</span>
+
+        <span class="c1"># Check for changes since the last request.</span>
+        <span class="k">if</span> <span class="n">cached</span> <span class="ow">and</span> <span class="n">cached</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">mtime</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cached</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">with</span> <span class="n">LMNFile</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">config</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+        <span class="n">_CACHE</span><span class="p">[</span><span class="n">school</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">mtime</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span></div>
 
 </pre></div>
 
@@ -119,7 +154,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

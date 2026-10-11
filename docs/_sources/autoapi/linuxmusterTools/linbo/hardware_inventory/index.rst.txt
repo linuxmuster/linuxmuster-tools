@@ -1,0 +1,56 @@
+linuxmusterTools.linbo.hardware_inventory
+=========================================
+
+.. py:module:: linuxmusterTools.linbo.hardware_inventory
+
+.. autoapi-nested-parse::
+
+   Read DMI information uploaded by LINBO clients.
+
+   LINBO stores one compressed ``<hostname>_hwinfo.gz`` file per client in
+   ``/var/log/linuxmuster/linbo``.  The inventory manager combines these files
+   with the school-scoped client records already provided by :class:`Devices`.
+   It is read-only and deliberately independent from driver profiles and hooks.
+
+
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:function:: parse_dmi(text: str) -> dict[str, str | None] | None
+
+   Return SMBIOS system vendor, product and version from hwinfo output.
+
+
+.. py:class:: LinboHardwareInventoryManager(school: str = DEFAULT_SCHOOL, hwinfo_dir: str | pathlib.Path = DEFAULT_HWINFO_DIR)
+
+   List and read school-scoped LINBO hardware inventories.
+
+
+   .. py:attribute:: school
+      :value: 'default-school'
+
+
+
+   .. py:attribute:: hwinfo_dir
+
+
+   .. py:attribute:: devices
+
+
+   .. py:method:: list() -> list[dict[str, Any]]
+
+      Return readable inventories for the school's configured clients.
+
+
+
+   .. py:method:: get(hostname: str) -> dict[str, Any] | None
+
+      Return one configured client's inventory, or ``None`` if absent.
+
+
+

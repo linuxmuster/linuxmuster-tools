@@ -4,29 +4,10 @@ linuxmusterTools.common.checks.names
 .. py:module:: linuxmusterTools.common.checks.names
 
 
-Attributes
-----------
-
-.. autoapisummary::
-
-   linuxmusterTools.common.checks.names.logger
-   linuxmusterTools.common.checks.names.NAME_RULES
 
 
-Classes
--------
-
-.. autoapisummary::
-
-   linuxmusterTools.common.checks.names.NameChecker
 
 
-Functions
----------
-
-.. autoapisummary::
-
-   linuxmusterTools.common.checks.names.set_check_method
 
 
 Module Contents
@@ -43,6 +24,28 @@ Module Contents
    .. py:method:: check(name_type, string)
 
 
+   .. py:method:: validate(name_type, string)
+
+      Same rules as check(), but raise instead of returning False, and
+      return the string so that the result can be assigned back.
+
+      Use this wherever the name is about to build a filesystem path: a
+      caller that forgets to test check()'s boolean silently keeps an
+      unchecked name, while a forgotten validate() cannot go unnoticed.
+
+      :param name_type: One of the rules declared in NAME_RULES
+      :type name_type: string
+      :param string: The name to validate
+      :type string: string
+      :return: The validated name, unchanged
+      :rtype: string
+      :raises ValueError: if the name does not pass check()
+
+
+
    .. py:method:: normalize_mac(mac)
+
+      Return a mac address in the colon-format  AA:BB:CC:DD:EE:FF
+
 
 

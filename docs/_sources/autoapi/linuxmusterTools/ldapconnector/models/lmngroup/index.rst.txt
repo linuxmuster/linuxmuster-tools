@@ -4,12 +4,6 @@ linuxmusterTools.ldapconnector.models.lmngroup
 .. py:module:: linuxmusterTools.ldapconnector.models.lmngroup
 
 
-Classes
--------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.models.lmngroup.LMNGroupModel
 
 
 Module Contents
@@ -71,12 +65,60 @@ Module Contents
       :type:  str
 
 
+   .. py:attribute:: sophomorixAddMailQuota
+      :type:  list
+
+
+   .. py:attribute:: sophomorixAddQuota
+      :type:  list
+
+
    .. py:attribute:: sophomorixAdminClass
       :type:  str
 
 
    .. py:attribute:: sophomorixCreationDate
       :type:  str
+
+
+   .. py:attribute:: sophomorixCustom1
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom2
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom3
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom4
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustom5
+      :type:  str
+
+
+   .. py:attribute:: sophomorixCustomMulti1
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti2
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti3
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti4
+      :type:  list
+
+
+   .. py:attribute:: sophomorixCustomMulti5
+      :type:  list
 
 
    .. py:attribute:: sophomorixHidden
@@ -135,7 +177,15 @@ Module Contents
       :type:  bool
 
 
+   .. py:attribute:: sophomorixMailQuota
+      :type:  list
+
+
    .. py:attribute:: sophomorixMembers
+      :type:  list
+
+
+   .. py:attribute:: sophomorixQuota
       :type:  list
 
 
@@ -182,7 +232,7 @@ Module Contents
       This is not called as post init because of nested projects. So it's necessary to call this method
       afterwards:
 
-      p = lr.get('/projects/p_test', dict=False)
+      p = lr.get('/projects/p_test', as_dict=False)
       p.get_all_members()
 
 

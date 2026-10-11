@@ -1,0 +1,105 @@
+linuxmusterTools.linbo.boot_logs
+================================
+
+.. py:module:: linuxmusterTools.linbo.boot_logs
+
+.. autoapi-nested-parse::
+
+   LINBO Boot Logs — read client boot logs from /var/log/linuxmuster/linbo/.
+
+   Provides safe file listing, reading, and deletion with path traversal protection.
+
+
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:data:: logger
+
+.. py:data:: DEFAULT_LOG_DIR
+   :value: '/var/log/linuxmuster/linbo'
+
+
+.. py:data:: MAX_FILE_SIZE
+   :value: 5242880
+
+
+.. py:data:: name_checker
+
+.. py:class:: LinboBootLogs(log_dir: str = DEFAULT_LOG_DIR)
+
+   Read-only access to LINBO client boot logs.
+
+
+   .. py:attribute:: log_dir
+
+
+   .. py:method:: list_logs() -> list[dict]
+
+      List all log files with metadata.
+
+      Returns:
+          List of {filename, hostname, size, modifiedAt} dicts, sorted
+          newest first. hostname is None for a file whose name says nothing
+          about a host; it is a name no inventory matches for the ones that
+          belong to no machine anyway, like a multicast log
+          (bionic.cloop_mcast.log) or a client that could not identify
+          itself (UNKNOWN_linbo.log).
+
+
+
+   .. py:method:: read_log(filename: str) -> str | None
+
+      Read a log file's content.
+
+      Args:
+          filename: Name of the log file (validated for path traversal)
+
+      Returns:
+          File content as string, or None if not found
+
+      Raises:
+          ValueError: If filename contains unsafe characters
+          ValueError: If file exceeds MAX_FILE_SIZE
+
+
+
+   .. py:method:: latest_remote_log(hostname: str) -> str | None
+
+      Name of the log of a host's last linbo-remote run.
+
+      The newest <hostname>_linbo-remote_<YYYYmmddHHMMSS>.log, ordered on
+      the timestamp of its name, or the <hostname>.linbo-remote written by
+      linuxmuster-linbo7 before 7.4.18 if the host has no other.
+
+      Args:
+          hostname: Name of the host
+
+      Returns:
+          File name to pass to read_log(), or None if the host has no
+          linbo-remote log
+
+      Raises:
+          ValueError: If hostname is not a valid host name
+
+
+
+   .. py:method:: delete_log(filename: str) -> bool
+
+      Delete a log file.
+
+      Args:
+          filename: Name of the log file
+
+      Returns:
+          True if deleted, False if not found
+
+      Raises:
+          ValueError: If filename contains unsafe characters
+
+
+

@@ -1,0 +1,114 @@
+linuxmusterTools.linbo.host_status
+==================================
+
+.. py:module:: linuxmusterTools.linbo.host_status
+
+.. autoapi-nested-parse::
+
+   LINBO Host Status Scanner — TCP port probing for online detection.
+
+   Probes port 2222 (Dropbear SSH on LINBO clients) to determine
+   if a host is online. Supports concurrent scanning.
+
+   Also classifies a host's boot state (Off, Linbo, OS Linux, OS Windows,
+   OS Unknown) from the state of ports 2222/22/135, without depending on
+   nmap. Since there is no separate host-discovery/ping step here (unlike
+   nmap), a host that doesn't answer on any of the three ports is reported
+   as 'Off' directly, instead of the 'Off' vs 'No response' distinction the
+   nmap-based webui implementation made.
+
+
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:data:: logger
+
+.. py:data:: DEFAULT_PORT
+   :value: 2222
+
+
+.. py:data:: DEFAULT_TIMEOUT
+   :value: 2.0
+
+
+.. py:data:: DEFAULT_CONCURRENCY
+   :value: 20
+
+
+.. py:function:: probe_host(ip: str, port: int = DEFAULT_PORT, timeout: float = DEFAULT_TIMEOUT) -> bool
+   :async:
+
+
+   Test if a host is reachable via TCP connect.
+
+   Args:
+       ip: Target IP address
+       port: TCP port to probe (default: 2222)
+       timeout: Connection timeout in seconds (default: 2.0)
+
+   Returns:
+       True if host is reachable, False otherwise
+
+
+.. py:function:: scan_hosts(hosts: list[dict], port: int = DEFAULT_PORT, timeout: float = DEFAULT_TIMEOUT, concurrency: int = DEFAULT_CONCURRENCY) -> list[dict]
+   :async:
+
+
+   Scan multiple hosts concurrently for online status.
+
+   Args:
+       hosts: List of host dicts with at least 'ip' and 'mac' keys
+       port: TCP port to probe
+       timeout: Per-host connection timeout
+       concurrency: Max concurrent probes
+
+   Returns:
+       List of {mac, ip, hostname, online} dicts
+
+
+.. py:function:: scan_hosts_sync(hosts: list[dict], port: int = DEFAULT_PORT, timeout: float = DEFAULT_TIMEOUT, concurrency: int = DEFAULT_CONCURRENCY) -> list[dict]
+
+   Synchronous wrapper for scan_hosts (for use outside async context).
+
+
+.. py:data:: CLASSIFY_PORTS
+   :value: (2222, 22, 135)
+
+
+.. py:function:: probe_port_state(ip: str, port: int, timeout: float = DEFAULT_TIMEOUT) -> str
+
+   Probe a single TCP port and classify its state.
+
+   Plain blocking socket, not asyncio: this is meant to be called from
+   gevent-monkey-patched code (e.g. the webui), where a blocking
+   socket.create_connection() is cooperative for free, while an asyncio
+   event loop would not be.
+
+   Returns:
+       'open' if the connection succeeds, 'closed' if the host actively
+       refuses it, 'filtered' if it doesn't respond at all (timeout or
+       unreachable) — mirroring nmap's port states without shelling out to it.
+
+
+.. py:function:: classify_os(ports: dict[int, str]) -> str
+
+   Classify a host's boot state from its port states.
+
+   :param ports: Dict mapping port number (2222, 22, 135) to its state
+       ('open', 'closed' or 'filtered').
+   :return: One of 'Off', 'Linbo', 'OS Linux', 'OS Windows', 'OS Unknown'.
+
+
+.. py:function:: classify_host(ip: str, timeout: float = DEFAULT_TIMEOUT) -> str
+
+   Probe a host on ports 2222/22/135 and classify its boot state.
+
+   Returns:
+       One of 'Off', 'Linbo', 'OS Linux', 'OS Windows', 'OS Unknown'.
+
+

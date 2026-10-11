@@ -4,22 +4,8 @@ linuxmusterTools.samba_util.smbstatus
 .. py:module:: linuxmusterTools.samba_util.smbstatus
 
 
-Attributes
-----------
-
-.. autoapisummary::
-
-   linuxmusterTools.samba_util.smbstatus.users_regex
-   linuxmusterTools.samba_util.smbstatus.machine_regex
 
 
-Classes
--------
-
-.. autoapisummary::
-
-   linuxmusterTools.samba_util.smbstatus.SMBConnection
-   linuxmusterTools.samba_util.smbstatus.SMBConnections
 
 
 Module Contents
@@ -79,7 +65,7 @@ Module Contents
       :type:  str
 
 
-   .. py:method:: asdict()
+   .. py:method:: as_dict()
 
 
 .. py:data:: users_regex

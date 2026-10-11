@@ -1,0 +1,260 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.linbo.changes &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../linuxmusterTools.html">linuxmusterTools</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.linbo.changes</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for linuxmusterTools.linbo.changes</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">LINBO Change Tracker — cursor-based delta detection via filesystem mtimes.</span>
+
+<span class="sd">Compares file modification times against a unix-timestamp cursor to</span>
+<span class="sd">determine which hosts, start.confs, and configs have changed.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.devices</span><span class="w"> </span><span class="kn">import</span> <span class="n">Devices</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">LINBO_PATH</span><span class="p">,</span> <span class="n">LinboConfigManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.dhcp</span><span class="w"> </span><span class="kn">import</span> <span class="n">DHCP_SUBNETS_PATH</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.grub</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinboGrubReader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.timestamps</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_utc_mtime</span>
+
+
+<div class="viewcode-block" id="logger">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/changes/index.html#linuxmusterTools.linbo.changes.logger">[docs]</a>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LinboChangeTracker">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/changes/index.html#linuxmusterTools.linbo.changes.LinboChangeTracker">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LinboChangeTracker</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Cursor-based change detection using filesystem mtimes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default-school&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="LinboChangeTracker.school">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/changes/index.html#linuxmusterTools.linbo.changes.LinboChangeTracker.school">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">school</span> <span class="o">=</span> <span class="n">school</span></div>
+
+<div class="viewcode-block" id="LinboChangeTracker.devices_mgr">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/changes/index.html#linuxmusterTools.linbo.changes.LinboChangeTracker.devices_mgr">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">devices_mgr</span> <span class="o">=</span> <span class="n">Devices</span><span class="p">(</span><span class="n">school</span><span class="o">=</span><span class="n">school</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LinboChangeTracker.config_manager">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/changes/index.html#linuxmusterTools.linbo.changes.LinboChangeTracker.config_manager">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span> <span class="o">=</span> <span class="n">LinboConfigManager</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LinboChangeTracker.grub_reader">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/changes/index.html#linuxmusterTools.linbo.changes.LinboChangeTracker.grub_reader">[docs]</a>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grub_reader</span> <span class="o">=</span> <span class="n">LinboGrubReader</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LinboChangeTracker.get_changes">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/changes/index.html#linuxmusterTools.linbo.changes.LinboChangeTracker.get_changes">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_changes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">since_cursor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare filesystem state against cursor, return delta.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            since_cursor: Unix timestamp string. &#39;0&#39; = full snapshot.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict with nextCursor, hostsChanged, startConfsChanged,</span>
+<span class="sd">            configsChanged, dhcpChanged, allHostMacs, allStartConfIds,</span>
+<span class="sd">            allConfigIds.</span>
+
+<span class="sd">        hostsChanged lists every host of the school as soon as devices.csv</span>
+<span class="sd">        changed: all hosts live in this one file, its mtime cannot tell which</span>
+<span class="sd">        line was edited.</span>
+
+<span class="sd">        Nothing is remembered between two calls, so a deleted host or</span>
+<span class="sd">        start.conf cannot be reported as such: it is the entry missing from</span>
+<span class="sd">        allHostMacs or allStartConfIds compared to the previous call.</span>
+
+<span class="sd">        A file whose mtime cannot be read counts as changed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cursor_ts</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">since_cursor</span><span class="p">)</span> <span class="k">if</span> <span class="n">since_cursor</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">cursor_ts</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">cursor_dt</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">cursor_ts</span><span class="p">,</span> <span class="n">tz</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span> <span class="k">if</span> <span class="n">cursor_ts</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Taken before anything is read: a file written during the scan then</span>
+        <span class="c1"># has an mtime at or after the next cursor, and is reported on the next</span>
+        <span class="c1"># call. The worst case is a change reported twice, never one lost.</span>
+        <span class="n">next_cursor</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()))</span>
+
+        <span class="c1"># Reload devices list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">devices_mgr</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+        <span class="n">school_groups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">devices_mgr</span><span class="o">.</span><span class="n">groups</span>
+        <span class="n">all_hosts_macs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">devices_mgr</span><span class="o">.</span><span class="n">macs</span>
+
+        <span class="c1"># Parse ids</span>
+        <span class="n">all_startconf_ids</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">id</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_manager</span><span class="o">.</span><span class="n">group_ids</span>
+            <span class="k">if</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">school_groups</span>
+        <span class="p">]</span>
+        <span class="n">all_config_ids</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">id</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">grub_reader</span><span class="o">.</span><span class="n">list_grub_cfg_ids</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">school_groups</span>
+        <span class="p">]</span>
+
+        <span class="c1"># Detect host changes via devices.csv mtime</span>
+        <span class="n">devices_csv_mtime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">devices_mgr</span><span class="o">.</span><span class="n">csv_mtime</span>
+        <span class="n">hosts_changed_macs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">devices_modified</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">cursor_dt</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="ow">or</span> <span class="n">devices_csv_mtime</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="ow">or</span> <span class="p">(</span><span class="n">devices_csv_mtime</span> <span class="o">&gt;=</span> <span class="n">cursor_dt</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">subnets_conf_mtime</span> <span class="o">=</span> <span class="n">get_utc_mtime</span><span class="p">(</span><span class="n">DHCP_SUBNETS_PATH</span><span class="p">)</span>
+        <span class="n">subnets_modified</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">cursor_dt</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="ow">or</span> <span class="n">subnets_conf_mtime</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="ow">or</span> <span class="p">(</span><span class="n">subnets_conf_mtime</span> <span class="o">&gt;=</span> <span class="n">cursor_dt</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">devices_modified</span><span class="p">:</span>
+            <span class="n">hosts_changed_macs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">all_hosts_macs</span><span class="p">)</span>
+
+        <span class="n">dhcp_changed</span> <span class="o">=</span> <span class="n">devices_modified</span> <span class="ow">or</span> <span class="n">subnets_modified</span>
+
+        <span class="c1"># Check start.conf files</span>
+        <span class="n">startconfs_changed</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">all_startconf_ids</span><span class="p">:</span>
+            <span class="n">startconf_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">LINBO_PATH</span><span class="p">)</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;start.conf.</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">mtime</span> <span class="o">=</span> <span class="n">get_utc_mtime</span><span class="p">(</span><span class="n">startconf_path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">cursor_dt</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">mtime</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">mtime</span> <span class="o">&gt;=</span> <span class="n">cursor_dt</span><span class="p">:</span>
+                <span class="n">startconfs_changed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+
+        <span class="c1"># Check GRUB configs</span>
+        <span class="n">configs_changed</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">all_config_ids</span><span class="p">:</span>
+            <span class="n">mtime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grub_reader</span><span class="o">.</span><span class="n">get_cfg_mtime</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">cursor_dt</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">mtime</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">mtime</span> <span class="o">&gt;=</span> <span class="n">cursor_dt</span><span class="p">:</span>
+                <span class="n">configs_changed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;nextCursor&quot;</span><span class="p">:</span> <span class="n">next_cursor</span><span class="p">,</span>
+            <span class="s2">&quot;hostsChanged&quot;</span><span class="p">:</span> <span class="n">hosts_changed_macs</span><span class="p">,</span>
+            <span class="s2">&quot;startConfsChanged&quot;</span><span class="p">:</span> <span class="n">startconfs_changed</span><span class="p">,</span>
+            <span class="s2">&quot;configsChanged&quot;</span><span class="p">:</span> <span class="n">configs_changed</span><span class="p">,</span>
+            <span class="s2">&quot;dhcpChanged&quot;</span><span class="p">:</span> <span class="n">dhcp_changed</span><span class="p">,</span>
+            <span class="s2">&quot;allHostMacs&quot;</span><span class="p">:</span> <span class="n">all_hosts_macs</span><span class="p">,</span>
+            <span class="s2">&quot;allStartConfIds&quot;</span><span class="p">:</span> <span class="n">all_startconf_ids</span><span class="p">,</span>
+            <span class="s2">&quot;allConfigIds&quot;</span><span class="p">:</span> <span class="n">all_config_ids</span><span class="p">,</span>
+        <span class="p">}</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

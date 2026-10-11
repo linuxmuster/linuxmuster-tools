@@ -4,29 +4,22 @@ linuxmusterTools.lmnconfig.sophomorix
 .. py:module:: linuxmusterTools.lmnconfig.sophomorix
 
 
-Attributes
-----------
-
-.. autoapisummary::
-
-   linuxmusterTools.lmnconfig.sophomorix.logger
 
 
-Classes
--------
-
-.. autoapisummary::
-
-   linuxmusterTools.lmnconfig.sophomorix.SchoolConfig
-   linuxmusterTools.lmnconfig.sophomorix.MultiOrderedDict
-   linuxmusterTools.lmnconfig.sophomorix.SophomorixIni
-   linuxmusterTools.lmnconfig.sophomorix.SophomorixConf
 
 
 Module Contents
 ---------------
 
 .. py:data:: logger
+
+.. py:data:: SOPHOMORIX_INI_PATH
+   :value: '/usr/share/sophomorix/devel/sophomorix.ini'
+
+
+.. py:data:: FALLBACK_DEFAULT_ROLE
+   :value: 'classroom-studentcomputer'
+
 
 .. py:class:: SchoolConfig(school='default-school')
 
@@ -35,21 +28,48 @@ Module Contents
    Bases: :py:obj:`collections.OrderedDict`
 
 
-   dict() -> new empty dictionary
-   dict(mapping) -> new dictionary initialized from a mapping object's
-       (key, value) pairs
-   dict(iterable) -> new dictionary initialized as if via:
-       d = {}
-       for k, v in iterable:
-           d[k] = v
-   dict(**kwargs) -> new dictionary initialized with the name=value pairs
-       in the keyword argument list.  For example:  dict(one=1, two=2)
+   An OrderedDict whose repeated keys accumulate their values in a list.
 
 
    .. py:method:: __setitem__(key, value)
 
       Set self[key] to value.
 
+
+
+.. py:class:: ComputerRoles
+
+   What sophomorix.ini says about computer roles: the ones getting a
+   machine account in the AD, the ones getting a DNS node only, and the one
+   an empty role field means.
+
+   Read by SophomorixIni into its computer_roles attribute, or built by hand
+   to pin what a caller reads - a test, or a check run against an inventory
+   coming from somewhere else.
+
+
+   .. py:attribute:: accounts
+      :type:  tuple
+      :value: ()
+
+
+
+   .. py:attribute:: dns_only
+      :type:  tuple
+      :value: ()
+
+
+
+   .. py:attribute:: default
+      :type:  str
+      :value: 'classroom-studentcomputer'
+
+
+
+   .. py:property:: roles
+
+
+   .. py:method:: __contains__(role)
 
 
 .. py:class:: SophomorixIni
@@ -68,7 +88,7 @@ Module Contents
    .. py:attribute:: dict
 
 
-   .. py:attribute:: computerrole
+   .. py:attribute:: computer_roles
 
 
    .. py:attribute:: clientrole
@@ -77,6 +97,15 @@ Module Contents
 
 
    .. py:attribute:: userrole
+
+
+   .. py:property:: computerrole
+
+      Deprecated, use computer_roles.roles.
+
+      :return: Every computer role, 'computerrole.' prefix stripped
+      :rtype: list
+
 
 
    .. py:method:: sanitize(value)

@@ -5,18 +5,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.lmnconfig.samba &mdash; linuxmuster-tools7 7.3.26 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+  <title>linuxmusterTools.lmnconfig.samba &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=ac320c09"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/translations.js?v=8fd896e3"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -73,37 +73,35 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.lmnconfig.samba</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">configparser</span> <span class="kn">import</span> <span class="n">ConfigParser</span>
-<span class="kn">from</span> <span class="nn">configobj</span> <span class="kn">import</span> <span class="n">ConfigObj</span>
-<span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">check_output</span>
-<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">configparser</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">configobj</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigObj</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">subprocess</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_output</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">StringIO</span>
 
 
 <div class="viewcode-block" id="logger">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/samba/index.html#linuxmusterTools.lmnconfig.logger">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/samba/index.html#linuxmusterTools.lmnconfig.samba.logger">[docs]</a>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
 
 
 <span class="c1"># Load samba domain</span>
 <div class="viewcode-block" id="smbconf">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/index.html#linuxmusterTools.lmnconfig.smbconf">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/samba/index.html#linuxmusterTools.lmnconfig.samba.smbconf">[docs]</a>
 <span class="n">smbconf</span> <span class="o">=</span> <span class="n">ConfigParser</span><span class="p">(</span><span class="n">delimiters</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">,))</span></div>
 
 <span class="n">SAMBA_DOMAIN</span><span class="p">,</span> <span class="n">SAMBA_REALM</span><span class="p">,</span> <span class="n">SAMBA_NETBIOS</span><span class="p">,</span> <span class="n">SAMBA_WORKGROUP</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span>
 <span class="n">SAMBA_TLD</span><span class="p">,</span> <span class="n">LDAP_CONTEXT</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>
 
 <div class="viewcode-block" id="parse_log_level">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/index.html#linuxmusterTools.lmnconfig.parse_log_level">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_log_level</span><span class="p">(</span><span class="n">level</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/samba/index.html#linuxmusterTools.lmnconfig.samba.parse_log_level">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_log_level</span><span class="p">(</span><span class="n">level</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A level entry should look like</span>
+<span class="sd">    A level entry should look like one of these::</span>
 
 <span class="sd">        log level = auth_audit:2</span>
-<span class="sd">    or</span>
 <span class="sd">        log level = 2</span>
-<span class="sd">    or</span>
 <span class="sd">        log level = 1 auth_audit:3 winbind:5</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -126,7 +124,7 @@
     <span class="c1"># TODO: use smb.conf or the output of testparm -sv ?</span>
     <span class="n">smbconf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;/etc/samba/smb.conf&#39;</span><span class="p">)</span>
 <div class="viewcode-block" id="LOG_LEVEL">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/index.html#linuxmusterTools.lmnconfig.LOG_LEVEL">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/samba/index.html#linuxmusterTools.lmnconfig.samba.LOG_LEVEL">[docs]</a>
     <span class="n">LOG_LEVEL</span> <span class="o">=</span> <span class="n">parse_log_level</span><span class="p">(</span><span class="n">smbconf</span><span class="p">[</span><span class="s2">&quot;global&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;log level&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span></div>
 
     <span class="n">SAMBA_REALM</span> <span class="o">=</span> <span class="n">smbconf</span><span class="p">[</span><span class="s2">&quot;global&quot;</span><span class="p">][</span><span class="s2">&quot;realm&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
@@ -134,22 +132,26 @@
     <span class="n">SAMBA_NETBIOS</span> <span class="o">=</span> <span class="n">smbconf</span><span class="p">[</span><span class="s2">&quot;global&quot;</span><span class="p">][</span><span class="s2">&quot;netbios name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
     <span class="n">SAMBA_DOMAIN</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">SAMBA_NETBIOS</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">SAMBA_REALM</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="n">SAMBA_TLD</span> <span class="o">=</span> <span class="n">SAMBA_REALM</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-    <span class="n">LDAP_CONTEXT</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;OU=SCHOOLS,DC=</span><span class="si">{</span><span class="n">SAMBA_WORKGROUP</span><span class="si">}</span><span class="s2">,DC=</span><span class="si">{</span><span class="n">SAMBA_TLD</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="c1"># fandom.example.org --&gt; &#39;DC=FANDOM,DC=EXAMPLE,DC=ORG&#39;</span>
+    <span class="n">LDAP_DC</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;DC=</span><span class="si">{</span><span class="n">comp</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="n">SAMBA_REALM</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">comp</span><span class="p">])</span>
+    <span class="n">LDAP_CONTEXT</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;OU=SCHOOLS,</span><span class="si">{</span><span class="n">LDAP_DC</span><span class="si">}</span><span class="s2">&quot;</span>
+
 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Can not read realm and domain from smb.conf: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">. Is linuxmuster.net installed and configured ?&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DFS">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/index.html#linuxmusterTools.lmnconfig.DFS">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/samba/index.html#linuxmusterTools.lmnconfig.samba.DFS">[docs]</a>
 <span class="n">DFS</span> <span class="o">=</span> <span class="p">{}</span></div>
 
 
 <div class="viewcode-block" id="config">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/index.html#linuxmusterTools.lmnconfig.config">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/samba/index.html#linuxmusterTools.lmnconfig.samba.config">[docs]</a>
 <span class="n">config</span> <span class="o">=</span> <span class="n">ConfigObj</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&quot;/usr/bin/net&quot;</span><span class="p">,</span> <span class="s2">&quot;conf&quot;</span><span class="p">,</span> <span class="s2">&quot;list&quot;</span><span class="p">],</span> <span class="n">shell</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()))</span></div>
 
 
 <div class="viewcode-block" id="SHARES_LIST">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/index.html#linuxmusterTools.lmnconfig.SHARES_LIST">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/samba/index.html#linuxmusterTools.lmnconfig.samba.SHARES_LIST">[docs]</a>
 <span class="n">SHARES_LIST</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
 
 
@@ -157,7 +159,7 @@
     <span class="c1"># DFS activated ?</span>
     <span class="k">if</span> <span class="n">share_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;msdfs root&#39;</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;yes&#39;</span><span class="p">:</span>
 <div class="viewcode-block" id="dfs_proxy">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/samba_util/index.html#linuxmusterTools.lmnconfig.dfs_proxy">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/lmnconfig/samba/index.html#linuxmusterTools.lmnconfig.samba.dfs_proxy">[docs]</a>
         <span class="n">dfs_proxy</span> <span class="o">=</span> <span class="n">share_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;msdfs proxy&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span></div>
 
         <span class="k">if</span> <span class="n">dfs_proxy</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
@@ -174,7 +176,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

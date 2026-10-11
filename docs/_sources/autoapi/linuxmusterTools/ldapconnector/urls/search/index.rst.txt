@@ -4,12 +4,6 @@ linuxmusterTools.ldapconnector.urls.search
 .. py:module:: linuxmusterTools.ldapconnector.urls.search
 
 
-Functions
----------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.urls.search.global_search
 
 
 Module Contents

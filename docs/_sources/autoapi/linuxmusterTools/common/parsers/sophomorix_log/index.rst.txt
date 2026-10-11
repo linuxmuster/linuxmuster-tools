@@ -4,28 +4,14 @@ linuxmusterTools.common.parsers.sophomorix_log
 .. py:module:: linuxmusterTools.common.parsers.sophomorix_log
 
 
-Attributes
-----------
-
-.. autoapisummary::
-
-   linuxmusterTools.common.parsers.sophomorix_log.KILL_LOG_PATH
-   linuxmusterTools.common.parsers.sophomorix_log.ADD_LOG_PATH
-   linuxmusterTools.common.parsers.sophomorix_log.UPDATE_LOG_PATH
 
 
-Functions
----------
-
-.. autoapisummary::
-
-   linuxmusterTools.common.parsers.sophomorix_log.parse_kill_log
-   linuxmusterTools.common.parsers.sophomorix_log.parse_add_log
-   linuxmusterTools.common.parsers.sophomorix_log.parse_update_log
 
 
 Module Contents
 ---------------
+
+.. py:data:: logger
 
 .. py:data:: KILL_LOG_PATH
    :value: '/var/log/sophomorix/userlog/user-kill.log'
@@ -43,6 +29,7 @@ Module Contents
 
    Parse the kill log of sophomorix to return a dict with all informations.
    Informations available in the log:
+
    - timestamp
    - utc datetime
    - school
@@ -68,6 +55,7 @@ Module Contents
 
    Parse the add log of sophomorix to return a dict with all informations.
    Informations available in the log:
+
    - timestamp
    - utc datetime
    - school
@@ -94,14 +82,18 @@ Module Contents
 
    Parse the update log of sophomorix to return a dict with all informations.
    Informations available in the log:
+
    - first log line:
+
        - timestamp
        - utc datetime
        - school
        - user's cn
        - group change (e.g. teachers->attic)
        - role change (e.g. teacher->student)
+
    - second log line:
+
        - timestamp
        - utc datetime
        - school

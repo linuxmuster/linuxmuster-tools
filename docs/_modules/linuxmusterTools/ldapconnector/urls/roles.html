@@ -5,18 +5,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.urls.roles &mdash; linuxmuster-tools7 7.3.26 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+  <title>linuxmusterTools.ldapconnector.urls.roles &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/theme_overrides.css?v=472cca7c" />
 
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=ac320c09"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/translations.js?v=8fd896e3"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
@@ -74,19 +74,34 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.ldapconnector.urls.roles</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">linuxmusterTools.ldapconnector.models</span> <span class="k">as</span> <span class="nn">models</span>
-<span class="kn">from</span> <span class="nn">linuxmusterTools.ldapconnector.urls.ldaprouter</span> <span class="kn">import</span> <span class="n">router</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ldap.filter</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">linuxmusterTools.ldapconnector.models</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">models</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">linuxmusterTools.ldapconnector.urls.ldaprouter</span><span class="w"> </span><span class="kn">import</span> <span class="n">router</span>
 
 
 <span class="nd">@router</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/roles/(?P&lt;role&gt;.*)&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNUserModel</span><span class="p">)</span>
 <div class="viewcode-block" id="get_all_from_role">
-<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/roles/index.html#linuxmusterTools.ldapconnector.urls.get_all_from_role">[docs]</a>
-<span class="k">def</span> <span class="nf">get_all_from_role</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="s1">&#39;teacher&#39;</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/roles/index.html#linuxmusterTools.ldapconnector.urls.roles.get_all_from_role">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_all_from_role</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="s1">&#39;teacher&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get all user from a same role.</span>
 <span class="sd">    Return a list of LMNUserModel data objects.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">role</span> <span class="o">=</span> <span class="n">ldap</span><span class="o">.</span><span class="n">filter</span><span class="o">.</span><span class="n">escape_filter_chars</span><span class="p">(</span><span class="n">role</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;(&amp;(objectClass=user)(sophomorixRole=</span><span class="si">{</span><span class="n">role</span><span class="si">}</span><span class="s2">))&quot;</span></div>
+
+
+<span class="nd">@router</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/rawroles/(?P&lt;role&gt;.*)&#39;</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">LMNRawUserModel</span><span class="p">)</span>
+<div class="viewcode-block" id="get_all_raw_from_role">
+<a class="viewcode-back" href="../../../../autoapi/linuxmusterTools/ldapconnector/urls/roles/index.html#linuxmusterTools.ldapconnector.urls.roles.get_all_raw_from_role">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_all_raw_from_role</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="s1">&#39;teacher&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get all user from a same role, but in this case without parents / children request.</span>
+<span class="sd">    Return a list of LMNRawUserModel data objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">role</span> <span class="o">=</span> <span class="n">ldap</span><span class="o">.</span><span class="n">filter</span><span class="o">.</span><span class="n">escape_filter_chars</span><span class="p">(</span><span class="n">role</span><span class="p">)</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;(&amp;(objectClass=user)(sophomorixRole=</span><span class="si">{</span><span class="n">role</span><span class="si">}</span><span class="s2">))&quot;</span></div>
 
 </pre></div>
@@ -98,7 +113,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

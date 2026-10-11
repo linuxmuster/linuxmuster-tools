@@ -25,6 +25,14 @@ autosummary_generate = True
 autoapi_dirs = ['../usr/lib/python3/dist-packages/linuxmusterTools']
 autoapi_type = "python"
 autoapi_ignore = ["*/conf.py", "*/examples/*", "*/pytests/*", "*/install-scripts/*", "*/WIP/*"]
+# Drop imported-members: the packages re-export their submodules (from .x
+# import *), which otherwise documents every object twice (package index +
+# module index) and floods the build with "duplicate description" warnings.
+autoapi_options = ['members', 'undoc-members', 'show-inheritance', 'special-members']
+# autoapi resolves imports statically and can't follow the cross-module
+# constants pulled in via star-imports (LDAP_CONTEXT, SAMBA_* ...); the
+# warnings are false positives.
+suppress_warnings = ['autoapi.python_import_resolution']
 
 templates_path = ['_templates']
 source_suffix = '.rst'

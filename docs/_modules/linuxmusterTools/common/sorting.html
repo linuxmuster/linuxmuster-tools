@@ -1,0 +1,241 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.common.sorting &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../linuxmusterTools.html">linuxmusterTools</a></li>
+          <li class="breadcrumb-item"><a href="../common.html">linuxmusterTools.common</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.common.sorting</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for linuxmusterTools.common.sorting</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+
+
+<span class="c1"># Split on digit runs, keeping them: &#39;r100-pc5&#39; -&gt; [&#39;r&#39;, &#39;100&#39;, &#39;-pc&#39;, &#39;5&#39;, &#39;&#39;].</span>
+<span class="c1"># re.split() always alternates text and digits, starting with text (possibly</span>
+<span class="c1"># empty), so the odd indices of the result are the numbers and nothing else.</span>
+<span class="n">_DIGITS</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(\d+)&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_number_segment</span><span class="p">(</span><span class="n">digits</span><span class="p">):</span>
+    <span class="c1"># Leading zeros rank before the value: a digit run padded with two zeros is</span>
+    <span class="c1"># ordered before one padded with a single zero, itself ordered before an</span>
+    <span class="c1"># unpadded one, whatever the values are. A run made of zeros only (&#39;0&#39;,</span>
+    <span class="c1"># &#39;00&#39;) keeps its last zero as its value, so a bare &#39;0&#39; is not padding.</span>
+    <span class="n">zeros</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">digits</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">digits</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">zeros</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">digits</span><span class="p">):</span>
+        <span class="n">zeros</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="n">zeros</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">digits</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="natural_key">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/sorting/index.html#linuxmusterTools.common.natural_key">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">natural_key</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sort key ordering names the way a human reads them: m5 before m10.</span>
+
+<span class="sd">    A plain sorted() compares strings character by character, which puts m10</span>
+<span class="sd">    before m5 as soon as the numbers have a different number of digits. This</span>
+<span class="sd">    key splits the string into text and number segments and compares the</span>
+<span class="sd">    numbers as numbers, the text case-insensitively:</span>
+
+<span class="sd">    &gt;&gt;&gt; sorted([&#39;m10&#39;, &#39;m5&#39;, &#39;m1&#39;], key=natural_key)</span>
+<span class="sd">    [&#39;m1&#39;, &#39;m5&#39;, &#39;m10&#39;]</span>
+
+<span class="sd">    Every segment is used, not only the first number, so hostnames sharing a</span>
+<span class="sd">    prefix are ordered on the part that actually differs:</span>
+
+<span class="sd">    &gt;&gt;&gt; sorted([&#39;r100-pc10&#39;, &#39;r100-pc5&#39;], key=natural_key)</span>
+<span class="sd">    [&#39;r100-pc5&#39;, &#39;r100-pc10&#39;]</span>
+
+<span class="sd">    IP addresses come out in numeric order too, each octet being a segment of</span>
+<span class="sd">    its own (&#39;10.0.0.2&#39; before &#39;10.0.0.10&#39;).</span>
+
+<span class="sd">    Leading zeros are read as a naming convention of their own, not as noise.</span>
+<span class="sd">    Numbers are grouped by how deep their padding is, deepest first, and the</span>
+<span class="sd">    values are compared only inside a group. A site numbering its machines</span>
+<span class="sd">    &#39;m0020&#39;, &#39;m05&#39; to &#39;m012&#39; and &#39;m1&#39; to &#39;m5&#39; therefore gets one block per</span>
+<span class="sd">    padding depth, each block in numeric order:</span>
+
+<span class="sd">    &gt;&gt;&gt; sorted([&#39;m1&#39;, &#39;m05&#39;, &#39;m0020&#39;, &#39;m010&#39;, &#39;m5&#39;], key=natural_key)</span>
+<span class="sd">    [&#39;m0020&#39;, &#39;m05&#39;, &#39;m010&#39;, &#39;m1&#39;, &#39;m5&#39;]</span>
+
+<span class="sd">    A run made of zeros only keeps its last zero as its value, so a bare &#39;0&#39; is</span>
+<span class="sd">    not padding. This is deliberate and diverges from `sort -V`, from `ls -v`</span>
+<span class="sd">    and from JavaScript&#39;s Intl.Collator, which all read &#39;m05&#39; as the plain</span>
+<span class="sd">    number 5.</span>
+
+<span class="sd">    Two names differing only in case (&#39;m5&#39; and &#39;M5&#39;) produce the same segments;</span>
+<span class="sd">    the original string is kept as the last part of the key to break the tie,</span>
+<span class="sd">    so the order is total and stable. The comparison is pure Unicode case</span>
+<span class="sd">    folding, without any locale-dependent collation: &#39;ä&#39; sorts after &#39;z&#39;, and</span>
+<span class="sd">    the result does not depend on the caller&#39;s locale.</span>
+
+<span class="sd">    A &#39;-&#39; is a separator, never a sign: &#39;-1&#39; sorts as the text &#39;-&#39; followed by</span>
+<span class="sd">    the number 1.</span>
+
+<span class="sd">    :param value: Value to build a key for. Anything which is not a string is</span>
+<span class="sd">                  sorted on its str() representation, None comes last.</span>
+<span class="sd">    :type value: str or None or any</span>
+<span class="sd">    :return: Comparable key, to pass as sorted()&#39;s key argument</span>
+<span class="sd">    :rtype: tuple</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Nothing to read, and no reason to fail on a missing attribute: an</span>
+        <span class="c1"># empty name sorts first, a missing one last.</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(),</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="n">text</span> <span class="o">=</span> <span class="n">value</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="n">segments</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+        <span class="n">_number_segment</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="k">if</span> <span class="n">index</span> <span class="o">%</span> <span class="mi">2</span> <span class="k">else</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">part</span><span class="o">.</span><span class="n">casefold</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">part</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">_DIGITS</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="sort_naturally">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/common/sorting/index.html#linuxmusterTools.common.sort_naturally">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">sort_naturally</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">digitless_last</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sort a list of names, or of objects holding a name, in human order.</span>
+
+<span class="sd">    &gt;&gt;&gt; sort_naturally([&#39;m10&#39;, &#39;m5&#39;])</span>
+<span class="sd">    [&#39;m5&#39;, &#39;m10&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; sort_naturally(hosts, key=lambda host: host[&#39;hostname&#39;])</span>
+<span class="sd">    &gt;&gt;&gt; sort_naturally([&#39;abitur&#39;, &#39;10b&#39;, &#39;5a&#39;], digitless_last=True)</span>
+<span class="sd">    [&#39;5a&#39;, &#39;10b&#39;, &#39;abitur&#39;]</span>
+
+<span class="sd">    :param items: Values to sort</span>
+<span class="sd">    :type items: iterable</span>
+<span class="sd">    :param key: Callable returning the value to sort an item on, like sorted()&#39;s</span>
+<span class="sd">                own key. Without it the items are sorted on themselves.</span>
+<span class="sd">    :type key: callable or None</span>
+<span class="sd">    :param reverse: Sort in descending order. None values, sorted last by</span>
+<span class="sd">                    natural_key(), then come first.</span>
+<span class="sd">    :type reverse: bool</span>
+<span class="sd">    :param digitless_last: Move the values holding no digit at all after the</span>
+<span class="sd">                           others, each group in natural order. Schoolclasses</span>
+<span class="sd">                           are listed this way: &#39;5a&#39;, &#39;10b&#39;, then &#39;abitur&#39;.</span>
+<span class="sd">                           With reverse, these values come first.</span>
+<span class="sd">    :type digitless_last: bool</span>
+<span class="sd">    :return: Sorted list</span>
+<span class="sd">    :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span>
+
+    <span class="k">if</span> <span class="n">digitless_last</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">sort_key</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">key</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="c1"># None holds no digit either: it stays last, behind the digitless</span>
+            <span class="c1"># names, as natural_key() orders it.</span>
+            <span class="n">digitless</span> <span class="o">=</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">_DIGITS</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">digitless</span><span class="p">,</span> <span class="n">natural_key</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">sort_key</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">natural_key</span><span class="p">(</span><span class="n">key</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">sort_key</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

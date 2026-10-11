@@ -4,25 +4,10 @@ linuxmusterTools.samba_util.samba_tool
 .. py:module:: linuxmusterTools.samba_util.samba_tool
 
 
-Attributes
-----------
-
-.. autoapisummary::
-
-   linuxmusterTools.samba_util.samba_tool.logger
-   linuxmusterTools.samba_util.samba_tool.lp
-   linuxmusterTools.samba_util.samba_tool.SAMDB_PATH
 
 
-Classes
--------
 
-.. autoapisummary::
 
-   linuxmusterTools.samba_util.samba_tool.GPO
-   linuxmusterTools.samba_util.samba_tool.GPOManager
-   linuxmusterTools.samba_util.samba_tool.GroupManager
-   linuxmusterTools.samba_util.samba_tool.UserManager
 
 
 Module Contents
@@ -30,10 +15,151 @@ Module Contents
 
 .. py:data:: logger
 
+.. py:data:: system_session
+   :value: None
+
+
+.. py:data:: Credentials
+   :value: None
+
+
+.. py:data:: LoadParm
+   :value: None
+
+
+.. py:data:: SamDB
+   :value: None
+
+
+.. py:data:: get_gpo_info
+   :value: None
+
+
+.. py:data:: LdbError
+   :value: None
+
+
+.. py:data:: SCOPE_BASE
+   :value: None
+
+
+.. py:data:: SCOPE_SUBTREE
+   :value: None
+
+
+.. py:data:: Message
+   :value: None
+
+
+.. py:data:: MessageElement
+   :value: None
+
+
+.. py:data:: FLAG_MOD_REPLACE
+   :value: None
+
+
+.. py:data:: Dn
+   :value: None
+
+
 .. py:data:: lp
+   :value: None
+
+
+.. py:data:: creds
+   :value: None
+
+
+.. py:function:: load_samba_bindings()
+
+   Import Samba's Python bindings and build the shared lp/creds session on
+   first use, instead of at module import time.
+
+   Only SamDB is checked before overwriting: it's the one name test doubles
+   patch (see samba_util/pytests/test_samba_tool.py), and this makes the
+   load order-independent — whichever class gets instantiated first (in
+   production or in a test that patched SamDB beforehand) still ends up
+   with a working system_session/creds/lp, without clobbering a test's
+   SamDB double once it's already been set.
+
+   Public (not prefixed with `_`): `ldapconnector.writers.user.LMNUser`
+   calls this directly to open its own SamDB connection for password
+   writes, since `ldapconnector` can't import this module at the top level
+   (samba_util already imports ldapconnector, so a module-level import in
+   the other direction would be circular) — see LMNUser.set_actual_password.
+
 
 .. py:data:: SAMDB_PATH
    :value: '/var/lib/samba/private/sam.ldb'
+
+
+.. py:data:: DOMAIN_PASSWORD_COMPLEX
+   :value: 1
+
+
+.. py:data:: NEVER_TIMESTAMP
+   :value: -9223372036854775808
+
+
+.. py:class:: DomainPasswordSettings
+
+   .. py:attribute:: min_pwd_length
+      :type:  int
+
+
+   .. py:attribute:: complexity
+      :type:  bool
+
+
+   .. py:attribute:: min_pwd_age
+      :type:  int
+
+
+   .. py:attribute:: max_pwd_age
+      :type:  int
+
+
+.. py:class:: DomainPasswordSettingsManager
+
+   Reads the domain-wide Samba AD password policy (minimum length,
+   complexity) directly via SamDB, equivalent to `samba-tool domain
+   passwordsettings show` but without shelling out to it.
+
+   TODO: this only reads the domain-wide policy and ignores Fine-Grained
+   Password Policies (PSOs, `samba-tool domain passwordsettings pso ...`),
+   which override it for the users/groups they're applied to. If a PSO
+   exists for a given role/group, callers using `get()` as a floor will be
+   silently wrong (too weak if the PSO is stricter than the domain policy,
+   too strict if it's more permissive). Fixing this means taking a username
+   (or representative group) and reading that user's constructed attribute
+   `msDS-ResultantPSO` (confirmed present in the schema — `systemFlags`
+   includes `FLAG_ATTR_IS_CONSTRUCTED`) first, falling back to the
+   domain-wide read only if absent. Not an issue today: no PSO is used
+   anywhere in this codebase or known deployment. See
+   `linuxmusterTools/passwords/README.md` for the full writeup.
+
+
+   .. py:attribute:: samdb
+      :value: None
+
+
+
+   .. py:method:: get() -> DomainPasswordSettings
+
+
+   .. py:method:: set(*, min_pwd_length=None, min_pwd_age=None, max_pwd_age=None, complexity=None)
+
+      Set the domain-wide password policy, mirroring `samba-tool domain
+      passwordsettings set`. Only the given fields are changed; history
+      length, lockout settings and PSOs are left untouched.
+      Use it very carefully!
+
+      :param min_pwd_length: minimum password length, 0-14
+      :param min_pwd_age: minimum password age in days, 0-998
+      :param max_pwd_age: maximum password age in days, 0-999 (0 = never expires)
+      :param complexity: enable/disable Samba's fixed complexity check
+
 
 
 .. py:class:: GPO
@@ -90,19 +216,6 @@ Module Contents
 
 
 
-   .. py:method:: _run_post_hook(action, group, members)
-
-      Runs alls the scripts located in self.POST_HOOK_DIR in alphanum order, passing 3 arguments:
-
-      :param action: actually 'remove' or 'add'
-      :type action: basestring
-      :param group: group name
-      :type group: basestring
-      :param members: members list, will be given coma separated as argument
-      :type members: list
-
-
-
    .. py:method:: list()
 
 
@@ -130,9 +243,9 @@ Module Contents
 
 
 
-.. py:class:: UserManager
+.. py:class:: DeviceManager
 
-   Sample class to manage samba users via samba-tool.
+   Sample class to manage samba devices via samba-tool.
 
 
    .. py:attribute:: POST_HOOK_DIR
@@ -140,18 +253,23 @@ Module Contents
 
 
 
-   .. py:method:: _check_password_strength(password)
-
-      Passwords must contain at least one lowercase, one uppercase, one special char or number, and at least 7 chars.
-
-
-
-   .. py:method:: _generate_password()
-
-      Passwords must contain at least one lowercase, one uppercase, one special char or number, and at least 7 chars.
+   .. py:attribute:: samdb
+      :value: None
 
 
 
-   .. py:method:: set_password(username, password)
+   .. py:method:: get_credentials(device_cn, school='default-school')
+
+
+   .. py:method:: set_credentials(device_cn, HashunicodePwd, HashsupplementalCredentials, school='default-school')
+
+      Directly set unicodePwd and supplementalCredentials for a device using
+      ldbmodify.
+
+      :param HashunicodePwd: Hashed unicodePwd
+      :type HashunicodePwd: basestring
+      :param HashsupplementalCredentials: Hashed supplementalCredentials
+      :type HashsupplementalCredentials: basestring
+
 
 

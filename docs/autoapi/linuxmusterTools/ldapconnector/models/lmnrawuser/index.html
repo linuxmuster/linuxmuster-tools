@@ -1,0 +1,562 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.ldapconnector.models.lmnrawuser &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="linuxmusterTools.ldapconnector.models.lmnschool" href="../lmnschool/index.html" />
+    <link rel="prev" title="linuxmusterTools.ldapconnector.models.lmnproject" href="../lmnproject/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../index.html">linuxmusterTools</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../../index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../../../common/index.html">linuxmusterTools.common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../devices/index.html">linuxmusterTools.devices</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../../index.html">linuxmusterTools.ldapconnector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../linbo/index.html">linuxmusterTools.linbo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lmnconfig/index.html">linuxmusterTools.lmnconfig</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../lmnfile/index.html">linuxmusterTools.lmnfile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../passwords/index.html">linuxmusterTools.passwords</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../print/index.html">linuxmusterTools.print</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../quotas/index.html">linuxmusterTools.quotas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../samba_util/index.html">linuxmusterTools.samba_util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../smbclient/index.html">linuxmusterTools.smbclient</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../subnets/index.html">linuxmusterTools.subnets</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">linuxmusterTools</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">linuxmusterTools.ldapconnector</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">linuxmusterTools.ldapconnector.models</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.ldapconnector.models.lmnrawuser</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../_sources/autoapi/linuxmusterTools/ldapconnector/models/lmnrawuser/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-linuxmusterTools.ldapconnector.models.lmnrawuser">
+<span id="linuxmustertools-ldapconnector-models-lmnrawuser"></span><h1>linuxmusterTools.ldapconnector.models.lmnrawuser<a class="headerlink" href="#module-linuxmusterTools.ldapconnector.models.lmnrawuser" title="Link to this heading"></a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.models.lmnrawuser.</span></span><span class="sig-name descname"><span class="pre">LMNRawUserModel</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../lmnusermixin/index.html#linuxmusterTools.ldapconnector.models.lmnusermixin.LMNUserMixin" title="linuxmusterTools.ldapconnector.models.lmnusermixin.LMNUserMixin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linuxmusterTools.ldapconnector.models.lmnusermixin.LMNUserMixin</span></code></a>, <a class="reference internal" href="../common/index.html#linuxmusterTools.ldapconnector.models.common.LMNModel" title="linuxmusterTools.ldapconnector.models.common.LMNModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linuxmusterTools.ldapconnector.models.common.LMNModel</span></code></a></p>
+<p>Methods shared between LMNUserModel and LMNRawUserModel.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.cn">
+<span class="sig-name descname"><span class="pre">cn</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.cn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.cn" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.custom_fields_config">
+<span class="sig-name descname"><span class="pre">custom_fields_config</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/dataclasses.html#dataclasses.InitVar" title="(in Python v3.15)"><span class="pre">dataclasses.InitVar</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../../../lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.dict" title="linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.dict"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.custom_fields_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.custom_fields_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.displayName">
+<span class="sig-name descname"><span class="pre">displayName</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.displayName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.displayName" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.distinguishedName">
+<span class="sig-name descname"><span class="pre">distinguishedName</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.distinguishedName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.distinguishedName" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.givenName">
+<span class="sig-name descname"><span class="pre">givenName</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.givenName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.givenName" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.homeDirectory">
+<span class="sig-name descname"><span class="pre">homeDirectory</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.homeDirectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.homeDirectory" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.homeDrive">
+<span class="sig-name descname"><span class="pre">homeDrive</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.homeDrive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.homeDrive" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.mail">
+<span class="sig-name descname"><span class="pre">mail</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.mail"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.mail" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.memberOf">
+<span class="sig-name descname"><span class="pre">memberOf</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.memberOf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.memberOf" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.name">
+<span class="sig-name descname"><span class="pre">name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.objectClass">
+<span class="sig-name descname"><span class="pre">objectClass</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.objectClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.objectClass" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.preferredLanguage">
+<span class="sig-name descname"><span class="pre">preferredLanguage</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.preferredLanguage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.preferredLanguage" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.proxyAddresses">
+<span class="sig-name descname"><span class="pre">proxyAddresses</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.proxyAddresses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.proxyAddresses" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sAMAccountName">
+<span class="sig-name descname"><span class="pre">sAMAccountName</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sAMAccountName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sAMAccountName" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sAMAccountType">
+<span class="sig-name descname"><span class="pre">sAMAccountType</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sAMAccountType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sAMAccountType" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sn">
+<span class="sig-name descname"><span class="pre">sn</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sn" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixAdminClass">
+<span class="sig-name descname"><span class="pre">sophomorixAdminClass</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixAdminClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixAdminClass" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixAdminFile">
+<span class="sig-name descname"><span class="pre">sophomorixAdminFile</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixAdminFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixAdminFile" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixBirthdate">
+<span class="sig-name descname"><span class="pre">sophomorixBirthdate</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixBirthdate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixBirthdate" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCloudQuotaCalculated">
+<span class="sig-name descname"><span class="pre">sophomorixCloudQuotaCalculated</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixCloudQuotaCalculated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCloudQuotaCalculated" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixComment">
+<span class="sig-name descname"><span class="pre">sophomorixComment</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixComment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixComment" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCreationDate">
+<span class="sig-name descname"><span class="pre">sophomorixCreationDate</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixCreationDate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCreationDate" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCustom1">
+<span class="sig-name descname"><span class="pre">sophomorixCustom1</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixCustom1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCustom1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCustom2">
+<span class="sig-name descname"><span class="pre">sophomorixCustom2</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixCustom2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCustom2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCustom3">
+<span class="sig-name descname"><span class="pre">sophomorixCustom3</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixCustom3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCustom3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCustom4">
+<span class="sig-name descname"><span class="pre">sophomorixCustom4</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixCustom4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCustom4" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCustom5">
+<span class="sig-name descname"><span class="pre">sophomorixCustom5</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixCustom5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCustom5" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCustomMulti1">
+<span class="sig-name descname"><span class="pre">sophomorixCustomMulti1</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixCustomMulti1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCustomMulti1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCustomMulti2">
+<span class="sig-name descname"><span class="pre">sophomorixCustomMulti2</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixCustomMulti2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCustomMulti2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCustomMulti3">
+<span class="sig-name descname"><span class="pre">sophomorixCustomMulti3</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixCustomMulti3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCustomMulti3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCustomMulti4">
+<span class="sig-name descname"><span class="pre">sophomorixCustomMulti4</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixCustomMulti4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCustomMulti4" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCustomMulti5">
+<span class="sig-name descname"><span class="pre">sophomorixCustomMulti5</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixCustomMulti5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixCustomMulti5" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixDeactivationDate">
+<span class="sig-name descname"><span class="pre">sophomorixDeactivationDate</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixDeactivationDate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixDeactivationDate" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixExamMode">
+<span class="sig-name descname"><span class="pre">sophomorixExamMode</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixExamMode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixExamMode" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixExitAdminClass">
+<span class="sig-name descname"><span class="pre">sophomorixExitAdminClass</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixExitAdminClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixExitAdminClass" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixFirstnameASCII">
+<span class="sig-name descname"><span class="pre">sophomorixFirstnameASCII</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixFirstnameASCII"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixFirstnameASCII" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixFirstnameInitial">
+<span class="sig-name descname"><span class="pre">sophomorixFirstnameInitial</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixFirstnameInitial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixFirstnameInitial" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixFirstPassword">
+<span class="sig-name descname"><span class="pre">sophomorixFirstPassword</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixFirstPassword"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixFirstPassword" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixIntrinsic1">
+<span class="sig-name descname"><span class="pre">sophomorixIntrinsic1</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixIntrinsic1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixIntrinsic1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixIntrinsic2">
+<span class="sig-name descname"><span class="pre">sophomorixIntrinsic2</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixIntrinsic2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixIntrinsic2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixIntrinsic3">
+<span class="sig-name descname"><span class="pre">sophomorixIntrinsic3</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixIntrinsic3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixIntrinsic3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixIntrinsic4">
+<span class="sig-name descname"><span class="pre">sophomorixIntrinsic4</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixIntrinsic4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixIntrinsic4" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixIntrinsic5">
+<span class="sig-name descname"><span class="pre">sophomorixIntrinsic5</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixIntrinsic5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixIntrinsic5" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixIntrinsicMulti1">
+<span class="sig-name descname"><span class="pre">sophomorixIntrinsicMulti1</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixIntrinsicMulti1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixIntrinsicMulti1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixIntrinsicMulti2">
+<span class="sig-name descname"><span class="pre">sophomorixIntrinsicMulti2</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixIntrinsicMulti2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixIntrinsicMulti2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixIntrinsicMulti3">
+<span class="sig-name descname"><span class="pre">sophomorixIntrinsicMulti3</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixIntrinsicMulti3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixIntrinsicMulti3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixIntrinsicMulti4">
+<span class="sig-name descname"><span class="pre">sophomorixIntrinsicMulti4</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixIntrinsicMulti4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixIntrinsicMulti4" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixIntrinsicMulti5">
+<span class="sig-name descname"><span class="pre">sophomorixIntrinsicMulti5</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixIntrinsicMulti5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixIntrinsicMulti5" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixMailQuotaCalculated">
+<span class="sig-name descname"><span class="pre">sophomorixMailQuotaCalculated</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixMailQuotaCalculated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixMailQuotaCalculated" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixMailQuota">
+<span class="sig-name descname"><span class="pre">sophomorixMailQuota</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixMailQuota"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixMailQuota" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixQuota">
+<span class="sig-name descname"><span class="pre">sophomorixQuota</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixQuota"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixQuota" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixRole">
+<span class="sig-name descname"><span class="pre">sophomorixRole</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixRole"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixRole" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixSchoolname">
+<span class="sig-name descname"><span class="pre">sophomorixSchoolname</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixSchoolname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixSchoolname" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixSchoolPrefix">
+<span class="sig-name descname"><span class="pre">sophomorixSchoolPrefix</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixSchoolPrefix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixSchoolPrefix" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixSessions">
+<span class="sig-name descname"><span class="pre">sophomorixSessions</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixSessions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixSessions" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixStatus">
+<span class="sig-name descname"><span class="pre">sophomorixStatus</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixStatus" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixSurnameASCII">
+<span class="sig-name descname"><span class="pre">sophomorixSurnameASCII</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixSurnameASCII"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixSurnameASCII" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixSurnameInitial">
+<span class="sig-name descname"><span class="pre">sophomorixSurnameInitial</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixSurnameInitial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixSurnameInitial" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixTolerationDate">
+<span class="sig-name descname"><span class="pre">sophomorixTolerationDate</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixTolerationDate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixTolerationDate" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixUnid">
+<span class="sig-name descname"><span class="pre">sophomorixUnid</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixUnid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixUnid" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixUserToken">
+<span class="sig-name descname"><span class="pre">sophomorixUserToken</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixUserToken"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixUserToken" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixWebuiDashboard">
+<span class="sig-name descname"><span class="pre">sophomorixWebuiDashboard</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.sophomorixWebuiDashboard"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.sophomorixWebuiDashboard" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.thumbnailPhoto">
+<span class="sig-name descname"><span class="pre">thumbnailPhoto</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.thumbnailPhoto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.thumbnailPhoto" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.unixHomeDirectory">
+<span class="sig-name descname"><span class="pre">unixHomeDirectory</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.unixHomeDirectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.unixHomeDirectory" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.userAccountControl">
+<span class="sig-name descname"><span class="pre">userAccountControl</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><span class="pre">int</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.userAccountControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.userAccountControl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.whenChanged">
+<span class="sig-name descname"><span class="pre">whenChanged</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.whenChanged"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.whenChanged" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.dn">
+<span class="sig-name descname"><span class="pre">dn</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.dn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.dn" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.customFields">
+<span class="sig-name descname"><span class="pre">customFields</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../lmnconfig/sophomorix/index.html#linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.dict" title="linuxmusterTools.lmnconfig.sophomorix.SophomorixIni.dict"><span class="pre">dict</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.customFields"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.customFields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.examMode">
+<span class="sig-name descname"><span class="pre">examMode</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.examMode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.examMode" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.examTeacher">
+<span class="sig-name descname"><span class="pre">examTeacher</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.examTeacher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.examTeacher" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.examBaseCn">
+<span class="sig-name descname"><span class="pre">examBaseCn</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.examBaseCn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.examBaseCn" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.internet">
+<span class="sig-name descname"><span class="pre">internet</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.internet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.internet" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.intranet">
+<span class="sig-name descname"><span class="pre">intranet</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.intranet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.intranet" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.isAdmin">
+<span class="sig-name descname"><span class="pre">isAdmin</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.isAdmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.isAdmin" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.lmnsessions">
+<span class="sig-name descname"><span class="pre">lmnsessions</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.lmnsessions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.lmnsessions" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.printers">
+<span class="sig-name descname"><span class="pre">printers</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.printers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.printers" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.printing">
+<span class="sig-name descname"><span class="pre">printing</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.printing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.printing" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.projects">
+<span class="sig-name descname"><span class="pre">projects</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.projects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.projects" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.schoolclasses">
+<span class="sig-name descname"><span class="pre">schoolclasses</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><span class="pre">list</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.schoolclasses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.schoolclasses" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.school">
+<span class="sig-name descname"><span class="pre">school</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.school"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.school" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.webfilter">
+<span class="sig-name descname"><span class="pre">webfilter</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.webfilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.webfilter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.wifi">
+<span class="sig-name descname"><span class="pre">wifi</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><span class="pre">bool</span></a></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.wifi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.wifi" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">custom_fields_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/models/lmnrawuser.html#LMNRawUserModel.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.models.lmnrawuser.LMNRawUserModel.__post_init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../lmnproject/index.html" class="btn btn-neutral float-left" title="linuxmusterTools.ldapconnector.models.lmnproject" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../lmnschool/index.html" class="btn btn-neutral float-right" title="linuxmusterTools.ldapconnector.models.lmnschool" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

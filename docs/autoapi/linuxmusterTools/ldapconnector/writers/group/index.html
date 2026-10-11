@@ -6,23 +6,23 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.ldapconnector.writers.group &mdash; linuxmuster-tools7 7.3.26 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
+  <title>linuxmusterTools.ldapconnector.writers.group &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/theme_overrides.css?v=472cca7c" />
 
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../_static/documentation_options.js?v=ac320c09"></script>
-      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../../_static/translations.js?v=8fd896e3"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
-    <link rel="next" title="linuxmusterTools.ldapconnector.writers.managementgroup" href="../managementgroup/index.html" />
+    <link rel="next" title="linuxmusterTools.ldapconnector.writers.object" href="../object/index.html" />
     <link rel="prev" title="linuxmusterTools.ldapconnector.writers.device" href="../device/index.html" /> 
 </head>
 
@@ -56,17 +56,17 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../linbo/index.html">linuxmusterTools.linbo</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../lmnconfig/index.html">linuxmusterTools.lmnconfig</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../lmnfile/index.html">linuxmusterTools.lmnfile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../passwords/index.html">linuxmusterTools.passwords</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../print/index.html">linuxmusterTools.print</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../quotas/index.html">linuxmusterTools.quotas</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../samba_util/index.html">linuxmusterTools.samba_util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../smbclient/index.html">linuxmusterTools.smbclient</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../subnets/index.html">linuxmusterTools.subnets</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../index.html#attributes">Attributes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../index.html#classes">Classes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../index.html#package-contents">Package Contents</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../create_students_groups/index.html">create_students_groups</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../00-update-schoolclasses-groups/index.html">00-update-schoolclasses-groups</a></li>
 </ul>
 </li>
 </ul>
@@ -101,32 +101,6 @@
              
   <section id="module-linuxmusterTools.ldapconnector.writers.group">
 <span id="linuxmustertools-ldapconnector-writers-group"></span><h1>linuxmusterTools.ldapconnector.writers.group<a class="headerlink" href="#module-linuxmusterTools.ldapconnector.writers.group" title="Link to this heading"></a></h1>
-<section id="attributes">
-<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.group.logger" title="linuxmusterTools.ldapconnector.writers.group.logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logger</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.group.name_checker" title="linuxmusterTools.ldapconnector.writers.group.name_checker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_checker</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="classes">
-<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon" title="linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNGroupCommon</span></code></a></p></td>
-<td><p>Comme group class for all group types in the linuxmuster project (Projects,</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.group.LMNGroup" title="linuxmusterTools.ldapconnector.writers.group.LMNGroup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNGroup</span></code></a></p></td>
-<td><p>Class to handle the Sophomorix Groups (saved under the OU Projects)</p></td>
-</tr>
-</tbody>
-</table>
-</section>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
 <dl class="py data">
@@ -141,7 +115,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.group.</span></span><span class="sig-name descname"><span class="pre">LMNGroupCommon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/group.html#LMNGroupCommon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.group.</span></span><span class="sig-name descname"><span class="pre">LMNGroupCommon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/group.html#LMNGroupCommon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon" title="Link to this definition"></a></dt>
 <dd><p>Comme group class for all group types in the linuxmuster project (Projects,
 Schoolclasses, ManagementGroup, Sophomorix Group, etc …).</p>
 <dl class="py attribute">
@@ -171,7 +145,12 @@ Schoolclasses, ManagementGroup, Sophomorix Group, etc …).</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon.school">
-<span class="sig-name descname"><span class="pre">school</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'default-school'</span></em><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/group.html#LMNGroupCommon.school"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon.school" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">school</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'default-school'</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/group.html#LMNGroupCommon.school"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon.school" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon.new">
+<span class="sig-name descname"><span class="pre">new</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/group.html#LMNGroupCommon.new"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon.new" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -202,6 +181,12 @@ kwargs must contain a data dict with attributes/values to set.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/group.html#LMNGroupCommon.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon.delete" title="Link to this definition"></a></dt>
+<dd><p>Delete the object directly in Ldap.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon.remove_member">
 <span class="sig-name descname"><span class="pre">remove_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/group.html#LMNGroupCommon.remove_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon.remove_member" title="Link to this definition"></a></dt>
 <dd></dd></dl>
@@ -219,10 +204,15 @@ kwargs must contain a data dict with attributes/values to set.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon.add_members">
 <span class="sig-name descname"><span class="pre">add_members</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">userlist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/group.html#LMNGroupCommon.add_members"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon.add_members" title="Link to this definition"></a></dt>
-<dd><p>Shortcut to add all members from a given list</p>
+<dd><p>Shortcut to add all members from a given list. One invalid cn
+doesn’t abort the rest of the batch: it’s skipped and reported.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>userlist</strong> – List of valid cn</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of (user, error message) tuples for entries that
+could not be added</p>
 </dd>
 </dl>
 </dd></dl>
@@ -230,10 +220,15 @@ kwargs must contain a data dict with attributes/values to set.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon.remove_members">
 <span class="sig-name descname"><span class="pre">remove_members</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">userlist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/group.html#LMNGroupCommon.remove_members"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon.remove_members" title="Link to this definition"></a></dt>
-<dd><p>Shortcut to remove all members from a given list</p>
+<dd><p>Shortcut to remove all members from a given list. One invalid cn
+doesn’t abort the rest of the batch: it’s skipped and reported.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>userlist</strong> – List of valid cn</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of (user, error message) tuples for entries that
+could not be removed</p>
 </dd>
 </dl>
 </dd></dl>
@@ -242,7 +237,7 @@ kwargs must contain a data dict with attributes/values to set.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.group.LMNGroup">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.group.</span></span><span class="sig-name descname"><span class="pre">LMNGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/group.html#LMNGroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.group.LMNGroup" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.group.</span></span><span class="sig-name descname"><span class="pre">LMNGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/group.html#LMNGroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.group.LMNGroup" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon" title="linuxmusterTools.ldapconnector.writers.group.LMNGroupCommon"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LMNGroupCommon</span></code></a></p>
 <p>Class to handle the Sophomorix Groups (saved under the OU Projects)</p>
 <dl class="py method">
@@ -250,6 +245,28 @@ kwargs must contain a data dict with attributes/values to set.</p>
 <span class="sig-name descname"><span class="pre">load_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/group.html#LMNGroup.load_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.group.LMNGroup.load_data" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.group.LMNGroup.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/group.html#LMNGroup.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.group.LMNGroup.create" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.group.LMNGroup.migrate">
+<span class="sig-name descname"><span class="pre">migrate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/group.html#LMNGroup.migrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.group.LMNGroup.migrate" title="Link to this definition"></a></dt>
+<dd><p>Migrate a legacy sophomorix-group entry (living in OU=Projects) to OU=LMNGroups,
+converting its sophomorixType to lmngroup.</p>
+<p>A move only changes the entry’s DN, not its attributes: the member list is
+untouched, and memberOf on the members is a computed backlink that follows
+automatically.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="linuxmusterTools.ldapconnector.writers.group.find_legacy_groups">
+<span class="sig-prename descclassname"><span class="pre">linuxmusterTools.ldapconnector.writers.group.</span></span><span class="sig-name descname"><span class="pre">find_legacy_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">school</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default-school'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/linuxmusterTools/ldapconnector/writers/group.html#find_legacy_groups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#linuxmusterTools.ldapconnector.writers.group.find_legacy_groups" title="Link to this definition"></a></dt>
+<dd><p>List groups still living in OU=Projects (sophomorixType=sophomorix-group),
+not yet migrated to OU=LMNGroups.</p>
 </dd></dl>
 
 </section>
@@ -260,13 +277,13 @@ kwargs must contain a data dict with attributes/values to set.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../device/index.html" class="btn btn-neutral float-left" title="linuxmusterTools.ldapconnector.writers.device" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../managementgroup/index.html" class="btn btn-neutral float-right" title="linuxmusterTools.ldapconnector.writers.managementgroup" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../object/index.html" class="btn btn-neutral float-right" title="linuxmusterTools.ldapconnector.writers.object" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -4,23 +4,10 @@ linuxmusterTools.devices.devices
 .. py:module:: linuxmusterTools.devices.devices
 
 
-Attributes
-----------
-
-.. autoapisummary::
-
-   linuxmusterTools.devices.devices.sophomorix_ini
-   linuxmusterTools.devices.devices.CLIENT_ROLES
-   linuxmusterTools.devices.devices.COMPUTER_ROLES
-   linuxmusterTools.devices.devices.name_checker
 
 
-Classes
--------
 
-.. autoapisummary::
 
-   linuxmusterTools.devices.devices.Devices
 
 
 Module Contents
@@ -32,9 +19,13 @@ Module Contents
    :value: ['classroom-teachercomputer', 'classroom-studentcomputer', 'faculty-teachercomputer',...
 
 
-.. py:data:: COMPUTER_ROLES
-
 .. py:data:: name_checker
+
+.. py:data:: logger
+
+.. py:data:: SOPHOMORIX_SCHOOLS_DIR
+   :value: '/etc/linuxmuster/sophomorix'
+
 
 .. py:class:: Devices(school='default-school')
 
@@ -49,10 +40,18 @@ Module Contents
    .. py:method:: load()
 
 
-   .. py:method:: filter(roles=[], groups=[])
+   .. py:method:: filter(roles=[], groups=[], macs=[])
+
+      Filter the devices list per attributes.
+      The filters roles and groups can be combined, but the filter macs must
+      be used alone.
 
 
-   .. py:method:: get_hostname(hostname, roles=[], groups=[])
+
+   .. py:method:: get_host(hostname, roles=[], groups=[])
+
+
+   .. py:method:: get_hosts_by_macs(macs=[])
 
 
    .. py:method:: get_client(hostname, groups=[])
@@ -62,5 +61,42 @@ Module Contents
 
 
    .. py:method:: check_conf()
+
+      Validate the inventory of this school, reporting everything found
+      instead of stopping at the first problem.
+
+      Only this school is read, so a host name, a mac address or an ip
+      address shared with another school can not be seen here: use
+      check_all_schools() for that.
+
+      :return: valid, counts, findings and report (see InventoryValidator.validate)
+      :rtype: dict
+
+
+
+.. py:function:: list_schools(root=None)
+
+   List the schools holding a devices.csv on this server.
+
+   This reads the filesystem rather than ldap on purpose: what is
+   validated here are the files, and a caller already holding the
+   authoritative list of provisioned schools passes it to
+   check_all_schools() instead.
+
+   :param root: Directory holding one subdirectory per school
+   :type root: string or Path
+   :return: Sorted school names
+   :rtype: list
+
+
+.. py:function:: check_all_schools(schools=None)
+
+   Validate the inventories of every school at once, which is the only way
+   to see a host name or a mac address used twice in two different schools.
+
+   :param schools: Schools to validate, discovered on disk if not given
+   :type schools: list
+   :return: valid, counts, findings and report (see InventoryValidator.validate)
+   :rtype: dict
 
 

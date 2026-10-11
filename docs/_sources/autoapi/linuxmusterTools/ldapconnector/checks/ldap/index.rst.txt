@@ -4,21 +4,8 @@ linuxmusterTools.ldapconnector.checks.ldap
 .. py:module:: linuxmusterTools.ldapconnector.checks.ldap
 
 
-Attributes
-----------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.checks.ldap.logger
 
 
-Functions
----------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.checks.ldap.check_empty_ou_rooms
-   linuxmusterTools.ldapconnector.checks.ldap.check_devices
 
 
 Module Contents

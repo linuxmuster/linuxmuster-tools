@@ -5,18 +5,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>linuxmusterTools.devices.ping &mdash; linuxmuster-tools7 7.3.26 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+  <title>linuxmusterTools.devices.ping &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=ac320c09"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/translations.js?v=8fd896e3"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -73,29 +73,29 @@
            <div itemprop="articleBody">
              
   <h1>Source code for linuxmusterTools.devices.ping</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="k">as</span> <span class="nn">ElementTree</span>
-<span class="kn">from</span> <span class="nn">concurrent</span> <span class="kn">import</span> <span class="n">futures</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xml.etree.ElementTree</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ElementTree</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">concurrent</span><span class="w"> </span><span class="kn">import</span> <span class="n">futures</span>
 
-<span class="kn">from</span> <span class="nn">.devices</span> <span class="kn">import</span> <span class="n">Devices</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.devices</span><span class="w"> </span><span class="kn">import</span> <span class="n">Devices</span>
 
 
 <div class="viewcode-block" id="UPChecker">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/ping/index.html#linuxmusterTools.devices.UPChecker">[docs]</a>
-<span class="k">class</span> <span class="nc">UPChecker</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/ping/index.html#linuxmusterTools.devices.ping.UPChecker">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UPChecker</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">school</span><span class="o">=</span><span class="s1">&#39;default-school&#39;</span><span class="p">):</span>
 <div class="viewcode-block" id="UPChecker.devicesmgr">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/ping/index.html#linuxmusterTools.devices.UPChecker.devicesmgr">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/ping/index.html#linuxmusterTools.devices.ping.UPChecker.devicesmgr">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">devicesmgr</span> <span class="o">=</span> <span class="n">Devices</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="UPChecker.devices">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/ping/index.html#linuxmusterTools.devices.UPChecker.devices">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/ping/index.html#linuxmusterTools.devices.ping.UPChecker.devices">[docs]</a>
         <span class="bp">self</span><span class="o">.</span><span class="n">devices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">devicesmgr</span><span class="o">.</span><span class="n">clients</span></div>
 
 
 <div class="viewcode-block" id="UPChecker.checkhost">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/ping/index.html#linuxmusterTools.devices.UPChecker.checkhost">[docs]</a>
-    <span class="k">def</span> <span class="nf">checkhost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/ping/index.html#linuxmusterTools.devices.ping.UPChecker.checkhost">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">checkhost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">):</span>
         <span class="n">to_check</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">devicesmgr</span><span class="o">.</span><span class="n">get_client</span><span class="p">(</span><span class="n">hostname</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">to_check</span><span class="p">:</span>
@@ -104,8 +104,8 @@
 
 
 <div class="viewcode-block" id="UPChecker.check">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/ping/index.html#linuxmusterTools.devices.UPChecker.check">[docs]</a>
-    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="p">[]):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/ping/index.html#linuxmusterTools.devices.ping.UPChecker.check">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="p">[]):</span>
         <span class="n">to_check</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">devicesmgr</span><span class="o">.</span><span class="n">get_clients</span><span class="p">(</span><span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">)</span>
 
         <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
@@ -117,8 +117,8 @@
 
 
 <div class="viewcode-block" id="UPChecker.test_online">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/ping/index.html#linuxmusterTools.devices.UPChecker.test_online">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_online</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/ping/index.html#linuxmusterTools.devices.ping.UPChecker.test_online">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_online</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Launch a nmap on a host to test if the os is up, and return OS type.</span>
 
@@ -157,8 +157,8 @@
 
 
 <div class="viewcode-block" id="UPChecker.get_os_from_ports">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/ping/index.html#linuxmusterTools.devices.UPChecker.get_os_from_ports">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_os_from_ports</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ports</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/ping/index.html#linuxmusterTools.devices.ping.UPChecker.get_os_from_ports">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_os_from_ports</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ports</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert a dict of ports to an OS string.</span>
 
@@ -179,8 +179,8 @@
 
     <span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="UPChecker.is_port_signature_linbo">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/ping/index.html#linuxmusterTools.devices.UPChecker.is_port_signature_linbo">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_port_signature_linbo</span><span class="p">(</span><span class="n">ports</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/ping/index.html#linuxmusterTools.devices.ping.UPChecker.is_port_signature_linbo">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_port_signature_linbo</span><span class="p">(</span><span class="n">ports</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if a dict of ports belongs to a Linbo host.</span>
 <span class="sd">        The criteria for Linbo is, that ONLY port 2222 is open</span>
@@ -204,8 +204,8 @@
 
     <span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="UPChecker.is_port_signature_linux">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/ping/index.html#linuxmusterTools.devices.UPChecker.is_port_signature_linux">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_port_signature_linux</span><span class="p">(</span><span class="n">ports</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/ping/index.html#linuxmusterTools.devices.ping.UPChecker.is_port_signature_linux">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_port_signature_linux</span><span class="p">(</span><span class="n">ports</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if a dict of ports belongs to a Linux host.</span>
 <span class="sd">        The criteria for Linux is, that port 22 is open and 135 is closed.</span>
@@ -228,8 +228,8 @@
 
     <span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="UPChecker.is_port_signature_windows">
-<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/ping/index.html#linuxmusterTools.devices.UPChecker.is_port_signature_windows">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_port_signature_windows</span><span class="p">(</span><span class="n">ports</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/devices/ping/index.html#linuxmusterTools.devices.ping.UPChecker.is_port_signature_windows">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_port_signature_windows</span><span class="p">(</span><span class="n">ports</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if a dict of ports belongs to a Windows host.</span>
 <span class="sd">        The criteria for Windows is, that port 135 is open and 22 is not open.</span>
@@ -259,7 +259,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright Arnaud Kientz - 2025.</p>
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

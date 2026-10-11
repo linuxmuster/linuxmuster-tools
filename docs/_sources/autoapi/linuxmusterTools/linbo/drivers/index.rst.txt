@@ -1,0 +1,77 @@
+linuxmusterTools.linbo.drivers
+==============================
+
+.. py:module:: linuxmusterTools.linbo.drivers
+
+.. autoapi-nested-parse::
+
+   Manage hardware-specific LINBO driver profile and image metadata.
+
+   ``LinboDriverManager`` owns profile directories and their image-independent
+   ``match.conf``. ``WindowsDrivers`` is bound to one ``LinboImageGroup`` and
+   owns its ``image.conf`` assignments and ``.driverpostsync`` dispatcher.
+   Both profile configuration files remain below ``/srv/linbo/drivers``; the
+   dispatcher is published in the bound image group's directory.
+   Hardware inventory, archive extraction and payload validation remain separate.
+
+
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:exception:: DriverProfileExistsError(profile)
+
+   Bases: :py:obj:`FileExistsError`
+
+
+   Raised when a new profile would replace an existing path.
+
+
+   .. py:attribute:: profile
+
+
+.. py:class:: LinboDriverManager(drivers_base=None)
+
+   Create, read, update and delete LINBO driver profile metadata.
+
+
+   .. py:attribute:: base
+
+
+   .. py:method:: list_profiles(*, strict=False)
+
+      Return every complete, valid profile sorted by name.
+
+      Raise the first profile error instead of skipping it when ``strict``
+      is true.
+
+
+
+   .. py:method:: get_profile(name)
+
+      Return one valid profile or ``None`` when its path is absent.
+
+
+
+   .. py:method:: create_profile(name, vendor, product)
+
+      Create a profile without replacing any existing path.
+
+
+
+   .. py:method:: update_match(name, vendor, product)
+
+      Replace only ``match.conf`` and preserve all driver payload files.
+
+
+
+   .. py:method:: delete_profile(name)
+
+      Delete a valid managed profile and return whether it existed.
+
+
+

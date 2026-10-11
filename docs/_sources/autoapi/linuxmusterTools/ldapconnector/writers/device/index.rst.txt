@@ -4,22 +4,8 @@ linuxmusterTools.ldapconnector.writers.device
 .. py:module:: linuxmusterTools.ldapconnector.writers.device
 
 
-Attributes
-----------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.writers.device.name_checker
-   linuxmusterTools.ldapconnector.writers.device.logger
 
 
-Classes
--------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.writers.device.LMNRoom
-   linuxmusterTools.ldapconnector.writers.device.LMNDevice
 
 
 Module Contents
@@ -28,6 +14,8 @@ Module Contents
 .. py:data:: name_checker
 
 .. py:data:: logger
+
+.. py:data:: devices_list
 
 .. py:class:: LMNRoom(cn, school='default-school')
 
@@ -81,7 +69,7 @@ Module Contents
 
 
 
-.. py:class:: LMNDevice(cn, school='default-school')
+.. py:class:: LMNDevice(cn, school='default-school', printer=False)
 
    .. py:attribute:: cn
 
@@ -92,13 +80,15 @@ Module Contents
    .. py:attribute:: lr
 
 
-   .. py:attribute:: model
-
-
    .. py:attribute:: data
 
 
    .. py:attribute:: new
+      :value: False
+
+
+
+   .. py:attribute:: pxe
       :value: False
 
 
@@ -136,6 +126,65 @@ Module Contents
    .. py:method:: rename(new_cn)
 
       Rename a device inside a room.
+
+
+
+.. py:class:: LMNPrinter(cn, school='default-school')
+
+   Bases: :py:obj:`LMNDevice`
+
+
+   .. py:method:: load_data()
+
+
+   .. py:method:: remove_member(user)
+
+
+   .. py:method:: remove_all_members()
+
+
+   .. py:method:: add_member(user)
+
+
+   .. py:method:: add_members(members)
+
+      Add all members from a given list in a single ldap modify.
+
+      Members are users or groups. Rewriting the whole member list would
+      lose any concurrent change: two requests adding an user and a group
+      at the same time both read the list, and the last one to write wins.
+      Targeted MOD_ADD operations are applied by the directory itself, so
+      nothing gets lost. The whole modify fails if a value is added twice,
+      so members already in the list are filtered out first.
+
+      One invalid cn doesn't abort the rest of the batch: it's skipped and
+      reported.
+
+      :param members: List of valid cn (users or groups)
+      :type members: list
+      :return: list of (member, error message) tuples for entries that
+          could not be added
+      :rtype: list
+
+
+
+   .. py:method:: remove_members(members)
+
+      Remove all members from a given list in a single ldap modify.
+
+      Members are users or groups. See add_members() about why the member
+      list is not rewritten as a whole. Removing every member leaves no
+      value behind, and the directory drops the attribute on its own: no
+      need for the delattr() dance setattr() would require.
+
+      One invalid cn doesn't abort the rest of the batch: it's skipped and
+      reported.
+
+      :param members: List of valid cn (users or groups)
+      :type members: list
+      :return: list of (member, error message) tuples for entries that
+          could not be removed
+      :rtype: list
 
 
 

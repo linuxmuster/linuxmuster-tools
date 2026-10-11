@@ -1,0 +1,41 @@
+linuxmusterTools.ldapconnector.urls.staff
+=========================================
+
+.. py:module:: linuxmusterTools.ldapconnector.urls.staff
+
+
+
+
+Module Contents
+---------------
+
+.. py:function:: get_staffgroup(staffgroup)
+
+   Get all details from a specific staffgroup.
+   Return a LMNSchoolClassModel data object
+
+
+.. py:function:: get_all_members_from_staffgroup(staffgroup)
+
+   Get all members details from a specific staffgroup.
+   Return a list of LMNUserModel data objects.
+
+
+.. py:function:: get_all_staff()
+
+   Get all staff details.
+   Return a list of LMNSchoolClassModel data objects.
+
+
+.. py:function:: get_results_search_staff(query)
+
+   Get all details from a search about staff.
+   Return a list of LMNSchoolClassModel data objects.
+
+
+.. py:function:: get_results_search_empty_staff()
+
+   Get all details from empty staff.
+   Return a list of LMNSchoolClassModel data objects.
+
+

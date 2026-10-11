@@ -1,0 +1,414 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en-GB" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxmusterTools.linbo.ssh &mdash; linuxmuster-tools7 7.4.19 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/theme_overrides.css?v=472cca7c" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=eb6bb57e"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/translations.js?v=8fd896e3"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            linuxmuster-tools7
+              <img src="../../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">linuxmuster-tools7</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../linuxmusterTools.html">linuxmusterTools</a></li>
+      <li class="breadcrumb-item active">linuxmusterTools.linbo.ssh</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for linuxmusterTools.linbo.ssh</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">LINBO SSH Service — execute commands on LINBO clients via SSH.</span>
+
+<span class="sd">Uses the system ssh client. Key loading is lazy: the private key is loaded</span>
+<span class="sd">on first use, not at module import time.</span>
+
+<span class="sd">Default connection: root@host:2222 with RSA key from</span>
+<span class="sd">/etc/linuxmuster/linbo/ssh_host_rsa_key_client</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<div class="viewcode-block" id="logger">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/ssh/index.html#linuxmusterTools.linbo.ssh.logger">[docs]</a>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span></div>
+
+
+<span class="c1"># Key paths</span>
+<span class="n">_KEY_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+    <span class="s2">&quot;LINBO_CLIENT_SSH_KEY&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;/etc/linuxmuster/linbo/ssh_host_rsa_key_client&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">_SSH_BIN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;LINBO_CLIENT_SSH_BIN&quot;</span><span class="p">,</span> <span class="s2">&quot;ssh&quot;</span><span class="p">)</span>
+<span class="n">_SSH_PORT</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;LINBO_CLIENT_SSH_PORT&quot;</span><span class="p">,</span> <span class="s2">&quot;2222&quot;</span><span class="p">))</span>
+<span class="n">_SSH_TIMEOUT</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SSH_TIMEOUT&quot;</span><span class="p">,</span> <span class="s2">&quot;10&quot;</span><span class="p">))</span>
+<span class="n">_MAX_OUTPUT</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span>  <span class="c1"># 10 MB</span>
+
+<span class="c1"># Lazy-loaded key cache</span>
+<span class="n">_cached_key</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="c1"># Validation patterns for shell-safe parameters</span>
+<div class="viewcode-block" id="SAFE_OSNAME_RE">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/ssh/index.html#linuxmusterTools.linbo.ssh.SAFE_OSNAME_RE">[docs]</a>
+<span class="n">SAFE_OSNAME_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[A-Za-z0-9 ._-]{1,100}$&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SAFE_PARTITION_RE">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/ssh/index.html#linuxmusterTools.linbo.ssh.SAFE_PARTITION_RE">[docs]</a>
+<span class="n">SAFE_PARTITION_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^/dev/[a-z]{2,8}[0-9]{1,3}$&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SAFE_DOWNLOAD_TYPE_RE">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/ssh/index.html#linuxmusterTools.linbo.ssh.SAFE_DOWNLOAD_TYPE_RE">[docs]</a>
+<span class="n">SAFE_DOWNLOAD_TYPE_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^(rsync|multicast|torrent)$&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_private_key_path</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get SSH private key path. Tries primary, then fallback.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Path to the private key file</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        FileNotFoundError: If no key file is available</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">_cached_key</span>
+    <span class="k">if</span> <span class="n">_cached_key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_cached_key</span>
+
+    <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">_KEY_PATH</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+        <span class="n">_cached_key</span> <span class="o">=</span> <span class="n">_KEY_PATH</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loaded LINBO client key from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">_KEY_PATH</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_cached_key</span>
+
+    <span class="n">fallback</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SSH_PRIVATE_KEY&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">fallback</span> <span class="ow">and</span> <span class="n">Path</span><span class="p">(</span><span class="n">fallback</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+        <span class="n">_cached_key</span> <span class="o">=</span> <span class="n">fallback</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Using fallback SSH key: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fallback</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_cached_key</span>
+
+    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;SSH private key not available. Expected: </span><span class="si">{</span><span class="n">_KEY_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_ssh_command</span><span class="p">(</span>
+    <span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">command</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build the ssh command used for remote execution.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">port</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">port</span> <span class="o">=</span> <span class="n">_SSH_PORT</span>
+    <span class="k">if</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">timeout</span> <span class="o">=</span> <span class="n">_SSH_TIMEOUT</span>
+
+    <span class="n">key_path</span> <span class="o">=</span> <span class="n">_get_private_key_path</span><span class="p">()</span>
+    <span class="n">connect_timeout</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">timeout</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">_SSH_BIN</span><span class="p">,</span>
+        <span class="s2">&quot;-i&quot;</span><span class="p">,</span>
+        <span class="n">key_path</span><span class="p">,</span>
+        <span class="s2">&quot;-p&quot;</span><span class="p">,</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">port</span><span class="p">),</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;BatchMode=yes&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;StrictHostKeyChecking=no&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;UserKnownHostsFile=/dev/null&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;ConnectTimeout=</span><span class="si">{</span><span class="n">connect_timeout</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;root@</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">command</span><span class="p">,</span>
+    <span class="p">]</span>
+
+
+<div class="viewcode-block" id="execute_command">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/ssh/index.html#linuxmusterTools.linbo.ssh.execute_command">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">execute_command</span><span class="p">(</span>
+    <span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">command</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute a command on a remote host via SSH.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        host: Target hostname or IP</span>
+<span class="sd">        command: Shell command to execute</span>
+<span class="sd">        port: SSH port (default: 2222)</span>
+<span class="sd">        timeout: Connection timeout in seconds</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        {stdout, stderr, code}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">timeout</span> <span class="o">=</span> <span class="n">_SSH_TIMEOUT</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="n">_build_ssh_command</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">),</span>
+        <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;stdout&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="p">[:</span><span class="n">_MAX_OUTPUT</span><span class="p">],</span>
+        <span class="s2">&quot;stderr&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="p">[:</span><span class="n">_MAX_OUTPUT</span><span class="p">],</span>
+        <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span>
+    <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="execute_commands">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/ssh/index.html#linuxmusterTools.linbo.ssh.execute_commands">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">execute_commands</span><span class="p">(</span>
+    <span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">commands</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">continue_on_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute multiple commands sequentially.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        host: Target hostname or IP</span>
+<span class="sd">        commands: List of shell commands</span>
+<span class="sd">        continue_on_error: Continue even if a command fails</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List of {command, success, stdout, stderr, code} dicts</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="n">commands</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">execute_command</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="n">cmd</span><span class="p">,</span>
+                <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;code&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">result</span><span class="p">,</span>
+            <span class="p">})</span>
+            <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;code&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">continue_on_error</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="n">cmd</span><span class="p">,</span>
+                <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+                <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+            <span class="p">})</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">continue_on_error</span><span class="p">:</span>
+                <span class="k">break</span>
+    <span class="k">return</span> <span class="n">results</span></div>
+
+
+
+<div class="viewcode-block" id="test_connection">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/ssh/index.html#linuxmusterTools.linbo.ssh.test_connection">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_connection</span><span class="p">(</span><span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test SSH connectivity to a host.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        {success, connected} or {success: False, error}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">execute_command</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="s1">&#39;echo &quot;connected&quot;&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;connected&quot;</span><span class="p">:</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;stdout&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;connected&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_validate_param</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pattern</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">Pattern</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate a parameter for shell safety.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Invalid </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">: &quot;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="execute_linbo_command">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/ssh/index.html#linuxmusterTools.linbo.ssh.execute_linbo_command">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">execute_linbo_command</span><span class="p">(</span><span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">linbo_command</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute a LINBO command on a host.</span>
+
+<span class="sd">    Supported commands: sync, start, reboot, shutdown, halt, initcache, partition, format</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        host: Target hostname or IP</span>
+<span class="sd">        linbo_command: LINBO command name</span>
+<span class="sd">        params: Optional parameters (osName, forceNew, downloadType, partition)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        {stdout, stderr, code}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_build_cmd</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">linbo_command</span> <span class="o">==</span> <span class="s2">&quot;sync&quot;</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;linbo_cmd synconly&quot;</span>
+            <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;forceNew&quot;</span><span class="p">):</span>
+                <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot; -f&quot;</span>
+            <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;osName&quot;</span><span class="p">):</span>
+                <span class="n">_validate_param</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;osName&quot;</span><span class="p">],</span> <span class="s2">&quot;osName&quot;</span><span class="p">,</span> <span class="n">SAFE_OSNAME_RE</span><span class="p">)</span>
+                <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;osName&quot;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">cmd</span>
+
+        <span class="k">if</span> <span class="n">linbo_command</span> <span class="o">==</span> <span class="s2">&quot;start&quot;</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;linbo_cmd start&quot;</span>
+            <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;osName&quot;</span><span class="p">):</span>
+                <span class="n">_validate_param</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;osName&quot;</span><span class="p">],</span> <span class="s2">&quot;osName&quot;</span><span class="p">,</span> <span class="n">SAFE_OSNAME_RE</span><span class="p">)</span>
+                <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;osName&quot;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">cmd</span>
+
+        <span class="k">if</span> <span class="n">linbo_command</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;reboot&quot;</span><span class="p">,</span> <span class="s2">&quot;shutdown&quot;</span><span class="p">,</span> <span class="s2">&quot;halt&quot;</span><span class="p">,</span> <span class="s2">&quot;partition&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;linbo_cmd &quot;</span> <span class="o">+</span> <span class="n">linbo_command</span>
+
+        <span class="k">if</span> <span class="n">linbo_command</span> <span class="o">==</span> <span class="s2">&quot;initcache&quot;</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;linbo_cmd initcache&quot;</span>
+            <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;downloadType&quot;</span><span class="p">):</span>
+                <span class="n">_validate_param</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;downloadType&quot;</span><span class="p">],</span> <span class="s2">&quot;downloadType&quot;</span><span class="p">,</span> <span class="n">SAFE_DOWNLOAD_TYPE_RE</span><span class="p">)</span>
+                <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;downloadType&quot;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">cmd</span>
+
+        <span class="k">if</span> <span class="n">linbo_command</span> <span class="o">==</span> <span class="s2">&quot;format&quot;</span><span class="p">:</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;linbo_cmd format&quot;</span>
+            <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;partition&quot;</span><span class="p">):</span>
+                <span class="n">_validate_param</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;partition&quot;</span><span class="p">],</span> <span class="s2">&quot;partition&quot;</span><span class="p">,</span> <span class="n">SAFE_PARTITION_RE</span><span class="p">)</span>
+                <span class="n">cmd</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;partition&quot;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">cmd</span>
+
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown LINBO command: </span><span class="si">{</span><span class="n">linbo_command</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">command</span> <span class="o">=</span> <span class="n">_build_cmd</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">execute_command</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;port&quot;</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="get_linbo_status">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/ssh/index.html#linuxmusterTools.linbo.ssh.get_linbo_status">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_linbo_status</span><span class="p">(</span><span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get LINBO status from a host (images, cache, disks).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        {success, images, cache, disks} or {success: False, error}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">execute_commands</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="p">[</span>
+            <span class="s2">&quot;linbo_cmd listimages&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;df -h /cache&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;lsblk -J&quot;</span><span class="p">,</span>
+        <span class="p">],</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">continue_on_error</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;images&quot;</span><span class="p">:</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;stdout&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;success&quot;</span><span class="p">]</span> <span class="k">else</span> <span class="p">[],</span>
+            <span class="s2">&quot;cache&quot;</span><span class="p">:</span> <span class="n">results</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;stdout&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">results</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;success&quot;</span><span class="p">]</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;disks&quot;</span><span class="p">:</span> <span class="n">results</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="s2">&quot;stdout&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">results</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="s2">&quot;success&quot;</span><span class="p">]</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span></div>
+
+
+
+<div class="viewcode-block" id="reset_key_cache">
+<a class="viewcode-back" href="../../../autoapi/linuxmusterTools/linbo/ssh/index.html#linuxmusterTools.linbo.ssh.reset_key_cache">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">reset_key_cache</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reset the cached SSH key (for testing).&quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">_cached_key</span>
+    <span class="n">_cached_key</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Arnaud Kientz - 2026.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

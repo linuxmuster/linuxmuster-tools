@@ -4,13 +4,6 @@ linuxmusterTools.ldapconnector.models.lmndevice
 .. py:module:: linuxmusterTools.ldapconnector.models.lmndevice
 
 
-Classes
--------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.models.lmndevice.LMNDeviceModel
-   linuxmusterTools.ldapconnector.models.lmndevice.LMNRoomModel
 
 
 Module Contents

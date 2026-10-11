@@ -1,0 +1,28 @@
+linuxmusterTools.print.schoolclasses
+====================================
+
+.. py:module:: linuxmusterTools.print.schoolclasses
+
+
+
+
+Module Contents
+---------------
+
+.. py:function:: print_schoolclass_list(schoolclass, caller, school='default_school', template='schoolclass-DE-32-template.tex')
+
+   Print a list of students from a specific schoolclass.
+
+   :param caller: the user calling the process, for generating the filename
+   :return: PDF path
+
+
+.. py:function:: print_schoolclasses_list(schoolclasses, caller, school='default_school', template='datalist-DE-32-template.tex')
+
+   Print a list of students from multiple schoolclasses.
+
+   :param schoolclasses: list of schoolclasses
+   :param caller: the user calling the process, for generating the filename
+   :return: PDF path
+
+

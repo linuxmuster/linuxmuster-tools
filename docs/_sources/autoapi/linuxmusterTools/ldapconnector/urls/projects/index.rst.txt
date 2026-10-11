@@ -4,13 +4,6 @@ linuxmusterTools.ldapconnector.urls.projects
 .. py:module:: linuxmusterTools.ldapconnector.urls.projects
 
 
-Functions
----------
-
-.. autoapisummary::
-
-   linuxmusterTools.ldapconnector.urls.projects.get_project
-   linuxmusterTools.ldapconnector.urls.projects.get_all_projects
 
 
 Module Contents

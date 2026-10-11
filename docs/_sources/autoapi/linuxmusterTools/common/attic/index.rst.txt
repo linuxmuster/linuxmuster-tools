@@ -4,22 +4,8 @@ linuxmusterTools.common.attic
 .. py:module:: linuxmusterTools.common.attic
 
 
-Attributes
-----------
-
-.. autoapisummary::
-
-   linuxmusterTools.common.attic.logger
 
 
-Functions
----------
-
-.. autoapisummary::
-
-   linuxmusterTools.common.attic.get_killdate
-   linuxmusterTools.common.attic.get_attic_status
-   linuxmusterTools.common.attic.check_attic_dir
 
 
 Module Contents
@@ -27,7 +13,7 @@ Module Contents
 
 .. py:data:: logger
 
-.. py:function:: get_killdate(user, school='default-school')
+.. py:function:: get_killdate(user)
 
    Get kill date of an user, if it exists.
    Actually only works with default-school on a single school instance.
@@ -40,7 +26,7 @@ Module Contents
    :rtype: basestring
 
 
-.. py:function:: get_attic_status(user, school='default-school')
+.. py:function:: get_attic_status(user)
 
    Get the actual status of an user in attic.
    Actually only works with default-school on a single school instance.
