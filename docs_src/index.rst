@@ -20,8 +20,23 @@ This documentation is still under construction.
 
 
 .. toctree::
+   :maxdepth: 2
+   :caption: Modules
+
+   modules/common
+   modules/devices
+   modules/ldapconnector
+   modules/linbo
+   modules/lmnconfig
+   modules/lmnfile
+   modules/passwords
+   modules/print
+   modules/quotas
+   modules/samba_util
+   modules/smbclient
+   modules/subnets
+
+.. toctree::
    :maxdepth: 3
 
    autoapi/index
-
-

@@ -18,7 +18,8 @@ extensions = [
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
     'sphinx.ext.autosummary',
-    'autoapi.extension'
+    'autoapi.extension',
+    'myst_parser',
 ]
 autosummary_generate = True
 
@@ -32,7 +33,15 @@ autoapi_options = ['members', 'undoc-members', 'show-inheritance', 'special-memb
 # autoapi resolves imports statically and can't follow the cross-module
 # constants pulled in via star-imports (LDAP_CONTEXT, SAMBA_* ...); the
 # warnings are false positives.
-suppress_warnings = ['autoapi.python_import_resolution']
+suppress_warnings = ['autoapi.python_import_resolution',
+                     # The module READMEs keep GitHub-relative links to each
+                     # other (../<module>/README.md); they don't resolve as
+                     # Sphinx cross-references but must stay valid on GitHub.
+                     'myst.xref_missing']
+
+# Turn ## headings of the included READMEs into anchor targets so their
+# in-page [...](#section) links work.
+myst_heading_anchors = 3
 
 templates_path = ['_templates']
 source_suffix = '.rst'
