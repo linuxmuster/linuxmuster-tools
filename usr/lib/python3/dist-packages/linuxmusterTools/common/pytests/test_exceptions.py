@@ -1,6 +1,6 @@
 """
-Tests for the SchoolError, LdapNotProvisionedError and SchoolclassExistsError
-exceptions.
+Tests for the SchoolError, LdapNotProvisionedError, SchoolclassExistsError and
+UnknownTemplateTypeError exceptions.
 """
 
 import pytest
@@ -9,6 +9,7 @@ from linuxmusterTools.common.exceptions import (
     SchoolError,
     LdapNotProvisionedError,
     SchoolclassExistsError,
+    UnknownTemplateTypeError,
 )
 
 
@@ -43,3 +44,7 @@ def test_schoolclass_exists_error_raisable_and_catchable_with_message():
         raise SchoolclassExistsError("The schoolclass 7a still exists in default-school")
 
     assert str(excinfo.value) == "The schoolclass 7a still exists in default-school"
+
+
+def test_unknown_template_type_error_is_a_value_error_subclass():
+    assert issubclass(UnknownTemplateTypeError, ValueError)

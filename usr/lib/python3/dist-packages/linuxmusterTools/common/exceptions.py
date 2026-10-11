@@ -17,3 +17,10 @@ class SchoolclassExistsError(Exception):
     Raised when the subgroups of a schoolclass are requested to be deleted
     while the schoolclass itself still exists in LDAP.
     """
+
+
+class UnknownTemplateTypeError(ValueError):
+    """
+    Raised when a print template has a type with no known output name
+    (none of schoolclass, passwords, passwordslarge).
+    """
