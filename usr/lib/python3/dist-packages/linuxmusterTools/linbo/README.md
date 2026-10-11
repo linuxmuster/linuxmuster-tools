@@ -159,7 +159,17 @@ wrong command.
 >>> from linuxmusterTools.linbo import LinboRemote
 >>> remote = LinboRemote(group='win10', cmd='sync:1')
 >>> remote.run()
-{'status': 0, 'msg': 'Started with PID 1234. Log see /var/log/linuxmuster/linbo/pc001_linbo-remote.\n'}
+{'status': 0, 'msg': 'Started with PID 1234. Log see /var/log/linuxmuster/linbo/pc001_linbo-remote_20261011101500.log.\n'}
+```
+
+Since linuxmuster-linbo7 7.4.18, every run writes its own log, `<hostname>_linbo-remote_<YYYYmmddHHMMSS>.log`, where older versions overwrote a single `<hostname>.linbo-remote`. `LinboBootLogs().latest_remote_log()` gives the name of a host's last one, ordered on the timestamp of its name, falling back on the old name; a running session writes into it live. It returns `None` if the host has no linbo-remote log, and raises `ValueError` on an unsafe hostname.
+
+```python
+>>> from linuxmusterTools.linbo import LinboBootLogs
+>>> logs = LinboBootLogs()
+>>> logs.latest_remote_log('pc001')
+'pc001_linbo-remote_20261011101500.log'
+>>> logs.read_log(logs.latest_remote_log('pc001'))
 ```
 
 `list_running_sessions()` lists the tmux sessions `linbo-remote` currently

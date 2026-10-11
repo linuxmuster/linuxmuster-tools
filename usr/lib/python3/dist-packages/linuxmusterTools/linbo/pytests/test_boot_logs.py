@@ -23,6 +23,7 @@ def hostname_of(tmp_path, filename):
     ('client1_image.status', 'client1'),
     ('client1_hwinfo.gz', 'client1'),
     ('client1.linbo-remote', 'client1'),
+    ('client1_linbo-remote_20261011101500.log', 'client1'),
     ('gym-pc01_linbo.log', 'gym-pc01'),
 ])
 def test_hostname_is_read_from_the_file_name(tmp_path, filename, hostname):
@@ -56,3 +57,54 @@ def test_list_logs_reports_every_file_with_its_host(tmp_path):
 
 def test_list_logs_without_directory(tmp_path):
     assert LinboBootLogs(str(tmp_path / 'nothing-here')).list_logs() == []
+
+
+def remote_logs(tmp_path, *filenames):
+    for filename in filenames:
+        (tmp_path / filename).write_text('log\n')
+    return LinboBootLogs(str(tmp_path))
+
+
+def test_latest_remote_log_is_the_newest_run_by_its_name(tmp_path):
+    logs = remote_logs(
+        tmp_path,
+        'pc01_linbo-remote_20261011101500.log',
+        'pc01_linbo-remote_20261011093000.log',
+        'pc01_linbo-remote_20260930235959.log',
+    )
+    assert logs.latest_remote_log('pc01') == 'pc01_linbo-remote_20261011101500.log'
+
+
+def test_latest_remote_log_ignores_other_hosts_sharing_a_prefix(tmp_path):
+    logs = remote_logs(
+        tmp_path,
+        'pc01_linbo-remote_20261011093000.log',
+        'pc010_linbo-remote_20261011101500.log',
+        'pc01-a_linbo-remote_20261011101500.log',
+    )
+    assert logs.latest_remote_log('pc01') == 'pc01_linbo-remote_20261011093000.log'
+
+
+def test_latest_remote_log_falls_back_on_the_name_before_linbo7_7_4_18(tmp_path):
+    logs = remote_logs(tmp_path, 'pc01.linbo-remote', 'pc01_linbo.log')
+    assert logs.latest_remote_log('pc01') == 'pc01.linbo-remote'
+
+
+def test_a_run_log_wins_over_the_name_before_linbo7_7_4_18(tmp_path):
+    logs = remote_logs(tmp_path, 'pc01.linbo-remote', 'pc01_linbo-remote_20261011093000.log')
+    assert logs.latest_remote_log('pc01') == 'pc01_linbo-remote_20261011093000.log'
+
+
+def test_latest_remote_log_is_none_without_any_log(tmp_path):
+    logs = remote_logs(tmp_path, 'pc01_linbo.log', 'linbo-remote_runs.jsonl')
+    assert logs.latest_remote_log('pc01') is None
+
+
+def test_latest_remote_log_is_none_without_log_dir(tmp_path):
+    assert LinboBootLogs(str(tmp_path / 'missing')).latest_remote_log('pc01') is None
+
+
+@pytest.mark.parametrize('hostname', ['../pc01', 'pc*', 'pc01.x', ''])
+def test_latest_remote_log_refuses_an_unsafe_hostname(tmp_path, hostname):
+    with pytest.raises(ValueError):
+        LinboBootLogs(str(tmp_path)).latest_remote_log(hostname)
