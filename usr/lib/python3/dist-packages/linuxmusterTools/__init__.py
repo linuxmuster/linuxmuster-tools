@@ -4,6 +4,8 @@ from pathlib import Path
 
 
 class LMNToolsLoggingFormatter(logging.Formatter):
+    """Colored log formatter for console output, one color per level."""
+
     grey = '\x1b[38;5;245m'
     green = '\x1b[38;5;82m'
     orange = '\x1b[38;5;214m'
@@ -13,6 +15,7 @@ class LMNToolsLoggingFormatter(logging.Formatter):
     reset = '\x1b[0m'
 
     def __init__(self):
+        """Build the per-level format strings."""
         super().__init__()
         self.fmtprefix = "%(asctime)s %(name)60s" + self.violet + " %(filename)20s:%(lineno)d " + self.reset
         self.fmt = f"%(levelname)8s - %(message)s"
@@ -25,6 +28,7 @@ class LMNToolsLoggingFormatter(logging.Formatter):
         }
 
     def format(self, record):
+        """Render the record with the color of its level."""
         log_fmt = self.FORMATS.get(record.levelno)
         formatter = logging.Formatter(log_fmt, "%Y-%m-%d %H:%M:%S")
         return formatter.format(record)
@@ -42,6 +46,7 @@ class LMNFileHandler(logging.Handler):
     )
 
     def __init__(self):
+        """Create the log directory and the per-submodule handler cache."""
         super().__init__()
         self._handlers = {}
         self.LOG_DIR.mkdir(parents=True, exist_ok=True)
@@ -54,6 +59,7 @@ class LMNFileHandler(logging.Handler):
         return self._handlers[submodule]
 
     def emit(self, record):
+        """Route the record to the file of its submodule."""
         parts = record.name.split('.')
         submodule = parts[1] if len(parts) > 1 else 'lmntools'
         self._get_handler(submodule).emit(record)
@@ -66,10 +72,10 @@ logger.propagate = False
 
 def setup_logging(mode='file'):
     """
-    Configure logging for linuxmusterTools.
+    Configure logging for linuxmusterTools:
 
-    mode='file'    : log to /var/log/linuxmuster/lmntools/<submodule>.log
-    mode='console' : log to stderr with colored output
+    - ``mode='file'``    : log to /var/log/linuxmuster/lmntools/<submodule>.log
+    - ``mode='console'`` : log to stderr with colored output
     """
 
 

@@ -24,7 +24,7 @@ class LinboGrubReader:
         self.grub_dir = Path(grub_dir)
 
     def list_grub_cfg_ids(self) -> list[str]:
-        """Return sorted list of GRUB config group IDs (stems of *.cfg files)."""
+        """Return sorted list of GRUB config group IDs (stems of ``*.cfg`` files)."""
         ids = []
         for p in sorted(self.grub_dir.glob("*.cfg")):
             group = p.stem

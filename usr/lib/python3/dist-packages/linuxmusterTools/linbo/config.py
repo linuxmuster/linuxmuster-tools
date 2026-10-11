@@ -454,7 +454,7 @@ _IMAGE_STATUS_PATTERN = re.compile(r'^(\d{12})\s+(\w+):\s+(\S+)(?:\s+"?(\d+)"?)?
 
 def _parse_image_status_file(statusfile):
     """
-    Parse a *_image.status file as written by linuxmuster-linbo7's
+    Parse a ``*_image.status`` file as written by linuxmuster-linbo7's
     shell_functions log_image_status(), e.g.:
         202603241142 applied: win11_pro_edu.qcow2 "202601271107"
         202601271107 created: win11_pro_edu.qcow2 202601271107
@@ -469,7 +469,7 @@ def _parse_image_status_file(statusfile):
     normally holds a single line, but every matching line is returned, in
     file order, to stay tolerant of older or hand-edited multi-line files.
 
-    :param statusfile: Path to the *_image.status file
+    :param statusfile: Path to the ``*_image.status`` file
     :type statusfile: string
     :return: List of {timestamp, action, image, image_timestamp}
     :rtype: list of dict
@@ -546,7 +546,7 @@ def last_sync(workstation, image, timestamp=True):
 def get_host_image_status(log_dir=None):
     """
     Report the last logged image status for every host, read directly from
-    the *_image.status files in the LINBO log directory.
+    the ``*_image.status`` files in the LINBO log directory.
 
     Unlike last_sync(), this does not need to know beforehand which image a
     host is expected to run: it just reports whatever the last

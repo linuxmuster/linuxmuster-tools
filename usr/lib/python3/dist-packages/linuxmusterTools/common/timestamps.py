@@ -24,7 +24,7 @@ def linbo_timestamp_to_epoch(timestamp):
     Convert a LINBO timestamp (YYYYMMDDHHMI) to a Unix epoch.
 
     LINBO clients write their own wall clock, which matches the server's local
-    time: verified by comparing the content of *_image.status files with the
+    time: verified by comparing the content of ``*_image.status`` files with the
     mtime of those same files, written by the server on reception, at two
     different UTC offsets (CET and CEST). The timestamp is therefore read as
     server-local time, not as UTC.

@@ -138,7 +138,7 @@ class LMNGroupCommon:
 
         :param userlist: List of valid cn
         :return: list of (user, error message) tuples for entries that
-        could not be added
+            could not be added
         """
 
         failures = []
@@ -156,7 +156,7 @@ class LMNGroupCommon:
 
         :param userlist: List of valid cn
         :return: list of (user, error message) tuples for entries that
-        could not be removed
+            could not be removed
         """
 
         failures = []

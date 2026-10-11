@@ -388,7 +388,7 @@ class LMNPrinter(LMNDevice):
         :param members: List of valid cn (users or groups)
         :type members: list
         :return: list of (member, error message) tuples for entries that
-        could not be added
+            could not be added
         :rtype: list
         """
 
@@ -439,7 +439,7 @@ class LMNPrinter(LMNDevice):
         :param members: List of valid cn (users or groups)
         :type members: list
         :return: list of (member, error message) tuples for entries that
-        could not be removed
+            could not be removed
         :rtype: list
         """
 

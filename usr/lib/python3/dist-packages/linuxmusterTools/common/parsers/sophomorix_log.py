@@ -13,6 +13,7 @@ def parse_kill_log(all=False, epoch=None, today=False, lastweek=False):
     """
     Parse the kill log of sophomorix to return a dict with all informations.
     Informations available in the log:
+
     - timestamp
     - utc datetime
     - school
@@ -99,6 +100,7 @@ def parse_add_log(all=False, epoch=None, today=False, lastweek=False):
     """
     Parse the add log of sophomorix to return a dict with all informations.
     Informations available in the log:
+
     - timestamp
     - utc datetime
     - school
@@ -186,14 +188,18 @@ def parse_update_log(all=False, epoch=None, today=False, lastweek=False, list_ch
     """
     Parse the update log of sophomorix to return a dict with all informations.
     Informations available in the log:
+
     - first log line:
+
         - timestamp
         - utc datetime
         - school
         - user's cn
         - group change (e.g. teachers->attic)
         - role change (e.g. teacher->student)
+
     - second log line:
+
         - timestamp
         - utc datetime
         - school

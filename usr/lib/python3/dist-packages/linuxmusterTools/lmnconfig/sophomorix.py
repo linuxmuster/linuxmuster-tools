@@ -32,6 +32,7 @@ class SchoolConfig:
             self.config = {}
 
 class MultiOrderedDict(OrderedDict):
+    """An OrderedDict whose repeated keys accumulate their values in a list."""
 
     def __setitem__(self, key, value):
         if isinstance(value, list) and key in self:

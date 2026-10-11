@@ -15,12 +15,10 @@ SAMBA_TLD, LDAP_CONTEXT = [''] * 2
 
 def parse_log_level(level):
     """
-    A level entry should look like
+    A level entry should look like one of these::
 
         log level = auth_audit:2
-    or
         log level = 2
-    or
         log level = 1 auth_audit:3 winbind:5
     """
 
