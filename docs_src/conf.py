@@ -22,9 +22,9 @@ extensions = [
 ]
 autosummary_generate = True
 
-autoapi_dirs = ['../../linuxmuster-tools']
+autoapi_dirs = ['../usr/lib/python3/dist-packages/linuxmusterTools']
 autoapi_type = "python"
-autoapi_ignore = ["*/conf.py", "*/examples/*"]
+autoapi_ignore = ["*/conf.py", "*/examples/*", "*/pytests/*", "*/install-scripts/*", "*/WIP/*"]
 
 templates_path = ['_templates']
 source_suffix = '.rst'
