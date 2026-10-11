@@ -2,6 +2,8 @@ import os
 import subprocess
 from jinja2 import Environment, FileSystemLoader
 
+from linuxmusterTools.common import UnknownTemplateTypeError
+
 
 OUTPUT_DIR = "/var/lib/lmntools/print/"
 TEMPLATES_DIR = "/var/lib/lmntools/templates/"
@@ -74,6 +76,8 @@ class LatexRenderer:
             output_file = f"{self.caller}-schoolclass-{self.vars['schoolclass']}.tex"
         elif self.template_obj.type in ("passwords", "passwordslarge"):
             output_file = f"{self.caller}-{self.template_obj.type}-{self.vars['schoolclass']}.tex"
+        else:
+            raise UnknownTemplateTypeError(f"Unknown template type {self.template_obj.type}")
 
         self.destination_file = os.path.join(OUTPUT_DIR, output_file)
 

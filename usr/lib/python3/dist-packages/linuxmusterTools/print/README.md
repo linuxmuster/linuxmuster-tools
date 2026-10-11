@@ -21,7 +21,7 @@ A LaTeX-based printable document generator for [linuxmuster.net](https://www.lin
 from linuxmusterTools.print import print_passwords_list, print_schoolclass_list
 ```
 
-Both functions look up their data in LDAP, render a Jinja2 `.tex` template, compile it with `pdflatex`, and return the path to the generated PDF. They raise an `Exception` if the requested template is unknown or the schoolclass is missing/empty.
+Both functions look up their data in LDAP, render a Jinja2 `.tex` template, compile it with `pdflatex`, and return the path to the generated PDF. They raise an `Exception` if the requested template is unknown or the schoolclass is missing/empty, and [`UnknownTemplateTypeError`](../common/README.md#exceptions) (a `ValueError`) if the template's type is none of `schoolclass`, `passwords`, `passwordslarge`.
 
 ### `print_passwords_list(schoolclass, caller, school='default-school', large=False, template="passwords-DE-1-template.tex")`
 

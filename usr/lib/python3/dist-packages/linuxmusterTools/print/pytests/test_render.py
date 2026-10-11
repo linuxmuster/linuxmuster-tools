@@ -8,6 +8,7 @@ from types import SimpleNamespace
 
 import pytest
 
+from linuxmusterTools.common import UnknownTemplateTypeError
 from linuxmusterTools.print.render import LatexRenderer
 
 
@@ -200,20 +201,13 @@ def test_compile_cleans_up_auxiliary_files(render_dirs, mock_popen):
         assert not os.path.isfile(r.destination_file.replace(".tex", ext))
 
 
-def test_compile_unknown_template_type_raises_unboundlocalerror(render_dirs, mock_popen):
-    """
-    Regression/documentation test for a production gap: compile() only
-    branches on template_obj.type in ("schoolclass", "passwords",
-    "passwordslarge"). Any other type (e.g. a template file whose filename
-    encodes a different `type` group, like "foo-DE-1-template.tex" ->
-    type="foo") leaves `output_file` unset, raising an unhandled
-    UnboundLocalError instead of a clear, catchable error.
-    See render.py:73-78.
-    """
+def test_compile_unknown_template_type_raises(render_dirs, mock_popen):
     templates_dir, _ = render_dirs
     write_template(templates_dir, "foo.tex", "x")
     template_obj = make_template_obj(filename="foo.tex", count=10, type="foo")
 
     r = LatexRenderer(template_obj, data=[], caller="admin", vars={"schoolclass": "7a"})
-    with pytest.raises(UnboundLocalError):
+    with pytest.raises(UnknownTemplateTypeError):
         r.compile()
+    popen_ctor, _ = mock_popen
+    popen_ctor.assert_not_called()
