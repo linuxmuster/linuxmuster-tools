@@ -306,12 +306,10 @@ def test_list_user_files_filters_by_owner_and_aggregates_sizes(check, monkeypatc
     assert result['total'] == format_size(350)
 
 
-def test_list_user_files_prefix_boundary_bug(check, monkeypatch):
+def test_list_user_files_keeps_a_prefixed_sibling_apart(check, monkeypatch):
     """
-    Documents current behaviour of the `root.startswith(directory)` check:
-    it has no path-separator boundary, so a sibling directory whose name is
-    merely prefixed by an already-seen directory name gets merged into it.
-    See bug note in the final report.
+    A sibling directory whose name merely starts with an already seen
+    directory name (alice-archive after alice) gets its own bucket.
     """
     sizes = {'a.txt': 10, 'old.txt': 20}
     walk_data = [
@@ -328,10 +326,12 @@ def test_list_user_files_prefix_boundary_bug(check, monkeypatch):
 
     result = check.list_user_files('alice')
 
-    # Current (buggy) behaviour: only one bucket, 'alice-archive' merged into 'alice'.
-    assert set(result['directories'].keys()) == {'/srv/samba/school1/alice'}
-    bucket = result['directories']['/srv/samba/school1/alice']
-    assert bucket['files'].keys() == {'a.txt', 'old.txt'}
+    assert set(result['directories'].keys()) == {
+        '/srv/samba/school1/alice',
+        '/srv/samba/school1/alice-archive',
+    }
+    assert result['directories']['/srv/samba/school1/alice']['files'].keys() == {'a.txt'}
+    assert result['directories']['/srv/samba/school1/alice-archive']['files'].keys() == {'old.txt'}
 
 
 # ---------------------------------------------------------------------------

@@ -144,7 +144,7 @@ def list_user_files(user):
             size = stats.st_size
             if owner == user:
                 for directory, _ in directories.items():
-                    if root.startswith(directory):
+                    if root == directory or root.startswith(directory + os.sep):
                         directories[directory]['total'] += size
                         directories[directory]['files'][f] = f"{format_size(size)}"
                         break
