@@ -3,6 +3,7 @@ import shutil
 import subprocess
 import logging
 from datetime import datetime, timezone
+from pathlib import Path
 
 from ..common.sorting import sort_naturally
 from ..lmnfile import LMNFile
@@ -129,6 +130,7 @@ class LinboImage:
         lists the seeding session.
         """
 
+
         command = ['/usr/sbin/linbo-torrent', 'create', os.path.join(self.path, self.image)]
 
         try:
@@ -152,6 +154,7 @@ class LinboImage:
         Prepare all variables to manage the image object ( path, name, extra files )
         """
 
+
         if self.diff:
             self.image = f"{self.name}.{DIFF_IMAGE}"
         else:
@@ -174,6 +177,7 @@ class LinboImage:
         """
         Load raw content of extra editables config files.
         """
+
 
         for extra in EXTRA_IMAGE_FILES:
             extra_file = os.path.join(self.path, f"{self.image}.{extra}")
@@ -208,6 +212,7 @@ class LinboImage:
         over with a fabricated value.
         """
 
+
         info_path = os.path.join(self.path, f"{self.image}.info")
         attributes = {}
         if os.path.isfile(info_path):
@@ -239,6 +244,7 @@ class LinboImage:
         Delete all files from a LinboImage.
         """
 
+
         # Remove image
         image_path = os.path.join(self.path, self.image)
         if os.path.exists(image_path):
@@ -259,22 +265,32 @@ class LinboImage:
 
     def delete(self):
         """
-        Completely remove an image and its directory.
+        Completely remove an image. A differential image only loses its own
+        files, it shares the directory of its base image. A base image or a
+        backup takes its whole directory with it, whatever it contains: for a
+        base image, this includes its backups and differential image.
         """
+
 
         if not self.backup:
             self._torrent_stop()
 
-        self.delete_files()
+        if self.diff:
+            self.delete_files()
+            return
 
-        if not self.diff:
-            # Remove directory
-            os.rmdir(self.path)
+        root = Path(LINBO_PATH).resolve()
+        path = Path(self.path)
+        if path.is_symlink() or path.resolve() == root or not path.resolve().is_relative_to(root):
+            raise RuntimeError(f"Refusing to remove {self.path}: not a directory below {LINBO_PATH}")
+
+        shutil.rmtree(path)
 
     def rename(self, new_name):
         """
         Rename a LinboImage and all its files.
         """
+
 
         if self.diff:
             new_image_name = f"{new_name}.{DIFF_IMAGE}"
@@ -331,6 +347,7 @@ class LinboImage:
         :type data: dict
         """
 
+
         for extra in EXTRA_IMAGE_FILES:
             path = os.path.join(self.path, f"{self.image}.{extra}")
             extra_content = data.get(extra, '')
@@ -358,6 +375,7 @@ class LinboImage:
         Convert all necessary infos into a dict for angular.
         """
 
+
         return {
             'name': self.name,
             'size': self.size,
@@ -379,6 +397,7 @@ class LinboImageGroup:
     Class to handle a basic LinboImage and all his backups.
     """
 
+
     def __init__(self, name, driver_manager=None):
         self.name = name
         self.path = os.path.join(LINBO_PATH, self.name)
@@ -393,6 +412,7 @@ class LinboImageGroup:
 
     def load(self):
         self.backups = {}
+        self.diff_image = None
         self.error = None
         try:
             self.base = LinboImage(self.name)
@@ -509,22 +529,30 @@ class LinboImageGroup:
 
     def delete(self):
         """
-        Delete basic image, all backups, diff image and all config files.
+        Delete the whole image directory: basic image, all backups, diff
+        image, all config files, and anything else stored in it, including
+        files added by hand. Nothing has to be parsed, so a group whose .info
+        is missing or incomplete can be deleted too.
         """
 
-        if self.base is None:
-            raise RuntimeError(f"Cannot delete image group {self.name}: {self.error}")
 
-        for timestamp, backup in self.backups.items():
-            backup.delete()
+        # The base image takes the whole directory with it, backups included:
+        # only the differential image, which has its own torrent, must be
+        # deleted first.
+        for image in (self.diff_image, self.base):
+            if image:
+                image.delete()
 
-        if self.diff_image:
-            self.diff_image.delete()
+        if self.base:
+            return
 
-        if os.path.isdir(self.backup_path):
-            os.rmdir(self.backup_path)
-
-        self.base.delete()
+        # Fallback if the dir is "broken"
+        # Never follow a symlink out of LINBO_PATH.
+        root = Path(LINBO_PATH).resolve()
+        path = Path(self.path)
+        if path.is_symlink() or path.resolve() == root or not path.resolve().is_relative_to(root):
+            raise RuntimeError(f"Refusing to remove {self.path}: not a directory below {LINBO_PATH}")
+        shutil.rmtree(path)
 
     def to_dict(self):
         if self.base is None:

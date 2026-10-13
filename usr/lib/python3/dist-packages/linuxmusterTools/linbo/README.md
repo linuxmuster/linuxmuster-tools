@@ -105,9 +105,17 @@ The manager contains a dict of all groups in the attributes `groups`, filled by 
 {'name': 'ubuntu', 'size': 2609718272, 'desc': 'Install LaTeX and update', 'info': '["ubuntu.qcow2" Info File]\ntimestamp="202108291639"\nimage="ubuntu.qcow2"\nimagesize="2609718272"\npartition="/dev/sda1"\npartitionsize="31457280"\n', 'reg': None, 'postsync': None, 'vdi': None, 'prestart': '#! /bin/bash\n\necho "ok"\n', 'backup': False, 'diff': False, 'torrent': True, 'timestamp': '202108291639', 'date': '29/08/2021 16:39', 'diff_image': {}, 'backups': {'03/03/2022 19:03': {'name': 'ubuntu', 'size': 0, 'desc': '', 'info': 'timestamp=202203031903\ndate=voila', 'reg': None, 'postsync': None, 'vdi': None, 'prestart': None, 'backup': True, 'diff': False, 'torrent': False, 'timestamp': '202203031903', 'date': '03/03/2022 19:03'}, '29/08/2021 16:22': {'name': 'ubuntu', 'size': 3233778176, 'desc': 'Install ZSH', 'info': '[ubuntu.qcow2 Info File]\ntimestamp=202108291622\nimage=ubuntu.qcow2\nbaseimage=/dev/sda1\npartitionsize=31457159\nimagesize=3233778176\n', 'reg': None, 'postsync': None, 'vdi': None, 'prestart': '#! /bin/bash\n\necho "ok"\n', 'backup': True, 'diff': False, 'torrent': False, 'timestamp': '202108291622', 'date': '29/08/2021 16:22'}, '29/08/2021 16:17': {'name': 'ubuntu', 'size': 3233778176, 'desc': 'Install ZSH', 'info': '[ubuntu.qcow2 Info File]\ntimestamp=202108291617\nimage=ubuntu.qcow2\nbaseimage=/dev/sda1\npartitionsize=31457159\nimagesize=3233778176\n', 'reg': None, 'postsync': None, 'vdi': None, 'prestart': '#! /bin/bash\n\necho "ok"\n', 'backup': True, 'diff': False, 'torrent': False, 'timestamp': '202108291617', 'date': '29/08/2021 16:17'}}, 'selected': False}
 ```
 
-`delete()`, `duplicate()` and `restore()` raise rather than fail silently:
-a directory that cannot be removed propagates the underlying `OSError`, and
-`duplicate()`/`restore()` raise `ImageExistsError` (a `FileExistsError`
+`delete()` removes the **whole directory** `/srv/linbo/images/<image>/`, with
+everything in it: backups, differential image, config files, and any file an
+admin added by hand. Deleting one backup likewise removes its whole
+`backups/<timestamp>/` directory; only a differential image is deleted file by
+file, since it shares the directory of its base image. Consumers must warn the
+admin of this before calling it. Nothing is parsed, so an image whose `.info`
+is missing or incomplete can be deleted too. A directory that is a symlink, or
+that does not resolve below `/srv/linbo/images`, is refused with
+`RuntimeError`.
+
+`duplicate()` and `restore()` raise `ImageExistsError` (a `FileExistsError`
 subclass, importable from `linuxmusterTools.linbo`) if the target image or
 backup directory already exists.
 

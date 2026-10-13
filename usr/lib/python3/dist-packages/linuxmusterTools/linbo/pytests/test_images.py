@@ -142,7 +142,6 @@ def test_broken_image_does_not_crash_manager_list(environment):
     assert images.groups["broken"].base is None
 
 
-
 def test_list_returns_images_in_natural_order(environment):
     images_root, images = environment
     for name in ["win10", "Debian", "win2", "ubuntu"]:
@@ -192,15 +191,17 @@ def test_rename_refuses_on_broken_group(environment):
     assert not (images_root / "renamed").exists()
 
 
-def test_delete_refuses_on_broken_group(environment):
+def test_delete_removes_a_broken_group(environment):
     images_root, images = environment
     _create_broken_image(images_root, "broken")
     images.list()
 
-    with pytest.raises(RuntimeError, match="Cannot delete image group broken"):
-        images.groups["broken"].delete()
+    # A missing .info must not block the deletion: it is exactly the state a
+    # failed delete used to leave behind (#39).
+    images.delete("broken")
 
-    assert (images_root / "broken").is_dir()
+    assert "broken" not in images.groups
+    assert not (images_root / "broken").exists()
 
 
 def test_save_extras_refuses_on_broken_group(environment):
@@ -222,33 +223,63 @@ def test_save_extras_refuses_when_no_diff_image_exists(environment):
         images.save_extras("ubuntu", {"desc": "test"}, diff=True)
 
 
-# ── LinboImage.delete() / LinboImageGroup.delete() propagate OSError ─
+# ── Whole directory removal (#39) ────────────────────────────────────
 
 
-def test_base_image_delete_propagates_oserror_on_nonempty_directory(environment):
+def test_delete_removes_files_added_by_hand(environment):
     images_root, images = environment
     image_dir = _create_image(images_root, "ubuntu")
-    # A file delete_files() does not know about: os.rmdir() must then fail.
     (image_dir / "stray.txt").write_text("leftover")
-    images.list()
-
-    with pytest.raises(OSError):
-        images.groups["ubuntu"].base.delete()
-
-    assert image_dir.exists()
-
-
-def test_group_delete_propagates_oserror_when_backups_dir_not_empty(environment):
-    images_root, images = environment
-    image_dir = _create_image(images_root, "ubuntu")
     (image_dir / "backups").mkdir()
-    # A stray file directly under backups/, not inside any timestamp dir: no
-    # LinboImage will ever unlink it, so the final os.rmdir() must fail.
     (image_dir / "backups" / "stray.txt").write_text("leftover")
     images.list()
 
-    with pytest.raises(OSError):
-        images.groups["ubuntu"].delete()
+    images.delete("ubuntu")
+
+    assert not image_dir.exists()
+
+
+def test_delete_removes_the_upload_backup_directory(environment):
+    images_root, images = environment
+    image_dir = _create_image(images_root, "ubuntu")
+    # image_sync.finalize_upload() keeps its copies in backup/ (singular),
+    # which the former file-by-file deletion never knew about.
+    upload_backup = image_dir / "backup" / "20260101120000"
+    upload_backup.mkdir(parents=True)
+    (upload_backup / "ubuntu.qcow2").write_bytes(b"x")
+    images.list()
+
+    images.delete("ubuntu")
+
+    assert not image_dir.exists()
+
+
+def test_delete_backup_removes_files_added_by_hand(environment):
+    images_root, images = environment
+    image_dir = _create_image(images_root, "ubuntu")
+    backup_ts = "202512241000"
+    backup_dir = _create_backup(image_dir, "ubuntu", backup_ts)
+    (backup_dir / "stray.txt").write_text("leftover")
+    images.list()
+
+    images.delete("ubuntu", date=timestamp2date(backup_ts))
+
+    assert not backup_dir.exists()
+    assert (image_dir / "ubuntu.qcow2").exists()
+
+
+def test_delete_refuses_a_symlinked_image_directory(environment, tmp_path):
+    images_root, images = environment
+    outside = tmp_path / "outside"
+    _create_image(tmp_path, "outside")
+    (images_root / "linked").symlink_to(outside)
+    (outside / "linked.qcow2").touch()
+    images.list()
+
+    with pytest.raises(RuntimeError, match="Refusing to remove"):
+        images.groups["linked"].delete()
+
+    assert (outside / "outside.qcow2").exists()
 
 
 # ── Manager.delete() — the self.images/self.groups regression ──────
