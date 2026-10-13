@@ -54,17 +54,32 @@ except Exception as e:
     logger.error(f"Can not read realm and domain from smb.conf: {str(e)}. Is linuxmuster.net installed and configured ?")
 
 DFS = {}
+SHARES_LIST = []
 
-config = ConfigObj(StringIO(check_output(["/usr/bin/net", "conf", "list"], shell=False).decode()))
+def load_shares():
+    """
+    Read the shares and their DFS targets from 'net conf list' into
+    SHARES_LIST and DFS. Both are filled in place, so that every module which
+    imported them sees a reload.
 
-SHARES_LIST = list(config.keys())
+    Done once at import: a long running process like linuxmuster-api keeps
+    the shares it found at start. Call it again after a share has been moved
+    to a fileserver (DFS).
+    """
 
-for share_name, share_config in config.items():
-    # DFS activated ?
-    if share_config.get('msdfs root', 'no') == 'yes':
-        dfs_proxy = share_config.get('msdfs proxy', '')
-        if dfs_proxy != '':
-            # //sub.domain.lan/school to \\\\sub.domain.lan\\school
-            DFS[share_name] = {
-                'dfs_proxy': dfs_proxy.replace('/', '\\'),
-            }
+    config = ConfigObj(StringIO(check_output(["/usr/bin/net", "conf", "list"], shell=False).decode()))
+
+    SHARES_LIST[:] = config.keys()
+    DFS.clear()
+
+    for share_name, share_config in config.items():
+        # DFS activated ?
+        if share_config.get('msdfs root', 'no') == 'yes':
+            dfs_proxy = share_config.get('msdfs proxy', '')
+            if dfs_proxy != '':
+                # //sub.domain.lan/school to \\\\sub.domain.lan\\school
+                DFS[share_name] = {
+                    'dfs_proxy': dfs_proxy.replace('/', '\\'),
+                }
+
+load_shares()

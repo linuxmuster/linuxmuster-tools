@@ -45,6 +45,15 @@ print(SAMBA_DOMAIN)      # 'server.school.lan'
 print(LDAP_CONTEXT)      # 'OU=SCHOOLS,DC=SCHOOL,DC=LAN'
 ```
 
+`SHARES_LIST` and `DFS` are read from `net conf list` once, at import. A long running process like linuxmuster-api therefore keeps the shares it found at start: restart it after moving a share to a fileserver. `load_shares()` reads them again, updating both objects in place, so every module which imported them sees the new values. `quotas.get_user_quotas()` calls it once by itself when a share is not found at its known place.
+
+```python
+from linuxmusterTools.lmnconfig import DFS, load_shares
+
+load_shares()
+print(DFS)               # {'default-school': {'dfs_proxy': '\\\\file01.school.lan\\default-school'}}
+```
+
 If `/etc/samba/smb.conf` is missing or unreadable, the constants read from it default to `''` (or `{}`) and a warning/error is logged. `net conf list` is not guarded: if it fails (Samba not provisioned yet, process not running as root), importing the module raises `subprocess.CalledProcessError`.
 
 ### `server.py` — module-level constants
