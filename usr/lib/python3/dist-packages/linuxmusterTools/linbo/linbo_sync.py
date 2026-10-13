@@ -382,9 +382,12 @@ def get_onboot_command(hostname: str) -> dict:
 
     name_checker.validate_host_name(hostname)
     content = (ONBOOT_CMD_PATH / f'{hostname}.cmd').read_text()
+    # Before an upload, linbo-remote -p writes the rsync credentials as a
+    # "linbo:<password>" entry, which the client needs at boot. It is the
+    # LINBO rsync password in clear, never to be handed to a caller.
     return {
         'hostname': hostname,
-        'commands': [cmd for cmd in content.strip().split(',') if cmd],
+        'commands': [cmd for cmd in content.strip().split(',') if cmd and not cmd.startswith('linbo:')],
     }
 
 

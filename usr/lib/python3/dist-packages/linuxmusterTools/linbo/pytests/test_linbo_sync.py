@@ -322,6 +322,15 @@ def test_get_onboot_command_reads_one_host(onboot_dir):
     }
 
 
+def test_get_onboot_command_never_returns_the_rsync_password(onboot_dir):
+    # What linbo-remote -p writes before an upload (buildOnbootCmds).
+    (onboot_dir / "pc03.cmd").write_text("dryrun,linbo:secret,upload_image:1,start:1,noauto\n")
+
+    expected = {"hostname": "pc03", "commands": ["dryrun", "upload_image:1", "start:1", "noauto"]}
+    assert linbo_sync_module.get_onboot_command("pc03") == expected
+    assert expected in linbo_sync_module.list_onboot_commands()
+
+
 def test_get_onboot_command_without_pending_command(onboot_dir):
     with pytest.raises(FileNotFoundError):
         linbo_sync_module.get_onboot_command("pc03")
