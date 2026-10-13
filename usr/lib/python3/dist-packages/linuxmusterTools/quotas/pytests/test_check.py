@@ -457,10 +457,55 @@ def test_get_user_quotas_smbcquotas_error_branch(check, monkeypatch):
     )
     monkeypatch.setattr(check.subprocess, 'run', fake_run)
 
+    reloads = []
+    monkeypatch.setattr(check, 'load_shares', lambda: reloads.append(True))
+
     result = check.get_user_quotas('alice')
 
     assert result['default-school']['ERROR']['code'] == 1
     assert result['default-school']['ERROR']['error'] == "NT_STATUS_ACCESS_DENIED"
+    # Not a share at the wrong place: the DFS targets are not reread.
+    assert reloads == []
+
+
+@pytest.mark.parametrize('status', ['NT_STATUS_BAD_NETWORK_NAME', 'NT_STATUS_UNSUCCESSFUL'])
+def test_get_user_quotas_rereads_dfs_once_after_a_share_moved(check, monkeypatch, status):
+    attributes = {
+        'sophomorixCloudQuotaCalculated': '0 MB',
+        'sophomorixMailQuotaCalculated': '0',
+        'sophomorixSchoolname': 'default-school',
+        'sophomorixRole': 'teacher',
+    }
+    monkeypatch.setattr(check, 'lr', _fake_lr_get(attributes))
+    _patch_admin_secret(check, monkeypatch)
+
+    # default-school moved to a fileserver after the DFS targets were read.
+    def fake_load_shares():
+        check.DFS['default-school'] = {'dfs_proxy': r'\\file01\default-school'}
+        reloads.append(True)
+
+    reloads = []
+    monkeypatch.setattr(check, 'load_shares', fake_load_shares)
+
+    calls = []
+
+    def fake_run(cmd, capture_output=True, env=None):
+        calls.append(cmd[-1])
+        if cmd[-1] == '//testdom.example.org/default-school':
+            return types.SimpleNamespace(returncode=1, stdout=b'', stderr=f'cli_full_connection failed! ({status})'.encode())
+        return types.SimpleNamespace(returncode=0, stdout=b'Get quota  User  1048576/  2097152/  3145728/', stderr=b'')
+
+    monkeypatch.setattr(check.subprocess, 'run', fake_run)
+
+    result = check.get_user_quotas('alice')
+
+    assert result['default-school'] == {'used': 1.0, 'soft_limit': 2.0, 'hard_limit': 3.0}
+    assert calls == [
+        '//testdom.example.org/default-school',
+        r'\\file01\default-school',
+        '//testdom.example.org/linuxmuster-global',
+    ]
+    assert reloads == [True]
 
 
 def test_get_user_quotas_no_limit_passthrough(check, monkeypatch):

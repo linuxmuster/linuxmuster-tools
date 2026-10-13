@@ -41,7 +41,7 @@ Walks `/srv/samba` on the local filesystem and returns every file owned by `user
 
 ### `get_user_quotas(user)`
 
-Runs `smbcquotas` against every share relevant to `user` (all shares for administrators, the user's own school and `linuxmuster-global` otherwise), plus the cloud and mail quotas read from LDAP.
+Runs `smbcquotas` against every share relevant to `user` (all shares for administrators, the user's own school and `linuxmuster-global` otherwise), plus the cloud and mail quotas read from LDAP. A share on a fileserver is queried at its DFS target. If a share is not found (`NT_STATUS_BAD_NETWORK_NAME` or `NT_STATUS_UNSUCCESSFUL`, for example after it was moved to a fileserver while the process was running), the DFS targets are read again once with `lmnconfig.load_shares()` and the query is retried.
 
 ```Console
 >>> from linuxmusterTools.quotas import get_user_quotas

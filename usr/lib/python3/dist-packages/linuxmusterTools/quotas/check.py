@@ -5,7 +5,7 @@ import logging
 import subprocess
 from datetime import datetime
 
-from ..samba_util import SAMBA_WORKGROUP, SAMBA_DOMAIN, SAMBA_NETBIOS, DFS, SHARES_LIST
+from ..samba_util import SAMBA_WORKGROUP, SAMBA_DOMAIN, SAMBA_NETBIOS, DFS, SHARES_LIST, load_shares
 from ..ldapconnector import LMNLdapReader as lr
 from ..common import format_size
 
@@ -187,17 +187,30 @@ def get_user_quotas(user):
         return round(int(quota) / 1024 /1024, 2)
 
     # TODO: parallel ?
+    reloaded = False
     for share in quotas.keys():
-        # Search for DFS paths
-        if share in DFS.keys():
-            share_path = DFS[share]['dfs_proxy']
-        else:
-            # Default school
-            share_path = f'//{SAMBA_DOMAIN}/{share}'
+        while True:
+            # Search for DFS paths
+            if share in DFS.keys():
+                share_path = DFS[share]['dfs_proxy']
+            else:
+                # Default school
+                share_path = f'//{SAMBA_DOMAIN}/{share}'
 
-        cmd = ['smbcquotas', '-U', 'administrator', '-u', user, share_path]
-        smbc_output = subprocess.run(cmd, capture_output=True, env={**os.environ, 'PASSWD': pw})
-        out, err = smbc_output.stdout.decode().strip(),  smbc_output.stderr.decode().strip()
+            cmd = ['smbcquotas', '-U', 'administrator', '-u', user, share_path]
+            smbc_output = subprocess.run(cmd, capture_output=True, env={**os.environ, 'PASSWD': pw})
+            out, err = smbc_output.stdout.decode().strip(),  smbc_output.stderr.decode().strip()
+
+            # The DFS targets are read once at import: a share moved to a
+            # fileserver since then is looked for at its old place. Reread
+            # them once, then retry.
+            if (smbc_output.returncode > 0 and not reloaded
+                    and ('NT_STATUS_BAD_NETWORK_NAME' in err or 'NT_STATUS_UNSUCCESSFUL' in err)):
+                load_shares()
+                reloaded = True
+                continue
+            break
+
         if smbc_output.returncode > 0:
             # Catch Samba error
             # error_code =  err.split("(")[1].strip(")")
