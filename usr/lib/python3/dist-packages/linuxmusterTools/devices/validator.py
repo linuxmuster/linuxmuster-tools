@@ -193,6 +193,16 @@ def validate_group(group):
             ERROR, 'group.invalid', f"{group} is not a valid Linbo group",
             field='group', value=group,
         )]
+
+    # LINBO names the group of a non default school '<school>__<group>':
+    # a group abc__room of default-school would read as group room of abc.
+    if '__' in group:
+        return [Finding(
+            ERROR, 'group.reserved_separator',
+            f"{group} is not a valid Linbo group: '__' separates the school "
+            f"from the group name",
+            field='group', value=group,
+        )]
     return []
 
 

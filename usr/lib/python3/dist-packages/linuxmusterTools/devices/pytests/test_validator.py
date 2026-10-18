@@ -145,6 +145,11 @@ def test_an_invalid_linbo_group(group):
     assert codes(validate_group(group)) == ['group.invalid']
 
 
+@pytest.mark.parametrize('group', ['abc__room', '__room', 'room__', 'a___b'])
+def test_a_linbo_group_with_the_school_separator_is_refused(group):
+    assert codes(validate_group(group)) == ['group.reserved_separator']
+
+
 @pytest.mark.parametrize('mac', [
     'AA:BB:CC:DD:EE:FF', 'aa:bb:cc:dd:ee:ff', 'AA-BB-CC-DD-EE-FF', 'AABBCCDDEEFF',
 ])

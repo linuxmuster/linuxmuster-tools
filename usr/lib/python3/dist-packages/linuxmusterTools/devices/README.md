@@ -199,6 +199,7 @@ Each finding carries:
 | `hostname.too_long` | error | `<school>-<hostname>` over 15 characters, for the roles whose `COMPUTER_ACCOUNT` is `TRUE` in `sophomorix.ini` |
 | `hostname.duplicate` | error | Same name twice, globally, compared on the prefixed name ignoring case |
 | `group.invalid` | error | LINBO group name: `^[a-z0-9_\-]+$`, case-insensitive (no `.` nor `+`, refused by sophomorix and LINBO) |
+| `group.reserved_separator` | error | Contains `__`, reserved by LINBO to name the group of a non-default school `<school>__<group>`; a single `_` is allowed |
 | `mac.invalid` | error | None of the three accepted forms (`AA:BB:…`, `AA-BB-…`, `AABB…`) |
 | `mac.duplicate` | error | Same address twice, globally, compared normalized |
 | `ip.invalid` | error | Not an IPv4 address, `DHCP` excepted |
