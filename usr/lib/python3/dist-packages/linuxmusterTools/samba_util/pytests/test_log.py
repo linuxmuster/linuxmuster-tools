@@ -34,6 +34,27 @@ MACHINE_ACCOUNT_LINE = (
 )
 
 
+@pytest.fixture(autouse=True)
+def no_schools(monkeypatch):
+    # Keep last_login() away from the real devices.csv of the machine.
+    monkeypatch.setattr(log_module, 'list_schools', lambda: [])
+
+
+class FakeDevices:
+    INVENTORIES = {
+        'default-school': ('', [{'ip': '10.0.0.1', 'hostname': 'pc01'}]),
+        'abc': ('abc-', [{'ip': '10.0.1.1', 'hostname': 'pc01'}]),
+    }
+
+    def __init__(self, school='default-school'):
+        self.hostname_prefix, self.devices = self.INVENTORIES[school]
+
+
+def _fake_inventories(monkeypatch):
+    monkeypatch.setattr(log_module, 'list_schools', lambda: ['default-school', 'abc'])
+    monkeypatch.setattr(log_module, 'Devices', FakeDevices)
+
+
 # --- check_audit_level -----------------------------------------------------
 
 def test_check_audit_level_true_when_auth_audit_high(monkeypatch):
@@ -106,6 +127,14 @@ def test_parse_log_content_filters_by_pattern_and_dedupes():
 def test_parse_log_content_skips_machine_accounts():
     logs = parse_log_content([MACHINE_ACCOUNT_LINE], "became")
     assert logs == []
+
+
+def test_parse_log_content_skips_administrator_any_case():
+    lines = [
+        KERBEROS_OK_LINE.replace("[ga@", "[administrator@").replace("\\[ga]", "\\[administrator]"),
+        KERBEROS_OK_LINE.replace("[ga@", "[Administrator@").replace("\\[ga]", "\\[Administrator]"),
+    ]
+    assert parse_log_content(lines, "became") == []
 
 
 def test_parse_log_content_decodes_bytes_lines():
@@ -186,3 +215,28 @@ def test_last_login_includes_gz_files_only_when_requested(tmp_path, monkeypatch)
     logs = last_login("became", include_gz=True)
     assert len(logs) == 1
     assert logs[0]['datetime'] == datetime(2026, 1, 1, 0, 0, 0)
+
+
+# --- hostname resolution -----------------------------------------------------
+
+def test_last_login_resolves_hostname_from_ip(tmp_path, monkeypatch):
+    monkeypatch.setattr(log_module, 'LOG_LEVEL', {'auth_audit': 3})
+    _fake_inventories(monkeypatch)
+
+    current_log = tmp_path / 'log.samba'
+    old_log = tmp_path / 'log.samba.1'
+    other_school_line = KERBEROS_OK_LINE.replace(
+        "10.0.0.1:52256", "10.0.1.1:52256"
+    ).replace("22 Jul 2026 15:42:08", "21 Jul 2026 15:42:08")
+    unknown_ip_line = KERBEROS_OK_LINE.replace(
+        "10.0.0.1:52256", "10.0.0.99:52256"
+    ).replace("22 Jul 2026 15:42:08", "20 Jul 2026 15:42:08")
+    _write(current_log, "\n".join([KERBEROS_OK_LINE, other_school_line, unknown_ip_line]) + "\n")
+    _write(old_log, "")
+
+    monkeypatch.setattr(log_module, 'SAMBA_LOG', str(current_log))
+    monkeypatch.setattr(log_module, 'SAMBA_LOG_OLD', str(old_log))
+
+    logs = last_login("became")
+
+    assert [l['hostname'] for l in logs] == ['pc01', 'abc-pc01', None]

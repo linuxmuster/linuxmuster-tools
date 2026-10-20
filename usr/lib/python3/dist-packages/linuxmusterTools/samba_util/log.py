@@ -5,6 +5,7 @@ import logging
 from datetime import datetime
 
 from ..samba_util import SAMBA_REALM, LOG_LEVEL
+from ..devices import Devices, list_schools
 
 
 logger = logging.getLogger(__name__)
@@ -45,10 +46,11 @@ def parse_log_content(content, pattern):
 
         if pattern in line:
             data = format_log_data(line)
-            # Datetime of logging is cut to the second
-            # By login to a linux client, a log entry can occur many times
-            # in a second, so we ignore duplicates
-            if data and not data['user'].endswith("$") and not data in logs:
+            # Ignore machine accounts, duplicates and administrator
+            if (data
+                and not data['user'].endswith("$")
+                and data['user'].lower() != 'administrator'
+                and not data in logs):
                 logs.append(data)
 
     return logs
@@ -65,5 +67,14 @@ def last_login(pattern, include_gz=False):
             for log_file in glob.glob('/var/log/samba/log.samba*gz'):
                 with gzip.open(log_file, 'rb') as f:
                     logs.extend(parse_log_content(f.readlines(), pattern))
+
+        hostnames = {}
+        for school in list_schools():
+            devicesmgr = Devices(school=school)
+            for device in devicesmgr.devices:
+                hostnames[device['ip']] = f"{devicesmgr.hostname_prefix}{device['hostname']}"
+
+        for entry in logs:
+            entry['hostname'] = hostnames.get(entry['ip'])
 
     return sorted(logs, key=lambda d: d["datetime"], reverse=True)

@@ -115,8 +115,10 @@ Not re-exported from `samba_util/__init__.py`; import it directly from the submo
 ```python
 from linuxmusterTools.samba_util import log
 
-log.last_login('jdupont')             # sorted list of {'user', 'datetime', 'ip'}, most recent first
+log.last_login('jdupont')             # sorted list of {'user', 'datetime', 'ip', 'hostname'}, most recent first
 log.last_login('jdupont', include_gz=True)   # also scan rotated, gzipped logs
 ```
+
+`hostname` is resolved from the ip through the `devices.csv` of all schools (prefixed with `<school>-` for a secondary school), and is `None` for an ip not found there. The log only holds the ip of the client, so pass an ip as pattern to get the logins on a given computer. Machine accounts and the `administrator` account, used by the server-side tools, are left out.
 
 Requires Samba's `auth_audit` (or `general`) log level set to at least `3` in `smb.conf` — `check_audit_level()` returns `False` and logs an error otherwise.
