@@ -11,7 +11,6 @@ Müller;Holger;my Gymnasium;ST;ldap;muellho;Klasse:teachers;
 """
 
 
-from linuxmusterTools.common import lcolor
 from linuxmusterTools.ldapconnector import LMNTeachers, LMNStudents
 
 content = "surname;firstname;branchcode;categorycode;auth_method;userid;patron_attributes;\n"
