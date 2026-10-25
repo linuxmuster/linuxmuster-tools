@@ -1,7 +1,5 @@
 import os
-import re
 import time
-import logging
 import filecmp
 from pathlib import Path
 import hashlib
@@ -9,6 +7,7 @@ from glob import glob
 from datetime import datetime, timezone
 
 from .models import *
+from .boot_logs import _get_image_status_entries, _get_os_starts
 from .grub import GRUB_DIR_DEFAULT
 from ..devices import Devices
 from ..lmnfile import LMNFile
@@ -450,47 +449,6 @@ class LinboConfigManager:
 ## The following functions need to be rewritten
 ## Still used in lmncli
 
-_IMAGE_STATUS_PATTERN = re.compile(r'^(\d{12})\s+(\w+):\s+(\S+)(?:\s+"?(\d+)"?)?')
-
-def _parse_image_status_file(statusfile):
-    """
-    Parse a ``*_image.status`` file as written by linuxmuster-linbo7's
-    shell_functions log_image_status(), e.g.:
-        202603241142 applied: win11_pro_edu.qcow2 "202601271107"
-        202601271107 created: win11_pro_edu.qcow2 202601271107
-
-    The trailing image timestamp is quoted on "applied" lines and bare on
-    "created" ones: linbo_sync reads it back from the image .info file with
-    getinfo(), which returns the raw right-hand side of timestamp="...",
-    quotes included, while linbo_mkinfo passes date(1) output directly.
-    Both forms are accepted.
-
-    The file is overwritten (not appended) on every sync/creation, so it
-    normally holds a single line, but every matching line is returned, in
-    file order, to stay tolerant of older or hand-edited multi-line files.
-
-    :param statusfile: Path to the ``*_image.status`` file
-    :type statusfile: string
-    :return: List of {timestamp, action, image, image_timestamp}
-    :rtype: list of dict
-    """
-
-    if not os.path.isfile(statusfile) or os.stat(statusfile).st_size == 0:
-        return []
-
-    entries = []
-    with open(statusfile, 'r', encoding='utf-8', errors='replace') as f:
-        for line in f:
-            m = _IMAGE_STATUS_PATTERN.match(line.strip())
-            if m:
-                entries.append({
-                    'timestamp': m.group(1),
-                    'action': m.group(2),
-                    'image': m.group(3),
-                    'image_timestamp': m.group(4),
-                })
-    return entries
-
 def last_sync(workstation, image, timestamp=True):
     """
     Get the last synchronisation of a workstation for a given image.
@@ -510,7 +468,7 @@ def last_sync(workstation, image, timestamp=True):
                       entry when False, to also get the version of the image
                       which was applied.
     :type timestamp: bool
-    :return: Epoch, or the entry as returned by _parse_image_status_file();
+    :return: Epoch, or the entry as returned by _get_image_status_entries();
              False in both cases if the host never synced that image
     :rtype: float, dict or bool
     """
@@ -529,7 +487,7 @@ def last_sync(workstation, image, timestamp=True):
 
         matches.extend(
             entry
-            for entry in _parse_image_status_file(os.path.join(LINBO_LOG_PATH, filename))
+            for entry in _get_image_status_entries(os.path.join(LINBO_LOG_PATH, filename))
             if entry['image'] in (image, diff_image)
         )
 
@@ -542,6 +500,39 @@ def last_sync(workstation, image, timestamp=True):
         return last
 
     return linbo_timestamp_to_epoch(last['timestamp'])
+
+def last_start(workstation):
+    """
+    Get the last OS start of a workstation, read from its <hostname>_linbo.log.
+
+    :param workstation: Workstation
+    :type workstation: string
+    :return: {'timestamp': epoch, 'os': Name of the OS in start.conf, or None
+             if not logged}, or False if the host never started an OS
+    :rtype: dict or bool
+    """
+
+
+    if not os.path.isdir(LINBO_LOG_PATH):
+        return False
+
+    logfile = f'{workstation}_linbo.log'.lower()
+    filenames = os.listdir(LINBO_LOG_PATH)
+
+    starts = []
+    for suffix in ('', '.1.gz'):
+        for filename in filenames:
+            if filename.lower() == logfile + suffix:
+                starts.extend(_get_os_starts(os.path.join(LINBO_LOG_PATH, filename)))
+
+        if starts:
+            break
+    else:
+        return False
+
+    last = max(starts, key=lambda entry: entry['timestamp'])
+
+    return {'timestamp': linbo_timestamp_to_epoch(last['timestamp']), 'os': last['os']}
 
 def get_host_image_status(log_dir=None):
     """
@@ -575,7 +566,7 @@ def get_host_image_status(log_dir=None):
         hostname = filename.removesuffix('_image.status')
 
         try:
-            entries = _parse_image_status_file(base / filename)
+            entries = _get_image_status_entries(base / filename)
         except OSError as e:
             # One unreadable file must not cost the whole report, but it is
             # reported: a host silently missing from the result would look
@@ -713,13 +704,16 @@ def list_workstations(school='default-school', groups=[]):
                 devices_dict[device['group']]['hosts'].append(device)
     return group_os(devices_dict)
 
-def last_sync_all(workstations):
+def last_sync_all(workstations, laststart=False):
     """
     Add last synchronisation informations into the workstations dict,
     and status attribute to use as class for bootstrap.
 
     :param workstations: Dict of workstations set in list_workstations().
     :type workstations: dict
+    :param laststart: Also add the last OS start of each host as lastStart,
+                       read from its whole linbo.log
+    :type laststart: bool
     :return: Completed dict of workstations
     :rtype: dict
     """
@@ -746,3 +740,7 @@ def last_sync_all(workstations):
                     else:
                         tmpDict['status'] = "success"
                     host['image'].append(tmpDict)
+
+                if laststart:
+                    start = last_start(host['hostname'])
+                    host['lastStart'] = {'date': start['timestamp'], 'os': start['os']} if start else "Never"

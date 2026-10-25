@@ -261,7 +261,8 @@ in `/var/log/linuxmuster/linbo/<hostname>_image.status` (written by
 | `last_sync(workstation, image, timestamp=True)` | Epoch of the most recent entry for that image, or `False` if the host never synced it. With `timestamp=False`, the whole `{timestamp, action, image, image_timestamp}` entry is returned instead, to also get the version of the image which was applied. The image name is matched exactly, along with its `.qdiff` variant: `last_sync('client1', 'jammy.qcow2')` does *not* report a sync of `data-jammy.qcow2`. The file name is matched **case insensitively**, see below. |
 | `get_host_image_status(log_dir=None)` | Last logged status of **every** host found in the log directory, without knowing beforehand which image a host is supposed to run. Returns `{}` if the directory is missing. |
 | `list_workstations(school='default-school', groups=[])` | `{group: {'grp', 'hosts', 'os', ...}}` of the PXE-enabled hosts whose group has a `start.conf`. Groups, and hosts inside each group, come in natural order (`grp2` before `grp10`, `r1-pc5` before `r1-pc10`, see `common.sort_naturally`). A missing `SyncEnabled`, `NewEnabled` or `StartEnabled` counts as `yes`, as LINBO reads it. |
-| `last_sync_all(workstations)` | Enriches a `list_workstations()` dict: each host gets an `image` list of `{date, image, imageVersion, status}`. `imageVersion` is the creation timestamp of the image the host actually runs (`None` if it never synced it), not the date of the sync. `status` is the bootstrap class `success`/`warning`/`danger` (fresher than 7 days, older than 7 days, older than 30 days or never). |
+| `last_sync_all(workstations, laststart=False)` | Enriches a `list_workstations()` dict: each host gets an `image` list of `{date, image, imageVersion, status}`. `imageVersion` is the creation timestamp of the image the host actually runs (`None` if it never synced it), not the date of the sync. `status` is the bootstrap class `success`/`warning`/`danger` (fresher than 7 days, older than 7 days, older than 30 days or never). With `laststart=True`, each host also gets `lastStart`, `{date, os}` or `"Never"`, see `last_start()` below. |
+| `last_start(workstation)` | Last OS start of a host, read from its `<hostname>_linbo.log`: `{timestamp, os}` (server-local epoch, `Name` of the OS in `start.conf`), or `False` if the host never started an OS. `os` is `None` if no name was logged before that start. |
 
 ```python
 >>> from linuxmusterTools.linbo import last_sync, get_host_image_status
@@ -294,6 +295,22 @@ purpose: `last_sync()` propagates the `OSError`, because answering "Never"
 for a file it could not read would be indistinguishable from a host that
 really never synced, while `get_host_image_status()` logs a warning and skips
 that host rather than losing the whole report.
+
+`last_start()` reads the `### YYYYMMDD-HHMMSS linbo_start ... ###` lines of
+`<hostname>_linbo.log`, with the OS name logged just before them by
+`linbo_wrapper` (`Starting <Name> ...`) or by the GUI
+(`[+++ Chapter +++] Starting <Name>`). The name is the one at the time of the
+start, even if the OS was renamed in `start.conf` since. linbo_start logs its
+call before the kexec: an entry means that the start was launched, not that the
+OS booted. Clients in localmode never upload their log. When the current log
+holds no start, typically just after a rotation, the last rotated log
+(`.1.gz`) is read instead; older ones are not.
+
+```python
+>>> from linuxmusterTools.linbo import last_start
+>>> last_start('client1')
+{'timestamp': 1792484520.0, 'os': 'Ubuntu KDE'}
+```
 
 ---
 

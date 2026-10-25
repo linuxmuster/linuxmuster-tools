@@ -1,8 +1,9 @@
 """
-Tests for list_workstations(), group_os(), last_sync_all() and get_host_image_status() in
+Tests for list_workstations(), group_os(), last_sync_all(), get_host_image_status() and last_start() in
 linuxmusterTools.linbo.config.
 """
 
+import gzip
 import logging
 import time
 from datetime import datetime, timezone
@@ -11,7 +12,7 @@ import pytest
 
 import linuxmusterTools.linbo.config as config_module
 from linuxmusterTools.common.timestamps import linbo_timestamp_to_epoch
-from linuxmusterTools.linbo.config import group_os, last_sync, last_sync_all, get_host_image_status, list_workstations
+from linuxmusterTools.linbo.config import group_os, last_sync, last_sync_all, get_host_image_status, last_start, list_workstations
 
 
 @pytest.fixture
@@ -230,7 +231,7 @@ def test_last_sync_all_reports_the_applied_image_version(tmp_path):
 
 # ── last_sync ────────────────────────────────────────────────────────────
 # last_sync() and get_host_image_status() share the same line parser
-# (_parse_image_status_file); these tests pin last_sync()'s own contract:
+# (_get_image_status_entries); these tests pin last_sync()'s own contract:
 # matching by exact image field (not by substring of the whole line) and
 # accepting the .qdiff variant of the requested base image.
 
@@ -396,3 +397,117 @@ def test_get_host_image_status_reports_an_unreadable_file_and_keeps_the_others(t
     # result is indistinguishable from a host which never synced.
     assert 'pc006' not in status
     assert 'pc006' in caplog.text
+
+
+# ── last_start ───────────────────────────────────────────────────────
+# Both formats of linbo_start, as found in real logs: the OS number from
+# linbo_wrapper (linbo-remote) and the partitions from the GUI.
+
+LINBO_LOG = """\
+Starting time sync ...
+### 20261020-095445 linbo_wrapper start:1 ###
+Command   : start
+OS number  : 1
+Starting Ubuntu KDE ...
+### 20261020-095445 linbo_start 1 ###
+[Info] Linbo state changed to: 3
+[+++ Chapter +++] Starting Ubuntu Mate
+[Info] Linbo state changed to: 4
+[Info] Executing: linbo_cmd start /dev/sda3 /dev/sda3 /boot/vmlinuz /boot/initrd.img ro splash /dev/sda4
+### 20261020-101411 linbo_start /dev/sda3 /dev/sda3 /boot/vmlinuz /boot/initrd.img ro splash /dev/sda4 ###
+"""
+
+
+def test_get_last_start_no_log_returns_false(tmp_path):
+    assert last_start('pc404') is False
+
+
+def test_get_last_start_without_start_returns_false(tmp_path):
+    (tmp_path / 'var_log_linbo' / 'pc001_linbo.log').write_text('Starting time sync ...\n')
+
+    assert last_start('pc001') is False
+
+
+def test_get_last_start_reads_gui_format(tmp_path):
+    (tmp_path / 'var_log_linbo' / 'pc001_linbo.log').write_text(LINBO_LOG)
+
+    assert last_start('pc001') == {
+        'timestamp': linbo_timestamp_to_epoch('202610201014'),
+        'os': 'Ubuntu Mate',
+    }
+
+
+def test_get_last_start_reads_wrapper_format(tmp_path):
+    (tmp_path / 'var_log_linbo' / 'pc001_linbo.log').write_text(LINBO_LOG.split('[Info] Linbo state')[0])
+
+    assert last_start('pc001') == {
+        'timestamp': linbo_timestamp_to_epoch('202610200954'),
+        'os': 'Ubuntu KDE',
+    }
+
+
+def test_get_last_start_does_not_reuse_the_name_of_a_previous_start(tmp_path):
+    (tmp_path / 'var_log_linbo' / 'pc001_linbo.log').write_text(
+        'Starting Ubuntu KDE ...\n'
+        '### 20261020-095445 linbo_start 1 ###\n'
+        '### 20261020-101411 linbo_start 2 ###\n'
+    )
+
+    assert last_start('pc001')['os'] is None
+
+
+def test_get_last_start_matches_log_file_case_insensitively(tmp_path):
+    (tmp_path / 'var_log_linbo' / 'PC001_linbo.log').write_text(LINBO_LOG)
+
+    assert last_start('pc001')['os'] == 'Ubuntu Mate'
+
+
+def test_last_start_falls_back_to_the_last_rotated_log(tmp_path):
+    # Just rotated: the current log holds no start yet.
+    (tmp_path / 'var_log_linbo' / 'pc001_linbo.log').write_text('Starting time sync ...\n')
+    with gzip.open(tmp_path / 'var_log_linbo' / 'pc001_linbo.log.1.gz', 'wt') as f:
+        f.write(LINBO_LOG)
+
+    assert last_start('pc001')['os'] == 'Ubuntu Mate'
+
+
+def test_last_start_prefers_the_current_log(tmp_path):
+    (tmp_path / 'var_log_linbo' / 'pc001_linbo.log').write_text(
+        'Starting Windows 10 ...\n'
+        '### 20261021-080000 linbo_start 2 ###\n'
+    )
+    with gzip.open(tmp_path / 'var_log_linbo' / 'pc001_linbo.log.1.gz', 'wt') as f:
+        f.write(LINBO_LOG)
+
+    assert last_start('pc001')['os'] == 'Windows 10'
+
+
+def test_last_start_does_not_read_older_rotated_logs(tmp_path):
+    with gzip.open(tmp_path / 'var_log_linbo' / 'pc001_linbo.log.2.gz', 'wt') as f:
+        f.write(LINBO_LOG)
+
+    assert last_start('pc001') is False
+
+
+def test_last_sync_all_without_last_start_option(tmp_path):
+    write_start_conf(tmp_path)
+    workstations = {'grp1': {'hosts': [{'hostname': 'pc001'}]}}
+    group_os(workstations)
+    (tmp_path / 'var_log_linbo' / 'pc001_linbo.log').write_text(LINBO_LOG)
+
+    last_sync_all(workstations)
+
+    assert 'lastStart' not in workstations['grp1']['hosts'][0]
+
+
+def test_last_sync_all_adds_last_start(tmp_path):
+    write_start_conf(tmp_path)
+    workstations = {'grp1': {'hosts': [{'hostname': 'pc001'}, {'hostname': 'pc002'}]}}
+    group_os(workstations)
+    (tmp_path / 'var_log_linbo' / 'pc001_linbo.log').write_text(LINBO_LOG)
+
+    last_sync_all(workstations, laststart=True)
+
+    pc001, pc002 = workstations['grp1']['hosts']
+    assert pc001['lastStart'] == {'date': linbo_timestamp_to_epoch('202610201014'), 'os': 'Ubuntu Mate'}
+    assert pc002['lastStart'] == 'Never'
