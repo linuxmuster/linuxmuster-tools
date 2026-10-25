@@ -54,6 +54,7 @@ Prefer `validate()` wherever the name is about to build a filesystem path. A cal
 | `session` | Session name |
 | `linbo_conf` | LINBO group name (`start.conf.<group>`): letters, digits, `_` and `-`, as accepted by `sophomorix-device` |
 | `linbo_image` | LINBO image name |
+| `linbo_image_base` | LINBO image name without extension, as given to `image_name` of `linbo-remote`: letters, digits, `_` and `-` |
 | `login` | User login |
 | `comment` | `sophomorixComment` field |
 | `alphanum` | Generic config name |
