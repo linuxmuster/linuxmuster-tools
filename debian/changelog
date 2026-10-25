@@ -1,3 +1,50 @@
+linuxmuster-tools7 (7.4.20) lmn74; urgency=medium
+
+  * [security] [linbo] get_onboot_command() never returns the
+    "linbo:<password>" entry written by linbo-remote -p before an
+    upload: it is the LINBO rsync password in clear. See
+    linuxmuster-api#51, reported by @TomlDev.
+  * [linbo] Deleting an image removes its whole directory, backups,
+    differential image and any file added by hand included, instead of
+    its known files only, which left the directory behind. An image
+    whose .info is missing or incomplete can be deleted too. The path is
+    checked to be a directory below /srv/linbo before removal. Fix #39,
+    reported by @TomlDev.
+  * [linbo] New last_start(workstation), the last OS start of a client
+    and the name of the OS, read from its <hostname>_linbo.log, or from
+    the last rotated .1.gz if the current log holds none.
+    last_sync_all() gets a laststart parameter filling lastStart for
+    each host.
+  * [linbo] New LinboBootLogs.latest_remote_log(), the log of the last
+    linbo-remote run of a host: linuxmuster-linbo7 7.4.18 writes one log
+    per run, the former <hostname>.linbo-remote is still read as a
+    fallback.
+  * [linbo] LinboRemote accepts the linbo-remote command
+    image_name:<name> of linuxmuster-linbo7 7.4.21, creating or uploading
+    an image under a new name. It refuses it, as linbo-remote does,
+    without a following create_image/upload_image and with a qdiff
+    command. Fix #46, reported by @HappyBasher.
+  * [linbo] A missing SyncEnabled, NewEnabled or StartEnabled in a
+    start.conf is read as yes, as LINBO does, instead of raising a
+    KeyError.
+  * [devices] The validator reports a LINBO group containing '__'
+    (group.reserved_separator): LINBO names the group of a non default
+    school <school>__<group>.
+  * [samba_util] last_login() gives the hostname of each login, resolved
+    from the devices.csv of all schools, and leaves out the
+    administrator account.
+  * [lmnconfig] New load_shares(), reading again the shares and their
+    DFS targets, so far only read at import. get_user_quotas() calls it
+    once when a share is not found, e.g. after it was moved to a
+    fileserver while linuxmuster-api was running.
+  * [quotas] list_user_files() no longer matches a directory whose name
+    only starts with the one looked for.
+  * [print] LatexRenderer raises UnknownTemplateTypeError for a template
+    type it does not know, instead of failing later on an undefined
+    output file.
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Sun, 25 Oct 2026 22:45:00 +0100
+
 linuxmuster-tools7 (7.4.19) lmn74; urgency=medium
 
   * [security] [quotas] get_user_quotas() passes the administrator
