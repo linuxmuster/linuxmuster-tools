@@ -55,6 +55,7 @@ class LinboRemote:
         'upload_image': {'nr': True, 'msg': False},
         'create_qdiff': {'nr': True, 'msg': True},
         'upload_qdiff': {'nr': True, 'msg': False},
+        'image_name': {'nr': True, 'msg': False},
         'reboot': {'nr': False, 'msg': False},
         'halt': {'nr': False, 'msg': False},
     }
@@ -192,6 +193,10 @@ class LinboRemote:
         if not self.cmd:
             raise LinboRemoteParameterError(f'cmd must be given.')
 
+        image_name = None
+        has_qdiff = False
+        image_name_used = False
+
         for cmd in self.cmd.split(','):
             args = cmd.split(':')
             if len(args) == 3:
@@ -218,8 +223,26 @@ class LinboRemote:
             if name == 'initcache' and nr is not None and nr not in self.SUPPORTED_COMMANDS['initcache']['type']:
                 raise LinboRemoteParameterError(f'Wrong type {nr} for the command initcache.')
 
+            if name == 'image_name':
+                if not nr:
+                    raise LinboRemoteParameterError('Command image_name needs a name.')
+                if not name_checker.check_linbo_image_base_name(nr):
+                    raise LinboRemoteParameterError(f'{nr} is not a valid image name, allowed are letters, digits, "_" and "-".')
+                image_name = nr
+                continue
+
+            has_qdiff = has_qdiff or name in ('create_qdiff', 'upload_qdiff')
+            image_name_used = image_name_used or (image_name is not None and name in ('create_image', 'upload_image'))
+
             if nr and name != 'initcache':
                 self._check_nr(name, nr)
+
+        # Same refusals as linbo-remote, to get a clear error before running it
+        if image_name:
+            if has_qdiff:
+                raise LinboRemoteParameterError('Differential images cannot be created or uploaded under a new name.')
+            if not image_name_used:
+                raise LinboRemoteParameterError('image_name needs a following create_image or upload_image command.')
 
     def build(self):
         self._check_args()

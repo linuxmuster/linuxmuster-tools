@@ -198,6 +198,41 @@ def test_check_nr_rejects_when_group_cannot_be_resolved():
             remote.build()
 
 
+# ── LinboRemote image_name (linuxmuster-linbo7 7.4.21) ──────────────────
+
+
+@pytest.mark.parametrize("cmd", [
+    "image_name:noble,create_image:1,upload_image:1",
+    "image_name:noble_2-test,create_image:1:new kernel",
+    "sync:1,image_name:noble,upload_image:2",
+])
+def test_check_cmd_accepts_image_name(cmd):
+    remote = LinboRemote(group='win10', cmd=cmd)
+
+    with patch('linuxmusterTools.linbo.linbo_sync.read_config', return_value=OS_CONFIG):
+        remote._check_cmd()
+
+
+@pytest.mark.parametrize("cmd", [
+    "image_name,create_image:1",                         # no name
+    "image_name:,create_image:1",                        # empty name
+    "image_name:noble.qcow2,create_image:1",             # extension
+    "image_name:../noble,create_image:1",                # path
+    "image_name:1:noble,create_image:1",                 # field too many
+    "image_name:noble",                                  # no image command
+    "create_image:1,image_name:noble",                   # image command before
+    "image_name:noble,sync:1",                           # no image command
+    "image_name:noble,create_image:1,create_qdiff:1",    # qdiff
+    "upload_qdiff:1,image_name:noble,upload_image:1",    # qdiff before
+])
+def test_check_cmd_rejects_invalid_image_name(cmd):
+    remote = LinboRemote(group='win10', cmd=cmd)
+
+    with patch('linuxmusterTools.linbo.linbo_sync.read_config', return_value=OS_CONFIG):
+        with pytest.raises(LinboRemoteParameterError):
+            remote._check_cmd()
+
+
 # ── LinboRemote.run() ────────────────────────────────────────────────────
 
 

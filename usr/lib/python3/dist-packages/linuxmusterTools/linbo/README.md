@@ -170,6 +170,12 @@ wrong command.
 {'status': 0, 'msg': 'Started with PID 1234. Log see /var/log/linuxmuster/linbo/pc001_linbo-remote_20261011101500.log.\n'}
 ```
 
+Since linuxmuster-linbo7 7.4.21, `image_name:<name>` makes the `create_image` and `upload_image` commands following it work on `<name>.qcow2` instead of the image defined in `start.conf`. The name holds letters, digits, `_` and `-` only, without extension. As `linbo-remote` does, `LinboRemote` refuses it without a following `create_image`/`upload_image`, and in a chain with `create_qdiff` or `upload_qdiff`: a differential image cannot get a new name.
+
+```python
+>>> remote = LinboRemote(clients=['pc001'], cmd='image_name:noble,create_image:1,upload_image:1')
+```
+
 Since linuxmuster-linbo7 7.4.18, every run writes its own log, `<hostname>_linbo-remote_<YYYYmmddHHMMSS>.log`, where older versions overwrote a single `<hostname>.linbo-remote`. `LinboBootLogs().latest_remote_log()` gives the name of a host's last one, ordered on the timestamp of its name, falling back on the old name; a running session writes into it live. It returns `None` if the host has no linbo-remote log, and raises `ValueError` on an unsafe hostname.
 
 ```python
