@@ -4,7 +4,9 @@ LINBO Boot Logs — read client boot logs from /var/log/linuxmuster/linbo/.
 Provides safe file listing, reading, and deletion with path traversal protection.
 """
 
+import gzip
 import logging
+import os
 import re
 from datetime import datetime, timezone
 from pathlib import Path
@@ -152,3 +154,88 @@ class LinboBootLogs:
 
         filepath.unlink()
         return True
+
+
+_IMAGE_STATUS_PATTERN = re.compile(r'^(\d{12})\s+(\w+):\s+(\S+)(?:\s+"?(\d+)"?)?')
+
+def _get_image_status_entries(statusfile):
+    """
+    Parse a ``*_image.status`` file as written by linuxmuster-linbo7's
+    shell_functions log_image_status(), e.g.:
+        202603241142 applied: win11_pro_edu.qcow2 "202601271107"
+        202601271107 created: win11_pro_edu.qcow2 202601271107
+
+    The trailing image timestamp is quoted on "applied" lines and bare on
+    "created" ones: linbo_sync reads it back from the image .info file with
+    getinfo(), which returns the raw right-hand side of timestamp="...",
+    quotes included, while linbo_mkinfo passes date(1) output directly.
+    Both forms are accepted.
+
+    The file is overwritten (not appended) on every sync/creation, so it
+    normally holds a single line, but every matching line is returned, in
+    file order, to stay tolerant of older or hand-edited multi-line files.
+
+    :param statusfile: Path to the ``*_image.status`` file
+    :type statusfile: string
+    :return: List of {timestamp, action, image, image_timestamp}
+    :rtype: list of dict
+    """
+
+    if not os.path.isfile(statusfile) or os.stat(statusfile).st_size == 0:
+        return []
+
+    entries = []
+    with open(statusfile, 'r', encoding='utf-8', errors='replace') as f:
+        for line in f:
+            m = _IMAGE_STATUS_PATTERN.match(line.strip())
+            if m:
+                entries.append({
+                    'timestamp': m.group(1),
+                    'action': m.group(2),
+                    'image': m.group(3),
+                    'image_timestamp': m.group(4),
+                })
+    return entries
+
+_LINBO_START_PATTERN = re.compile(r'^### (\d{8})-(\d{4})\d{2} linbo_start ')
+# The name of the OS is logged just before linbo_start, by linbo_wrapper
+# ("Starting <Name> ...") or by the GUI ("[+++ Chapter +++] Starting <Name>").
+_OS_NAME_PATTERNS = (
+    re.compile(r'^Starting (.+) \.\.\.$'),
+    re.compile(r'^\[\+\+\+ Chapter \+\+\+\] Starting (.+)$'),
+)
+
+def _get_os_starts(logfile):
+    """
+    Parse the OS starts of a <hostname>_linbo.log, plain or gzipped by
+    logrotate.
+
+    :param logfile: Path of the log file
+    :type logfile: string
+    :return: List of {'timestamp': YYYYMMDDHHMI, 'os': name or None}
+    :rtype: list of dict
+    """
+
+
+    opener = gzip.open if logfile.endswith('.gz') else open
+
+    starts = []
+    name = None
+    with opener(logfile, 'rt', encoding='utf-8', errors='replace') as f:
+        for line in f:
+            line = line.strip()
+            m = _LINBO_START_PATTERN.match(line)
+            if m:
+                # linbo_start writes seconds, linbo_timestamp_to_epoch()
+                # reads the YYYYMMDDHHMI of the image status files.
+                starts.append({'timestamp': m.group(1) + m.group(2), 'os': name})
+                name = None
+                continue
+
+            for pattern in _OS_NAME_PATTERNS:
+                m = pattern.match(line)
+                if m:
+                    name = m.group(1)
+                    break
+
+    return starts
