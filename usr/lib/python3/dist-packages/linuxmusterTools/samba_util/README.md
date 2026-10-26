@@ -99,9 +99,13 @@ dns.delete('test', 'A', '10.0.1.2')
 from linuxmusterTools.samba_util import smbstatus
 
 conn = smbstatus.SMBConnections()
+conn.connections
+# {'jdupont': [SMBConnection(username='DOMAIN\\jdupont', ip4='10.0.0.100:33390', machine='10.0.0.100', hostname='pc01',
+#                             room='r101', auth_time='2026-10-26T19:27:40.168787+01:00', ...),
+#              SMBConnection(username='DOMAIN\\jdupont', ip4='10.0.0.102:56725', machine='10.0.0.102', hostname='pc03',
+#                             room='r101', auth_time='2026-10-26T19:02:43.717022+01:00', ...)]}
 conn.users
-# {'jdupont': SMBConnection(username='DOMAIN\\jdupont', ip4='10.0.0.102:50682', machine='10.0.0.102',
-#                            hostname='pc01', room='r101', protocol='SMB3_11', signing='AES-128-GMAC', ...)}
+# {'jdupont': SMBConnection(machine='10.0.0.100', hostname='pc01', room='r101', ...)}
 conn.get_machines()
 conn.machines
 
@@ -109,7 +113,9 @@ room, users = conn.get_room_users('jdupont')
 # ('r101', {'student01': SMBConnection(machine='10.0.0.103', hostname='pc02', room='r101', ...)})
 ```
 
-`users` only holds the connections of the clients, hostname and room being read from the `devices.csv` of the school (`SMBConnections('abc')` for another school, whose hostnames are prefixed like their computer account, e.g. `abc-pc01`): the connections opened by the server itself, e.g. by the Webui, are left out. `get_room_users()` gives the room of the client where a user is connected and the other users of this room, or `('', {})` if the user is not connected to a known client. `smbstatus` only works as root.
+The sessions are read from `smbstatus -b -j`. `connections` holds all connections of each user, one per client (a client opens several sessions, the most recent one is kept), and `users` only the most recent connection of each user, by `auth_time`: a session closed on a Windows client can stay open on the server until its Kerberos ticket expires, so the last login is the most reliable guess. `get_room_users()` relies on `users`.
+
+Only the connections of the clients are kept, hostname and room being read from the `devices.csv` of the school (`SMBConnections('abc')` for another school, whose hostnames are prefixed like their computer account, e.g. `abc-pc01`): the connections opened by the server itself, e.g. by the Webui, are left out. `get_room_users()` gives the room of the client where a user is connected and the other users of this room, or `('', {})` if the user is not connected to a known client. `rawline` is not filled anymore, `smbstatus -j` giving no raw line. `smbstatus` only works as root.
 
 ---
 

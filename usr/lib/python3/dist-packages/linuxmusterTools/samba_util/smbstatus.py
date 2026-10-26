@@ -1,6 +1,7 @@
+import json
 import subprocess
-import re
 from dataclasses import dataclass, field, InitVar, asdict
+from datetime import datetime
 from ..lmnfile import LMNFile
 from ..lmnconfig.server import SERVER_IP
 
@@ -21,37 +22,10 @@ class SMBConnection:
     username: str
     version: str
     rawline: str = ''
+    auth_time: str = ''
 
     def as_dict(self):
         return asdict(self)
-
-users_regex = re.compile(
-    r"(?P<pid>[0-9]+)\s+"
-    r"(?P<username>\S+)\s+"
-    r"users\s+"
-    r"(?P<machine>\S+)\s+"
-    r"\(((?P<ip>[0-9a-fA-F.:]+)|"
-    r"ipv4:(?P<ip4>[0-9a-fA-F.:]+)|"
-    r"ipv6:(?P<ip6>[0-9a-fA-F:]+))\)\s+"
-    r"(?P<protocol>\S+)\s+"
-    r"(?P<version>.*)\s+"
-    r"(?P<encryption>\S+)\s+"
-    r"(?P<signing>\S+)\s*"
-)
-
-machine_regex = re.compile(
-    r"(?P<pid>[0-9]+)\s+"
-    r"(?P<username>\S+)\s+"
-    r"(?P<group>[a-zA-Z0-9\-._]+\\domain computers)\s+"
-    r"(?P<machine>\S+)\s+" 
-    r"\(((?P<ip>[0-9a-fA-F.:]+)|"
-    r"ipv4:(?P<ip4>[0-9a-fA-F.:]+)|"
-    r"ipv6:(?P<ip6>[0-9a-fA-F:]+))\)\s+"
-    r"(?P<protocol>\S+)\s+"
-    r"(?P<version>.*)\s+"
-    r"(?P<encryption>\S+)\s+"
-    r"(?P<signing>\S+)\s*"
-)
 
 class SMBConnections:
     def __init__(self, school='default-school'):
@@ -83,19 +57,89 @@ class SMBConnections:
                 }
         return devices
 
-    def get_users(self):
-        output = subprocess.getoutput('smbstatus -b').split('\n')
-        self.users = {}
+    @staticmethod
+    def _sessions():
+        """
+        Get the sessions listed by `smbstatus -b -j`.
 
-        for line in output:
-            match = users_regex.match(line)
-            if match:
-                data = match.groupdict()
-                user = data['username'].split('\\')[1]
-                data['hostname'] = self.hostnames.get(data['machine'], {'hostname': 'No hostname found'})['hostname']
-                data['room'] = self.hostnames.get(data['machine'], {'room': 'No room found'})['room']
-                if SERVER_IP != data['machine'] and f"{SERVER_IP}:" not in (data['ip4'] or ''):
-                    self.users[user] = SMBConnection(group='users', rawline=line, **data)
+        :return: all sessions, empty if smbstatus fails (e.g. not run as root)
+        :rtype: list of SMBConnection
+        """
+
+
+        output = subprocess.getoutput('smbstatus -b -j')
+        try:
+            sessions = json.loads(output).get('sessions', {})
+        except json.JSONDecodeError:
+            return []
+
+        connections = []
+        for session in sessions.values():
+            # e.g. 'ipv4:10.0.0.102:50682'
+            family, _, address = session['hostname'].partition(':')
+            connections.append(SMBConnection(
+                auth_time=session['auth_time'],
+                encryption=session['encryption']['cipher'],
+                group=session['groupname'],
+                hostname='No hostname found',
+                ip=None if family in ('ipv4', 'ipv6') else session['hostname'],
+                ip4=address if family == 'ipv4' else None,
+                ip6=address if family == 'ipv6' else None,
+                machine=session['remote_machine'],
+                pid=session['server_id']['pid'],
+                protocol=session['session_dialect'],
+                room='No room found',
+                signing=session['signing']['cipher'],
+                username=session['username'],
+                version='',
+            ))
+        return connections
+
+    @staticmethod
+    def _latest(connections):
+        """
+        Get the most recent samba connection opened on the server.
+        """
+
+
+        return max(connections, key=lambda c: datetime.fromisoformat(c.auth_time))
+
+    def get_users(self):
+        """
+        Get the connections of the users on the clients. A client opens
+        several sessions for a user, only the most recent one per ip is kept.
+
+        - self.connections: all connections of each user, one per ip
+        - self.users: the most recent connection of each user
+
+        The connections opened by the server itself, e.g. by the Webui, are
+        not taken into account.
+        """
+
+
+        connections = {}
+
+        for connection in self._sessions():
+            if connection.group.endswith('\\domain computers') or '\\' not in connection.username:
+                continue
+
+            if connection.machine == SERVER_IP or (connection.ip4 or '').startswith(f"{SERVER_IP}:"):
+                continue
+
+            user = connection.username.split('\\')[1]
+            device = self.hostnames.get(connection.machine, {})
+            connection.hostname = device.get('hostname', connection.hostname)
+            connection.room = device.get('room', connection.room)
+            connections.setdefault(user, {}).setdefault(connection.machine, []).append(connection)
+
+        self.connections = {
+            user: [self._latest(sessions) for sessions in by_ip.values()]
+            for user, by_ip in connections.items()
+        }
+        self.users = {
+            user: self._latest(user_connections)
+            for user, user_connections in self.connections.items()
+        }
 
     def get_room_users(self, username):
         """
@@ -122,15 +166,24 @@ class SMBConnections:
         return connection.room, users
 
     def get_machines(self):
-        output = subprocess.getoutput('smbstatus -b').split('\n')
+        """
+        Get the connections of the computer accounts, the most recent one for
+        each machine.
+        """
 
-        self.machines = {}
+        machines = {}
 
-        for line in output:
-            match = machine_regex.match(line)
-            if match:
-                data = match.groupdict()
-                machine = data['username'].split('\\')[1]
-                data['hostname'] = self.hostnames.get(machine, {'hostname': 'No hostname found'})['hostname']
-                data['room'] = self.hostnames.get(machine, {'room': 'No room found'})['room']
-                self.machines[machine] = SMBConnection(rawline=line, **data)
+        for connection in self._sessions():
+            if not connection.group.endswith('\\domain computers'):
+                continue
+
+            machine = connection.username.split('\\')[1]
+            device = self.hostnames.get(machine, {})
+            connection.hostname = device.get('hostname', connection.hostname)
+            connection.room = device.get('room', connection.room)
+            machines.setdefault(machine, []).append(connection)
+
+        self.machines = {
+            machine: self._latest(connections)
+            for machine, connections in machines.items()
+        }
