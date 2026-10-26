@@ -249,3 +249,71 @@ def test_get_machines_defaults_when_unknown(monkeypatch):
     machine = connections.machines['pc05$']
     assert machine.hostname == 'No hostname found'
     assert machine.room == 'No room found'
+
+
+# --- SMBConnections.get_room_users -----------------------------------------
+
+# Based on real `smbstatus -b` lines: a teacher is logged on pc01, and the
+# Ajenti worker of the teacher's Webui session keeps its own connection from the server.
+# This second connection comes later and was taken as the room of the teacher (#11518).
+ROOM_OUTPUT = (
+    "264465  DOMAIN\\teacher    users        10.0.0.102 (ipv4:10.0.0.102:50682)        SMB3_11           -                    AES-128-GMAC         \n"
+    "264466  DOMAIN\\pc01$ DOMAIN\\domain computers 10.0.0.102 (ipv4:10.0.0.102:50691)        SMB3_11           -                    AES-128-GMAC         \n"
+    "264470  DOMAIN\\s1    users        10.0.0.103 (ipv4:10.0.0.103:50710)        SMB3_11           -                    AES-128-GMAC         \n"
+    "264480  DOMAIN\\s2    users        10.0.0.120 (ipv4:10.0.0.120:50720)        SMB3_11           -                    AES-128-GMAC         \n"
+    "268253  DOMAIN\\teacher    users        10.0.0.1 (ipv4:10.0.0.1:51538)            SMB3_11           -                    AES-128-GMAC         \n"
+)
+
+ROOM_HOSTNAMES = {
+    '10.0.0.1': {'hostname': 'server', 'room': 'server'},
+    '10.0.0.102': {'hostname': 'pc01', 'room': 'r101'},
+    '10.0.0.103': {'hostname': 'pc02', 'room': 'r101'},
+    '10.0.0.120': {'hostname': 'r201-pc01', 'room': 'r201'},
+}
+
+
+def test_get_room_users_ignores_the_server_connection(monkeypatch):
+    connections = _connections_with_hostnames(ROOM_HOSTNAMES)
+    monkeypatch.setattr(smbstatus_module.subprocess, 'getoutput', lambda cmd: ROOM_OUTPUT)
+    connections.get_users()
+
+    room, users = connections.get_room_users('teacher')
+
+    assert room == 'r101'
+    assert list(users.keys()) == ['s1']
+    assert users['s1'].hostname == 'pc02'
+
+
+def test_get_room_users_only_server_connection(monkeypatch):
+    connections = _connections_with_hostnames(ROOM_HOSTNAMES)
+    output = ROOM_OUTPUT.splitlines()[-1] + "\n"
+    monkeypatch.setattr(smbstatus_module.subprocess, 'getoutput', lambda cmd: output)
+    connections.get_users()
+
+    assert connections.get_room_users('teacher') == ('', {})
+
+
+def test_get_room_users_unknown_client(monkeypatch):
+    connections = _connections_with_hostnames({})
+    monkeypatch.setattr(smbstatus_module.subprocess, 'getoutput', lambda cmd: ROOM_OUTPUT)
+    connections.get_users()
+
+    assert connections.get_room_users('teacher') == ('', {})
+
+
+def test_get_room_users_not_connected(monkeypatch):
+    connections = _connections_with_hostnames(ROOM_HOSTNAMES)
+    monkeypatch.setattr(smbstatus_module.subprocess, 'getoutput', lambda cmd: ROOM_OUTPUT)
+    connections.get_users()
+
+    assert connections.get_room_users('nobody') == ('', {})
+
+
+def test_get_users_accepts_ipv6_connection(monkeypatch):
+    connections = _connections_with_hostnames({})
+    output = "1234    DOMAIN\\jdoe   users    fd00::5    (ipv6:fd00::5)    SMB3_11    -    -    -\n"
+    monkeypatch.setattr(smbstatus_module.subprocess, 'getoutput', lambda cmd: output)
+
+    connections.get_users()
+
+    assert connections.users['jdoe'].ip6 == 'fd00::5'

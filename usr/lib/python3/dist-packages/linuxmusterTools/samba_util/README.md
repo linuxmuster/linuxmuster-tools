@@ -100,11 +100,16 @@ from linuxmusterTools.samba_util import smbstatus
 
 conn = smbstatus.SMBConnections()
 conn.users
-# {'kiar': SMBConnection(username='LINUXMUSTER\\kiar', ip4='10.0.0.1:38402', machine='10.0.0.1',
-#                         protocol='SMB3_11', signing='AES-128-GMAC', ...)}
+# {'jdupont': SMBConnection(username='DOMAIN\\jdupont', ip4='10.0.0.102:50682', machine='10.0.0.102',
+#                            hostname='pc01', room='r101', protocol='SMB3_11', signing='AES-128-GMAC', ...)}
 conn.get_machines()
 conn.machines
+
+room, users = conn.get_room_users('jdupont')
+# ('r101', {'student01': SMBConnection(machine='10.0.0.103', hostname='pc02', room='r101', ...)})
 ```
+
+`users` only holds the connections of the clients, hostname and room being read from the `devices.csv` of the school (`SMBConnections('abc')` for another school): the connections opened by the server itself, e.g. by the Webui, are left out. `get_room_users()` gives the room of the client where a user is connected and the other users of this room, or `('', {})` if the user is not connected to a known client. `smbstatus` only works as root.
 
 ---
 
