@@ -20,6 +20,7 @@ class SMBConnection:
     signing: str
     username: str
     version: str
+    rawline: str = ''
 
     def as_dict(self):
         return asdict(self)
@@ -65,8 +66,11 @@ class SMBConnections:
     def load_hostnames(self):
         if self.school != 'default-school':
             prefix = f'{self.school}.'
+            # Computer accounts of the other schools are prefixed in AD
+            hostname_prefix = f'{self.school}-'
         else:
             prefix = ''
+            hostname_prefix = ''
 
         devices_path = f'/etc/linuxmuster/sophomorix/{self.school}/{prefix}devices.csv'
 
@@ -74,7 +78,7 @@ class SMBConnections:
         with LMNFile(devices_path, 'r') as devices_csv:
             for device in devices_csv.read():
                 devices[device['ip']] = {
-                    'hostname': device['hostname'],
+                    'hostname': f"{hostname_prefix}{device['hostname']}",
                     'room': device['room'],
                 }
         return devices
@@ -91,7 +95,7 @@ class SMBConnections:
                 data['hostname'] = self.hostnames.get(data['machine'], {'hostname': 'No hostname found'})['hostname']
                 data['room'] = self.hostnames.get(data['machine'], {'room': 'No room found'})['room']
                 if SERVER_IP != data['machine'] and f"{SERVER_IP}:" not in (data['ip4'] or ''):
-                    self.users[user] = SMBConnection(group='users', **data)
+                    self.users[user] = SMBConnection(group='users', rawline=line, **data)
 
     def get_room_users(self, username):
         """
@@ -129,4 +133,4 @@ class SMBConnections:
                 machine = data['username'].split('\\')[1]
                 data['hostname'] = self.hostnames.get(machine, {'hostname': 'No hostname found'})['hostname']
                 data['room'] = self.hostnames.get(machine, {'room': 'No room found'})['room']
-                self.machines[machine] = SMBConnection(**data)
+                self.machines[machine] = SMBConnection(rawline=line, **data)

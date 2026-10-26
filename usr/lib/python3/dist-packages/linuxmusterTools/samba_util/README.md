@@ -109,7 +109,7 @@ room, users = conn.get_room_users('jdupont')
 # ('r101', {'student01': SMBConnection(machine='10.0.0.103', hostname='pc02', room='r101', ...)})
 ```
 
-`users` only holds the connections of the clients, hostname and room being read from the `devices.csv` of the school (`SMBConnections('abc')` for another school): the connections opened by the server itself, e.g. by the Webui, are left out. `get_room_users()` gives the room of the client where a user is connected and the other users of this room, or `('', {})` if the user is not connected to a known client. `smbstatus` only works as root.
+`users` only holds the connections of the clients, hostname and room being read from the `devices.csv` of the school (`SMBConnections('abc')` for another school, whose hostnames are prefixed like their computer account, e.g. `abc-pc01`): the connections opened by the server itself, e.g. by the Webui, are left out. `get_room_users()` gives the room of the client where a user is connected and the other users of this room, or `('', {})` if the user is not connected to a known client. `smbstatus` only works as root.
 
 ---
 

@@ -56,7 +56,7 @@ def test_smb_connection_as_dict():
         'encryption': '-', 'ip': None, 'ip4': '10.0.0.5:445', 'ip6': None,
         'group': 'users', 'hostname': 'pc01', 'machine': 'PC01', 'pid': '123',
         'protocol': 'SMB3_11', 'room': 'B101', 'signing': 'AES-128-CMAC',
-        'username': 'DOMAIN\\jdoe', 'version': '-',
+        'username': 'DOMAIN\\jdoe', 'version': '-', 'rawline': '',
     }
 
 
@@ -135,11 +135,12 @@ def test_load_hostnames_default_school_uses_unprefixed_path():
 def test_switch_reloads_hostnames_with_school_prefix():
     FakeDevicesCSV.rows_by_path['/etc/linuxmuster/sophomorix/default-school/devices.csv'] = []
     FakeDevicesCSV.rows_by_path['/etc/linuxmuster/sophomorix/abc/abc.devices.csv'] = [
-        {'ip': '10.0.1.5', 'hostname': 'abc-pc01', 'room': 'A1'},
+        {'ip': '10.0.1.5', 'hostname': 'pc01', 'room': 'A1'},
     ]
     connections = SMBConnections()
     connections.switch('abc')
     assert connections.school == 'abc'
+    # Like the computer account in AD
     assert connections.hostnames == {'10.0.1.5': {'hostname': 'abc-pc01', 'room': 'A1'}}
 
 
@@ -282,6 +283,7 @@ def test_get_room_users_ignores_the_server_connection(monkeypatch):
     assert room == 'r101'
     assert list(users.keys()) == ['s1']
     assert users['s1'].hostname == 'pc02'
+    assert users['s1'].rawline == ROOM_OUTPUT.splitlines()[2]
 
 
 def test_get_room_users_only_server_connection(monkeypatch):
