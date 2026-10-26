@@ -15,22 +15,22 @@ from linuxmusterTools.samba_util.log import (
 # Real sample lines captured from an actual `log.samba` audit trail (dates
 # adjusted to keep the fixtures self-contained).
 KERBEROS_OK_LINE = (
-    "  Auth: [Kerberos KDC,ENC-TS Pre-authentication] user [(null)]\\[ga@UNPEUD.INFO] "
+    "  Auth: [Kerberos KDC,ENC-TS Pre-authentication] user [(null)]\\[ga@DOMAIN.LAN] "
     "at [Wed, 22 Jul 2026 15:42:08.629671 CEST] with [aes256-cts-hmac-sha1-96] "
     "status [NT_STATUS_OK] workstation [(null)] remote host [ipv4:10.0.0.1:52256] "
-    "became [UNPEUD]\\[ga] [S-1-5-21-2783324004-2870359872-1600671279-2248]. local host [NULL] "
+    "became [DOMAIN]\\[ga] [S-1-5-21-0000000000-0000000000-0000000000-1001]. local host [NULL] "
 )
 KERBEROS_FAILED_LINE = (
-    "  Auth: [Kerberos KDC,ENC-TS Pre-authentication] user [(null)]\\[ga@UNPEUD.INFO] "
+    "  Auth: [Kerberos KDC,ENC-TS Pre-authentication] user [(null)]\\[ga@DOMAIN.LAN] "
     "at [Wed, 22 Jul 2026 15:42:08.635994 CEST] with [aes256-cts-hmac-sha1-96] "
     "status [NT_STATUS_PROTOCOL_UNREACHABLE] workstation [(null)] remote host [ipv4:10.0.0.1:53890] "
-    "mapped to [UNPEUD]\\[ga]. local host [NULL] "
+    "mapped to [DOMAIN]\\[ga]. local host [NULL] "
 )
 MACHINE_ACCOUNT_LINE = (
-    "  Auth: [Kerberos KDC,ENC-TS Pre-authentication] user [(null)]\\[PC01$@UNPEUD.INFO] "
+    "  Auth: [Kerberos KDC,ENC-TS Pre-authentication] user [(null)]\\[PC01$@DOMAIN.LAN] "
     "at [Thu, 23 Jul 2026 08:00:00.000000 CEST] with [aes256-cts-hmac-sha1-96] "
     "status [NT_STATUS_OK] workstation [(null)] remote host [ipv4:10.0.0.9:12345] "
-    "became [UNPEUD]\\[PC01$] [S-1-5-21-0000000000-0000000000-0000000000-1234]. local host [NULL] "
+    "became [DOMAIN]\\[PC01$] [S-1-5-21-0000000000-0000000000-0000000000-1234]. local host [NULL] "
 )
 
 
@@ -95,7 +95,7 @@ def test_format_log_data_parses_failed_kerberos_line():
 
 
 def test_format_log_data_returns_empty_for_non_kerberos_line():
-    line = "  Auth: [NTLMSSP] user [(null)]\\[ga@UNPEUD.INFO] at [Wed, 22 Jul 2026 15:42:08.629671 CEST]"
+    line = "  Auth: [NTLMSSP] user [(null)]\\[ga@DOMAIN.LAN] at [Wed, 22 Jul 2026 15:42:08.629671 CEST]"
     assert format_log_data(line) == {}
 
 
