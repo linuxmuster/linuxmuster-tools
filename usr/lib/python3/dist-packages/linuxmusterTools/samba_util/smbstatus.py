@@ -90,8 +90,32 @@ class SMBConnections:
                 user = data['username'].split('\\')[1]
                 data['hostname'] = self.hostnames.get(data['machine'], {'hostname': 'No hostname found'})['hostname']
                 data['room'] = self.hostnames.get(data['machine'], {'room': 'No room found'})['room']
-                if SERVER_IP != data['machine'] and f"{SERVER_IP}:" not in data['ip4']:
+                if SERVER_IP != data['machine'] and f"{SERVER_IP}:" not in (data['ip4'] or ''):
                     self.users[user] = SMBConnection(group='users', **data)
+
+    def get_room_users(self, username):
+        """
+        Get the room of the client where a user is connected, and the other
+        users connected in this room. The connections opened by the server
+        itself, e.g. by the Webui, are not taken into account.
+
+        :param username: login of the user
+        :type username: str
+        :return: room ('' if the user is not connected to a known client), and the connections of the other users in this room
+        :rtype: tuple(str, dict)
+        """
+
+
+        connection = self.users.get(username)
+        if connection is None or connection.room == 'No room found':
+            return '', {}
+
+        users = {
+            user: details
+            for user, details in self.users.items()
+            if details.room == connection.room and user != username
+        }
+        return connection.room, users
 
     def get_machines(self):
         output = subprocess.getoutput('smbstatus -b').split('\n')
