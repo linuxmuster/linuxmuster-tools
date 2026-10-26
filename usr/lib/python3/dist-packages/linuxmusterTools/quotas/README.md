@@ -27,7 +27,7 @@ Walks `/srv/samba` on the local filesystem and returns every file owned by `user
 
 ```Console
 >>> from linuxmusterTools.quotas import list_user_files
->>> list_user_files('kiar')
+>>> list_user_files('jdupont')
 {
     'directories': {
         '/srv/samba/default-school/students/8a': {
