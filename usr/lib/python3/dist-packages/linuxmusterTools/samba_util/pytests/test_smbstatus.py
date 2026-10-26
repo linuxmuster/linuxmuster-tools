@@ -292,9 +292,9 @@ def test_get_users_compares_auth_time_across_utc_offsets(monkeypatch):
 
 
 def test_get_machines_parses_and_resolves_hostname(monkeypatch):
-    # get_machines() looks up hostnames by the computer account name, which
-    # keeps the trailing '$' (e.g. 'pc04$').
-    connections = _connections_with_hostnames({'pc04$': {'hostname': 'pc04.lan', 'room': 'C1'}})
+    # Like get_users(), hostnames are looked up by ip, the key of devices.csv,
+    # and not by the computer account name (e.g. 'pc04$').
+    connections = _connections_with_hostnames({'10.0.0.7': {'hostname': 'pc04', 'room': 'C1'}})
     _patch_smbstatus(
         monkeypatch,
         _session(77, 'DOMAIN\\pc04$', '10.0.0.7', T1, group='DOMAIN\\domain computers', port=445),
@@ -305,7 +305,7 @@ def test_get_machines_parses_and_resolves_hostname(monkeypatch):
 
     assert list(connections.machines.keys()) == ['pc04$']
     machine = connections.machines['pc04$']
-    assert machine.hostname == 'pc04.lan'
+    assert machine.hostname == 'pc04'
     assert machine.room == 'C1'
     assert machine.group == 'DOMAIN\\domain computers'
     assert machine.ip4 == '10.0.0.7:445'

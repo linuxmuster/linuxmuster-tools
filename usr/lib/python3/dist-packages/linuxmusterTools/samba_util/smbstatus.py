@@ -178,7 +178,7 @@ class SMBConnections:
                 continue
 
             machine = connection.username.split('\\')[1]
-            device = self.hostnames.get(machine, {})
+            device = self.hostnames.get(connection.machine, {})
             connection.hostname = device.get('hostname', connection.hostname)
             connection.room = device.get('room', connection.room)
             machines.setdefault(machine, []).append(connection)
