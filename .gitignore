@@ -7,3 +7,4 @@ app.po~
 .crowdin.token
 .vscode
 docs/build/*
+usr/lib/python3/dist-packages/linuxmusterTools/pytests/credentials.py
