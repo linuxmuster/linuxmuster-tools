@@ -186,6 +186,8 @@ Since linuxmuster-linbo7 7.4.18, every run writes its own log, `<hostname>_linbo
 >>> logs.read_log(logs.latest_remote_log('pc001'))
 ```
 
+`read_log()` decompresses the logs gzipped by logrotate (`*.gz`), within the same 5 MB limit applied to the uncompressed content.
+
 `list_running_sessions()` lists the tmux sessions `linbo-remote` currently
 has running (one per targeted host), and `attach_command()` builds the
 `tmux attach` command for a given hostname - not meant to be run through a

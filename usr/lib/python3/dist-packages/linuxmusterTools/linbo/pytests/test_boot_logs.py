@@ -3,8 +3,11 @@ Tests for LinboBootLogs, and above all for the host a log file names: that is
 what lets a caller keep only the logs of one school's machines.
 """
 
+import gzip
+
 import pytest
 
+from linuxmusterTools.linbo import boot_logs
 from linuxmusterTools.linbo.boot_logs import LinboBootLogs
 
 
@@ -108,3 +111,20 @@ def test_latest_remote_log_is_none_without_log_dir(tmp_path):
 def test_latest_remote_log_refuses_an_unsafe_hostname(tmp_path, hostname):
     with pytest.raises(ValueError):
         LinboBootLogs(str(tmp_path)).latest_remote_log(hostname)
+
+
+def test_read_log_reads_a_plain_log(tmp_path):
+    (tmp_path / 'pc01_linbo.log').write_text('boot\n')
+    assert LinboBootLogs(str(tmp_path)).read_log('pc01_linbo.log') == 'boot\n'
+
+
+def test_read_log_decompresses_a_log_rotated_by_logrotate(tmp_path):
+    (tmp_path / 'pc01_linbo.log.1.gz').write_bytes(gzip.compress('boot\n'.encode()))
+    assert LinboBootLogs(str(tmp_path)).read_log('pc01_linbo.log.1.gz') == 'boot\n'
+
+
+def test_read_log_limits_the_uncompressed_size(tmp_path, monkeypatch):
+    monkeypatch.setattr(boot_logs, 'MAX_FILE_SIZE', 10)
+    (tmp_path / 'pc01_linbo.log.1.gz').write_bytes(gzip.compress(b'x' * 11))
+    with pytest.raises(ValueError):
+        LinboBootLogs(str(tmp_path)).read_log('pc01_linbo.log.1.gz')

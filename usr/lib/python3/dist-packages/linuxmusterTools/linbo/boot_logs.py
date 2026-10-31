@@ -92,6 +92,14 @@ class LinboBootLogs:
         if filepath.stat().st_size > MAX_FILE_SIZE:
             raise ValueError(f"File too large: {filepath.stat().st_size} bytes (max {MAX_FILE_SIZE})")
 
+        # Logs rotated by logrotate are gzipped
+        if filepath.suffix == ".gz":
+            with gzip.open(filepath, "rb") as f:
+                content = f.read(MAX_FILE_SIZE + 1)
+            if len(content) > MAX_FILE_SIZE:
+                raise ValueError(f"File too large: more than {MAX_FILE_SIZE} bytes uncompressed")
+            return content.decode("utf-8", errors="replace")
+
         return filepath.read_text(encoding="utf-8", errors="replace")
 
     def latest_remote_log(self, hostname: str) -> str | None:
