@@ -1,3 +1,5 @@
+import ldap.filter
+
 import linuxmusterTools.ldapconnector.models as models
 from linuxmusterTools.ldapconnector.urls.ldaprouter import router
 
@@ -11,6 +13,8 @@ def global_search(query=''):
     if not query:
         # Get the whole menu
         return "(cn=*)"
+
+    query = ldap.filter.escape_filter_chars(query)
 
     return f"""(
                 |
