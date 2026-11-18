@@ -1,3 +1,10 @@
+linuxmuster-tools7 (7.3.50) lmn73; urgency=high
+
+  * [security] [ldapconnector] The value of /search is escaped in the
+    LDAP filter.
+
+ -- Arnaud Kientz <arnaud@linuxmuster.net>  Wed, 18 Nov 2026 10:40:23 +0100
+
 linuxmuster-tools7 (7.3.49) lmn73; urgency=medium
 
   * [lmnfile] Do not parse comment lines as CSV.  
